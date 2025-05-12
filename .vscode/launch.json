@@ -1,0 +1,29 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Frontend",
+      "type": "pwa-node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "./run-frontend.sh"],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Backend",
+      "type": "pwa-node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "./run-backend.sh"],
+      "console": "integratedTerminal"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Fullstack",
+      "configurations": ["Frontend", "Backend"]
+    }
+  ]
+} 

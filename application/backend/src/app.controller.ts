@@ -1,10 +1,10 @@
 import { Controller, Get } from '@nestjs/common';
-import { GREETING } from 'e-punch-common';
+import { GREETING, ApiResponse } from 'e-punch-common';
 
 @Controller('api/v1')
 export class AppController {
   @Get('hello-world')
-  getHello(): string {
-    return GREETING;
+  getHello(): ApiResponse<string> {
+    return ApiResponse.success(GREETING);
   }
 } 
