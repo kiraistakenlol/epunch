@@ -1,0 +1,10 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+Don't leave any comments.
+
+If you want to remove any code, remove it, don't just comment it out.
+
+Always be concise and minimalistic.
