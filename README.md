@@ -4,6 +4,10 @@ A simple electronic punch card system.
 
 Users have a personal QR code and digital punch cards for various businesses. Businesses scan the user's QR code to add punches. Accumulated punches lead to rewards.
 
+## Planning
+
+See the detailed project planning document: [Planning Doc](https://docs.google.com/document/d/1aP9CDDbN2PSN6AypOyp7pGCODV2ZQdApm9iQcMuSTGI/edit?tab=t.0#heading=h.bmch098gxbif)
+
 ## User Journey
 
 ### Visiting "Pottery Cafe"
@@ -41,20 +45,23 @@ Users have a personal QR code and digital punch cards for various businesses. Bu
 ## Technical Implementation
 
 ### Tech Stack
-*   **Frontend:** React, TypeScript, Vite
-*   **Backend:** NestJS (Node.js framework), TypeScript
-*   **Database:** PostgreSQL
+* **Frontend:** React, TypeScript, Vite, Redux (for state management)
+* **Backend:** NestJS (Node.js framework), TypeScript, TypeORM, Joi (for config validation)
+* **Database:** PostgreSQL
+* **Package Manager:** Yarn (all shared dev dependencies, e.g., typescript, are kept in the root package.json for the workspace)
 
 ### Infrastructure & Deployment
-*   **Frontend Hosting:** Vercel
-*   **Backend Hosting:** Fly.io (Runs the backend NestJS application in a Docker container)
-*   **Database Hosting:** AWS RDS for PostgreSQL.
-*   **Authentication (Future):** AWS Cognito (For user/merchant logins)
-*   **AWS Infrastructure Management:** Terraform (Code located in `infra/terraform`)
+* **Frontend Hosting:** Vercel
+* **Backend Hosting:** Fly.io (Dockerized NestJS app)
+* **Database Hosting:** AWS RDS for PostgreSQL
+* **Authentication (Future):** AWS Cognito
+* **AWS Infrastructure Management:** Terraform (`infra/terraform`)
+* **Configuration:** All config (including API endpoints, host, port) is centralized and managed via environment variables and `.env` files
+* **Secrets:** Store all secrets in `.env`
 
 ### Project Structure
 
-The application code resides within the `application/` directory and is structured as a multi-module TypeScript project
+The application code resides within the `application/` directory and is structured as a multi-module TypeScript project:
 
 ```
 application/
@@ -62,9 +69,27 @@ application/
 ├── frontend/    # React frontend code
 └── common/      # Shared code (DTOs, constants, types, etc.)
 ```
-
-*   The `common/` module contains code shared between the frontend and backend.
-*   Both `backend/` and `frontend/` import modules from `common/`.
+* `common/` contains code shared between frontend and backend.
+* Both `backend/` and `frontend/` import modules from `common/`.
 
 ### Database Schema Management
-*   The database schema (table definitions, relationships) will be managed using raw SQL DDL
+* The database schema (table definitions, relationships) is managed using raw SQL DDL.
+* No migration scripts: manage schema manually and keep one initial SQL DDL in sync.
+
+### Implementation Guidelines
+
+**General**
+- Minimalistic: implement only what is necessary.
+- Avoid leaving comments.
+- Always use types, avoid `any`.
+
+**Frontend**
+- All backend calls are in a single `apiClient` file.
+- All API calls use the `/api/v1` prefix, configured globally.
+
+**Backend**
+- No DTO validation.
+- All API responses are wrapped in an `ApiResponse<T>` class.
+- Use an `ApiResponseInterceptor` to wrap responses and handle `NotFoundException` as 200 OK with `null` data.
+- Use a `GlobalHttpExceptionFilter` to handle and log all exceptions, returning a consistent error response shape.
+- Consistent error handling.

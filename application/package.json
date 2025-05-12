@@ -1,0 +1,12 @@
+{
+  "name": "ep-punch-app",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "common"
+  ],
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
