@@ -2,7 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { ApiResponseInterceptor } from './core/interceptors/api-response.interceptor';
-// import { GlobalHttpExceptionFilter } from './core/filters/global-http-exception.filter'; // Commented out as not yet implemented
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,13 +12,12 @@ async function bootstrap() {
   
   app.useGlobalInterceptors(new ApiResponseInterceptor());
 
-  // app.useGlobalFilters(new GlobalHttpExceptionFilter()); // Commented out as not yet implemented
 
   app.enableCors({
-    origin: ['*'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
-  });
+});
   
   const host = configService.getOrThrow<string>('app.host');
   const port = configService.getOrThrow<number>('app.port');
