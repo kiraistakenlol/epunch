@@ -1,0 +1,9 @@
+{
+  "name": "e-punch-frontend",
+  "version": 2,
+  "buildCommand": "cd application/frontend && yarn build",
+  "outputDirectory": "application/frontend/dist",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+} 
