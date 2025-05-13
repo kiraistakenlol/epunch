@@ -84,6 +84,7 @@ application/
 - Minimalistic: implement only what is necessary.
 - Avoid leaving comments.
 - Always use types, avoid `any`.
+- The website is developed with a mobile-first approach.
 
 **Frontend**
 - All backend calls are in a single `apiClient` file.
