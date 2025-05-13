@@ -4,6 +4,8 @@ A simple electronic punch card system.
 
 Users have a personal QR code and digital punch cards for various businesses. Businesses scan the user's QR code to add punches. Accumulated punches lead to rewards.
 
+![E-PUNCH.io System Overview](image.png)
+
 ## Planning
 
 See the detailed project planning document: [Planning Doc](https://docs.google.com/document/d/1aP9CDDbN2PSN6AypOyp7pGCODV2ZQdApm9iQcMuSTGI/edit?tab=t.0#heading=h.bmch098gxbif)
