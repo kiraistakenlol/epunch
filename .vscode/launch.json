@@ -2,6 +2,15 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Database",
+      "type": "pwa-node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/database",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "docker-compose up"],
+      "console": "integratedTerminal"
+    },
+    {
       "name": "Frontend",
       "type": "pwa-node",
       "request": "launch",
@@ -16,14 +25,14 @@
       "request": "launch",
       "cwd": "${workspaceFolder}",
       "runtimeExecutable": "bash",
-      "runtimeArgs": ["-c", "./run-backend.sh"],
+      "runtimeArgs": ["-c", "cd application/backend && yarn start:dev"],
       "console": "integratedTerminal"
     }
   ],
   "compounds": [
     {
       "name": "Fullstack",
-      "configurations": ["Frontend", "Backend"]
+      "configurations": ["Database", "Frontend", "Backend"]
     }
   ]
 } 

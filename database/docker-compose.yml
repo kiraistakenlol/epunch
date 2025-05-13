@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine # Using a specific version and a small image
+    container_name: epunch_postgres
+    environment:
+      POSTGRES_USER: postgres # Default user, align with your .env
+      POSTGRES_PASSWORD: password # Default password, align with your .env
+      POSTGRES_DB: epunch # Default database name, align with your .env
+    ports:
+      - "5432:5432" # Expose PostgreSQL port to the host
+    volumes:
+      - epunch_postgres_data:/var/lib/postgresql/data # Persist data
+    restart: unless-stopped
+
+volumes:
+  epunch_postgres_data: # Defines the named volume 
