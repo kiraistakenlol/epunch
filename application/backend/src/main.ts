@@ -16,7 +16,7 @@ async function bootstrap() {
   // app.useGlobalFilters(new GlobalHttpExceptionFilter()); // Commented out as not yet implemented
 
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://localhost:5173'],
+    origin: ['*'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
   });
