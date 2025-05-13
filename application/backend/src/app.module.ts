@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppConfigModule } from './config/config.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User, Merchant, LoyaltyProgram, PunchCard, Punch } from './entities';
+import { User, Merchant, LoyaltyProgram, PunchCard, Punch } from './database/entities';
 
 @Module({
   imports: [
