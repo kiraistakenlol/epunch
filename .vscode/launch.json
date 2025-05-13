@@ -27,6 +27,15 @@
       "runtimeExecutable": "bash",
       "runtimeArgs": ["-c", "cd application/backend && yarn start:dev"],
       "console": "integratedTerminal"
+    },
+    {
+      "name": "Backend Logs",
+      "type": "pwa-node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "./backend-logs.sh"],
+      "console": "integratedTerminal"
     }
   ],
   "compounds": [
