@@ -17,12 +17,13 @@ const initialState: AuthState = {
   error: null,
 };
 
-export const loadOrInitializeUserId = createAsyncThunk<string, void, {} >(
+export const loadOrInitializeUserId = createAsyncThunk<string, void, {}>(
   'auth/loadOrInitializeUserId',
   async (_, { dispatch }) => {
     let currentUserId = localStorage.getItem(LOCAL_STORAGE_USER_ID_KEY);
     if (!currentUserId) {
-      currentUserId = uuidv4();
+      // currentUserId = uuidv4();
+      currentUserId = '412dbe6d-e933-464e-87e2-31fe9c9ee6ac'
       localStorage.setItem(LOCAL_STORAGE_USER_ID_KEY, currentUserId);
     }
     dispatch(setUserId(currentUserId));

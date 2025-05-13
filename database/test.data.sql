@@ -1,11 +1,11 @@
--- Insert test user
+-- Insert test user with specific ID
 INSERT INTO "user" (id, created_at)
-VALUES (gen_random_uuid(), NOW());
+VALUES ('412dbe6d-e933-464e-87e2-31fe9c9ee6ac', NOW());
 
 -- Store the user ID in a variable for reference
 DO $$
 DECLARE
-    test_user_id UUID := (SELECT id FROM "user" ORDER BY created_at DESC LIMIT 1);
+    test_user_id UUID := '412dbe6d-e933-464e-87e2-31fe9c9ee6ac';
     coffee_shop_id UUID;
     coffee_loyalty_id UUID;
 BEGIN
