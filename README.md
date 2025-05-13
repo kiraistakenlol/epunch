@@ -66,6 +66,57 @@ See the detailed project planning document: [Planning Doc](https://docs.google.c
 * **Database & Auth:** Supabase (PostgreSQL, Auth, Storage, Functions)
 * **Configuration:** All config (including API endpoints, host, port) is centralized and managed via environment variables and `.env` files
 * **Secrets:** Store all secrets in `.env`
+* **Infrastructure Files:** All infrastructure configurations are stored in the `infra/` directory:
+  * `infra/backend/` - Backend deployment configurations (Docker, Fly.io)
+  * `infra/frontend/` - Frontend deployment configurations (Vercel)
+  * `infra/terraform/` - Terraform configurations (if needed)
+
+### Deployment Scripts
+
+The project includes several scripts to simplify deployment:
+
+#### Backend Local Development with Docker
+
+To run the backend locally using Docker:
+```bash
+./infra/backend/docker/run-docker-local.sh
+```
+
+#### Backend Deployment to Fly.io
+
+The backend includes automated deployment scripts:
+
+1. **One-Step Deployment** (`deploy.sh`):
+   ```bash
+   cd infra/backend/fly
+   ./deploy.sh
+   ```
+   This script handles creating the app, setting secrets, and deploying in one command.
+
+2. **Setting Environment Secrets** (`set-fly-secrets.sh`):
+   ```bash
+   cd infra/backend/fly
+   ./set-fly-secrets.sh
+   ```
+   This reads environment variables from `.env.dev` and sets them as Fly.io secrets.
+
+3. **Manual Deployment**:
+   ```bash
+   cd infra/backend/fly
+   fly deploy -c fly.toml
+   ```
+
+4. **Viewing Logs**:
+   ```bash
+   # View recent logs
+   fly logs -a e-punch-backend
+   
+   # Stream logs in real-time
+   fly logs -a e-punch-backend -f
+   
+   # View limited number of log lines
+   fly logs -a e-punch-backend --lines 100
+   ```
 
 ### Project Structure
 
@@ -76,9 +127,23 @@ application/
 ├── backend/     # NestJS backend code
 ├── frontend/    # React frontend code
 └── common/      # Shared code (DTOs, constants, types, etc.)
+
+infra/
+├── backend/              # Backend infrastructure
+│   ├── docker/           # Docker configurations
+│   │   ├── Dockerfile    # Backend Docker image definition
+│   │   └── run-docker-local.sh # Script to run locally with Docker
+│   └── fly/              # Fly.io deployment configurations
+│       ├── fly.toml      # Fly.io configuration
+│       ├── .env.dev      # Environment variables for deployment
+│       ├── deploy.sh     # One-step deployment script
+│       └── set-fly-secrets.sh # Script for setting Fly.io secrets
+├── frontend/    # Frontend infrastructure
+└── terraform/   # Terraform IaC (if needed)
 ```
 * `common/` contains code shared between frontend and backend.
 * Both `backend/` and `frontend/` import modules from `common/`.
+* `infra/` contains all infrastructure and deployment configurations.
 
 #### Frontend Directory Structure (`application/frontend/src/`)
 
