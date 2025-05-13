@@ -188,3 +188,4 @@ src/
 - Use an `ApiResponseInterceptor` to wrap responses and handle `NotFoundException` as 200 OK with `null` data.
 - Use a `GlobalHttpExceptionFilter` to handle and log all exceptions, returning a consistent error response shape.
 - Consistent error handling.
+- Keep TypeORM entities simple without relations - use repository methods for related data fetching.
