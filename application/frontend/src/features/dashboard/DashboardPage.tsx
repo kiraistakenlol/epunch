@@ -1,9 +1,10 @@
 import React from 'react';
-import { QRCodeSVG } from 'qrcode.react';
+// import { QRCodeSVG } from 'qrcode.react'; // Will be replaced by UserQRCode
+import UserQRCode from '../user/UserQRCode'; // Import UserQRCode
 import styles from './DashboardPage.module.css';
 
 // Mock Data
-const userQrData = 'epunch-user-id-12345'; // Replace with actual user data later
+// const userQrData = 'epunch-user-id-12345'; // No longer needed
 
 interface PunchCardProps {
   id: string;
@@ -88,7 +89,7 @@ const DashboardPage: React.FC = () => {
 
       <section className={styles.qrSection}>
         <div className={styles.qrCodeWrapper}>
-          <QRCodeSVG value={userQrData} size={200} bgColor="#FFFFFF" fgColor="#000000" level="Q" />
+          <UserQRCode />
         </div>
       </section>
 
