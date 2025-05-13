@@ -74,6 +74,52 @@ application/
 * `common/` contains code shared between frontend and backend.
 * Both `backend/` and `frontend/` import modules from `common/`.
 
+#### Frontend Directory Structure (`application/frontend/src/`)
+
+```
+src/
+├── api/                  # API client and related configurations
+│   └── apiClient.ts      # Single file for all backend API calls
+├── App.tsx               # Main application component, routing setup
+├── main.tsx              # Entry point, renders App, Redux Provider
+│
+├── assets/               # Static assets (images, fonts, etc.)
+│   └── images/
+│   └── fonts/
+│
+├── components/           # Reusable UI components
+│   ├── common/           # Very general components (Button, Input, Modal, Icon etc.)
+│   └── layout/           # Layout components (Header, Footer, PageWrapper etc.)
+│
+├── features/             # Feature-specific components, hooks, and Redux slices
+│   ├── auth/             # Example: Authentication feature
+│   │   ├── LoginPage.tsx
+│   │   └── authSlice.ts
+│   └── punchCards/       # Example: Punch card management feature
+│       ├── PunchCardListPage.tsx
+│       └── punchCardSlice.ts
+│
+├── hooks/                # Custom React hooks (reusable across features)
+│
+├── pages/                # Top-level page components (if not directly in features/)
+│   ├── HomePage.tsx
+│   └── NotFoundPage.tsx
+│
+├── store/                # Redux store setup
+│   ├── rootReducer.ts
+│   └── store.ts
+│
+├── styles/               # Global styles, theme configuration
+│   └── global.css
+│
+└── utils/                # General utility functions (not React-specific)
+```
+
+**Key Principles for Frontend Structure:**
+*   **Features First:** Code is primarily organized by user-facing features to promote modularity and co-location of related logic (UI, state, specific hooks).
+*   **Common Components:** Truly generic and reusable UI elements reside in `components/common/`.
+*   **Minimalism:** Start with essential folders and expand as needed. Avoid premature abstraction.
+
 ### Database Schema Management
 * The database schema (table definitions, relationships) is managed using raw SQL DDL.
 * No migration scripts: manage schema manually and keep one initial SQL DDL in sync.
