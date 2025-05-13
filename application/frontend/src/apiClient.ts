@@ -50,7 +50,7 @@ export const apiClient = {
       console.warn('getUserPunchCards called without a userId. Returning empty list.');
       return Promise.resolve([]);
     }
-    const response = await instance.get<PunchCardDto[]>(`/api/v1/users/${userId}/punch-cards`);
+    const response = await instance.get<PunchCardDto[]>(`/users/${userId}/punch-cards`);
     return response.data;
   }
 }; 
