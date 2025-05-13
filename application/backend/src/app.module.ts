@@ -4,6 +4,7 @@ import { AppConfigModule } from './config/config.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User, Merchant, LoyaltyProgram, PunchCard, Punch } from './database/entities';
+import { PunchCardsModule } from './features/punch-cards/punch-cards.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { User, Merchant, LoyaltyProgram, PunchCard, Punch } from './database/ent
         };
       },
     }),
+    PunchCardsModule,
   ],
   controllers: [AppController],
 })

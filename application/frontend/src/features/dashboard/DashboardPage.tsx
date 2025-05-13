@@ -1,44 +1,13 @@
-import React from 'react';
-// import { QRCodeSVG } from 'qrcode.react'; // Will be replaced by UserQRCode
-import UserQRCode from '../user/UserQRCode'; // Import UserQRCode
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import UserQRCode from '../user/UserQRCode';
 import styles from './DashboardPage.module.css';
+import type { RootState } from '../../store/store';
+import { selectUserId } from '../auth/authSlice';
+import { apiClient, PunchCardDto } from '../../apiClient';
 
-// Mock Data
-// const userQrData = 'epunch-user-id-12345'; // No longer needed
-
-interface PunchCardProps {
-  id: string;
-  shopName: string;
-  shopAddress: string;
-  currentPunches: number;
-  totalPunches: number;
-  isFavorite?: boolean;
-}
-
-const mockPunchCards: PunchCardProps[] = [
-  {
-    id: '1',
-    shopName: 'Pottery Cafe',
-    shopAddress: '123 Clay St, Artville',
-    currentPunches: 2,
-    totalPunches: 8,
-    isFavorite: true,
-  },
-  {
-    id: '2',
-    shopName: 'Books & Beans',
-    shopAddress: '456 Read Lane, Novel Town',
-    currentPunches: 5,
-    totalPunches: 10,
-  },
-  {
-    id: '3',
-    shopName: 'Green Grocer',
-    shopAddress: '789 Produce Ave, Farmburg',
-    currentPunches: 8,
-    totalPunches: 8,
-  },
-];
+// Interface for component props, maps DTO to what component expects
+interface PunchCardItemProps extends PunchCardDto {}
 
 // Placeholder for icons - replace with actual SVGs or an icon library
 const LocationPinIcon = () => (
@@ -53,7 +22,7 @@ const StarIcon = () => (
   </svg>
 );
 
-const PunchCardItem: React.FC<PunchCardProps> = ({ shopName, shopAddress, currentPunches, totalPunches, isFavorite }) => {
+const PunchCardItem: React.FC<PunchCardItemProps> = ({ shopName, shopAddress, currentPunches, totalPunches }) => {
   const punchCircles = [];
   for (let i = 0; i < totalPunches; i++) {
     punchCircles.push(
@@ -73,7 +42,6 @@ const PunchCardItem: React.FC<PunchCardProps> = ({ shopName, shopAddress, curren
         </div>
       </div>
       <div className={styles.punchCardFooter}>
-        {isFavorite && <StarIcon />}
         <span className={styles.shopName}>{shopName}</span>
       </div>
     </div>
@@ -81,6 +49,62 @@ const PunchCardItem: React.FC<PunchCardProps> = ({ shopName, shopAddress, curren
 };
 
 const DashboardPage: React.FC = () => {
+  const userId = useSelector((state: RootState) => selectUserId(state));
+  
+  const [punchCards, setPunchCards] = useState<PunchCardDto[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (userId === null) {
+        setIsLoading(false);
+        setPunchCards([]);
+        return;
+    }
+    if (userId) {
+      const fetchCards = async () => {
+        setIsLoading(true);
+        setError(null);
+        try {
+          const fetchedData = await apiClient.getUserPunchCards(userId);
+          console.log('Fetched punch card data:', fetchedData); // Log the fetched data
+          if (Array.isArray(fetchedData)) {
+            setPunchCards(fetchedData);
+          } else {
+            console.error('Received data is not an array:', fetchedData);
+            setError('Received unexpected data format for punch cards.');
+            setPunchCards([]); // Ensure punchCards is an empty array
+          }
+        } catch (e: any) {
+          console.error('Error fetching punch cards in component:', e);
+          setError(e.message || 'An unexpected error occurred while fetching punch cards.');
+          setPunchCards([]);
+        }
+        setIsLoading(false);
+      };
+      fetchCards();
+    } else {
+      setIsLoading(false);
+      setPunchCards([]);
+    }
+  }, [userId]);
+
+  let punchCardContent;
+  // Ensure punchCards is treated as an array before accessing .length or .map
+  const cardsArray = Array.isArray(punchCards) ? punchCards : [];
+
+  if (isLoading) {
+    punchCardContent = <p>Loading punch cards...</p>;
+  } else if (error) {
+    punchCardContent = <p>Error: {error}</p>;
+  } else if (cardsArray.length === 0) {
+    punchCardContent = <p>No punch cards yet. Start collecting!</p>;
+  } else {
+    punchCardContent = cardsArray.map((card, index) => (
+      <PunchCardItem key={`${card.shopName}-${index}`} {...card} />
+    ));
+  }
+
   return (
     <div className={styles.pageContainer}>
       <header className={styles.header}>
@@ -95,9 +119,7 @@ const DashboardPage: React.FC = () => {
 
       <section className={styles.punchCardsSection}>
         <div className={styles.punchCardsList}>
-          {mockPunchCards.map(card => (
-            <PunchCardItem key={card.id} {...card} />
-          ))}
+          {punchCardContent}
         </div>
       </section>
     </div>

@@ -5,6 +5,6 @@ import { GREETING, ApiResponse } from 'e-punch-common';
 export class AppController {
   @Get('hello-world')
   getHello(): ApiResponse<string> {
-    return ApiResponse.success(GREETING);
+    return new ApiResponse(GREETING);
   }
 } 
