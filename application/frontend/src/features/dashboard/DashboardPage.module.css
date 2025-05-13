@@ -4,99 +4,128 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  padding: 20px;
+  background-color: #3a3a3a; /* Fallback, main sections will have their own BG */
+  font-family: Arial, sans-serif; /* Placeholder font */
 }
 
 .header {
-  display: flex;
-  justify-content: center;
+  background-color: #5d4037; /* Dark Brown */
   padding: 15px 0;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .logo {
+  color: #f5f5dc; /* Light Beige/Cream */
+  font-size: 2.5em;
   font-weight: bold;
-  font-size: 1.5rem;
+  text-shadow: 2px 2px 2px #3e2723; /* Darker brown for shadow */
 }
 
 .qrSection {
+  background-color: #424242; /* Dark Grey/Charcoal */
+  padding: 30px 20px;
   display: flex;
   justify-content: center;
-  margin: 20px 0;
+  align-items: center;
+  flex-grow: 1; /* Allows this section to take available space */
 }
 
 .qrCodeWrapper {
-  padding: 15px;
-  background-color: white;
+  background-color: #f5f5dc; /* Light Beige/Cream for QR code background */
+  padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .punchCardsSection {
-  margin-top: 30px;
+  background-color: #795548; /* Medium Brown */
+  padding: 20px 0;
+  overflow-x: auto; /* Enable horizontal scrolling */
+  white-space: nowrap; /* Keep items in a single line */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
 .punchCardsList {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+  display: flex; /* Arrange cards horizontally */
+  padding-left: 20px; /* Initial padding for the first card */
+  padding-right: 20px; /* Padding for the last card */
 }
 
 .punchCardItem {
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 15px;
+  background-color: #8d6e63; /* Lighter shade of Medium Brown for the card body */
+  border-radius: 12px;
+  min-width: 280px; /* Min width for a card */
+  max-width: 300px;
+  margin-right: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
+  overflow: hidden; /* Ensure content respects border-radius */
 }
 
 .punchCardHeader {
+  background-color: #5d4037; /* Dark Brown */
+  color: #f5f5dc; /* Light Beige/Cream */
+  padding: 8px 12px;
+  font-size: 0.9em;
   display: flex;
   align-items: center;
-  color: #666;
-  font-size: 0.9rem;
-  margin-bottom: 15px;
 }
 
 .locationIcon {
+  margin-right: 8px;
+  /* Add styles for your pin icon here if using an SVG or font icon */
   width: 16px;
   height: 16px;
-  margin-right: 6px;
-  color: #666;
+  fill: #f5f5dc;
 }
 
 .punchCardBody {
-  flex: 1;
-  padding: 10px 0;
+  padding: 15px;
+  flex-grow: 1;
 }
 
 .punchCirclesContainer {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
-  justify-content: center;
+  margin-bottom: 15px;
 }
 
 .punchCircle {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  border: 2px solid #3182CE;
+  border: 2px solid #5d4037; /* Dark Brown border */
   background-color: transparent;
+  margin: 0 auto; /* Center circles in grid cells */
 }
 
 .punchCircleFilled {
-  background-color: #3182CE;
+  background-color: #5d4037; /* Dark Brown fill */
 }
 
 .punchCardFooter {
-  margin-top: 15px;
-  text-align: center;
+  padding: 0 12px 12px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.starIcon {
+  /* Styles for your star icon */
+  width: 20px;
+  height: 20px;
+  fill: #f5f5dc;
 }
 
 .shopName {
+  color: #5d4037; /* Dark Brown text for shop name */
+  font-size: 1.4em;
   font-weight: bold;
-  font-size: 1.1rem;
+  /* Consider a specific font if you have one */
+  text-shadow: 1px 1px 1px #a1887f; /* Lighter brown shadow */
 }
 
 /* For mobile-first, these are the base styles. Add media queries for larger screens if needed */ 
