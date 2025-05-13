@@ -8,7 +8,7 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
+      try {        
         const response = await apiClient.getHelloWorld();
         if (response.error) {
           setError(response.error);

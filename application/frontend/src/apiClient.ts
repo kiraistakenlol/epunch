@@ -1,7 +1,9 @@
 import axios from 'axios';
 import { ApiResponse } from 'e-punch-common';
 
-const API_BASE_URL = 'http://localhost:4000/api/v1';
+const API_BASE_URL = (import.meta as any).env.VITE_API_URL;
+
+console.log('API_BASE_URL', API_BASE_URL);
 
 export const apiClient = {
   async getHelloWorld(): Promise<ApiResponse<string>> {
