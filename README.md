@@ -128,6 +128,44 @@ src/
 *   **Common Components:** Truly generic and reusable UI elements reside in `components/common/`.
 *   **Minimalism:** Start with essential folders and expand as needed. Avoid premature abstraction.
 
+#### Backend Directory Structure (`application/backend/src/`)
+
+```
+src/
+├── config/               # Configuration setup and validation
+│   └── config.ts        # Environment variables and app config
+│
+├── core/                # Core application code
+│   ├── interceptors/    # Global interceptors
+│   ├── filters/         # Global exception filters
+│   └── types/          # Common types and interfaces
+│
+├── features/           # Feature modules
+│   ├── auth/          # Authentication feature
+│   │   ├── auth.module.ts
+│   │   ├── auth.controller.ts
+│   │   └── auth.service.ts
+│   └── punch-cards/   # Punch card management feature
+│       ├── punch-cards.module.ts
+│       ├── punch-cards.controller.ts
+│       ├── punch-cards.service.ts
+│       └── entities/
+│
+├── database/          # Database configuration and entities
+│   ├── entities/     # TypeORM entities
+│   └── migrations/   # SQL DDL files
+│
+├── utils/            # Utility functions and helpers
+│
+└── main.ts          # Application entry point
+```
+
+**Key Principles for Backend Structure:**
+* **Features First:** Code organized by domain features, each as a NestJS module
+* **Clean Core:** Global interceptors, filters, and types in core/
+* **Flat Entity Structure:** Database entities kept in a single location
+* **Minimal Abstractions:** Direct service-to-controller communication, no facades or repositories
+
 ### Database Schema Management
 * The database schema (table definitions, relationships) is managed using raw SQL DDL.
 * No migration scripts: manage schema manually and keep one initial SQL DDL in sync.
