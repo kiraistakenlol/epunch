@@ -1,8 +1,8 @@
 {
   "name": "e-punch-frontend",
   "version": 2,
-  "buildCommand": "cd application/frontend && yarn build",
-  "outputDirectory": "application/frontend/dist",
+  "buildCommand": "cd ../common && yarn build && cd ../frontend && yarn build",
+  "outputDirectory": "dist",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
