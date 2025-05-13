@@ -6,6 +6,14 @@ Users have a personal QR code and digital punch cards for various businesses. Bu
 
 <img src="image.png" alt="E-PUNCH.io System Overview" width="400" />
 
+## Features
+
+* View and manage digital punch cards for multiple businesses
+* Use without authentication (with a warning about potential data loss)
+* Personal QR code for quick punch collection
+* Track punch progress across different loyalty programs
+* Automatic reward notifications when punch cards are complete
+
 ## Planning
 
 See the detailed project planning document: [Planning Doc](https://docs.google.com/document/d/1aP9CDDbN2PSN6AypOyp7pGCODV2ZQdApm9iQcMuSTGI/edit?tab=t.0#heading=h.bmch098gxbif)
