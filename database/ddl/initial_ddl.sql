@@ -7,7 +7,8 @@ CREATE TABLE "user" (
 -- Merchant table
 CREATE TABLE merchant (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name VARCHAR(255) NOT NULL,
+    name TEXT NOT NULL,
+    address TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 

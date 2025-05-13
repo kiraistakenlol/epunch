@@ -52,9 +52,9 @@ const DashboardPage: React.FC = () => {
 
   useEffect(() => {
     if (userId === null) {
-        setIsLoading(false);
-        setPunchCards([]);
-        return;
+      setIsLoading(false);
+      setPunchCards([]);
+      return;
     }
     if (userId) {
       const fetchCards = async () => {
@@ -62,13 +62,13 @@ const DashboardPage: React.FC = () => {
         setError(null);
         try {
           const fetchedData = await apiClient.getUserPunchCards(userId);
-          console.log('Fetched punch card data:', fetchedData); // Log the fetched data
+          console.log('Fetched punch card data:', fetchedData);
           if (Array.isArray(fetchedData)) {
             setPunchCards(fetchedData);
           } else {
             console.error('Received data is not an array:', fetchedData);
             setError('Received unexpected data format for punch cards.');
-            setPunchCards([]); // Ensure punchCards is an empty array
+            setPunchCards([]);
           }
         } catch (e: any) {
           console.error('Error fetching punch cards in component:', e);
@@ -84,21 +84,24 @@ const DashboardPage: React.FC = () => {
     }
   }, [userId]);
 
-  let punchCardContent;
   // Ensure punchCards is treated as an array before accessing .length or .map
   const cardsArray = Array.isArray(punchCards) ? punchCards : [];
 
-  if (isLoading) {
-    punchCardContent = <p>Loading punch cards...</p>;
-  } else if (error) {
-    punchCardContent = <p>Error: {error}</p>;
-  } else if (cardsArray.length === 0) {
-    punchCardContent = <p>No punch cards yet. Start collecting!</p>;
-  } else {
-    punchCardContent = cardsArray.map((card, index) => (
+  // Render content based on loading and data state
+  const renderPunchCardContent = () => {
+    if (isLoading) {
+      return <p>Loading punch cards...</p>;
+    } 
+    if (error) {
+      return <p>Error: {error}</p>;
+    } 
+    if (cardsArray.length === 0) {
+      return <p>No punch cards yet. Start collecting!</p>;
+    }
+    return cardsArray.map((card, index) => (
       <PunchCardItem key={`${card.shopName}-${index}`} {...card} />
     ));
-  }
+  };
 
   return (
     <div className={styles.pageContainer}>
@@ -114,7 +117,7 @@ const DashboardPage: React.FC = () => {
 
       <section className={styles.punchCardsSection}>
         <div className={styles.punchCardsList}>
-          {punchCardContent}
+          {renderPunchCardContent()}
         </div>
       </section>
     </div>

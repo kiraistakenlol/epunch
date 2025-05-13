@@ -8,6 +8,9 @@ export class Merchant {
   @Column()
   name!: string;
 
+  @Column()
+  address!: string;
+
   @CreateDateColumn()
   created_at!: Date;
 } 

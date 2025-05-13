@@ -10,3 +10,5 @@ yarn-error.log
 **/dist
 
 **/tsconfig.tsbuildinfo
+
+.idea
