@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { PunchCardsController } from './punch-cards.controller';
 import { PunchCardsService } from './punch-cards.service';
 import { PunchCardsRepository } from './punch-cards.repository';
-import { PunchCard, LoyaltyProgram, Merchant } from '../../database/entities';
+import { SupabaseModule } from '../../supabase/supabase.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([PunchCard, LoyaltyProgram, Merchant])
+    SupabaseModule
   ],
   controllers: [PunchCardsController],
   providers: [PunchCardsService, PunchCardsRepository],

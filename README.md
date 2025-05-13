@@ -56,16 +56,14 @@ See the detailed project planning document: [Planning Doc](https://docs.google.c
 
 ### Tech Stack
 * **Frontend:** React, TypeScript, Vite, Redux (for state management)
-* **Backend:** NestJS (Node.js framework), TypeScript, TypeORM, Joi (for config validation)
-* **Database:** PostgreSQL
+* **Backend:** NestJS (Node.js framework), TypeScript, Supabase SDK
+* **Database:** PostgreSQL (via Supabase)
 * **Package Manager:** Yarn (all shared dev dependencies, e.g., typescript, are kept in the root package.json for the workspace)
 
 ### Infrastructure & Deployment
 * **Frontend Hosting:** Vercel
 * **Backend Hosting:** Fly.io (Dockerized NestJS app)
-* **Database Hosting:** AWS RDS for PostgreSQL
-* **Authentication (Future):** AWS Cognito
-* **AWS Infrastructure Management:** Terraform (`infra/terraform`)
+* **Database & Auth:** Supabase (PostgreSQL, Auth, Storage, Functions)
 * **Configuration:** All config (including API endpoints, host, port) is centralized and managed via environment variables and `.env` files
 * **Secrets:** Store all secrets in `.env`
 
@@ -149,11 +147,10 @@ src/
 │       ├── punch-cards.module.ts
 │       ├── punch-cards.controller.ts
 │       ├── punch-cards.service.ts
-│       └── entities/
+│       └── types/     # Type definitions for punch cards
 │
-├── database/          # Database configuration and entities
-│   ├── entities/     # TypeORM entities
-│   └── migrations/   # SQL DDL files
+├── supabase/          # Supabase client configuration
+│   └── client.ts      # Configured Supabase client
 │
 ├── utils/            # Utility functions and helpers
 │
@@ -163,12 +160,12 @@ src/
 **Key Principles for Backend Structure:**
 * **Features First:** Code organized by domain features, each as a NestJS module
 * **Clean Core:** Global interceptors, filters, and types in core/
-* **Flat Entity Structure:** Database entities kept in a single location
+* **Supabase Integration:** Direct use of Supabase client in services
 * **Minimal Abstractions:** Direct service-to-controller communication, no facades or repositories
 
 ### Database Schema Management
-* The database schema (table definitions, relationships) is managed using raw SQL DDL.
-* No migration scripts: manage schema manually and keep one initial SQL DDL in sync.
+* Database schema managed directly through Supabase Dashboard
+* SQL migrations can be created and tracked in version control
 
 ### Implementation Guidelines
 
@@ -179,7 +176,7 @@ src/
 - The website is developed with a mobile-first approach.
 
 **Frontend**
-- All backend calls are in a single `apiClient` file.
+- Supabase client used directly in front-end for real-time subscriptions
 - All API calls use the `/api/v1` prefix, configured globally.
 
 **Backend**
@@ -188,4 +185,4 @@ src/
 - Use an `ApiResponseInterceptor` to wrap responses and handle `NotFoundException` as 200 OK with `null` data.
 - Use a `GlobalHttpExceptionFilter` to handle and log all exceptions, returning a consistent error response shape.
 - Consistent error handling.
-- Keep TypeORM entities simple without relations - use repository methods for related data fetching.
+- Leverage Supabase features (auth, storage, real-time) where appropriate.
