@@ -8,6 +8,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   
+  // Set global API prefix
+  app.setGlobalPrefix('api/v1');
+  
   app.useGlobalInterceptors(new ApiResponseInterceptor());
 
   // app.useGlobalFilters(new GlobalHttpExceptionFilter()); // Commented out as not yet implemented

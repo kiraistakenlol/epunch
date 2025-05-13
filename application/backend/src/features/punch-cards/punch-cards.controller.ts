@@ -2,7 +2,7 @@ import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { PunchCardDto } from 'e-punch-common';
 import { PunchCardsService } from './punch-cards.service';
 
-@Controller('api/v1/users/:userId/punch-cards')
+@Controller('users/:userId/punch-cards')
 export class PunchCardsController {
   constructor(private readonly punchCardsService: PunchCardsService) {}
 
