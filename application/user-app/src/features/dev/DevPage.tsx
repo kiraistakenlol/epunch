@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import { selectUserId } from '../auth/authSlice';
-import { apiClient } from '../../apiClient';
+import { apiClient } from 'e-punch-common';
 
 const styles = {
   container: {

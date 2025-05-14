@@ -4,8 +4,7 @@ import UserQRCode from '../user/UserQRCode';
 import styles from './DashboardPage.module.css';
 import type { RootState } from '../../store/store';
 import { selectUserId } from '../auth/authSlice';
-import { apiClient } from '../../apiClient';
-import { PunchCardDto } from 'e-punch-common';
+import { apiClient, PunchCardDto } from 'e-punch-common';
 
 // Interface for component props, maps DTO to what component expects
 interface PunchCardItemProps extends PunchCardDto {}
