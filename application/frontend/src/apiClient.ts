@@ -39,6 +39,13 @@ instance.interceptors.response.use(
   }
 );
 
+// Interface for dev endpoint responses
+interface DevResponse {
+  status: string;
+  message: string;
+  [key: string]: any; // For additional properties
+}
+
 export const apiClient = {
   async getHelloWorld(): Promise<string> {
     const response = await instance.get<string>('/hello-world');
@@ -51,6 +58,22 @@ export const apiClient = {
       return Promise.resolve([]);
     }
     const response = await instance.get<PunchCardDto[]>(`/users/${userId}/punch-cards`);
+    return response.data;
+  },
+
+  // Development endpoints
+  async checkDevEndpoint(): Promise<DevResponse> {
+    const response = await instance.get<DevResponse>('/dev/status');
+    return response.data;
+  },
+
+  async generateTestData(): Promise<DevResponse> {
+    const response = await instance.post<DevResponse>('/dev/generate-data');
+    return response.data;
+  },
+
+  async resetTestData(): Promise<DevResponse> {
+    const response = await instance.post<DevResponse>('/dev/reset-data');
     return response.data;
   }
 }; 

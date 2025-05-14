@@ -13,6 +13,7 @@ Users have a personal QR code and digital punch cards for various businesses. Bu
 * Personal QR code for quick punch collection
 * Track punch progress across different loyalty programs
 * Automatic reward notifications when punch cards are complete
+* Development mode for testing and debugging (`/dev` route and `/api/v1/dev` endpoint)
 
 ## Planning
 
@@ -70,6 +71,19 @@ See the detailed project planning document: [Planning Doc](https://docs.google.c
   * `infra/backend/` - Backend deployment configurations (Docker, Fly.io)
   * `infra/frontend/` - Frontend deployment configurations (Vercel)
   * `infra/terraform/` - Terraform configurations (if needed)
+
+### Development Mode
+
+The application includes a development mode accessible at `/dev` route and `/api/v1/dev` endpoint. This mode provides development utilities for:
+
+* Testing database connections
+* Generating test data
+* Viewing system state
+* Debugging features
+
+Development application is available at: https://narrow-ai-epunch.vercel.app/dev
+
+This mode is disabled in production environments through environment configuration.
 
 ### Deployment Scripts
 
@@ -229,7 +243,7 @@ src/
 * **Minimal Abstractions:** Direct service-to-controller communication, no facades or repositories
 
 ### Database Schema Management
-* Database schema managed directly through Supabase Dashboard
+* Database schema managed directly through [Supabase Dashboard](https://supabase.com/dashboard/project/tdkfpgplsbjcblhfzurc)
 * SQL migrations can be created and tracked in version control
 
 ### Implementation Guidelines

@@ -4,6 +4,7 @@ import { AppConfigModule } from './config/config.module';
 import { ConfigModule } from '@nestjs/config';
 import { PunchCardsModule } from './features/punch-cards/punch-cards.module';
 import { SupabaseModule } from './supabase/supabase.module';
+import { DevModule } from './features/dev/dev.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { SupabaseModule } from './supabase/supabase.module';
     ConfigModule,
     SupabaseModule,
     PunchCardsModule,
+    DevModule,
   ],
   controllers: [AppController],
 })
