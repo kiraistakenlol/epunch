@@ -36,12 +36,21 @@
       "runtimeExecutable": "bash",
       "runtimeArgs": ["-c", "./backend-logs.sh"],
       "console": "integratedTerminal"
+    },
+    {
+      "name": "Merchant App",
+      "type": "pwa-node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "./run-merchant-app.sh"],
+      "console": "integratedTerminal"
     }
   ],
   "compounds": [
     {
       "name": "Fullstack",
-      "configurations": ["Database", "User App", "Backend"]
+      "configurations": ["Database", "User App", "Backend", "Merchant App"]
     }
   ]
 } 

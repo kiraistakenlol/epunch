@@ -20,6 +20,10 @@ yarn workspace e-punch-backend build
 echo "Building user-app..."
 yarn workspace e-punch-user-app build
 
+# Build merchant-app
+echo "Building merchant-app..."
+yarn workspace e-punch-merchant-app build
+
 echo "All modules built successfully!"
 
 # Return to the original directory

@@ -32,6 +32,11 @@ if [ -d "application/backend/node_modules" ]; then
   rm -rf application/backend/node_modules
 fi
 
+if [ -d "application/merchant-app/node_modules" ]; then
+  echo "Removing application/merchant-app/node_modules/"
+  rm -rf application/merchant-app/node_modules
+fi
+
 echo "All specified node_modules directories removed."
 
 echo "Reinstalling all dependencies using Yarn Workspaces..."

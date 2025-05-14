@@ -5,7 +5,8 @@
   "workspaces": [
     "common",
     "backend",
-    "user-app"
+    "user-app",
+    "merchant-app"
   ],
   "scripts": {
     "build-all": "./build-all.sh"
