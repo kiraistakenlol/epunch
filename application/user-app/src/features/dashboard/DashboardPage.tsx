@@ -104,21 +104,23 @@ const DashboardPage: React.FC = () => {
   };
 
   return (
-    <div className={styles.pageContainer}>
-      {common.AppHeader && <common.AppHeader title="User Dashboard" />}
+    <>
+      <common.AppHeader title="EPunch" />
+      <div className={styles.pageContainer}>
 
-      <section className={styles.qrSection}>
-        <div className={styles.qrCodeWrapper}>
-          <UserQRCode />
-        </div>
-      </section>
+        <section className={styles.qrSection}>
+          <div className={styles.qrCodeWrapper}>
+            <UserQRCode />
+          </div>
+        </section>
 
-      <section className={styles.punchCardsSection}>
-        <div className={styles.punchCardsList}>
-          {renderPunchCardContent()}
-        </div>
-      </section>
-    </div>
+        <section className={styles.punchCardsSection}>
+          <div className={styles.punchCardsList}>
+            {renderPunchCardContent()}
+          </div>
+        </section>
+      </div>
+    </>
   );
 };
 

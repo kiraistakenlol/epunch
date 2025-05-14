@@ -2,14 +2,26 @@
 
 .header {
   background-color: #5d4037; /* Dark Brown */
-  padding: 15px 20px;
-  text-align: center;
+  padding: 0 20px; /* Adjusted padding to keep horizontal while removing vertical */
+  /* text-align: center; (no longer needed with flex justify-content) */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   color: #f5f5dc; /* Light Beige/Cream for text */
+  position: fixed; /* Make it sticky */
+  top: 0;
+  left: 0;
+  width: 100%; /* Make it full width */
+  height: 50px; /* Adjusted to 50px as per user request */
+  display: flex; 
+  flex-direction: row; /* User suggested flex-direction */
+  align-items: center; 
+  justify-content: space-between; /* User suggested justify-content */
+  z-index: 1000; /* Ensure it stays on top of other content */
 }
 
 .logo {
   font-size: 1.8em;
   font-weight: bold;
   text-shadow: 1px 1px 1px #3e2723; /* Darker brown for shadow */
+  /* If using space-between and wanting the logo to not take full width if it's the only item: */
+  /* flex-grow: 0; (optional, depending on desired behavior with one item) */
 } 

@@ -213,9 +213,12 @@ const ScannerPage: React.FC = () => {
     };
 
     return (
-        <div className={styles.pageContainer}>
-            {common.AppHeader && <common.AppHeader title="Merchant Scanner" />}
-            <h2 className={styles.pageTitle}>Scan User QR Code</h2>
+        <>
+            <common.AppHeader title="EPunch Merchant" />
+            <div className={styles.pageContainer}>
+            
+            {/* The h2 title was removed in a previous step, but if re-added, it would go here or inside cameraViewWrapper */}
+            {/* <h2 className={styles.pageTitle}>Scan User QR Code</h2> */}
 
             <div className={styles.cameraViewWrapper}>
                 <video
@@ -259,6 +262,7 @@ const ScannerPage: React.FC = () => {
             </button>
             {testPunchMessage && <p style={{ marginTop: '10px', color: testPunchMessage.startsWith('Test Punch Error:') ? 'red' : 'green' }}>{testPunchMessage}</p>}
         </div>
+        </>
     );
 };
 
