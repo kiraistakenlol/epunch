@@ -6,6 +6,8 @@
     "@types/qrcode.react": "^3.0.0",
     "axios": "^1.6.0",
     "e-punch-common": "1.0.0",
+    "html5-qrcode": "^2.3.8",
+    "jsqr": "^1.4.0",
     "qrcode.react": "^4.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

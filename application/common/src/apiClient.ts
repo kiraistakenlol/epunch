@@ -87,5 +87,15 @@ export const apiClient = {
   async resetTestData(): Promise<DevResponse> {
     const response = await instance.post<DevResponse>('/dev/reset-data');
     return response.data;
+  },
+
+  async punchUser(userId: string): Promise<{ message: string }> {
+    if (!userId) {
+      console.warn('punchUser called without a userId.');
+      return Promise.reject(new Error('User ID is required to punch.'));
+    }
+    // Assuming an empty body for the punch action as per ScannerPage placeholder
+    const response = await instance.post<{ message: string }>(`/users/${userId}/punch-cards`, {});
+    return response.data; // After interceptor, this should be the { message: string } object
   }
 }; 
