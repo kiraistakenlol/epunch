@@ -57,19 +57,21 @@ See the detailed project planning document: [Planning Doc](https://docs.google.c
 
 ### Tech Stack
 * **User App (Frontend):** React, TypeScript, Vite, Redux (for state management)
+* **Merchant App (Frontend):** React, TypeScript, Vite, Redux (for state management) (Planned)
 * **Backend:** NestJS (Node.js framework), TypeScript, Supabase SDK
 * **Database:** PostgreSQL (via Supabase)
 * **Package Manager:** Yarn (all shared dev dependencies, e.g., typescript, are kept in the root package.json for the workspace)
 
 ### Infrastructure & Deployment
-* **Frontend Hosting:** Vercel
+* **Frontend Hosting:** Vercel (for both User and Merchant apps)
 * **Backend Hosting:** Fly.io (Dockerized NestJS app)
 * **Database & Auth:** Supabase (PostgreSQL, Auth, Storage, Functions)
 * **Configuration:** All config (including API endpoints, host, port) is centralized and managed via environment variables and `.env` files
 * **Secrets:** Store all secrets in `.env`
 * **Infrastructure Files:** All infrastructure configurations are stored in the `infra/` directory:
   * `infra/backend/` - Backend deployment configurations (Docker, Fly.io)
-  * `infra/user-app/` - Frontend deployment configurations (Vercel)
+  * `infra/user-app/` - User App deployment configurations (Vercel)
+  * `infra/merchant-app/` - Merchant App deployment configurations (Vercel) (Planned)
   * `infra/terraform/` - Terraform configurations (if needed)
 
 ### Development Mode
@@ -138,9 +140,10 @@ The application code resides within the `application/` directory and is structur
 
 ```
 application/
-├── backend/     # NestJS backend code
-├── user-app/    # React user-app code
-└── common/      # Shared code (DTOs, constants, types, etc.)
+├── backend/       # NestJS backend code
+├── user-app/      # React user-app code
+├── merchant-app/  # React merchant-app code (Planned)
+└── common/        # Shared code (DTOs, constants, types, etc.)
 
 infra/
 ├── backend/              # Backend infrastructure
@@ -152,11 +155,12 @@ infra/
 │       ├── .env.dev      # Environment variables for deployment
 │       ├── deploy.sh     # One-step deployment script
 │       └── set-fly-secrets.sh # Script for setting Fly.io secrets
-├── user-app/    # User App infrastructure
-└── terraform/   # Terraform IaC (if needed)
+├── user-app/      # User App infrastructure
+├── merchant-app/  # Merchant App infrastructure (Planned)
+└── terraform/     # Terraform IaC (if needed)
 ```
-* `common/` contains code shared between backend and user-app.
-* Both `backend/` and `user-app/` import modules from `common/`.
+* `common/` contains code shared between backend, user-app, and merchant-app.
+* `backend/`, `user-app/`, and `merchant-app/` import modules from `common/`.
 * `infra/` contains all infrastructure and deployment configurations.
 
 #### User App Directory Structure (`application/user-app/src/`)
@@ -204,6 +208,30 @@ src/
 *   **Features First:** Code is primarily organized by user-facing features to promote modularity and co-location of related logic (UI, state, specific hooks).
 *   **Common Components:** Truly generic and reusable UI elements reside in `components/common/`.
 *   **Minimalism:** Start with essential folders and expand as needed. Avoid premature abstraction.
+
+#### Merchant App Directory Structure (`application/merchant-app/src/`) (Planned)
+
+```
+src/
+├── api/                  # API client (likely from common module)
+├── App.tsx               # Main application component, routing setup
+├── main.tsx              # Entry point, renders App, Redux Provider
+│
+├── assets/               # Static assets (images, fonts, etc.)
+│
+├── components/           # Reusable UI components (specific to merchant app)
+│
+├── features/             # Feature-specific components (e.g., QR Scanner, Punch Management)
+│
+├── hooks/                # Custom React hooks
+│
+├── store/                # Redux store setup (if needed, may differ from user-app)
+│
+├── styles/               # Global styles, theme configuration
+│
+└── utils/                # General utility functions
+```
+**Note:** The Merchant App structure is a placeholder and will evolve.
 
 #### Backend Directory Structure (`application/backend/src/`)
 
@@ -256,6 +284,10 @@ src/
 
 **User App (Frontend)**
 - Supabase client used directly in user-app for real-time subscriptions
+
+**Merchant App (Frontend)** (Planned)
+- Will likely use Supabase client for QR code scanning and punch operations.
+- Authentication will be merchant-specific.
 
 **Backend**
 - No DTO validation.
