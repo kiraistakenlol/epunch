@@ -1,12 +1,15 @@
 {
-  "name": "ep-punch-app",
+  "name": "e-punch-app",
   "version": "1.0.0",
   "private": true,
   "workspaces": [
-    "backend",
     "common",
-    "frontend"
+    "backend",
+    "user-app"
   ],
+  "scripts": {
+    "build-all": "./build-all.sh"
+  },
   "devDependencies": {
     "typescript": "^5.0.0"
   }

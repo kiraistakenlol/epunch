@@ -56,7 +56,7 @@ See the detailed project planning document: [Planning Doc](https://docs.google.c
 ## Technical Implementation
 
 ### Tech Stack
-* **Frontend:** React, TypeScript, Vite, Redux (for state management)
+* **User App (Frontend):** React, TypeScript, Vite, Redux (for state management)
 * **Backend:** NestJS (Node.js framework), TypeScript, Supabase SDK
 * **Database:** PostgreSQL (via Supabase)
 * **Package Manager:** Yarn (all shared dev dependencies, e.g., typescript, are kept in the root package.json for the workspace)
@@ -69,7 +69,7 @@ See the detailed project planning document: [Planning Doc](https://docs.google.c
 * **Secrets:** Store all secrets in `.env`
 * **Infrastructure Files:** All infrastructure configurations are stored in the `infra/` directory:
   * `infra/backend/` - Backend deployment configurations (Docker, Fly.io)
-  * `infra/frontend/` - Frontend deployment configurations (Vercel)
+  * `infra/user-app/` - Frontend deployment configurations (Vercel)
   * `infra/terraform/` - Terraform configurations (if needed)
 
 ### Development Mode
@@ -139,7 +139,7 @@ The application code resides within the `application/` directory and is structur
 ```
 application/
 ├── backend/     # NestJS backend code
-├── frontend/    # React frontend code
+├── user-app/    # React user-app code
 └── common/      # Shared code (DTOs, constants, types, etc.)
 
 infra/
@@ -152,14 +152,14 @@ infra/
 │       ├── .env.dev      # Environment variables for deployment
 │       ├── deploy.sh     # One-step deployment script
 │       └── set-fly-secrets.sh # Script for setting Fly.io secrets
-├── frontend/    # Frontend infrastructure
+├── user-app/    # User App infrastructure
 └── terraform/   # Terraform IaC (if needed)
 ```
-* `common/` contains code shared between frontend and backend.
-* Both `backend/` and `frontend/` import modules from `common/`.
+* `common/` contains code shared between backend and user-app.
+* Both `backend/` and `user-app/` import modules from `common/`.
 * `infra/` contains all infrastructure and deployment configurations.
 
-#### Frontend Directory Structure (`application/frontend/src/`)
+#### User App Directory Structure (`application/user-app/src/`)
 
 ```
 src/
@@ -254,9 +254,8 @@ src/
 - Always use types, avoid `any`.
 - The website is developed with a mobile-first approach.
 
-**Frontend**
-- Supabase client used directly in front-end for real-time subscriptions
-- All API calls use the `/api/v1` prefix, configured globally.
+**User App (Frontend)**
+- Supabase client used directly in user-app for real-time subscriptions
 
 **Backend**
 - No DTO validation.
