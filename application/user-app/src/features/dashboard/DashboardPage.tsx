@@ -4,10 +4,10 @@ import UserQRCode from '../user/UserQRCode';
 import styles from './DashboardPage.module.css';
 import type { RootState } from '../../store/store';
 import { selectUserId } from '../auth/authSlice';
-import { apiClient, PunchCardDto } from 'e-punch-common';
+import * as common from 'e-punch-common';
 
 // Interface for component props, maps DTO to what component expects
-interface PunchCardItemProps extends PunchCardDto {}
+interface PunchCardItemProps extends common.PunchCardDto {}
 
 // Placeholder for icons - replace with actual SVGs or an icon library
 const LocationPinIcon = () => (
@@ -16,7 +16,7 @@ const LocationPinIcon = () => (
   </svg>
 );
 
-const PunchCardItem: React.FC<PunchCardItemProps> = ({ shopName, shopAddress, currentPunches, totalPunches }) => {
+const PunchCardItem: React.FC<PunchCardItemProps> = ({ shopName, shopAddress, currentPunches, totalPunches, status }) => {
   const punchCircles = [];
   for (let i = 0; i < totalPunches; i++) {
     punchCircles.push(
@@ -25,7 +25,7 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({ shopName, shopAddress, cu
   }
 
   return (
-    <div className={styles.punchCardItem}>
+    <div className={`${styles.punchCardItem} ${styles[`status${status}`]}`}>
       <div className={styles.punchCardHeader}>
         <LocationPinIcon />
         {shopAddress}
@@ -37,6 +37,7 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({ shopName, shopAddress, cu
       </div>
       <div className={styles.punchCardFooter}>
         <span className={styles.shopName}>{shopName}</span>
+        <span className={styles.cardStatus}>{status}</span>
       </div>
     </div>
   );
@@ -45,7 +46,7 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({ shopName, shopAddress, cu
 const DashboardPage: React.FC = () => {
   const userId = useSelector((state: RootState) => selectUserId(state));
   
-  const [punchCards, setPunchCards] = useState<PunchCardDto[]>([]);
+  const [punchCards, setPunchCards] = useState<common.PunchCardDto[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -60,7 +61,7 @@ const DashboardPage: React.FC = () => {
         setIsLoading(true);
         setError(null);
         try {
-          const fetchedData = await apiClient.getUserPunchCards(userId);
+          const fetchedData = await common.apiClient.getUserPunchCards(userId);
           console.log('Fetched punch card data:', fetchedData);
           if (Array.isArray(fetchedData)) {
             setPunchCards(fetchedData);
@@ -104,9 +105,7 @@ const DashboardPage: React.FC = () => {
 
   return (
     <div className={styles.pageContainer}>
-      <header className={styles.header}>
-        <div className={styles.logo}>E PUNCH.IO</div>
-      </header>
+      {common.AppHeader && <common.AppHeader title="User Dashboard" />}
 
       <section className={styles.qrSection}>
         <div className={styles.qrCodeWrapper}>

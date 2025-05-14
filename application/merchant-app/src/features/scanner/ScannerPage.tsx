@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import jsQR from 'jsqr';
-import { apiClient } from 'e-punch-common';
+import * as common from 'e-punch-common';
 import styles from './ScannerPage.module.css';
 
 /**
@@ -35,7 +35,6 @@ const ScannerPage: React.FC = () => {
 
     const [isCameraInitialized, setIsCameraInitialized] = useState(false);
     const [isProcessingPunch, setIsProcessingPunch] = useState(false);
-
     // Function to draw video frame to canvas and try to decode QR
     const scanFrame = useCallback(() => {
         if (!videoRef.current || !canvasRef.current || videoRef.current.readyState !== videoRef.current.HAVE_ENOUGH_DATA) {
@@ -170,7 +169,7 @@ const ScannerPage: React.FC = () => {
 
         try {
             console.log(`Attempting to punch for user: ${scanResult} on program: ${loyaltyProgramId}`);
-            const result = await apiClient.recordPunch(scanResult, loyaltyProgramId); // Use new method
+            const result = await common.apiClient.recordPunch(scanResult, loyaltyProgramId); // Use common.apiClient
             setPunchMessage(result.message); // Use message from PunchOperationResultDto
             // You can use other fields from result too, e.g., result.rewardAchieved
         } catch (error: any) {
@@ -205,7 +204,7 @@ const ScannerPage: React.FC = () => {
 
         try {
             console.log(`Attempting TEST punch for user: ${testUserId} on program: ${loyaltyProgramId}`);
-            const result = await apiClient.recordPunch(testUserId, loyaltyProgramId);
+            const result = await common.apiClient.recordPunch(testUserId, loyaltyProgramId);
             setTestPunchMessage(`Test Punch Success: ${result.message}`);
         } catch (error: any) {
             console.error('Test Punch error:', error);
@@ -215,6 +214,7 @@ const ScannerPage: React.FC = () => {
 
     return (
         <div className={styles.pageContainer}>
+            {common.AppHeader && <common.AppHeader title="Merchant Scanner" />}
             <h2 className={styles.pageTitle}>Scan User QR Code</h2>
 
             <div className={styles.cameraViewWrapper}>

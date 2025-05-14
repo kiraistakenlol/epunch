@@ -1,0 +1,15 @@
+/* application/common/src/components/layout/AppHeader.module.css */
+
+.header {
+  background-color: #5d4037; /* Dark Brown */
+  padding: 15px 20px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: #f5f5dc; /* Light Beige/Cream for text */
+}
+
+.logo {
+  font-size: 1.8em;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px #3e2723; /* Darker brown for shadow */
+} 
