@@ -60,6 +60,7 @@ export class DevService {
       const { error } = await this.supabase.rpc('execute_test_data_script');
       
       if (error) {
+        console.error('Error generating test data:', error);
         return {
           status: 'error',
           message: 'Failed to generate test data',

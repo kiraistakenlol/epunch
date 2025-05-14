@@ -24,13 +24,21 @@ CREATE TABLE loyalty_program (
 );
 
 -- Punch Card table
+CREATE TYPE punch_card_status AS ENUM ('ACTIVE', 'REWARD_READY', 'REWARD_REDEEMED');
+
 CREATE TABLE punch_card (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
     loyalty_program_id UUID NOT NULL REFERENCES loyalty_program(id) ON DELETE CASCADE,
     current_punches INTEGER NOT NULL DEFAULT 0 CHECK (current_punches >= 0),
+    status punch_card_status NOT NULL DEFAULT 'ACTIVE',
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- Ensures only one ACTIVE card per user/loyalty program combination
+CREATE UNIQUE INDEX UQ_user_loyalty_program_active_status
+ON punch_card (user_id, loyalty_program_id)
+WHERE (status = 'ACTIVE');
 
 CREATE TABLE punch (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

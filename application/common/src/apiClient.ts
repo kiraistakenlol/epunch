@@ -1,5 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 import { PunchCardDto } from './dto/punch-card.dto';
+import { CreatePunchDto } from './dto/create-punch.dto';
+import { PunchOperationResultDto } from './dto/punch-operation-result.dto';
 
 // The API URL will be set by the app using this client
 let API_BASE_URL: string;
@@ -97,5 +99,15 @@ export const apiClient = {
     // Assuming an empty body for the punch action as per ScannerPage placeholder
     const response = await instance.post<{ message: string }>(`/users/${userId}/punch-cards`, {});
     return response.data; // After interceptor, this should be the { message: string } object
+  },
+
+  // New method for Option 1 (POST /punches)
+  async recordPunch(userId: string, loyaltyProgramId: string): Promise<PunchOperationResultDto> {
+    if (!userId || !loyaltyProgramId) {
+      return Promise.reject(new Error('User ID and Loyalty Program ID are required.'));
+    }
+    const payload: CreatePunchDto = { userId, loyaltyProgramId };
+    const response = await instance.post<PunchOperationResultDto>('/punches', payload);
+    return response.data;
   }
 }; 

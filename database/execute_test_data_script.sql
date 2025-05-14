@@ -12,6 +12,7 @@ BEGIN
     test_user_id UUID := '412dbe6d-e933-464e-87e2-31fe9c9ee6ac';
     coffee_shop_id UUID;
     coffee_loyalty_id UUID;
+    loyalty_required_punches INTEGER := 10; -- Match the loyalty program
   BEGIN
     -- Insert a merchant (Coffee Shop)
     INSERT INTO merchant (id, name, address, created_at)
@@ -21,33 +22,46 @@ BEGIN
     -- Insert a loyalty program (Buy 10 coffees, get 1 free)
     INSERT INTO loyalty_program (id, merchant_id, name, description, required_punches, reward_description, created_at)
     VALUES (
-      gen_random_uuid(),
+      gen_random_uuid(), -- Use gen_random_uuid() for ID to ensure it can be re-run if IDs are not hardcoded elsewhere
       coffee_shop_id,
       'Coffee Lovers',
       'Collect punches with every coffee purchase',
-      10,
+      loyalty_required_punches,
       'One free coffee of your choice',
       NOW()
     )
     RETURNING id INTO coffee_loyalty_id;
       
-    -- Insert first punch card (5 punches collected)
-    INSERT INTO punch_card (id, user_id, loyalty_program_id, current_punches, created_at)
+    -- Insert first punch card (5 punches collected, ACTIVE)
+    INSERT INTO punch_card (id, user_id, loyalty_program_id, current_punches, status, created_at)
     VALUES (
       gen_random_uuid(),
       test_user_id,
       coffee_loyalty_id,
       5,
+      'ACTIVE', -- Explicitly set status
       NOW()
     );
       
-    -- Insert second punch card (2 punches collected)
-    INSERT INTO punch_card (id, user_id, loyalty_program_id, current_punches, created_at)
+    -- Insert second punch card (10 punches collected, REWARD_READY)
+    INSERT INTO punch_card (id, user_id, loyalty_program_id, current_punches, status, created_at)
     VALUES (
       gen_random_uuid(),
       test_user_id,
       coffee_loyalty_id,
-      2,
+      loyalty_required_punches, -- Set to required punches for REWARD_READY
+      'REWARD_READY', -- Explicitly set status
+      NOW()
+    );
+
+    -- Optional: Insert a third punch card that is REWARD_REDEEMED
+    INSERT INTO punch_card (id, user_id, loyalty_program_id, current_punches, status, created_at)
+    VALUES (
+      gen_random_uuid(),
+      test_user_id,
+      coffee_loyalty_id,
+      loyalty_required_punches, -- Could be 0 or required_punches, depending on reset logic
+      'REWARD_REDEEMED', -- Explicitly set status
       NOW()
     );
   END;

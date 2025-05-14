@@ -10,6 +10,6 @@ import { SupabaseModule } from '../../supabase/supabase.module';
   ],
   controllers: [PunchCardsController],
   providers: [PunchCardsService, PunchCardsRepository],
-  exports: [PunchCardsService]
+  exports: [PunchCardsService, PunchCardsRepository]
 })
 export class PunchCardsModule {} 

@@ -26,6 +26,7 @@ const ScannerPage: React.FC = () => {
     const [scanResult, setScanResult] = useState<string | null>(null); // Stores decoded QR data
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [punchMessage, setPunchMessage] = useState<string | null>(null);
+    const [testPunchMessage, setTestPunchMessage] = useState<string | null>(null); // For test button
 
     const videoRef = useRef<HTMLVideoElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -153,14 +154,25 @@ const ScannerPage: React.FC = () => {
 
     const handlePunchAndRestartScan = async () => {
         if (!scanResult) return;
+
+        // TODO: Replace this with a proper way to get loyaltyProgramId
+        const loyaltyProgramId = "ca8a6765-e272-4aaa-b7a9-c25863ff1678"; // Placeholder
+
+        if (!loyaltyProgramId) {
+            setErrorMessage("Loyalty Program ID is not configured. Cannot punch.");
+            setIsProcessingPunch(false); // Make sure to reset this if we bail early
+            return;
+        }
+
         setIsProcessingPunch(true);
         setPunchMessage(null);
         setErrorMessage(null);
 
         try {
-            console.log(`Attempting to punch for user: ${scanResult}`);
-            const result = await apiClient.punchUser(scanResult);
-            setPunchMessage(result.message || `Successfully punched for user ID: ${scanResult}`);
+            console.log(`Attempting to punch for user: ${scanResult} on program: ${loyaltyProgramId}`);
+            const result = await apiClient.recordPunch(scanResult, loyaltyProgramId); // Use new method
+            setPunchMessage(result.message); // Use message from PunchOperationResultDto
+            // You can use other fields from result too, e.g., result.rewardAchieved
         } catch (error: any) {
             console.error('Punch error:', error);
             setErrorMessage(error.response?.data?.message || error.message || 'Failed to record punch.');
@@ -174,6 +186,30 @@ const ScannerPage: React.FC = () => {
                 // setPunchMessage(null); // User might want to see this until next scan actually starts
                 // setErrorMessage(null);
             }, 2000);
+        }
+    };
+
+    const handleTestPunch = async () => {
+        const testUserId = '412dbe6d-e933-464e-87e2-31fe9c9ee6ac';
+        // TODO: Ensure this loyaltyProgramId is valid for testing against your backend data
+        const loyaltyProgramId = "ca8a6765-e272-4aaa-b7a9-c25863ff1678"; // Placeholder
+
+        if (!loyaltyProgramId) {
+            setTestPunchMessage("Test Punch Error: Placeholder Loyalty Program ID is not configured.");
+            return;
+        }
+
+        setTestPunchMessage("Processing test punch...");
+        setErrorMessage(null); // Clear main error message
+        setPunchMessage(null); // Clear main punch message
+
+        try {
+            console.log(`Attempting TEST punch for user: ${testUserId} on program: ${loyaltyProgramId}`);
+            const result = await apiClient.recordPunch(testUserId, loyaltyProgramId);
+            setTestPunchMessage(`Test Punch Success: ${result.message}`);
+        } catch (error: any) {
+            console.error('Test Punch error:', error);
+            setTestPunchMessage(`Test Punch Error: ${error.response?.data?.message || error.message || 'Failed to record test punch.'}`);
         }
     };
 
@@ -217,6 +253,11 @@ const ScannerPage: React.FC = () => {
 
             <canvas ref={canvasRef} style={{ display: 'none' }} />
 
+            {/* Test Punch Button and Message Area */}
+            <button onClick={handleTestPunch} className={styles.testPunchButton}>
+                Test Punch (User: ...e6ac)
+            </button>
+            {testPunchMessage && <p style={{ marginTop: '10px', color: testPunchMessage.startsWith('Test Punch Error:') ? 'red' : 'green' }}>{testPunchMessage}</p>}
         </div>
     );
 };
