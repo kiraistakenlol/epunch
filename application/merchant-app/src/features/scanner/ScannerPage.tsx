@@ -216,9 +216,6 @@ const ScannerPage: React.FC = () => {
         <>
             <common.AppHeader title="EPunch Merchant" />
             <div className={styles.pageContainer}>
-            
-            {/* The h2 title was removed in a previous step, but if re-added, it would go here or inside cameraViewWrapper */}
-            {/* <h2 className={styles.pageTitle}>Scan User QR Code</h2> */}
 
             <div className={styles.cameraViewWrapper}>
                 <video

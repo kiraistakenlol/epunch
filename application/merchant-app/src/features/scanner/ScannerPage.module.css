@@ -10,14 +10,6 @@
   box-sizing: border-box; /* Include padding in min-height calculation */
 }
 
-.pageTitle {
-  color: #f5f5dc;
-  font-size: 1.8em; /* Slightly smaller than Dashboard logo */
-  font-weight: bold;
-  margin-bottom: 20px;
-  text-shadow: 1px 1px 1px #2c2c2c; /* Darker shadow */
-}
-
 .cameraViewWrapper {
   width: 100%;
   max-width: 400px;
