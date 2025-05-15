@@ -6,6 +6,8 @@ import { PunchCardsModule } from './features/punch-cards/punch-cards.module';
 import { SupabaseModule } from './supabase/supabase.module';
 import { DevModule } from './features/dev/dev.module';
 import { PunchesModule } from './features/punches/punches.module';
+import { LoyaltyModule } from './features/loyalty/loyalty.module';
+import { UserModule } from './features/user/user.module';
 
 @Module({
   imports: [
@@ -14,6 +16,8 @@ import { PunchesModule } from './features/punches/punches.module';
     SupabaseModule,
     PunchCardsModule,
     PunchesModule,
+    LoyaltyModule,
+    UserModule,
     DevModule,
   ],
   controllers: [AppController],

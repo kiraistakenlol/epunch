@@ -1,10 +1,8 @@
 import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
 import { CreatePunchDto, PunchOperationResultDto, PunchCardDto } from 'e-punch-common';
 import { PunchCardsRepository } from '../punch-cards/punch-cards.repository';
-import { SupabaseClient } from '@supabase/supabase-js';
-import { Inject } from '@nestjs/common';
-import { Database } from '../punch-cards/types/database.types';
 import { LoyaltyRepository } from '../loyalty/loyalty.repository';
+import { UserRepository } from '../user/user.repository';
 
 @Injectable()
 export class PunchesService {
@@ -13,6 +11,7 @@ export class PunchesService {
   constructor(
     private readonly punchCardsRepository: PunchCardsRepository,
     private readonly loyaltyRepository: LoyaltyRepository,
+    private readonly userRepository: UserRepository,
   ) { }
 
   /**
@@ -28,6 +27,19 @@ export class PunchesService {
 
     if (!userId || !loyaltyProgramId) {
       throw new BadRequestException('UserId and LoyaltyProgramId are required.');
+    }
+
+    let user = await this.userRepository.findUserById(userId);
+    if (!user) {
+      this.logger.log(`User ${userId} not found. Attempting to create.`);
+      user = await this.userRepository.createUserWithId(userId);
+      if (!user) {
+        this.logger.error(`Failed to find or create user ${userId}. Aborting punch operation.`);
+        throw new NotFoundException(`Failed to find or create user ${userId}. Punch operation cannot proceed.`);
+      }
+      this.logger.log(`User ${userId} created successfully.`);
+    } else {
+      this.logger.log(`User ${userId} found.`);
     }
 
     const loyaltyProgram = await this.loyaltyRepository.findLoyaltyProgramById(loyaltyProgramId);
