@@ -14,19 +14,3 @@ body {
 *, *::before, *::after {
   box-sizing: inherit;
 }
-
-/* Attempt to hide the default viewfinder border/frame from html5-qrcode */
-#qr-reader div[style*="border:"] {
-  border: none !important;
-}
-
-/* If the L-corners are pseudo-elements of the above div, this might also be needed */
-#qr-reader div[style*="border:"]::before,
-#qr-reader div[style*="border:"]::after {
-  display: none !important;
-}
-
-/* Ensure the video element itself doesn't have an unexpected border */
-#qr-reader video {
-  border: none !important;
-} 
