@@ -7,6 +7,7 @@ import {
   Merchant, 
   PunchCard, 
   Punch,
+  PunchCardStatus,
   Tables,
   TableName,
   createQueryBuilder
@@ -61,15 +62,37 @@ export class PunchCardsRepository {
     return data;
   }
 
-  async createPunchCard(userId: string, loyaltyProgramId: string, initialPunches: number = 0): Promise<PunchCard> {
+  async findTop1PunchCardByUserIdAndLoyaltyProgramIdAndStatusOrderByCreatedAtDesc(
+    userId: string, 
+    loyaltyProgramId: string,
+    status: PunchCardStatus
+  ): Promise<PunchCard | null> {
+    const { data, error } = await this.query(Tables.punch_card)
+      .select('*')
+      .eq('user_id', userId)
+      .eq('loyalty_program_id', loyaltyProgramId)
+      .eq('status', status)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (error) {
+      console.error(`Error fetching punch card with status ${status} for user ${userId}, program ${loyaltyProgramId}:`, error);
+      throw error;
+    }
+    return data;
+  }
+
+  async createPunchCard(userId: string, loyaltyProgramId: string): Promise<PunchCard> {
     const { data, error } = await this.query(Tables.punch_card)
       .insert({
         user_id: userId,
         loyalty_program_id: loyaltyProgramId,
-        current_punches: initialPunches,
+        current_punches: 0,
+        status: 'ACTIVE'
       })
       .select()
-      .single(); // Assuming insert returns the created record
+      .single();
 
     if (error || !data) {
       console.error(`Error creating punch card for user ${userId}, program ${loyaltyProgramId}:`, error);
@@ -78,9 +101,16 @@ export class PunchCardsRepository {
     return data;
   }
 
-  async updatePunchCardPunches(punchCardId: string, newPunchCount: number): Promise<PunchCard> {
+  async updatePunchCardPunchesAndStatus(
+    punchCardId: string, 
+    newPunchCount: number, 
+    status: PunchCardStatus
+  ): Promise<PunchCard> {
     const { data, error } = await this.query(Tables.punch_card)
-      .update({ current_punches: newPunchCount })
+      .update({ 
+        current_punches: newPunchCount,
+        status: status
+      })
       .eq('id', punchCardId)
       .select()
       .single();
@@ -176,6 +206,7 @@ export class PunchCardsRepository {
       // NOTE: 'REWARD_REDEEMED' status is not handled here as its determination logic is not available.
       
       return {
+        id: card.id,
         shopName: merchant.name,
         shopAddress: merchant.address || '', // Convert null to empty string
         currentPunches: card.current_punches,

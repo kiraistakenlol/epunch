@@ -82,7 +82,7 @@ export type LoyaltyProgram = {
   created_at: string;
 };
 
-export type PunchCardStatus = 'ACTIVE' | 'REWARD_READY' | 'REWARD_REDEEMED'; // Define the status type
+export type PunchCardStatus = 'ACTIVE' | 'REWARD_READY' | 'REWARD_REDEEMED';
 
 export type PunchCard = {
   id: string;

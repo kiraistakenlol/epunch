@@ -1,9 +1,10 @@
 import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
-import { CreatePunchDto, PunchOperationResultDto } from 'e-punch-common';
+import { CreatePunchDto, PunchOperationResultDto, PunchCardDto } from 'e-punch-common';
 import { PunchCardsRepository } from '../punch-cards/punch-cards.repository';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Inject } from '@nestjs/common';
-import { Database } from '../punch-cards/types/database.types'; // Assuming this path is correct
+import { Database } from '../punch-cards/types/database.types';
+import { LoyaltyRepository } from '../loyalty/loyalty.repository';
 
 @Injectable()
 export class PunchesService {
@@ -11,9 +12,16 @@ export class PunchesService {
 
   constructor(
     private readonly punchCardsRepository: PunchCardsRepository,
-    @Inject('SUPABASE_CLIENT') private supabase: SupabaseClient<Database> // For direct punch record creation
-  ) {}
+    private readonly loyaltyRepository: LoyaltyRepository,
+  ) { }
 
+  /**
+   * Records a punch for a user on a loyalty program.
+   * Finds an active card or creates a new one if none exists. Increments punches on the active card.
+   * If the punch results in a reward, the card's status is explicitly updated,
+   * and a new, empty active card is created for the same loyalty program to allow continued punch accumulation.
+   * Logs the punch and returns the new punch count and reward status for the punched card.
+   */
   async recordPunch(createPunchDto: CreatePunchDto): Promise<PunchOperationResultDto> {
     const { userId, loyaltyProgramId } = createPunchDto;
     this.logger.log(`Attempting to record punch for user ${userId} on loyalty program ${loyaltyProgramId}`);
@@ -22,59 +30,84 @@ export class PunchesService {
       throw new BadRequestException('UserId and LoyaltyProgramId are required.');
     }
 
-    const loyaltyProgram = await this.punchCardsRepository.findLoyaltyProgramById(loyaltyProgramId);
+    const loyaltyProgram = await this.loyaltyRepository.findLoyaltyProgramById(loyaltyProgramId);
     if (!loyaltyProgram) {
       this.logger.warn(`Loyalty program ${loyaltyProgramId} not found.`);
       throw new NotFoundException(`Loyalty program ${loyaltyProgramId} not found.`);
     }
 
-    // Find the latest active punch card for this user and loyalty program
-    let punchCard = await this.punchCardsRepository.findPunchCardByUserIdAndLoyaltyProgramId(
+    let activePunchCard = await this.punchCardsRepository.findTop1PunchCardByUserIdAndLoyaltyProgramIdAndStatusOrderByCreatedAtDesc(
       userId,
       loyaltyProgramId,
-      loyaltyProgram.required_punches // Pass required_punches to filter for active cards
+      'ACTIVE'
     );
 
-    if (punchCard) {
-      // An active punch card was found.
+    if (activePunchCard) {
       this.logger.log(
-        `Found existing latest active punch card ${punchCard.id} (punches: ${punchCard.current_punches}) ` +
+        `Found existing latest active punch card ${activePunchCard.id} (punches: ${activePunchCard.current_punches}) ` +
         `for user ${userId}, program ${loyaltyProgramId}.`
       );
-      // No need to check if it's full, as the repository method only returns active ones.
     } else {
-      // No active punch card found for this loyalty program. Create a new one.
       this.logger.log(
         `No active punch card found for user ${userId}, program ${loyaltyProgramId} (requires ${loyaltyProgram.required_punches} punches). ` +
         `Creating new one.`
       );
-      punchCard = await this.punchCardsRepository.createPunchCard(userId, loyaltyProgramId, 0); // Starts with 0 punches
-      this.logger.log(`New punch card ${punchCard.id} created.`);
+      activePunchCard = await this.punchCardsRepository.createPunchCard(userId, loyaltyProgramId);
+      this.logger.log(`New punch card ${activePunchCard.id} created.`);
     }
 
-    // At this point, punchCard is either an existing active card or a newly created one.
-    const newPunchCount = punchCard.current_punches + 1;
-    const updatedCardEntity = await this.punchCardsRepository.updatePunchCardPunches(
-      punchCard.id,
+    const newPunchCount = activePunchCard.current_punches + 1;
+    const rewardAchieved = newPunchCount >= loyaltyProgram.required_punches;
+
+    const newStatus = rewardAchieved ? 'REWARD_READY' : activePunchCard.status;
+
+    const updatedPunchCard = await this.punchCardsRepository.updatePunchCardPunchesAndStatus(
+      activePunchCard.id,
       newPunchCount,
+      newStatus
     );
 
-    await this.punchCardsRepository.createPunchRecord(updatedCardEntity.id);
+    await this.punchCardsRepository.createPunchRecord(updatedPunchCard.id);
 
-    const rewardAchieved = newPunchCount >= loyaltyProgram.required_punches;
-    let message = 'Punch recorded successfully.';
-    if (rewardAchieved) {
-      message = `Punch recorded! Reward: ${loyaltyProgram.reward_description} achieved!`;
+    let newPunchCardDto: PunchCardDto | undefined = undefined;
+
+    if (newStatus === 'REWARD_READY') {
+      this.logger.log(
+        `Reward achieved for card ${updatedPunchCard.id}. Current punches: ${newPunchCount}. ` +
+        `Required: ${loyaltyProgram.required_punches}. Creating new active card.`
+      );
+
+      const newActiveCardEntity =
+        await this.punchCardsRepository.createPunchCard(userId, loyaltyProgramId);
+
+      this.logger.log(`New active card ${newActiveCardEntity.id} created for user ${userId}, program ${loyaltyProgramId}.`);
+
+      const merchant = await this.loyaltyRepository.findMerchantById(loyaltyProgram.merchant_id);
+      if (!merchant) {
+        this.logger.error(`Merchant ${loyaltyProgram.merchant_id} not found for loyalty program ${loyaltyProgramId}.`);
+        throw new NotFoundException(`Merchant details not found for loyalty program ${loyaltyProgramId}. Critical data missing.`);
+      }
+      newPunchCardDto = {
+        id: newActiveCardEntity.id,
+        shopName: merchant.name,
+        shopAddress: merchant.address || 'Address Unavailable',
+        currentPunches: newActiveCardEntity.current_punches,
+        totalPunches: loyaltyProgram.required_punches,
+        status: 'ACTIVE',
+      };
     }
-    
-    this.logger.log(`Punch recorded for card ${updatedCardEntity.id}. New count: ${newPunchCount}. Reward achieved: ${rewardAchieved}`);
+
+    this.logger.log(
+      `Punch operation complete for card ${updatedPunchCard.id}. ` +
+      `New punch count: ${newPunchCount}. Reward achieved: ${rewardAchieved}. ` +
+      `New active card created: ${newPunchCardDto ? newPunchCardDto.id : 'No'}`
+    );
 
     return {
-      message,
-      currentPunches: newPunchCount,
-      totalPunches: loyaltyProgram.required_punches,
       rewardAchieved,
-      rewardDescription: rewardAchieved ? loyaltyProgram.reward_description : undefined,
+      newPunchCard: newPunchCardDto,
+      required_punches: loyaltyProgram.required_punches,
+      current_punches: newPunchCount
     };
   }
 } 

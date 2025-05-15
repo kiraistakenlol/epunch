@@ -1,7 +1,8 @@
+import { PunchCardDto } from './punch-card.dto';
+
 export interface PunchOperationResultDto {
-  message: string;
-  currentPunches: number;
-  totalPunches: number;
   rewardAchieved: boolean;
-  rewardDescription?: string;
+  newPunchCard?: PunchCardDto;
+  required_punches: number;
+  current_punches: number;
 } 

@@ -170,7 +170,7 @@ const ScannerPage: React.FC = () => {
         try {
             console.log(`Attempting to punch for user: ${scanResult} on program: ${loyaltyProgramId}`);
             const result = await common.apiClient.recordPunch(scanResult, loyaltyProgramId); // Use common.apiClient
-            setPunchMessage(result.message); // Use message from PunchOperationResultDto
+            setPunchMessage(result.rewardAchieved ? "Reward Achieved!" : "Great."); // Use message from PunchOperationResultDto
             // You can use other fields from result too, e.g., result.rewardAchieved
         } catch (error: any) {
             console.error('Punch error:', error);
@@ -205,7 +205,7 @@ const ScannerPage: React.FC = () => {
         try {
             console.log(`Attempting TEST punch for user: ${testUserId} on program: ${loyaltyProgramId}`);
             const result = await common.apiClient.recordPunch(testUserId, loyaltyProgramId);
-            setTestPunchMessage(`Test Punch Success: ${result.message}`);
+            setTestPunchMessage(`Test Punch Success: ${result.rewardAchieved}`);
         } catch (error: any) {
             console.error('Test Punch error:', error);
             setTestPunchMessage(`Test Punch Error: ${error.response?.data?.message || error.message || 'Failed to record test punch.'}`);
