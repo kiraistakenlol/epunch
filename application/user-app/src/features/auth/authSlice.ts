@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-// import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 const LOCAL_STORAGE_USER_ID_KEY = 'epunch_user_id';
 
@@ -22,8 +22,7 @@ export const loadOrInitializeUserId = createAsyncThunk<string, void, {}>(
   async (_, { dispatch }) => {
     let currentUserId = localStorage.getItem(LOCAL_STORAGE_USER_ID_KEY);
     if (!currentUserId) {
-      // currentUserId = uuidv4();
-      currentUserId = '412dbe6d-e933-464e-87e2-31fe9c9ee6ac'
+      currentUserId = uuidv4();
       localStorage.setItem(LOCAL_STORAGE_USER_ID_KEY, currentUserId);
     }
     dispatch(setUserId(currentUserId));

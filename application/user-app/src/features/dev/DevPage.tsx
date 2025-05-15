@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store/store';
-import { selectUserId } from '../auth/authSlice';
+import { selectUserId, setUserId } from '../auth/authSlice';
 import { apiClient } from 'e-punch-common';
+
+const LOCAL_STORAGE_USER_ID_KEY = 'epunch_user_id';
 
 const styles = {
   container: {
@@ -33,6 +35,7 @@ const styles = {
     borderBottom: '1px solid #ddd',
     paddingBottom: '10px',
     marginTop: 0,
+    fontFamily: 'monospace',
   },
   button: {
     backgroundColor: '#5d4037',
@@ -59,13 +62,22 @@ const styles = {
     padding: '10px',
     backgroundColor: '#e0e0e0',
     borderRadius: '4px',
+  },
+  inputField: {
+    padding: '8px',
+    marginRight: '10px',
+    marginBottom: '10px',
+    borderRadius: '4px',
+    border: '1px solid #ccc',
   }
 };
 
 const DevPage: React.FC = () => {
   const userId = useSelector((state: RootState) => selectUserId(state));
+  const dispatch = useDispatch();
   const [apiStatus, setApiStatus] = useState<string>('No API calls made yet');
   const [loading, setLoading] = useState<boolean>(false);
+  const [customUserId, setCustomUserId] = useState<string>('412dbe6d-e933-464e-87e2-31fe9c9ee6ac');
 
   const checkBackendConnection = async () => {
     setLoading(true);
@@ -106,6 +118,22 @@ const DevPage: React.FC = () => {
     }
   };
 
+  const handleRemoveUserId = () => {
+    localStorage.removeItem(LOCAL_STORAGE_USER_ID_KEY);
+    dispatch(setUserId(null as any));
+    setApiStatus(`User ID removed from local storage. Current Redux User ID: null. Please reload or re-initialize to see changes in some parts of the app.`);
+  };
+
+  const handleSetCustomUserId = () => {
+    if (customUserId.trim() === '') {
+      setApiStatus('Custom User ID cannot be empty.');
+      return;
+    }
+    localStorage.setItem(LOCAL_STORAGE_USER_ID_KEY, customUserId);
+    dispatch(setUserId(customUserId));
+    setApiStatus(`User ID set to "${customUserId}" in local storage and Redux. Current Redux User ID: ${customUserId}.`);
+  };
+
   return (
     <div style={styles.container}>
       <header style={styles.header}>
@@ -116,6 +144,31 @@ const DevPage: React.FC = () => {
         <h2 style={styles.sectionTitle}>User Information</h2>
         <div style={styles.userInfo}>
           <p><strong>Current User ID:</strong> {userId || 'Not set'}</p>
+        </div>
+        <div>
+          <button 
+            style={styles.button} 
+            onClick={handleRemoveUserId}
+            disabled={loading}
+          >
+            Remove User ID (from Local Storage & Redux)
+          </button>
+        </div>
+        <div style={{ marginTop: '10px' }}>
+          <input 
+            type="text"
+            style={styles.inputField}
+            value={customUserId}
+            onChange={(e) => setCustomUserId(e.target.value)}
+            placeholder="Enter custom User ID"
+          />
+          <button 
+            style={styles.button} 
+            onClick={handleSetCustomUserId}
+            disabled={loading}
+          >
+            Set User ID (to Local Storage & Redux)
+          </button>
         </div>
       </section>
 
