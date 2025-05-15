@@ -15,6 +15,10 @@ cd "$(dirname "$0")/application" || exit
 echo "Building common package..."
 yarn workspace e-punch-common build
 
+echo "Cleaning Vite caches..."
+rm -rf user-app/node_modules/.vite 2>/dev/null || true
+rm -rf merchant-app/node_modules/.vite 2>/dev/null || true
+
 echo "Common package built successfully!"
 
 # Return to the original directory

@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom/client';
 import App from './App'; // This App will be specific to merchant-app
 // import store from './store/store'; // Assuming a similar store setup might be needed - Commented out
 import './styles/global.css';
-import 'e-punch-common/style.css'; // Updated path
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

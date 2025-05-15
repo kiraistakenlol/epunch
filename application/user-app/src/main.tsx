@@ -4,7 +4,6 @@ import App from './App';
 import './styles/global.css';
 import { Provider } from 'react-redux';
 import store from './store/store';
-import 'e-punch-common/style.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

@@ -14,6 +14,9 @@ cd "$(dirname "$0")/application" || exit
 echo "Ensuring common module is up-to-date..."
 yarn workspace e-punch-common build
 
+echo "Cleaning Vite cache in merchant-app..."
+rm -rf merchant-app/node_modules/.vite
+
 # Start the merchant-app development server
 echo "Starting merchant-app dev server..."
 yarn workspace e-punch-merchant-app dev 

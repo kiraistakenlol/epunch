@@ -19,6 +19,32 @@ Users have a personal QR code and digital punch cards for various businesses. Bu
 
 See the detailed project planning document: [Planning Doc](https://docs.google.com/document/d/1aP9CDDbN2PSN6AypOyp7pGCODV2ZQdApm9iQcMuSTGI/edit?tab=t.0#heading=h.bmch098gxbif)
 
+## Development
+
+### Known Issues and Workarounds
+
+#### Vite Caching Issue with Common Package
+
+We experience an issue with Vite caching when updating the common package. After making changes to components or code in the common package and rebuilding it, the user and merchant apps might not reflect these changes due to Vite's aggressive caching.
+
+**Symptoms:**
+- Changes to the common package are not visible in the user or merchant apps after rebuilding
+- Only manually deleting the `.vite` cache directory and restarting the app shows the changes
+
+**Workaround:**
+The development scripts (`run-user-app.sh`, `run-merchant-app.sh`, and `build-common.sh`) have been modified to automatically clear the Vite cache:
+
+1. When running `./build-common.sh`, the script will:
+   - Build the common package
+   - Clean the `.vite` cache directories in both user-app and merchant-app
+
+2. When running `./run-user-app.sh` or `./run-merchant-app.sh`, each script will:
+   - First build the common package
+   - Clear the specific app's `.vite` cache directory
+   - Start the development server
+
+This approach ensures that changes to the common package are always visible without manual cache clearing.
+
 ## User Journey
 
 ### Visiting "Pottery Cafe"
