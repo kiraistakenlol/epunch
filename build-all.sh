@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Disable auto-attaching Node.js debugger
+export NODE_OPTIONS=""
+
 # Script to build all E-PUNCH.io modules
 
 echo "Building all E-PUNCH.io modules..."

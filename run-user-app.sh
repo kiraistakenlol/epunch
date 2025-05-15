@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Disable auto-attaching Node.js debugger
+export NODE_OPTIONS=""
+
 # Navigate to the directory containing the workspace package.json
 original_dir=$(pwd)
 cd "$(dirname "$0")/application" || exit

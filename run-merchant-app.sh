@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Disable auto-attaching Node.js debugger
+export NODE_OPTIONS=""
+
 # Script to run the E-PUNCH.io Merchant App for local development
 
 echo "Starting E-PUNCH.io Merchant App development server..."
