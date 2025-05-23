@@ -172,7 +172,7 @@ application/
 ├── user-app/      # React user-app code
 ├── merchant-app/  # React merchant-app code
 ├── common-core/   # Shared core types, DTOs, constants (no React dependencies)
-└── common/        # Shared UI components and API client (React-based, renamed to common-ui)
+└── common-ui/     # Shared UI components and API client (React-based)
 
 infra/
 ├── backend/              # Backend infrastructure
@@ -189,9 +189,9 @@ infra/
 └── terraform/     # Terraform IaC (if needed)
 ```
 * `common-core/` contains shared TypeScript types, DTOs, and constants used by all applications.
-* `common/` (package name: `e-punch-common-ui`) contains shared React UI components and API client.
+* `common-ui/` contains shared React UI components and API client.
 * `backend/` imports from `common-core/` for DTOs and types.
-* `user-app/` and `merchant-app/` import from both `common-core/` and `common/` (common-ui).
+* `user-app/` and `merchant-app/` import from both `common-core/` and `common-ui/`.
 * `infra/` contains all infrastructure and deployment configurations.
 
 #### User App Directory Structure (`application/user-app/src/`)

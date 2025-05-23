@@ -25,7 +25,7 @@ export default defineConfig(({mode}) => {
         build: {
             commonjsOptions: {
                 transformMixedEsModules: true,
-                include: [/common\/dist/, /node_modules/],
+                include: [/common-ui\/dist/, /node_modules/],
             }
         }
     };

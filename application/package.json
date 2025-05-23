@@ -4,7 +4,7 @@
   "private": true,
   "workspaces": [
     "common-core",
-    "common",
+    "common-ui",
     "backend",
     "user-app",
     "merchant-app"

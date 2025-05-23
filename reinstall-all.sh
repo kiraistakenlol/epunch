@@ -22,9 +22,9 @@ if [ -d "application/common-core/node_modules" ]; then
   rm -rf application/common-core/node_modules
 fi
 
-if [ -d "application/common/node_modules" ]; then
-  echo "Removing application/common/node_modules/"
-  rm -rf application/common/node_modules
+if [ -d "application/common-ui/node_modules" ]; then
+  echo "Removing application/common-ui/node_modules/"
+  rm -rf application/common-ui/node_modules
 fi
 
 if [ -d "application/user-app/node_modules" ]; then
