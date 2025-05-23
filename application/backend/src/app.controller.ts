@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { ApiResponse } from 'e-punch-common';
+import { ApiResponse } from 'e-punch-common-core';
 
 @Controller('api/v1')
 export class AppController {

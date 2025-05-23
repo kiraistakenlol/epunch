@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import jsQR from 'jsqr';
-import * as common from 'e-punch-common';
+import { apiClient, AppHeader } from 'e-punch-common-ui';
 import styles from './ScannerPage.module.css';
 
 /**
@@ -169,7 +169,7 @@ const ScannerPage: React.FC = () => {
 
         try {
             console.log(`Attempting to punch for user: ${scanResult} on program: ${loyaltyProgramId}`);
-            const result = await common.apiClient.recordPunch(scanResult, loyaltyProgramId); // Use common.apiClient
+            const result = await apiClient.recordPunch(scanResult, loyaltyProgramId); // Use apiClient
             setPunchMessage(result.rewardAchieved ? "Reward Achieved!" : "Great."); // Use message from PunchOperationResultDto
             // You can use other fields from result too, e.g., result.rewardAchieved
         } catch (error: any) {
@@ -204,7 +204,7 @@ const ScannerPage: React.FC = () => {
 
         try {
             console.log(`Attempting TEST punch for user: ${testUserId} on program: ${loyaltyProgramId}`);
-            const result = await common.apiClient.recordPunch(testUserId, loyaltyProgramId);
+            const result = await apiClient.recordPunch(testUserId, loyaltyProgramId);
             setTestPunchMessage(`Test Punch Success: ${result.rewardAchieved}`);
         } catch (error: any) {
             console.error('Test Punch error:', error);
@@ -214,7 +214,7 @@ const ScannerPage: React.FC = () => {
 
     return (
         <>
-            <common.AppHeader title="EPunch Merchant" />
+            <AppHeader title="EPunch Merchant" />
             <div className={styles.pageContainer}>
 
             <div className={styles.cameraViewWrapper}>

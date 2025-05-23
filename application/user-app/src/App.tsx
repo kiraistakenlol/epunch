@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { configureApiClient } from 'e-punch-common';
+import { configureApiClient } from 'e-punch-common-ui';
 import DashboardPage from './features/dashboard/DashboardPage';
 import DevPage from './features/dev/DevPage';
 import { loadOrInitializeUserId } from './features/auth/authSlice';

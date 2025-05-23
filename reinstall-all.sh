@@ -17,6 +17,11 @@ if [ -d "application/node_modules" ]; then
 fi
 
 # Remove node_modules from each workspace package
+if [ -d "application/common-core/node_modules" ]; then
+  echo "Removing application/common-core/node_modules/"
+  rm -rf application/common-core/node_modules
+fi
+
 if [ -d "application/common/node_modules" ]; then
   echo "Removing application/common/node_modules/"
   rm -rf application/common/node_modules

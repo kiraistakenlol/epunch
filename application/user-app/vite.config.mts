@@ -20,7 +20,7 @@ export default defineConfig(({mode}) => {
             host: env.VITE_HOST || 'localhost',
         },
         optimizeDeps: {
-            include: ['e-punch-common'],
+            include: ['e-punch-common-ui'],
         },
         build: {
             commonjsOptions: {

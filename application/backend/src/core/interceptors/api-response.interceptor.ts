@@ -1,7 +1,7 @@
 import { Injectable, NestInterceptor, ExecutionContext, CallHandler, NotFoundException, HttpStatus } from '@nestjs/common';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { ApiResponse } from 'e-punch-common'; // Assuming ApiResponse is exported from your common package
+import { ApiResponse } from 'e-punch-common-core'; // Changed import path
 
 @Injectable()
 export class ApiResponseInterceptor<T> implements NestInterceptor<T, ApiResponse<T | null>> {

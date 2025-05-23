@@ -1,5 +1,5 @@
 import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
-import { CreatePunchDto, PunchOperationResultDto, PunchCardDto } from 'e-punch-common';
+import { CreatePunchDto, PunchOperationResultDto, PunchCardDto } from 'e-punch-common-core';
 import { PunchCardsRepository } from '../punch-cards/punch-cards.repository';
 import { LoyaltyRepository } from '../loyalty/loyalty.repository';
 import { UserRepository } from '../user/user.repository';

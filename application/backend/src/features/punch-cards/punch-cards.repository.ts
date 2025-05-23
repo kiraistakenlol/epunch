@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { PunchCardDto, PunchCardStatusDto } from 'e-punch-common';
+import { PunchCardDto, PunchCardStatusDto } from 'e-punch-common-core';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { 
   Database, 

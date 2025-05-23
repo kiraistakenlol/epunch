@@ -35,15 +35,17 @@ We experience an issue with Vite caching when updating the common package. After
 The development scripts (`run-user-app.sh`, `run-merchant-app.sh`, and `build-common.sh`) have been modified to automatically clear the Vite cache:
 
 1. When running `./build-common.sh`, the script will:
-   - Build the common package
+   - Build the common-core package (TypeScript compilation)
+   - Build the common-ui package (Vite build with React components)
    - Clean the `.vite` cache directories in both user-app and merchant-app
 
 2. When running `./run-user-app.sh` or `./run-merchant-app.sh`, each script will:
-   - First build the common package
+   - First build the common-core package
+   - Then build the common-ui package
    - Clear the specific app's `.vite` cache directory
    - Start the development server
 
-This approach ensures that changes to the common package are always visible without manual cache clearing.
+This approach ensures that changes to the common packages are always visible without manual cache clearing.
 
 ## User Journey
 
@@ -169,7 +171,8 @@ application/
 ├── backend/       # NestJS backend code
 ├── user-app/      # React user-app code
 ├── merchant-app/  # React merchant-app code
-└── common/        # Shared code (DTOs, constants, types, etc.)
+├── common-core/   # Shared core types, DTOs, constants (no React dependencies)
+└── common/        # Shared UI components and API client (React-based, renamed to common-ui)
 
 infra/
 ├── backend/              # Backend infrastructure
@@ -185,8 +188,10 @@ infra/
 ├── merchant-app/  # Merchant App infrastructure
 └── terraform/     # Terraform IaC (if needed)
 ```
-* `common/` contains code shared between backend, user-app, and merchant-app.
-* `backend/`, `user-app/`, and `merchant-app/` import modules from `common/`.
+* `common-core/` contains shared TypeScript types, DTOs, and constants used by all applications.
+* `common/` (package name: `e-punch-common-ui`) contains shared React UI components and API client.
+* `backend/` imports from `common-core/` for DTOs and types.
+* `user-app/` and `merchant-app/` import from both `common-core/` and `common/` (common-ui).
 * `infra/` contains all infrastructure and deployment configurations.
 
 #### User App Directory Structure (`application/user-app/src/`)

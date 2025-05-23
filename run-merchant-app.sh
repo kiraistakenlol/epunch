@@ -10,9 +10,12 @@ echo "Starting E-PUNCH.io Merchant App development server..."
 # Navigate to the application directory where workspaces are defined
 cd "$(dirname "$0")/application" || exit
 
-# Ensure common module is built (optional, but good for consistency if running standalone)
-echo "Ensuring common module is up-to-date..."
-yarn workspace e-punch-common build
+# Ensure common modules are built (optional, but good for consistency if running standalone)
+echo "Building common-core package (dependency for common-ui)..."
+yarn workspace e-punch-common-core build
+
+echo "Building common-ui package (dependency for merchant-app)..."
+yarn workspace e-punch-common-ui build
 
 echo "Cleaning Vite cache in merchant-app..."
 rm -rf merchant-app/node_modules/.vite

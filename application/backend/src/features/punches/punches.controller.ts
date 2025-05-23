@@ -1,6 +1,6 @@
 import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import { PunchesService } from './punches.service';
-import { CreatePunchDto, PunchOperationResultDto } from 'e-punch-common';
+import { CreatePunchDto, PunchOperationResultDto } from 'e-punch-common-core';
 
 @Controller('punches')
 export class PunchesController {

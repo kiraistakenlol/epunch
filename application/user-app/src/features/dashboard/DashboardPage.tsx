@@ -4,10 +4,11 @@ import UserQRCode from '../user/UserQRCode';
 import styles from './DashboardPage.module.css';
 import type { RootState } from '../../store/store';
 import { selectUserId } from '../auth/authSlice';
-import * as common from 'e-punch-common';
+import { PunchCardDto } from 'e-punch-common-core';
+import { apiClient, AppHeader } from 'e-punch-common-ui';
 
 // Interface for component props, maps DTO to what component expects
-interface PunchCardItemProps extends common.PunchCardDto {}
+interface PunchCardItemProps extends PunchCardDto {}
 
 // Placeholder for icons - replace with actual SVGs or an icon library
 const LocationPinIcon = () => (
@@ -46,7 +47,7 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({ shopName, shopAddress, cu
 const DashboardPage: React.FC = () => {
   const userId = useSelector((state: RootState) => selectUserId(state));
   
-  const [punchCards, setPunchCards] = useState<common.PunchCardDto[]>([]);
+  const [punchCards, setPunchCards] = useState<PunchCardDto[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -61,7 +62,7 @@ const DashboardPage: React.FC = () => {
         setIsLoading(true);
         setError(null);
         try {
-          const fetchedData = await common.apiClient.getUserPunchCards(userId);
+          const fetchedData = await apiClient.getUserPunchCards(userId);
           console.log('Fetched punch card data:', fetchedData);
           if (Array.isArray(fetchedData)) {
             setPunchCards(fetchedData);
@@ -105,7 +106,7 @@ const DashboardPage: React.FC = () => {
 
   return (
     <>
-      <common.AppHeader title="EPunch" />
+      <AppHeader title="EPunch" />
       <div className={styles.pageContainer}>
 
         <section className={styles.qrSection}>

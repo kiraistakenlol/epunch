@@ -1,7 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { PunchCardDto } from './dto/punch-card.dto';
-import { CreatePunchDto } from './dto/create-punch.dto';
-import { PunchOperationResultDto } from './dto/punch-operation-result.dto';
+import { CreatePunchDto, PunchCardDto, PunchOperationResultDto } from 'e-punch-common-core';
 
 // The API URL will be set by the app using this client
 let API_BASE_URL: string;

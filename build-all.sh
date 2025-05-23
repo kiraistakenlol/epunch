@@ -11,9 +11,13 @@ echo "Building all E-PUNCH.io modules..."
 original_dir=$(pwd)
 cd "$(dirname "$0")/application" || exit
 
-# Build common package
-echo "Building common package..."
-yarn workspace e-punch-common build
+# Build common-core package
+echo "Building common-core package..."
+yarn workspace e-punch-common-core build
+
+# Build common-ui package (formerly common)
+echo "Building common-ui package..."
+yarn workspace e-punch-common-ui build
 
 # Build backend
 echo "Building backend..."

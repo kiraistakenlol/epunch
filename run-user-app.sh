@@ -7,8 +7,11 @@ export NODE_OPTIONS=""
 original_dir=$(pwd)
 cd "$(dirname "$0")/application" || exit
 
-echo "Building common package (dependency for user-app)..."
-yarn workspace e-punch-common build
+echo "Building common-core package (dependency for common-ui)..."
+yarn workspace e-punch-common-core build
+
+echo "Building common-ui package (dependency for user-app)..."
+yarn workspace e-punch-common-ui build
 
 echo "Cleaning Vite cache in user-app..."
 rm -rf user-app/node_modules/.vite

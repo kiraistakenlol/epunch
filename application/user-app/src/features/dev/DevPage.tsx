@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store/store';
 import { selectUserId, setUserId } from '../auth/authSlice';
-import { apiClient } from 'e-punch-common';
+import { apiClient } from 'e-punch-common-ui';
 
 const LOCAL_STORAGE_USER_ID_KEY = 'epunch_user_id';
 

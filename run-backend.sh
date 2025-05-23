@@ -1,10 +1,10 @@
 #!/bin/bash
 
-cd application/backend
+cd "$(dirname "$0")/application" || exit # Navigate to application dir
 
-# Build common package first
-echo "Building common package..."
-yarn workspace e-punch-common build
+# Build common-core package (dependency for backend)
+echo "Building common-core package..."
+yarn workspace e-punch-common-core build
 
 # Run backend
 echo "Starting backend..."

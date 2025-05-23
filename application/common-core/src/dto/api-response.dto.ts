@@ -3,4 +3,4 @@ export class ApiResponse<T> {
   constructor(data: T | null) {
       this.data = data;
   }
-}
+} 

@@ -1,21 +1,18 @@
 {
-  "name": "e-punch-common",
+  "name": "e-punch-common-ui",
   "version": "1.0.0",
-  "main": "./dist/index.cjs.js",
-  "module": "./dist/index.es.js",
-  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "require": "./dist/index.cjs.js",
       "import": "./dist/index.es.js",
       "types": "./dist/index.d.ts"
-    },
-    "./style.css": "./dist/style.css"
+    }
   },
   "files": [
     "dist"
   ],
   "dependencies": {
+    "e-punch-common-core": "1.0.0",
     "axios": "^1.6.0"
   },
   "peerDependencies": {

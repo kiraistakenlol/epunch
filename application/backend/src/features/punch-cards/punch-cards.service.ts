@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PunchCardsRepository } from './punch-cards.repository';
-import { PunchCardDto } from 'e-punch-common';
+import { PunchCardDto } from 'e-punch-common-core';
 
 @Injectable()
 export class PunchCardsService {

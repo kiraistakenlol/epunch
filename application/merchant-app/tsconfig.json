@@ -17,5 +17,8 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src"],
-  "references": [{ "path": "../common" }]
+  "references": [
+    { "path": "../common-core" },
+    { "path": "../common" }
+  ]
 } 
