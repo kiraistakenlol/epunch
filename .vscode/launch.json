@@ -2,15 +2,6 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Database",
-      "type": "pwa-node",
-      "request": "launch",
-      "cwd": "${workspaceFolder}/database",
-      "runtimeExecutable": "bash",
-      "runtimeArgs": ["-c", "docker-compose up"],
-      "console": "integratedTerminal"
-    },
-    {
       "name": "User App",
       "type": "pwa-node",
       "request": "launch",
@@ -50,7 +41,7 @@
   "compounds": [
     {
       "name": "Fullstack",
-      "configurations": ["Database", "User App", "Backend", "Merchant App"]
+      "configurations": ["User App", "Backend", "Merchant App"]
     }
   ]
 } 
