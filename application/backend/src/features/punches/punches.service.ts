@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { CreatePunchDto, PunchOperationResultDto, PunchCardDto } from 'e-punch-common-core';
 import { PunchCardsRepository } from '../punch-cards/punch-cards.repository';
 import { LoyaltyRepository } from '../loyalty/loyalty.repository';
@@ -31,21 +31,12 @@ export class PunchesService {
 
     let user = await this.userRepository.findUserById(userId);
     if (!user) {
-      this.logger.log(`User ${userId} not found. Attempting to create.`);
       user = await this.userRepository.createUserWithId(userId);
-      if (!user) {
-        this.logger.error(`Failed to find or create user ${userId}. Aborting punch operation.`);
-        throw new NotFoundException(`Failed to find or create user ${userId}. Punch operation cannot proceed.`);
-      }
-      this.logger.log(`User ${userId} created successfully.`);
-    } else {
-      this.logger.log(`User ${userId} found.`);
     }
 
     const loyaltyProgram = await this.loyaltyRepository.findLoyaltyProgramById(loyaltyProgramId);
     if (!loyaltyProgram) {
-      this.logger.warn(`Loyalty program ${loyaltyProgramId} not found.`);
-      throw new NotFoundException(`Loyalty program ${loyaltyProgramId} not found.`);
+      throw new BadRequestException(`Loyalty program ${loyaltyProgramId} not found.`);
     }
 
     let activePunchCard = await this.punchCardsRepository.findTop1PunchCardByUserIdAndLoyaltyProgramIdAndStatusOrderByCreatedAtDesc(
@@ -97,7 +88,7 @@ export class PunchesService {
       const merchant = await this.loyaltyRepository.findMerchantById(loyaltyProgram.merchant_id);
       if (!merchant) {
         this.logger.error(`Merchant ${loyaltyProgram.merchant_id} not found for loyalty program ${loyaltyProgramId}.`);
-        throw new NotFoundException(`Merchant details not found for loyalty program ${loyaltyProgramId}. Critical data missing.`);
+        throw new BadRequestException(`Merchant details not found for loyalty program ${loyaltyProgramId}. Critical data missing.`);
       }
       newPunchCardDto = {
         id: newActiveCardEntity.id,

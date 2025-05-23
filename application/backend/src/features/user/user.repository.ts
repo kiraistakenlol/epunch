@@ -31,10 +31,8 @@ export class UserRepository {
     return data;
   }
 
-  async createUserWithId(id: string): Promise<User | null> {
+  async createUserWithId(id: string): Promise<User> {
     this.logger.log(`Attempting to create a new user with id: ${id}`);
-    // Ensure the DTO matches the expected structure for insert, especially if 'id' is auto-generated vs. provided.
-    // For Supabase, if 'id' is a PK and gen_random_uuid() is the default, providing it should work.
     const { data, error } = await this.supabase
       .from(Tables.user)
       .insert({ id: id })
@@ -42,13 +40,10 @@ export class UserRepository {
       .single();
 
     if (error) {
-      this.logger.error(`Error creating user with id ${id}:`, error.message);
-      // This could fail if the ID already exists due to a race condition or if not UUID and RLS prevents insert
-      return null;
+      throw new Error(`Failed to create user with id ${id}: ${error.message}`);
     }
     if (!data) {
-      this.logger.warn(`User with id ${id} could not be created or data not returned.`);
-      return null;
+      throw new Error(`Failed to create user with id ${id}: No data returned`);
     }
     this.logger.log(`Successfully created user with id: ${data.id}`);
     return data;
