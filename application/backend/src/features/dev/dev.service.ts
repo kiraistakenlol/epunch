@@ -1,6 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { Injectable, Inject } from '@nestjs/common';
+import { Pool } from 'pg';
 
 interface DevResponse {
   status: string;
@@ -10,45 +9,25 @@ interface DevResponse {
 
 @Injectable()
 export class DevService {
-  private supabase: SupabaseClient;
-
-  constructor(private readonly configService: ConfigService) {
-    const supabaseUrl = this.configService.get<string>('supabase.url');
-    const supabaseKey = this.configService.get<string>('supabase.apiKey');
-
-    if (!supabaseUrl || !supabaseKey) {
-      throw new Error('Supabase configuration is missing');
-    }
-
-    this.supabase = createClient(supabaseUrl, supabaseKey);
-  }
+  constructor(@Inject('DATABASE_POOL') private pool: Pool) {}
 
   async getStatus(): Promise<DevResponse> {
     try {
-      // Test Supabase connection with a simple query instead of using aggregate functions
-      const { data, error } = await this.supabase.from('user').select('id').limit(5);
+      const result = await this.pool.query('SELECT id FROM "user" LIMIT 5');
       
-      if (error) {
-        return {
-          status: 'error',
-          message: 'Supabase connection error',
-          details: error.message,
-        };
-      }
-
       return {
         status: 'success',
         message: 'Development API is active',
         dbConnection: 'ok',
-        userSample: data.map(user => user.id),
-        userCount: data.length,
+        userSample: result.rows.map(user => user.id),
+        userCount: result.rows.length,
         timestamp: new Date().toISOString(),
       };
     } catch (err) {
       const error = err as Error;
       return {
         status: 'error',
-        message: 'Failed to check system status',
+        message: 'Database connection error',
         error: error.message,
       };
     }
@@ -56,21 +35,9 @@ export class DevService {
 
   async generateTestData(): Promise<DevResponse> {
     try {
-      // Execute test data SQL script
-      const { error } = await this.supabase.rpc('execute_test_data_script');
-      
-      if (error) {
-        console.error('Error generating test data:', error);
-        return {
-          status: 'error',
-          message: 'Failed to generate test data',
-          details: error.message,
-        };
-      }
-
       return {
-        status: 'success',
-        message: 'Test data generated successfully',
+        status: 'info',
+        message: 'Test data generation not implemented yet with PostgreSQL client',
         timestamp: new Date().toISOString(),
       };
     } catch (err) {
@@ -85,20 +52,9 @@ export class DevService {
 
   async resetTestData(): Promise<DevResponse> {
     try {
-      // Execute a cleanup script
-      const { error } = await this.supabase.rpc('reset_test_data');
-      
-      if (error) {
-        return {
-          status: 'error',
-          message: 'Failed to reset test data',
-          details: error.message,
-        };
-      }
-
       return {
-        status: 'success',
-        message: 'Test data reset successfully',
+        status: 'info',
+        message: 'Test data reset not implemented yet with PostgreSQL client',
         timestamp: new Date().toISOString(),
       };
     } catch (err) {

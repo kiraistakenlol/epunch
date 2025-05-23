@@ -86,14 +86,14 @@ This approach ensures that changes to the common packages are always visible wit
 ### Tech Stack
 * **User App (Frontend):** React, TypeScript, Vite, Redux (for state management)
 * **Merchant App (Frontend):** React, TypeScript, Vite, Redux (for state management)
-* **Backend:** NestJS (Node.js framework), TypeScript, Supabase SDK
-* **Database:** PostgreSQL (via Supabase)
+* **Backend:** NestJS (Node.js framework), TypeScript, PostgreSQL client (pg)
+* **Database:** PostgreSQL (via Supabase as database host)
 * **Package Manager:** Yarn (all shared dev dependencies, e.g., typescript, are kept in the root package.json for the workspace)
 
 ### Infrastructure & Deployment
 * **Frontend Hosting:** Vercel (for both User and Merchant apps)
 * **Backend Hosting:** Fly.io (Dockerized NestJS app)
-* **Database & Auth:** Supabase (PostgreSQL, Auth, Storage, Functions)
+* **Database:** Supabase (PostgreSQL hosting only)
 * **Configuration:** All config (including API endpoints, host, port) is centralized and managed via environment variables and `.env` files
 * **Secrets:** Store all secrets in `.env`
 * **Infrastructure Files:** All infrastructure configurations are stored in the `infra/` directory:
@@ -263,6 +263,9 @@ src/
 │   ├── filters/         # Global exception filters
 │   └── types/          # Common types and interfaces
 │
+├── database/            # Database connection and configuration
+│   └── database.module.ts # PostgreSQL connection pool setup
+│
 ├── features/           # Feature modules
 │   ├── auth/          # Authentication feature
 │   │   ├── auth.module.ts
@@ -272,10 +275,7 @@ src/
 │       ├── punch-cards.module.ts
 │       ├── punch-cards.controller.ts
 │       ├── punch-cards.service.ts
-│       └── types/     # Type definitions for punch cards
-│
-├── supabase/          # Supabase client configuration
-│   └── client.ts      # Configured Supabase client
+│       └── punch-cards.repository.ts
 │
 ├── utils/            # Utility functions and helpers
 │
@@ -285,8 +285,8 @@ src/
 **Key Principles for Backend Structure:**
 * **Features First:** Code organized by domain features, each as a NestJS module
 * **Clean Core:** Global interceptors, filters, and types in core/
-* **Supabase Integration:** Direct use of Supabase client in services
-* **Minimal Abstractions:** Direct service-to-controller communication, no facades or repositories
+* **Direct Database Access:** PostgreSQL client with direct SQL queries in repositories
+* **Minimal Abstractions:** Direct service-to-repository communication
 
 ### Database Schema Management
 * Database schema managed directly through [Supabase Dashboard](https://supabase.com/dashboard/project/tdkfpgplsbjcblhfzurc)
@@ -301,7 +301,7 @@ src/
 - The website is developed with a mobile-first approach.
 
 **User App (Frontend)**
-- Supabase client used directly in user-app for real-time subscriptions
+- For real-time updates, implement polling or server-sent events from backend API
 
 **Merchant App (Frontend)**
 - For QR code scanning and punch operations.
@@ -312,4 +312,5 @@ src/
 - Use an `ApiResponseInterceptor` to wrap responses and handle `NotFoundException` as 200 OK with `null` data.
 - Use a `GlobalHttpExceptionFilter` to handle and log all exceptions, returning a consistent error response shape.
 - Consistent error handling.
-- Leverage Supabase features (auth, storage, real-time) where appropriate.
+- Direct PostgreSQL access through repositories with SQL queries.
+- Use connection pooling for database performance.

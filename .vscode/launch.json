@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "User App",
+      "name": "✅ User App",
       "type": "pwa-node",
       "request": "launch",
       "cwd": "${workspaceFolder}",
@@ -11,7 +11,7 @@
       "console": "integratedTerminal"
     },
     {
-      "name": "Backend",
+      "name": "✅ Backend",
       "type": "pwa-node",
       "request": "launch",
       "cwd": "${workspaceFolder}",
@@ -20,7 +20,7 @@
       "console": "integratedTerminal"
     },
     {
-      "name": "Backend Logs",
+      "name": "🪵 Backend Logs",
       "type": "pwa-node",
       "request": "launch",
       "cwd": "${workspaceFolder}",
@@ -29,7 +29,7 @@
       "console": "integratedTerminal"
     },
     {
-      "name": "Merchant App",
+      "name": "✅ Merchant App",
       "type": "pwa-node",
       "request": "launch",
       "cwd": "${workspaceFolder}",
@@ -41,7 +41,7 @@
   "compounds": [
     {
       "name": "Fullstack",
-      "configurations": ["User App", "Backend", "Merchant App"]
+      "configurations": ["✅ User App", "✅ Backend", "✅ Merchant App"]
     }
   ]
 } 

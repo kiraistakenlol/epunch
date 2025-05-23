@@ -4,8 +4,11 @@ export default () => ({
     host: process.env.APP_HOST,
     port: parseInt(process.env.APP_PORT || '', 10),
   },
-  supabase: {
-    url: process.env.SUPABASE_URL,
-    apiKey: process.env.SUPABASE_API_KEY,
+  database: {
+    host: process.env.DB_HOST,
+    port: parseInt(process.env.DB_PORT || '5432', 10),
+    name: process.env.DB_DATABASE,
+    user: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
   }
 }); 

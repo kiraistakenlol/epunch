@@ -11,17 +11,17 @@ const logger = new Logger('ConfigModule');
       isGlobal: true,
       envFilePath: [`.env.${process.env.NODE_ENV || 'development'}`, '.env'],
       load: [configuration],
-      validate: (config) => {
-        const { error, value } = configSchema.validate(config, {
+      validate: (envConfig) => {
+        const { error } = configSchema.validate(envConfig, {
           allowUnknown: true,
           abortEarly: false,
         });
 
         if (error) {
+          logger.error('Configuration validation failed:');
           throw new Error(`Config validation error: ${error.message}`);
         }
 
-        // Get schema descriptions to check for secrets
         const schema = configSchema.describe();
         const secrets = new Set(
           Object.entries(schema.keys)
@@ -29,15 +29,14 @@ const logger = new Logger('ConfigModule');
             .map(([key]) => key)
         );
 
-        // Log only schema-defined non-secret config values
-        logger.log('Loaded configuration:');
-        Object.entries(schema.keys).forEach(([key]) => {
-          if (!secrets.has(key) && key in config) {
-            logger.log(`${key}: ${config[key]}`);
+        logger.log('Configuration validated successfully:');
+        Object.entries(envConfig).forEach(([key, val]) => {
+          if (schema.keys[key] && !secrets.has(key) && val !== undefined) {
+            logger.log(`- ${key}: ${val}`);
           }
         });
 
-        return value;
+        return envConfig;
       },
     }),
   ],

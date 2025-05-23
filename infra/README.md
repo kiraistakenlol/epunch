@@ -26,8 +26,14 @@ infra/
 The application requires a `.env` file in the `application/backend/` directory with the following variables:
 
 ```
-SUPABASE_URL=your-supabase-url
-SUPABASE_API_KEY=your-supabase-api-key
+# Database connection (from Supabase Project Settings > Database)
+DB_HOST=db.your-project-id.supabase.co
+DB_PORT=5432
+DB_DATABASE=postgres
+DB_USERNAME=postgres
+DB_PASSWORD=your-database-password
+
+# Application settings
 APP_HOST=localhost
 APP_PORT=3001
 NODE_ENV=development
@@ -79,8 +85,12 @@ fly auth login
 
 3. Create a `.env.dev` file in the `infra/backend/fly` directory with your secrets:
 ```
-SUPABASE_URL=your-supabase-url
-SUPABASE_API_KEY=your-supabase-api-key
+# Database connection (from Supabase Project Settings > Database)
+DB_HOST=db.your-project-id.supabase.co
+DB_PORT=5432
+DB_DATABASE=postgres
+DB_USERNAME=postgres
+DB_PASSWORD=your-database-password
 ```
 
 4. Set the secrets:

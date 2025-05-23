@@ -1,75 +1,54 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { SupabaseClient } from '@supabase/supabase-js';
-import { Inject } from '@nestjs/common';
-import { Database, User, Tables } from '../punch-cards/types/database.types'; // Assuming common path for database types
+import { Injectable, Logger, Inject } from '@nestjs/common';
+import { Pool } from 'pg';
+
+export interface User {
+  id: string;
+  created_at: Date;
+}
 
 @Injectable()
 export class UserRepository {
   private readonly logger = new Logger(UserRepository.name);
 
-  constructor(@Inject('SUPABASE_CLIENT') private supabase: SupabaseClient<Database>) {}
+  constructor(@Inject('DATABASE_POOL') private pool: Pool) {}
 
   async findUserById(id: string): Promise<User | null> {
     this.logger.log(`Attempting to find user with id: ${id}`);
-    const { data, error } = await this.supabase
-      .from(Tables.user)
-      .select('*')
-      .eq('id', id)
-      .single();
-
-    if (error) {
+    
+    const query = 'SELECT * FROM "user" WHERE id = $1';
+    
+    try {
+      const result = await this.pool.query(query, [id]);
+      
+      if (!result.rows[0]) {
+        this.logger.warn(`No user found with id: ${id}`);
+        return null;
+      }
+      
+      this.logger.log(`Successfully found user with id: ${id}`);
+      return result.rows[0];
+    } catch (error: any) {
       this.logger.error(`Error fetching user with id ${id}:`, error.message);
-      // Depending on Supabase client version and RLS, an error might occur if not found,
-      // or it might return null data with no error. single() should error if more than one found.
       return null;
     }
-    if (!data) {
-      this.logger.warn(`No user found with id: ${id}`);
-      return null;
-    }
-    this.logger.log(`Successfully found user with id: ${id}`);
-    return data;
   }
 
   async createUserWithId(id: string): Promise<User> {
     this.logger.log(`Attempting to create a new user with id: ${id}`);
-    const { data, error } = await this.supabase
-      .from(Tables.user)
-      .insert({ id: id })
-      .select()
-      .single();
-
-    if (error) {
+    
+    const query = 'INSERT INTO "user" (id) VALUES ($1) RETURNING *';
+    
+    try {
+      const result = await this.pool.query(query, [id]);
+      
+      if (!result.rows[0]) {
+        throw new Error(`Failed to create user with id ${id}: No data returned`);
+      }
+      
+      this.logger.log(`Successfully created user with id: ${result.rows[0].id}`);
+      return result.rows[0];
+    } catch (error: any) {
       throw new Error(`Failed to create user with id ${id}: ${error.message}`);
     }
-    if (!data) {
-      throw new Error(`Failed to create user with id ${id}: No data returned`);
-    }
-    this.logger.log(`Successfully created user with id: ${data.id}`);
-    return data;
   }
-
-  // You can add other methods like createUser, updateUser, etc. as needed.
-  // Example for createUser:
-  /* 
-  async createUser(): Promise<User | null> {
-    this.logger.log('Attempting to create a new user');
-    const { data, error } = await this.supabase
-      .from(Tables.user)
-      .insert({})
-      .select()
-      .single();
-
-    if (error) {
-      this.logger.error('Error creating user:', error.message);
-      return null;
-    }
-    if (!data) {
-      this.logger.warn('User could not be created or data not returned.');
-      return null;
-    }
-    this.logger.log(`Successfully created user with id: ${data.id}`);
-    return data;
-  }
-  */
 } 
