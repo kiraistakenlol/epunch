@@ -1,11 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import UserQRCode from '../user/UserQRCode';
 import styles from './DashboardPage.module.css';
-import type { RootState } from '../../store/store';
+import type { RootState, AppDispatch } from '../../store/store';
 import { selectUserId } from '../auth/authSlice';
 import { PunchCardDto } from 'e-punch-common-core';
-import { apiClient, AppHeader } from 'e-punch-common-ui';
+import { AppHeader } from 'e-punch-common-ui';
+import { 
+  fetchPunchCards, 
+  selectPunchCards, 
+  selectPunchCardsLoading, 
+  selectPunchCardsError,
+  clearPunchCards 
+} from '../punchCards/punchCardsSlice';
 
 // Interface for component props, maps DTO to what component expects
 interface PunchCardItemProps extends PunchCardDto {}
@@ -45,47 +52,24 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({ shopName, shopAddress, cu
 };
 
 const DashboardPage: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const userId = useSelector((state: RootState) => selectUserId(state));
-  
-  const [punchCards, setPunchCards] = useState<PunchCardDto[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const punchCards = useSelector((state: RootState) => selectPunchCards(state));
+  const isLoading = useSelector((state: RootState) => selectPunchCardsLoading(state));
+  const error = useSelector((state: RootState) => selectPunchCardsError(state));
 
   useEffect(() => {
     if (userId === null) {
-      setIsLoading(false);
-      setPunchCards([]);
+      dispatch(clearPunchCards());
       return;
     }
     if (userId) {
-      const fetchCards = async () => {
-        setIsLoading(true);
-        setError(null);
-        try {
-          const fetchedData = await apiClient.getUserPunchCards(userId);
-          console.log('Fetched punch card data:', fetchedData);
-          if (Array.isArray(fetchedData)) {
-            setPunchCards(fetchedData);
-          } else {
-            console.error('Received data is not an array:', fetchedData);
-            setError('Received unexpected data format for punch cards.');
-            setPunchCards([]);
-          }
-        } catch (e: any) {
-          console.error('Error fetching punch cards in component:', e);
-          setError(e.message || 'An unexpected error occurred while fetching punch cards.');
-          setPunchCards([]);
-        }
-        setIsLoading(false);
-      };
-      fetchCards();
+      dispatch(fetchPunchCards(userId));
     } else {
-      setIsLoading(false);
-      setPunchCards([]);
+      dispatch(clearPunchCards());
     }
-  }, [userId]);
+  }, [userId, dispatch]);
 
-  // Ensure punchCards is treated as an array before accessing .length or .map
   const cardsArray = Array.isArray(punchCards) ? punchCards : [];
 
   // Render content based on loading and data state
