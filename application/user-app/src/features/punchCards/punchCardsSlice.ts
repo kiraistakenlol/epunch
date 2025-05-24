@@ -56,7 +56,7 @@ const punchCardsSlice = createSlice({
         return;
       }
       const index = state.cards.findIndex(
-        card => card.shopName === action.payload.shopName
+        card => card.id === action.payload.id
       );
       if (index !== -1) {
         state.cards[index] = action.payload;
@@ -103,7 +103,7 @@ const punchCardsSlice = createSlice({
         return;
       }
       const index = state.cards.findIndex(
-        card => card.shopName === action.payload.shopName
+        card => card.id === action.payload.id
       );
       if (index !== -1) {
         state.cards[index] = { ...action.payload, animateNewPunch: true };
@@ -118,10 +118,10 @@ const punchCardsSlice = createSlice({
         card[action.payload.flag] = false;
       }
     },
-    incrementPunch: (state, action: PayloadAction<{ shopName: string }>) => {
+    incrementPunch: (state, action: PayloadAction<{ id: string }>) => {
       if (!state.cards) return;
       const card = state.cards.find(
-        card => card.shopName === action.payload.shopName
+        card => card.id === action.payload.id
       );
       if (card && card.currentPunches < card.totalPunches) {
         card.currentPunches += 1;
