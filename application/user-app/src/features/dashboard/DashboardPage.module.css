@@ -291,6 +291,10 @@
   animation: slideInFromLeft 0.6s ease-out forwards;
 }
 
+.punchCardSlideRight {
+  animation: slideRight 0.6s ease-out forwards;
+}
+
 @keyframes slideInFromLeft {
   0% {
     transform: translateX(-100%);
@@ -299,5 +303,14 @@
   100% {
     transform: translateX(0);
     opacity: 1;
+  }
+}
+
+@keyframes slideRight {
+  0% {
+    transform: translateX(-280px);
+  }
+  100% {
+    transform: translateX(0);
   }
 } 

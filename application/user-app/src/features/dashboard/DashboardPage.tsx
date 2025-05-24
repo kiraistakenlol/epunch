@@ -22,6 +22,7 @@ interface PunchCardItemProps extends PunchCardDto {
   isHighlighted?: boolean;
   animatedPunchIndex?: number;
   shouldSlideIn?: boolean;
+  shouldSlideRight?: boolean;
 }
 
 // Placeholder for icons - replace with actual SVGs or an icon library
@@ -40,7 +41,8 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
   createdAt,
   isHighlighted = false,
   animatedPunchIndex,
-  shouldSlideIn = false
+  shouldSlideIn = false,
+  shouldSlideRight = false
 }) => {
   const punchCircles = [];
   for (let i = 0; i < totalPunches; i++) {
@@ -64,7 +66,7 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
   };
 
   return (
-    <div className={`${styles.punchCardItem} ${styles[`status${status}`]} ${isHighlighted ? styles.highlighted : ''} ${shouldSlideIn ? styles.punchCardSlideIn : ''}`}>
+    <div className={`${styles.punchCardItem} ${styles[`status${status}`]} ${isHighlighted ? styles.highlighted : ''} ${shouldSlideIn ? styles.punchCardSlideIn : ''} ${shouldSlideRight ? styles.punchCardSlideRight : ''}`}>
       <div className={styles.punchCardHeader}>
         <div className={styles.headerLeft}>
           <LocationPinIcon />
@@ -105,6 +107,7 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
   const error = useSelector((state: RootState) => selectPunchCardsError(state));
   const [showEmptyState, setShowEmptyState] = useState(false);
   const [animatingCardIds, setAnimatingCardIds] = useState<Set<string>>(new Set());
+  const [slidingRightCardIds, setSlidingRightCardIds] = useState<Set<string>>(new Set());
   const prevPunchCardsRef = useRef<PunchCardDto[] | undefined>(undefined);
 
   useEffect(() => {
@@ -135,26 +138,46 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
   useEffect(() => {
     if (!punchCards || punchCards.length === 0) return;
 
-    const newCardIds = new Set(animatingCardIds);
+    const newCardIds = new Set<string>();
+    const slidingRightIds = new Set<string>();
     let hasNewCards = false;
 
-    punchCards.forEach((card) => {
-      if (!prevPunchCardsRef.current || !prevPunchCardsRef.current.some(c => c.id === card.id)) {
+    if (!prevPunchCardsRef.current) {
+      punchCards.forEach((card) => {
         newCardIds.add(card.id);
         hasNewCards = true;
-        
-        setTimeout(() => {
-          setAnimatingCardIds(prev => {
-            const updated = new Set(prev);
-            updated.delete(card.id);
-            return updated;
-          });
-        }, 600);
+      });
+    } else {
+      const newCardsAtBeginning = [];
+      for (let i = 0; i < punchCards.length; i++) {
+        const card = punchCards[i];
+        const existsInPrevious = prevPunchCardsRef.current.some(c => c.id === card.id);
+        if (!existsInPrevious) {
+          newCardsAtBeginning.push(card);
+          newCardIds.add(card.id);
+          hasNewCards = true;
+        } else {
+          break;
+        }
       }
-    });
+
+      if (newCardsAtBeginning.length > 0) {
+        punchCards.forEach((card, index) => {
+          if (index >= newCardsAtBeginning.length) {
+            slidingRightIds.add(card.id);
+          }
+        });
+      }
+    }
 
     if (hasNewCards) {
       setAnimatingCardIds(newCardIds);
+      setSlidingRightCardIds(slidingRightIds);
+      
+      setTimeout(() => {
+        setAnimatingCardIds(new Set());
+        setSlidingRightCardIds(new Set());
+      }, 600);
     }
     
     prevPunchCardsRef.current = punchCards;
@@ -205,6 +228,7 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
                 : undefined
             }
             shouldSlideIn={animatingCardIds.has(card.id)}
+            shouldSlideRight={slidingRightCardIds.has(card.id)}
           />
         ))}
       </div>
