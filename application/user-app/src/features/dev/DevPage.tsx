@@ -8,6 +8,36 @@ import { webSocketClient } from '../../api/websocketClient';
 
 const LOCAL_STORAGE_USER_ID_KEY = 'epunch_user_id';
 
+// Reusable collapsible section component
+interface DevSectionProps {
+  title: string;
+  children: React.ReactNode;
+  defaultExpanded?: boolean;
+}
+
+const DevSection: React.FC<DevSectionProps> = ({ title, children, defaultExpanded = false }) => {
+  const [isExpanded, setIsExpanded] = useState(defaultExpanded);
+
+  return (
+    <section style={styles.section}>
+      <div 
+        style={styles.sectionHeader}
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        <h2 style={styles.sectionTitle}>{title}</h2>
+        <span style={styles.toggleIcon}>
+          {isExpanded ? '▼' : '▶'}
+        </span>
+      </div>
+      {isExpanded && (
+        <div style={styles.sectionContent}>
+          {children}
+        </div>
+      )}
+    </section>
+  );
+};
+
 const styles = {
   container: {
     padding: '20px',
@@ -37,9 +67,10 @@ const styles = {
     border: '1px solid #ddd',
   },
   sectionTitle: {
-    borderBottom: '1px solid #ddd',
-    paddingBottom: '10px',
+    borderBottom: 'none',
+    paddingBottom: '0',
     marginTop: 0,
+    marginBottom: 0,
     fontFamily: 'monospace',
   },
   button: {
@@ -74,7 +105,25 @@ const styles = {
     marginBottom: '10px',
     borderRadius: '4px',
     border: '1px solid #ccc',
-  }
+  },
+  sectionHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    cursor: 'pointer',
+    userSelect: 'none' as const,
+    padding: '5px 0',
+    borderBottom: '1px solid #ddd',
+    marginBottom: '10px',
+  },
+  toggleIcon: {
+    fontSize: '14px',
+    color: '#666',
+    transition: 'transform 0.2s ease',
+  },
+  sectionContent: {
+    marginTop: '10px',
+  },
 };
 
 const DevPage: React.FC = () => {
@@ -194,8 +243,7 @@ const DevPage: React.FC = () => {
         <h1 style={styles.title}>E-PUNCH.io Development Tools</h1>
       </header>
 
-      <section style={styles.section}>
-        <h2 style={styles.sectionTitle}>User Information</h2>
+      <DevSection title="User Information">
         <div style={styles.userInfo}>
           <p><strong>Current User ID:</strong> {userId || 'Not set'}</p>
         </div>
@@ -224,10 +272,9 @@ const DevPage: React.FC = () => {
             Set User ID (to Local Storage & Redux)
           </button>
         </div>
-      </section>
+      </DevSection>
 
-      <section style={styles.section}>
-        <h2 style={styles.sectionTitle}>API Testing</h2>
+      <DevSection title="API Testing">
         <div>
           <button 
             style={styles.button} 
@@ -257,10 +304,9 @@ const DevPage: React.FC = () => {
             {apiStatus}
           </pre>
         </div>
-      </section>
+      </DevSection>
 
-      <section style={styles.section}>
-        <h2 style={styles.sectionTitle}>WebSocket Connection</h2>
+      <DevSection title="WebSocket Connection">
         <div style={styles.userInfo}>
           <p><strong>Connection Status:</strong> 
             <span style={{ 
@@ -324,10 +370,9 @@ const DevPage: React.FC = () => {
             )}
           </div>
         </div>
-      </section>
+      </DevSection>
 
-      <section style={styles.section}>
-        <h2 style={styles.sectionTitle}>Merchant Testing</h2>
+      <DevSection title="Merchant Testing">
         <div>
           <h3>Test Punch Recording</h3>
           <div style={{ marginBottom: '10px' }}>
@@ -357,7 +402,7 @@ const DevPage: React.FC = () => {
             </pre>
           </div>
         </div>
-      </section>
+      </DevSection>
     </div>
   );
 };
