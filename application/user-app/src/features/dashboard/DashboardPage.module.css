@@ -3,8 +3,10 @@
 .pageContainer {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh; /* Fixed height instead of min-height */
+  overflow: hidden; /* Prevent scrolling */
   font-family: Arial, sans-serif; /* Placeholder font */
+  padding-top: 50px; /* Account for fixed header */
 }
 
 .qrSection {
@@ -13,7 +15,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-grow: 1; /* Allows this section to take available space */
+  flex: 1; /* Take available space */
+  min-height: 0; /* Allow flex item to shrink */
 }
 
 .qrCodeWrapper {
@@ -26,9 +29,13 @@
 .punchCardsSection {
   background-color: #795548; /* Medium Brown */
   padding: 20px 0;
-  overflow-x: auto; /* Enable horizontal scrolling */
+  overflow-x: auto; /* Enable horizontal scrolling only */
+  overflow-y: hidden; /* Prevent vertical scrolling */
   white-space: nowrap; /* Keep items in a single line */
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  flex-shrink: 0; /* Prevent section from shrinking */
+  height: auto; /* Let content determine height */
+  max-height: 40vh; /* Limit maximum height */
 }
 
 .punchCardsList {
