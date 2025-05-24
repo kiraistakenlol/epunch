@@ -1,4 +1,4 @@
-import { PunchCardStatusDto, PunchCardDto } from './punch-card.dto';
+import { PunchCardDto } from './punch-card.dto';
 
 // Base event interface  
 export interface BaseEvent {
@@ -10,12 +10,8 @@ export interface BaseEvent {
 export interface PunchAddedEvent extends BaseEvent {
   type: 'PUNCH_ADDED';
   punchCard: PunchCardDto;
-}
-
-export interface CardCreatedEvent extends BaseEvent {
-  type: 'CARD_CREATED';
-  punchCard: PunchCardDto;
+  newCard: PunchCardDto | null;
 }
 
 // Union type for all events
-export type AppEvent = PunchAddedEvent | CardCreatedEvent; 
+export type AppEvent = PunchAddedEvent; 

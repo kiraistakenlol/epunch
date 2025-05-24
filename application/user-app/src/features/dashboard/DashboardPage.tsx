@@ -16,6 +16,8 @@ import {
 } from '../punchCards/punchCardsSlice';
 import { useWebSocketEventHandler } from '../../hooks/useWebSocketEventHandler';
 
+const NEW_CARD_ANIMATION_DELAY = 1500;
+
 // Interface for component props, maps DTO to what component expects
 interface PunchCardItemProps extends PunchCardDto {
   isHighlighted?: boolean;
@@ -130,14 +132,48 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({ userId }) => {
     }
   }, [isLoading, error, punchCards]);
 
+  const getCardAnimations = () => {
+    const slideInCards = new Set<string>();
+    const slideRightCards = new Set<string>();
+    
+    if (!punchCards) return { slideInCards, slideRightCards };
+    
+    const hasActivePunchAnimation = punchCards.some(card => card.animateNewPunch);
+    
+    if (!hasActivePunchAnimation) {
+      const waitingCards = punchCards.filter(card => card.animateNewCard);
+      const allCards = punchCards;
+      
+      waitingCards.forEach((waitingCard) => {
+        slideInCards.add(waitingCard.id);
+        
+        const waitingCardIndex = allCards.findIndex(card => card.id === waitingCard.id);
+        
+        allCards.forEach((card) => {
+          const cardIndex = allCards.findIndex(c => c.id === card.id);
+          if (cardIndex > waitingCardIndex && !card.animateNewCard) {
+            slideRightCards.add(card.id);
+          }
+        });
+      });
+    }
+    
+    return { slideInCards, slideRightCards };
+  };
+
+  const { slideInCards, slideRightCards } = getCardAnimations();
+  const hasActivePunchAnimation = punchCards ? punchCards.some(card => card.animateNewPunch) : false;
+  const waitingCards = punchCards ? punchCards.filter(card => card.animateNewCard) : [];
+  const visibleCards = punchCards ? punchCards.filter(card => !card.animateNewCard) : [];
+  const cardsToRender = hasActivePunchAnimation ? visibleCards : punchCards || [];
+
   useEffect(() => {
     if (!punchCards) return;
 
-    const hasActivePunchAnimation = punchCards.some(card => card.animateNewPunch);
-    const hasNewCards = punchCards.some(card => card.animateNewCard);
+    const hasWaitingCards = waitingCards.length > 0;
 
     punchCards.forEach(card => {
-      if (card.animateNewPunch) {
+      if (card.animateNewPunch && !localAnimatedPunch) {
         const alertMessage = card.status === 'REWARD_READY'
           ? "🎉 You've got a new punch and your reward is ready!"
           : "✨ You've got a new punch!";
@@ -153,52 +189,20 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({ userId }) => {
           setLocalHighlightedCardId(null);
           setLocalAnimatedPunch(null);
           dispatch(updatePunchCardById({ id: card.id, updates: { animateNewPunch: false } }));
+          
+          if (hasWaitingCards) {
+            setTimeout(() => {
+              waitingCards.forEach(waitingCard => {
+                setTimeout(() => {
+                  dispatch(updatePunchCardById({ id: waitingCard.id, updates: { animateNewCard: false } }));
+                }, NEW_CARD_ANIMATION_DELAY);
+              });
+            }, NEW_CARD_ANIMATION_DELAY);
+          }
         }, 3000);
       }
     });
-
-    if (hasNewCards && !hasActivePunchAnimation) {
-      punchCards.forEach(card => {
-        if (card.animateNewCard) {
-          setTimeout(() => {
-            dispatch(updatePunchCardById({ id: card.id, updates: { animateNewCard: false } }));
-          }, 600);
-        }
-      });
-    }
-  }, [punchCards, dispatch]);
-
-  const getCardAnimations = () => {
-    if (!punchCards) return { slideInCards: new Set(), slideRightCards: new Set() };
-    
-    const slideInCards = new Set<string>();
-    const slideRightCards = new Set<string>();
-    
-    const hasActivePunchAnimation = punchCards.some(card => card.animateNewPunch);
-    
-    if (!hasActivePunchAnimation) {
-      const newCardIds = punchCards
-        .filter(card => card.animateNewCard)
-        .map(card => card.id);
-      
-      newCardIds.forEach(newCardId => {
-        slideInCards.add(newCardId);
-        
-        const newCardIndex = punchCards.findIndex(card => card.id === newCardId);
-        
-        punchCards.forEach((card) => {
-          const cardIndex = punchCards.findIndex(c => c.id === card.id);
-          if (cardIndex > newCardIndex && !card.animateNewCard) {
-            slideRightCards.add(card.id);
-          }
-        });
-      });
-    }
-    
-    return { slideInCards, slideRightCards };
-  };
-
-  const { slideInCards, slideRightCards } = getCardAnimations();
+  }, [punchCards, waitingCards, dispatch, localAnimatedPunch]);
 
   const renderContent = () => {
     if (isLoading || punchCards === undefined) {
@@ -234,7 +238,7 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({ userId }) => {
     }
     return (
       <div className={styles.punchCardsList}>
-        {punchCards.map((card) => (
+        {cardsToRender.map((card) => (
           <PunchCardItem
             key={card.id}
             {...card}

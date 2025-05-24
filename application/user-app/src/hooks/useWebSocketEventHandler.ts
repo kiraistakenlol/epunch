@@ -22,15 +22,14 @@ export const useWebSocketEventHandler = () => {
       if (appEvent.userId !== userId) return;
 
       if (appEvent.type === 'PUNCH_ADDED') {
-        const { punchCard } = appEvent;
+        const { punchCard, newCard } = appEvent;
         const cardWithAnimation: PunchCardWithAnimations = { ...punchCard, animateNewPunch: true };
         dispatch(updatePunchCard(cardWithAnimation));
 
-      } else if (appEvent.type === 'CARD_CREATED') {
-        const { punchCard } = appEvent;
-
-        const cardWithAnimation: PunchCardWithAnimations = { ...punchCard, animateNewCard: true };
-        dispatch(addPunchCard(cardWithAnimation));
+        if (newCard) {
+          const newCardWithAnimation: PunchCardWithAnimations = { ...newCard, animateNewCard: true };
+          dispatch(addPunchCard(newCardWithAnimation));
+        }
       }
     }
   }, [events, userId, dispatch]);

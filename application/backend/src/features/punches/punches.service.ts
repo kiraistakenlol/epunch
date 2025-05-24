@@ -126,16 +126,8 @@ export class PunchesService {
       type: 'PUNCH_ADDED',
       userId,
       punchCard: updatedPunchCardDto,
+      newCard: newPunchCardDto || null,
     });
-
-    if (newPunchCardDto) {
-      this.logger.log(`Emitting CARD_CREATED event for user ${userId}, new card ${newPunchCardDto.id}`);
-      this.eventService.emitAppEvent({
-        type: 'CARD_CREATED',
-        userId,
-        punchCard: newPunchCardDto,
-      });
-    }
 
     return {
       rewardAchieved,
