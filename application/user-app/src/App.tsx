@@ -7,6 +7,7 @@ import DevPage from './features/dev/DevPage';
 import { loadOrInitializeUserId } from './features/auth/authSlice';
 import type { AppDispatch } from './store/store';
 import './styles/global.css';
+import { useWebSocketEventHandler } from './hooks/useWebSocketEventHandler';
 
 const API_BASE_URL = (import.meta as any).env.VITE_API_URL;
 console.log('API_BASE_URL from App.tsx:', API_BASE_URL);
@@ -14,6 +15,8 @@ configureApiClient(API_BASE_URL);
 
 function App() {
   const dispatch: AppDispatch = useDispatch();
+
+  useWebSocketEventHandler();
 
   useEffect(() => {
     dispatch(loadOrInitializeUserId());

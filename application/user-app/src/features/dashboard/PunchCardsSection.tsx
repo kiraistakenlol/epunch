@@ -1,0 +1,190 @@
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import PunchCardItem from './PunchCardItem';
+import styles from './DashboardPage.module.css';
+import type { RootState, AppDispatch } from '../../store/store';
+import { selectUserId } from '../auth/authSlice';
+import {
+  fetchPunchCards,
+  selectPunchCards,
+  selectPunchCardsLoading,
+  selectPunchCardsError,
+  clearPunchCards,
+  updatePunchCardById
+} from '../punchCards/punchCardsSlice';
+
+const NEW_CARD_ANIMATION_DELAY = 1500;
+
+const PunchCardsSection: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const userId = useSelector((state: RootState) => selectUserId(state));
+  const punchCards = useSelector((state: RootState) => selectPunchCards(state));
+  const isLoading = useSelector((state: RootState) => selectPunchCardsLoading(state));
+  const error = useSelector((state: RootState) => selectPunchCardsError(state));
+  const [showEmptyState, setShowEmptyState] = useState(false);
+  const [localHighlightedCardId, setLocalHighlightedCardId] = useState<string | null>(null);
+  const [localAnimatedPunch, setLocalAnimatedPunch] = useState<{ cardId: string; punchIndex: number } | null>(null);
+  const [alert, setAlert] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (userId === null) {
+      dispatch(clearPunchCards());
+      return;
+    }
+    if (userId) {
+      dispatch(fetchPunchCards(userId));
+    } else {
+      dispatch(clearPunchCards());
+    }
+  }, [userId, dispatch]);
+
+  useEffect(() => {
+    if (isLoading || punchCards === undefined) {
+      setShowEmptyState(false);
+    } else if (!error && punchCards.length === 0) {
+      const timer = setTimeout(() => {
+        setShowEmptyState(true);
+      }, 300);
+      return () => clearTimeout(timer);
+    } else {
+      setShowEmptyState(false);
+    }
+  }, [isLoading, error, punchCards]);
+
+  const getCardAnimations = () => {
+    const slideInCards = new Set<string>();
+    const slideRightCards = new Set<string>();
+    
+    if (!punchCards) return { slideInCards, slideRightCards };
+    
+    const hasActivePunchAnimation = punchCards.some(card => card.animateNewPunch);
+    
+    if (!hasActivePunchAnimation) {
+      const waitingCards = punchCards.filter(card => card.animateNewCard);
+      const allCards = punchCards;
+      
+      waitingCards.forEach((waitingCard) => {
+        slideInCards.add(waitingCard.id);
+        
+        const waitingCardIndex = allCards.findIndex(card => card.id === waitingCard.id);
+        
+        allCards.forEach((card) => {
+          const cardIndex = allCards.findIndex(c => c.id === card.id);
+          if (cardIndex > waitingCardIndex && !card.animateNewCard) {
+            slideRightCards.add(card.id);
+          }
+        });
+      });
+    }
+    
+    return { slideInCards, slideRightCards };
+  };
+
+  const { slideInCards, slideRightCards } = getCardAnimations();
+  const hasActivePunchAnimation = punchCards ? punchCards.some(card => card.animateNewPunch) : false;
+  const waitingCards = punchCards ? punchCards.filter(card => card.animateNewCard) : [];
+  const visibleCards = punchCards ? punchCards.filter(card => !card.animateNewCard) : [];
+  const cardsToRender = hasActivePunchAnimation ? visibleCards : punchCards || [];
+
+  useEffect(() => {
+    if (!punchCards) return;
+
+    const hasWaitingCards = waitingCards.length > 0;
+
+    punchCards.forEach(card => {
+      if (card.animateNewPunch && !localAnimatedPunch) {
+        const alertMessage = card.status === 'REWARD_READY'
+          ? "🎉 You've got a new punch and your reward is ready!"
+          : "✨ You've got a new punch!";
+        setAlert(alertMessage);
+        setLocalHighlightedCardId(card.id);
+        setLocalAnimatedPunch({
+          cardId: card.id,
+          punchIndex: card.currentPunches - 1
+        });
+
+        setTimeout(() => {
+          setAlert(null);
+          setLocalHighlightedCardId(null);
+          setLocalAnimatedPunch(null);
+          dispatch(updatePunchCardById({ id: card.id, updates: { animateNewPunch: false } }));
+          
+          if (hasWaitingCards) {
+            setTimeout(() => {
+              waitingCards.forEach(waitingCard => {
+                setTimeout(() => {
+                  dispatch(updatePunchCardById({ id: waitingCard.id, updates: { animateNewCard: false } }));
+                }, NEW_CARD_ANIMATION_DELAY);
+              });
+            }, NEW_CARD_ANIMATION_DELAY);
+          }
+        }, 3000);
+      }
+    });
+  }, [punchCards, waitingCards, dispatch, localAnimatedPunch]);
+
+  const renderContent = () => {
+    if (isLoading || punchCards === undefined) {
+      return (
+        <div className={styles.loadingContainer}>
+          <div className={styles.loadingDots}>
+            <div className={styles.dot}></div>
+            <div className={styles.dot}></div>
+            <div className={styles.dot}></div>
+          </div>
+        </div>
+      );
+    }
+    if (error) {
+      return (
+        <div className={styles.emptyStateContainer}>
+          <div className={styles.emptyStateContent}>
+            <h2 className={styles.emptyStateHeadline}>Oops!</h2>
+            <p className={styles.emptyStateSubtext}>Error: {error}</p>
+          </div>
+        </div>
+      );
+    }
+    if (showEmptyState) {
+      return (
+        <div className={styles.emptyStateContainer}>
+          <div className={styles.emptyStateContent}>
+            <h2 className={styles.emptyStateHeadline}>Your rewards await!</h2>
+            <p className={styles.emptyStateSubtext}>Start collecting punches at your favorite spots and unlock amazing rewards</p>
+          </div>
+        </div>
+      );
+    }
+    return (
+      <div className={styles.punchCardsList}>
+        {cardsToRender.map((card) => (
+          <PunchCardItem
+            key={card.id}
+            {...card}
+            isHighlighted={localHighlightedCardId === card.id}
+            animatedPunchIndex={
+              localAnimatedPunch && localAnimatedPunch.cardId === card.id
+                ? localAnimatedPunch.punchIndex
+                : undefined
+            }
+            shouldSlideIn={slideInCards.has(card.id)}
+            shouldSlideRight={slideRightCards.has(card.id)}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  return (
+    <>
+      {alert && (
+        <div className={styles.alert}>
+          {alert}
+        </div>
+      )}
+      {renderContent()}
+    </>
+  );
+};
+
+export default PunchCardsSection; 
