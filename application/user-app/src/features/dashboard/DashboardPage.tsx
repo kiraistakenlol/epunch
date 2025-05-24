@@ -177,16 +177,21 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({ userId }) => {
     const hasActivePunchAnimation = punchCards.some(card => card.animateNewPunch);
     
     if (!hasActivePunchAnimation) {
-      punchCards.forEach((card, index) => {
-        if (card.animateNewCard) {
-          slideInCards.add(card.id);
-          
-          punchCards.forEach((otherCard, otherIndex) => {
-            if (otherIndex > index && !otherCard.animateNewCard) {
-              slideRightCards.add(otherCard.id);
-            }
-          });
-        }
+      const newCardIds = punchCards
+        .filter(card => card.animateNewCard)
+        .map(card => card.id);
+      
+      newCardIds.forEach(newCardId => {
+        slideInCards.add(newCardId);
+        
+        const newCardIndex = punchCards.findIndex(card => card.id === newCardId);
+        
+        punchCards.forEach((card) => {
+          const cardIndex = punchCards.findIndex(c => c.id === card.id);
+          if (cardIndex > newCardIndex && !card.animateNewCard) {
+            slideRightCards.add(card.id);
+          }
+        });
       });
     }
     
