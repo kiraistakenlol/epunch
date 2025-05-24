@@ -1,11 +1,12 @@
 /* DashboardPage.module.css - Simple 3-section layout */
 
 .pageContainer {
-  min-height: 100vh;
+  height: 100vh;
   background-color: #424242;
   padding-top: 50px;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .qrSection {
