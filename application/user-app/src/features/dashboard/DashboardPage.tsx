@@ -173,7 +173,15 @@ const DashboardPage: React.FC = () => {
   // Render content based on loading and data state
   const renderPunchCardContent = () => {
     if (isLoading) {
-      return <p>Loading punch cards...</p>;
+      return (
+        <div className={styles.loadingContainer}>
+          <div className={styles.loadingDots}>
+            <div className={styles.dot}></div>
+            <div className={styles.dot}></div>
+            <div className={styles.dot}></div>
+          </div>
+        </div>
+      );
     } 
     if (error) {
       return <p>Error: {error}</p>;

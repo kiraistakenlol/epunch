@@ -30,39 +30,40 @@
 
 .punchCardsSection {
   background-color: #795548; /* Medium Brown */
-  padding: 20px 0;
+  padding: 35px 0; /* Increased from 25px */
   overflow-x: auto; /* Enable horizontal scrolling only */
   overflow-y: hidden; /* Prevent vertical scrolling */
   white-space: nowrap; /* Keep items in a single line */
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
   flex-shrink: 0; /* Prevent section from shrinking */
   height: auto; /* Let content determine height */
-  max-height: 40vh; /* Limit maximum height */
+  max-height: 60vh; /* Increased from 50vh to 60vh */
 }
 
 .punchCardsList {
   display: flex; /* Arrange cards horizontally */
-  padding-left: 20px; /* Initial padding for the first card */
-  padding-right: 20px; /* Padding for the last card */
+  padding-left: 25px; /* Reduced from 35px to show more of next card */
+  padding-right: 80px; /* Increased to show peek of next card */
 }
 
 .punchCardItem {
   background-color: #8d6e63; /* Lighter shade of Medium Brown for the card body */
   border-radius: 12px;
-  min-width: 280px; /* Min width for a card */
-  max-width: 300px;
-  margin-right: 15px;
+  min-width: 350px; /* Slightly reduced from 380px to fit better with peek */
+  max-width: 370px; /* Slightly reduced from 400px */
+  margin-right: 25px; /* Keep spacing */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
   overflow: hidden; /* Ensure content respects border-radius */
+  flex-shrink: 0; /* Prevent cards from shrinking */
 }
 
 .punchCardHeader {
   background-color: #5d4037; /* Dark Brown */
   color: #f5f5dc; /* Light Beige/Cream */
-  padding: 8px 12px;
-  font-size: 0.9em;
+  padding: 12px 18px; /* Increased from 10px 15px */
+  font-size: 1em; /* Increased from 0.95em */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -87,20 +88,20 @@
 }
 
 .punchCardBody {
-  padding: 15px;
+  padding: 22px; /* Increased from 18px */
   flex-grow: 1;
 }
 
 .punchCirclesContainer {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: 15px; /* Increased from 12px */
+  margin-bottom: 22px; /* Increased from 18px */
 }
 
 .punchCircle {
-  width: 30px;
-  height: 30px;
+  width: 40px; /* Increased from 35px */
+  height: 40px; /* Increased from 35px */
   border-radius: 50%;
   border: 2px solid #5d4037; /* Dark Brown border */
   background-color: transparent;
@@ -134,7 +135,7 @@
 }
 
 .punchCardFooter {
-  padding: 0 12px 12px 12px;
+  padding: 0 18px 18px 18px; /* Increased from 15px */
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -240,6 +241,56 @@
   }
   50% {
     opacity: 0.6;
+  }
+}
+
+/* Loading animation styles */
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  min-height: 120px;
+  width: 100%;
+  text-align: center;
+}
+
+.loadingDots {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #5d4037;
+  animation: dotPulse 1.4s infinite ease-in-out;
+}
+
+.dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+.dot:nth-child(3) {
+  animation-delay: 0s;
+}
+
+@keyframes dotPulse {
+  0%, 80%, 100% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
   }
 }
 
