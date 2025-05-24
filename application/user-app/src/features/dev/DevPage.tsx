@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store/store';
 import { selectUserId, setUserId } from '../auth/authSlice';
@@ -83,8 +83,17 @@ const DevPage: React.FC = () => {
   const [apiStatus, setApiStatus] = useState<string>('No API calls made yet');
   const [loading, setLoading] = useState<boolean>(false);
   const [customUserId, setCustomUserId] = useState<string>('412dbe6d-e933-464e-87e2-31fe9c9ee6ac');
+  const [testPunchUserId, setTestPunchUserId] = useState<string>(userId || '');
+  const [testPunchStatus, setTestPunchStatus] = useState<string>('');
   
   const { connected, error: wsError, events, clearEvents } = useWebSocket();
+
+  // Update test punch user ID when current user ID changes
+  useEffect(() => {
+    if (userId && !testPunchUserId) {
+      setTestPunchUserId(userId);
+    }
+  }, [userId, testPunchUserId]);
 
   const checkBackendConnection = async () => {
     setLoading(true);
@@ -148,6 +157,34 @@ const DevPage: React.FC = () => {
         userId: userId,
         timestamp: new Date().toISOString(),
       });
+    }
+  };
+
+  const handleTestPunch = async () => {
+    const loyaltyProgramId = "ca8a6765-e272-4aaa-b7a9-c25863ff1678"; // Placeholder
+
+    if (!testPunchUserId.trim()) {
+      setTestPunchStatus("Test Punch Error: Please enter a User ID.");
+      return;
+    }
+
+    if (!loyaltyProgramId) {
+      setTestPunchStatus("Test Punch Error: Placeholder Loyalty Program ID is not configured.");
+      return;
+    }
+
+    setLoading(true);
+    setTestPunchStatus("Processing test punch...");
+
+    try {
+      console.log(`Attempting TEST punch for user: ${testPunchUserId} on program: ${loyaltyProgramId}`);
+      const result = await apiClient.recordPunch(testPunchUserId, loyaltyProgramId);
+      setTestPunchStatus(`Test Punch Success: Reward achieved: ${result.rewardAchieved}. Current punches: ${result.current_punches}/${result.required_punches}`);
+    } catch (error: any) {
+      console.error('Test Punch error:', error);
+      setTestPunchStatus(`Test Punch Error: ${error.response?.data?.message || error.message || 'Failed to record test punch.'}`);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -285,6 +322,39 @@ const DevPage: React.FC = () => {
                 </div>
               ))
             )}
+          </div>
+        </div>
+      </section>
+
+      <section style={styles.section}>
+        <h2 style={styles.sectionTitle}>Merchant Testing</h2>
+        <div>
+          <h3>Test Punch Recording</h3>
+          <div style={{ marginBottom: '10px' }}>
+            <input 
+              type="text"
+              style={styles.inputField}
+              value={testPunchUserId}
+              onChange={(e) => setTestPunchUserId(e.target.value)}
+              placeholder="Enter User ID for test punch"
+            />
+            <button 
+              style={styles.button} 
+              onClick={handleTestPunch}
+              disabled={loading}
+            >
+              Test Punch
+            </button>
+          </div>
+          <div>
+            <h4>Test Punch Result:</h4>
+            <pre style={{
+              ...styles.statusBox,
+              color: testPunchStatus.startsWith('Test Punch Error:') ? 'red' : 
+                     testPunchStatus.startsWith('Test Punch Success:') ? 'green' : 'black'
+            }}>
+              {testPunchStatus || 'No test punch performed yet'}
+            </pre>
           </div>
         </div>
       </section>

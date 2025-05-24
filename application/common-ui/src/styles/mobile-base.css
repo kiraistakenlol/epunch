@@ -38,4 +38,50 @@ body {
 *, *::before, *::after {
   box-sizing: inherit;
   -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+}
+
+/* Global Mobile Overflow Prevention */
+* {
+  max-width: 100%; /* Ensure no element can exceed viewport width */
+}
+
+/* Text and Content Wrapping */
+p, div, span, h1, h2, h3, h4, h5, h6 {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Pre and Code Elements (common overflow culprits) */
+pre, code {
+  white-space: pre-wrap !important; /* Force wrapping */
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  overflow-x: auto; /* Allow horizontal scroll only for code if absolutely necessary */
+  max-width: 100%;
+}
+
+/* Input and Form Elements */
+input, textarea, select, button {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  table-layout: fixed;
+  word-wrap: break-word;
+}
+
+/* Images and Media */
+img, video, canvas, iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Containers and Sections */
+div, section, article, main, aside, header, footer {
+  max-width: 100%;
+  overflow-wrap: break-word;
 } 

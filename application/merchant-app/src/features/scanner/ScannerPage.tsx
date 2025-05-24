@@ -26,8 +26,6 @@ const ScannerPage: React.FC = () => {
     const [scanResult, setScanResult] = useState<string | null>(null); // Stores decoded QR data
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [punchMessage, setPunchMessage] = useState<string | null>(null);
-    const [testPunchMessage, setTestPunchMessage] = useState<string | null>(null); // For test button
-    const [testUserId, setTestUserId] = useState<string>('cd12b88b-c805-4c97-9aa6-2c03e8794fc4'); // Default test user ID
 
     const videoRef = useRef<HTMLVideoElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -189,34 +187,6 @@ const ScannerPage: React.FC = () => {
         }
     };
 
-    const handleTestPunch = async () => {
-        // TODO: Ensure this loyaltyProgramId is valid for testing against your backend data
-        const loyaltyProgramId = "ca8a6765-e272-4aaa-b7a9-c25863ff1678"; // Placeholder
-
-        if (!testUserId.trim()) {
-            setTestPunchMessage("Test Punch Error: Please enter a User ID.");
-            return;
-        }
-
-        if (!loyaltyProgramId) {
-            setTestPunchMessage("Test Punch Error: Placeholder Loyalty Program ID is not configured.");
-            return;
-        }
-
-        setTestPunchMessage("Processing test punch...");
-        setErrorMessage(null); // Clear main error message
-        setPunchMessage(null); // Clear main punch message
-
-        try {
-            console.log(`Attempting TEST punch for user: ${testUserId} on program: ${loyaltyProgramId}`);
-            const result = await apiClient.recordPunch(testUserId, loyaltyProgramId);
-            setTestPunchMessage(`Test Punch Success: ${result.rewardAchieved}`);
-        } catch (error: any) {
-            console.error('Test Punch error:', error);
-            setTestPunchMessage(`Test Punch Error: ${error.response?.data?.message || error.message || 'Failed to record test punch.'}`);
-        }
-    };
-
     return (
         <>
             <AppHeader title="EPunch Merchant" />
@@ -257,29 +227,6 @@ const ScannerPage: React.FC = () => {
             </div>
 
             <canvas ref={canvasRef} style={{ display: 'none' }} />
-
-            {/* Test Punch Section */}
-            <div className={styles.testPunchSection}>
-                <label htmlFor="testUserId" className={styles.testLabel}>
-                    Test User ID:
-                </label>
-                <input
-                    id="testUserId"
-                    type="text"
-                    value={testUserId}
-                    onChange={(e) => setTestUserId(e.target.value)}
-                    placeholder="Enter user ID for testing"
-                    className={styles.testUserIdInput}
-                />
-                <button onClick={handleTestPunch} className={styles.testPunchButton}>
-                    Test Punch
-                </button>
-                {testPunchMessage && (
-                    <p className={`${styles.testPunchMessage} ${testPunchMessage.startsWith('Test Punch Error:') ? styles.testPunchError : styles.testPunchSuccess}`}>
-                        {testPunchMessage}
-                    </p>
-                )}
-            </div>
         </div>
         </>
     );
