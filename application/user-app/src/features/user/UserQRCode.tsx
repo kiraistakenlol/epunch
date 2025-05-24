@@ -20,8 +20,6 @@ const UserQRCode: React.FC = () => {
 
   const qrValue = currentUserId;
 
-  console.log('qrValue', qrValue);
-  
   return (
     <div>
       <QRCodeCanvas value={qrValue} size={170} level="H" />

@@ -174,6 +174,7 @@ export class PunchCardsRepository {
         currentPunches: row.current_punches,
         totalPunches: row.required_punches,
         status: status,
+        createdAt: row.created_at.toISOString(),
       };
     });
   }

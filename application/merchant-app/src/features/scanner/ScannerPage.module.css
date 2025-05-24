@@ -131,4 +131,65 @@
 
 .punchSuccessMessage {
   background-color: rgba(76, 175, 80, 0.5); /* More visible green background */
+}
+
+.testPunchSection {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #8d6e63; /* Match Dashboard's punchCardItem background */
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  width: 100%;
+}
+
+.testLabel {
+  display: block;
+  color: #f5f5dc;
+  font-size: 1em;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.testUserIdInput {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #5d4037;
+  border-radius: 6px;
+  font-size: 1em;
+  background-color: #f5f5dc;
+  color: #5d4037;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+}
+
+.testUserIdInput:focus {
+  outline: none;
+  border-color: #6d4c41;
+  box-shadow: 0 0 5px rgba(109, 76, 65, 0.5);
+}
+
+.testPunchSection .testPunchButton {
+  margin: 0;
+  width: 100%;
+}
+
+.testPunchMessage {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  color: #f5f5dc;
+}
+
+.testPunchMessage:first-letter {
+  color: inherit;
+}
+
+.testPunchSuccess {
+  background-color: rgba(76, 175, 80, 0.5); /* Green for success */
+}
+
+.testPunchError {
+  background-color: rgba(211, 47, 47, 0.5); /* Red for error */
 } 

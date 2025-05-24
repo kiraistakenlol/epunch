@@ -27,6 +27,7 @@ const ScannerPage: React.FC = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [punchMessage, setPunchMessage] = useState<string | null>(null);
     const [testPunchMessage, setTestPunchMessage] = useState<string | null>(null); // For test button
+    const [testUserId, setTestUserId] = useState<string>('cd12b88b-c805-4c97-9aa6-2c03e8794fc4'); // Default test user ID
 
     const videoRef = useRef<HTMLVideoElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -189,9 +190,13 @@ const ScannerPage: React.FC = () => {
     };
 
     const handleTestPunch = async () => {
-        const testUserId = '412dbe6d-e933-464e-87e2-31fe9c9ee6ac';
         // TODO: Ensure this loyaltyProgramId is valid for testing against your backend data
         const loyaltyProgramId = "ca8a6765-e272-4aaa-b7a9-c25863ff1678"; // Placeholder
+
+        if (!testUserId.trim()) {
+            setTestPunchMessage("Test Punch Error: Please enter a User ID.");
+            return;
+        }
 
         if (!loyaltyProgramId) {
             setTestPunchMessage("Test Punch Error: Placeholder Loyalty Program ID is not configured.");
@@ -253,11 +258,28 @@ const ScannerPage: React.FC = () => {
 
             <canvas ref={canvasRef} style={{ display: 'none' }} />
 
-            {/* Test Punch Button and Message Area */}
-            <button onClick={handleTestPunch} className={styles.testPunchButton}>
-                Test Punch (User: ...e6ac)
-            </button>
-            {testPunchMessage && <p style={{ marginTop: '10px', color: testPunchMessage.startsWith('Test Punch Error:') ? 'red' : 'green' }}>{testPunchMessage}</p>}
+            {/* Test Punch Section */}
+            <div className={styles.testPunchSection}>
+                <label htmlFor="testUserId" className={styles.testLabel}>
+                    Test User ID:
+                </label>
+                <input
+                    id="testUserId"
+                    type="text"
+                    value={testUserId}
+                    onChange={(e) => setTestUserId(e.target.value)}
+                    placeholder="Enter user ID for testing"
+                    className={styles.testUserIdInput}
+                />
+                <button onClick={handleTestPunch} className={styles.testPunchButton}>
+                    Test Punch
+                </button>
+                {testPunchMessage && (
+                    <p className={`${styles.testPunchMessage} ${testPunchMessage.startsWith('Test Punch Error:') ? styles.testPunchError : styles.testPunchSuccess}`}>
+                        {testPunchMessage}
+                    </p>
+                )}
+            </div>
         </div>
         </>
     );

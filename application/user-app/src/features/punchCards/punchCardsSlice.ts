@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { PunchCardDto } from 'e-punch-common-core';
+import { PunchCardDto, PunchCardStatusDto } from 'e-punch-common-core';
 import { apiClient } from 'e-punch-common-ui';
 
 export interface PunchCardsState {
@@ -55,12 +55,20 @@ const punchCardsSlice = createSlice({
         state.cards.push(action.payload);
       }
     },
+    updatePunchCardById: (state, action: PayloadAction<{ id: string; status: PunchCardStatusDto }>) => {
+      const index = state.cards.findIndex(
+        card => card.id === action.payload.id
+      );
+      if (index !== -1) {
+        state.cards[index].status = action.payload.status;
+      }
+    },
     addPunchCard: (state, action: PayloadAction<PunchCardDto>) => {
       const exists = state.cards.some(
-        card => card.shopName === action.payload.shopName
+        card => card.id === action.payload.id
       );
       if (!exists) {
-        state.cards.push(action.payload);
+        state.cards.unshift(action.payload); // Add to beginning to match API ordering (newest first)
       }
     },
     incrementPunch: (state, action: PayloadAction<{ shopName: string }>) => {
@@ -72,6 +80,15 @@ const punchCardsSlice = createSlice({
         if (card.currentPunches >= card.totalPunches) {
           card.status = 'REWARD_READY';
         }
+      }
+    },
+    incrementPunchById: (state, action: PayloadAction<{ id: string; status: PunchCardStatusDto }>) => {
+      const card = state.cards.find(
+        card => card.id === action.payload.id
+      );
+      if (card) {
+        card.currentPunches += 1;
+        card.status = action.payload.status;
       }
     },
     clearError: (state) => {
@@ -99,8 +116,10 @@ const punchCardsSlice = createSlice({
 export const {
   clearPunchCards,
   updatePunchCard,
+  updatePunchCardById,
   addPunchCard,
   incrementPunch,
+  incrementPunchById,
   clearError,
 } = punchCardsSlice.actions;
 

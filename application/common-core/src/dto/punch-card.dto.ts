@@ -7,4 +7,5 @@ export interface PunchCardDto {
   currentPunches: number;
   totalPunches: number;
   status: PunchCardStatusDto;
+  createdAt: string; // ISO string format
 } 

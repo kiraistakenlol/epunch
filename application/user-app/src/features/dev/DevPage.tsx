@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store/store';
 import { selectUserId, setUserId } from '../auth/authSlice';
 import { apiClient } from 'e-punch-common-ui';
+import { useWebSocket } from '../../hooks/useWebSocket';
+import { webSocketClient } from '../../api/websocketClient';
 
 const LOCAL_STORAGE_USER_ID_KEY = 'epunch_user_id';
 
@@ -78,6 +80,8 @@ const DevPage: React.FC = () => {
   const [apiStatus, setApiStatus] = useState<string>('No API calls made yet');
   const [loading, setLoading] = useState<boolean>(false);
   const [customUserId, setCustomUserId] = useState<string>('412dbe6d-e933-464e-87e2-31fe9c9ee6ac');
+  
+  const { connected, error: wsError, events, clearEvents } = useWebSocket();
 
   const checkBackendConnection = async () => {
     setLoading(true);
@@ -132,6 +136,16 @@ const DevPage: React.FC = () => {
     localStorage.setItem(LOCAL_STORAGE_USER_ID_KEY, customUserId);
     dispatch(setUserId(customUserId));
     setApiStatus(`User ID set to "${customUserId}" in local storage and Redux. Current Redux User ID: ${customUserId}.`);
+  };
+
+  const sendTestEvent = () => {
+    if (webSocketClient.isConnected()) {
+      webSocketClient['socket']?.emit('test', {
+        message: 'Test message from frontend',
+        userId: userId,
+        timestamp: new Date().toISOString(),
+      });
+    }
   };
 
   return (
@@ -202,6 +216,73 @@ const DevPage: React.FC = () => {
           <pre style={styles.statusBox}>
             {apiStatus}
           </pre>
+        </div>
+      </section>
+
+      <section style={styles.section}>
+        <h2 style={styles.sectionTitle}>WebSocket Connection</h2>
+        <div style={styles.userInfo}>
+          <p><strong>Connection Status:</strong> 
+            <span style={{ 
+              color: connected ? 'green' : 'red', 
+              marginLeft: '10px' 
+            }}>
+              {connected ? 'Connected' : 'Disconnected'}
+            </span>
+          </p>
+          {wsError && (
+            <p><strong>Error:</strong> <span style={{ color: 'red' }}>{wsError}</span></p>
+          )}
+        </div>
+        <div>
+          <button 
+            style={styles.button} 
+            onClick={clearEvents}
+            disabled={loading}
+          >
+            Clear Events ({events.length})
+          </button>
+          <button 
+            style={styles.button} 
+            onClick={sendTestEvent}
+            disabled={loading || !connected}
+          >
+            Send Test Event
+          </button>
+        </div>
+        <div>
+          <h3>Real-time Events:</h3>
+          <div style={{ 
+            ...styles.statusBox, 
+            maxHeight: '300px', 
+            fontSize: '12px' 
+          }}>
+            {events.length === 0 ? (
+              <div style={{ color: '#666' }}>No events received yet...</div>
+            ) : (
+              events.slice().reverse().map((event, index) => (
+                <div key={index} style={{ 
+                  marginBottom: '10px', 
+                  padding: '8px', 
+                  backgroundColor: '#f0f0f0', 
+                  borderRadius: '4px',
+                  borderLeft: '4px solid #2196F3'
+                }}>
+                  <div style={{ fontWeight: 'bold', color: '#333' }}>
+                    {event.type} - {event.timestamp.toLocaleTimeString()}
+                  </div>
+                  <pre style={{ 
+                    margin: '4px 0 0 0', 
+                    fontSize: '10px', 
+                    color: '#444',
+                    whiteSpace: 'pre-wrap'
+                  }}>
+                    {JSON.stringify(event.data, null, 2)}
+                  </pre>
+                </div>
+              ))
+            )}
+          </div>
         </div>
       </section>
     </div>

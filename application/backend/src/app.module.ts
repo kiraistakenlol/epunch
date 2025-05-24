@@ -6,6 +6,7 @@ import { DevModule } from './features/dev/dev.module';
 import { DatabaseModule } from './database/database.module';
 import { LoyaltyModule } from './features/loyalty/loyalty.module';
 import { PunchesModule } from './features/punches/punches.module';
+import { WebSocketModule } from './websocket/websocket.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { PunchesModule } from './features/punches/punches.module';
     UserModule,
     DevModule,
     LoyaltyModule,
+    WebSocketModule,
   ],
 })
 export class AppModule {} 

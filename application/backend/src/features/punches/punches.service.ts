@@ -3,6 +3,7 @@ import { CreatePunchDto, PunchOperationResultDto, PunchCardDto } from 'e-punch-c
 import { PunchCardsRepository } from '../punch-cards/punch-cards.repository';
 import { LoyaltyRepository } from '../loyalty/loyalty.repository';
 import { UserRepository } from '../user/user.repository';
+import { EventService } from '../../events/event.service';
 
 @Injectable()
 export class PunchesService {
@@ -12,6 +13,7 @@ export class PunchesService {
     private readonly punchCardsRepository: PunchCardsRepository,
     private readonly loyaltyRepository: LoyaltyRepository,
     private readonly userRepository: UserRepository,
+    private readonly eventService: EventService,
   ) { }
 
   /**
@@ -97,6 +99,7 @@ export class PunchesService {
         currentPunches: newActiveCardEntity.current_punches,
         totalPunches: loyaltyProgram.required_punches,
         status: 'ACTIVE',
+        createdAt: newActiveCardEntity.created_at.toISOString(),
       };
     }
 
@@ -105,6 +108,27 @@ export class PunchesService {
       `New punch count: ${newPunchCount}. Reward achieved: ${rewardAchieved}. ` +
       `New active card created: ${newPunchCardDto ? newPunchCardDto.id : 'No'}`
     );
+
+    this.logger.log(`Emitting PUNCH_ADDED event for user ${userId}, card ${updatedPunchCard.id}`);
+    this.eventService.emitAppEvent({
+      type: 'PUNCH_ADDED',
+      userId,
+      data: {
+        punchCardId: updatedPunchCard.id,
+        punchCardStatus: newStatus as 'ACTIVE' | 'REWARD_READY',
+      },
+    });
+
+    if (newPunchCardDto) {
+      this.logger.log(`Emitting CARD_CREATED event for user ${userId}, new card ${newPunchCardDto.id}`);
+      this.eventService.emitAppEvent({
+        type: 'CARD_CREATED',
+        userId,
+        data: {
+          punchCard: newPunchCardDto,
+        },
+      });
+    }
 
     return {
       rewardAchieved,
