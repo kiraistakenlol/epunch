@@ -6,7 +6,8 @@
       "require": "./dist/index.cjs.js",
       "import": "./dist/index.es.js",
       "types": "./dist/index.d.ts"
-    }
+    },
+    "./dist/styles/mobile-base.css": "./dist/styles/mobile-base.css"
   },
   "files": [
     "dist"

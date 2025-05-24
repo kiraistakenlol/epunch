@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import dts from 'vite-plugin-dts';
 import path from 'path';
+import fs from 'fs';
 
 export default defineConfig({
   plugins: [
@@ -11,6 +12,23 @@ export default defineConfig({
       // Optional: specify tsconfig file if not tsconfig.json
       // tsConfigFilePath: './tsconfig.json',
     }),
+    // Custom plugin to copy CSS files
+    {
+      name: 'copy-css',
+      generateBundle() {
+        // Copy CSS files to dist during build
+        const srcPath = path.resolve(__dirname, 'src/styles/mobile-base.css');
+        const distPath = path.resolve(__dirname, 'dist/styles');
+        
+        if (!fs.existsSync(distPath)) {
+          fs.mkdirSync(distPath, { recursive: true });
+        }
+        
+        if (fs.existsSync(srcPath)) {
+          fs.copyFileSync(srcPath, path.join(distPath, 'mobile-base.css'));
+        }
+      }
+    }
   ],
   build: {
     sourcemap: true, // Optional: generate sourcemaps for easier debugging

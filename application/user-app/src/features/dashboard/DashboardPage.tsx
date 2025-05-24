@@ -5,7 +5,7 @@ import styles from './DashboardPage.module.css';
 import type { RootState, AppDispatch } from '../../store/store';
 import { selectUserId } from '../auth/authSlice';
 import { PunchCardDto, AppEvent } from 'e-punch-common-core';
-import { AppHeader } from 'e-punch-common-ui';
+import { AppHeader, useViewportHeight } from 'e-punch-common-ui';
 import { 
   fetchPunchCards, 
   selectPunchCards, 
@@ -16,7 +16,6 @@ import {
   updatePunchCard
 } from '../punchCards/punchCardsSlice';
 import { useWebSocket } from '../../hooks/useWebSocket';
-import { useViewportHeight } from '../../hooks/useViewportHeight';
 
 // Interface for component props, maps DTO to what component expects
 interface PunchCardItemProps extends PunchCardDto {
