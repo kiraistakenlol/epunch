@@ -288,7 +288,7 @@ const DashboardPage: React.FC = () => {
         if (punchCard) {
           setTimeout(() => {
             dispatch(addPunchCard(punchCard));
-          }, 1800);
+          }, 2500);
         }
       }
     }

@@ -134,20 +134,25 @@
 
 .punchCircleAnimated {
   animation: newPunchAnimation 1.5s ease-out;
+  position: relative;
+  z-index: 10;
 }
 
 @keyframes newPunchAnimation {
   0% {
     transform: scale(0.5);
     background-color: #ffd700;
+    box-shadow: 0 0 20px #ffd700;
   }
   50% {
-    transform: scale(1.3);
+    transform: scale(1.4);
     background-color: #ff9800;
+    box-shadow: 0 0 25px #ff9800;
   }
   100% {
     transform: scale(1);
     background-color: #5d4037;
+    box-shadow: none;
   }
 }
 
@@ -185,7 +190,7 @@
 
 .highlighted {
   border: 3px solid #ffd700;
-  transform: scale(1.02);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
 }
 
