@@ -2,8 +2,13 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { PunchCardDto, PunchCardStatusDto } from 'e-punch-common-core';
 import { apiClient } from 'e-punch-common-ui';
 
+interface PunchCardWithAnimations extends PunchCardDto {
+  animateNewPunch?: boolean;
+  animateNewCard?: boolean;
+}
+
 export interface PunchCardsState {
-  cards: PunchCardDto[] | undefined;
+  cards: PunchCardWithAnimations[] | undefined;
   isLoading: boolean;
   error: string | null;
   lastFetched: number | null;
@@ -80,6 +85,39 @@ const punchCardsSlice = createSlice({
         state.cards.unshift(action.payload);
       }
     },
+    addPunchCardWithAnimation: (state, action: PayloadAction<PunchCardDto>) => {
+      if (!state.cards) {
+        state.cards = [{ ...action.payload, animateNewCard: true }];
+        return;
+      }
+      const exists = state.cards.some(
+        card => card.id === action.payload.id
+      );
+      if (!exists) {
+        state.cards.unshift({ ...action.payload, animateNewCard: true });
+      }
+    },
+    updatePunchCardWithAnimation: (state, action: PayloadAction<PunchCardDto>) => {
+      if (!state.cards) {
+        state.cards = [{ ...action.payload, animateNewPunch: true }];
+        return;
+      }
+      const index = state.cards.findIndex(
+        card => card.shopName === action.payload.shopName
+      );
+      if (index !== -1) {
+        state.cards[index] = { ...action.payload, animateNewPunch: true };
+      } else {
+        state.cards.push({ ...action.payload, animateNewPunch: true });
+      }
+    },
+    clearAnimationFlag: (state, action: PayloadAction<{ cardId: string; flag: 'animateNewPunch' | 'animateNewCard' }>) => {
+      if (!state.cards) return;
+      const card = state.cards.find(c => c.id === action.payload.cardId);
+      if (card) {
+        card[action.payload.flag] = false;
+      }
+    },
     incrementPunch: (state, action: PayloadAction<{ shopName: string }>) => {
       if (!state.cards) return;
       const card = state.cards.find(
@@ -129,6 +167,9 @@ export const {
   updatePunchCard,
   updatePunchCardById,
   addPunchCard,
+  addPunchCardWithAnimation,
+  updatePunchCardWithAnimation,
+  clearAnimationFlag,
   incrementPunch,
   incrementPunchById,
   clearError,

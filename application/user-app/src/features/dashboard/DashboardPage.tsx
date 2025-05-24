@@ -11,20 +11,9 @@ import {
   selectPunchCards,
   selectPunchCardsLoading,
   selectPunchCardsError,
-  clearPunchCards
+  clearPunchCards,
+  clearAnimationFlag
 } from '../punchCards/punchCardsSlice';
-import {
-  selectUnprocessedEvents,
-  selectHighlightedCardId,
-  selectAnimatedPunch,
-  selectAlert,
-  markEventProcessed,
-  setHighlightedCard,
-  setAnimatedPunch,
-  setAlert,
-  clearAllAnimations,
-  cleanupProcessedEvents
-} from '../ui/uiEventsSlice';
 import { useWebSocketEventHandler } from '../../hooks/useWebSocketEventHandler';
 
 // Interface for component props, maps DTO to what component expects
@@ -116,8 +105,9 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
   const isLoading = useSelector((state: RootState) => selectPunchCardsLoading(state));
   const error = useSelector((state: RootState) => selectPunchCardsError(state));
   const [showEmptyState, setShowEmptyState] = useState(false);
-  const [animatingCardIds, setAnimatingCardIds] = useState<Set<string>>(new Set());
-  const [slidingRightCardIds, setSlidingRightCardIds] = useState<Set<string>>(new Set());
+  const [localHighlightedCardId, setLocalHighlightedCardId] = useState<string | null>(null);
+  const [localAnimatedPunch, setLocalAnimatedPunch] = useState<{ cardId: string; punchIndex: number } | null>(null);
+  const [alert, setAlert] = useState<string | null>(null);
   const prevPunchCardsRef = useRef<PunchCardDto[] | undefined>(undefined);
 
   useEffect(() => {
@@ -146,52 +136,58 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
   }, [isLoading, error, punchCards]);
 
   useEffect(() => {
-    if (!punchCards || punchCards.length === 0) return;
+    if (!punchCards) return;
 
-    const newCardIds = new Set<string>();
-    const slidingRightIds = new Set<string>();
-    let hasNewCards = false;
+    punchCards.forEach(card => {
+      if (card.animateNewPunch) {
+        const alertMessage = card.status === 'REWARD_READY'
+          ? "🎉 You've got a new punch and your reward is ready!"
+          : "✨ You've got a new punch!";
+        setAlert(alertMessage);
+        setLocalHighlightedCardId(card.id);
+        setLocalAnimatedPunch({
+          cardId: card.id,
+          punchIndex: card.currentPunches - 1
+        });
 
-    if (!prevPunchCardsRef.current) {
-      punchCards.forEach((card) => {
-        newCardIds.add(card.id);
-        hasNewCards = true;
-      });
-    } else {
-      const newCardsAtBeginning = [];
-      for (let i = 0; i < punchCards.length; i++) {
-        const card = punchCards[i];
-        const existsInPrevious = prevPunchCardsRef.current.some(c => c.id === card.id);
-        if (!existsInPrevious) {
-          newCardsAtBeginning.push(card);
-          newCardIds.add(card.id);
-          hasNewCards = true;
-        } else {
-          break;
-        }
+        setTimeout(() => {
+          setAlert(null);
+          setLocalHighlightedCardId(null);
+          setLocalAnimatedPunch(null);
+          dispatch(clearAnimationFlag({ cardId: card.id, flag: 'animateNewPunch' }));
+        }, 3000);
       }
 
-      if (newCardsAtBeginning.length > 0) {
-        punchCards.forEach((card, index) => {
-          if (index >= newCardsAtBeginning.length) {
-            slidingRightIds.add(card.id);
+      if (card.animateNewCard) {
+        setTimeout(() => {
+          dispatch(clearAnimationFlag({ cardId: card.id, flag: 'animateNewCard' }));
+        }, 600);
+      }
+    });
+  }, [punchCards, dispatch]);
+
+  const getCardAnimations = () => {
+    if (!punchCards) return { slideInCards: new Set(), slideRightCards: new Set() };
+    
+    const slideInCards = new Set<string>();
+    const slideRightCards = new Set<string>();
+    
+    punchCards.forEach((card, index) => {
+      if (card.animateNewCard) {
+        slideInCards.add(card.id);
+        
+        punchCards.forEach((otherCard, otherIndex) => {
+          if (otherIndex > index && !otherCard.animateNewCard) {
+            slideRightCards.add(otherCard.id);
           }
         });
       }
-    }
-
-    if (hasNewCards) {
-      setAnimatingCardIds(newCardIds);
-      setSlidingRightCardIds(slidingRightIds);
-      
-      setTimeout(() => {
-        setAnimatingCardIds(new Set());
-        setSlidingRightCardIds(new Set());
-      }, 600);
-    }
+    });
     
-    prevPunchCardsRef.current = punchCards;
-  }, [punchCards]);
+    return { slideInCards, slideRightCards };
+  };
+
+  const { slideInCards, slideRightCards } = getCardAnimations();
 
   const renderContent = () => {
     if (isLoading || punchCards === undefined) {
@@ -231,21 +227,30 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
           <PunchCardItem
             key={card.id}
             {...card}
-            isHighlighted={highlightedCardId === card.id}
+            isHighlighted={localHighlightedCardId === card.id}
             animatedPunchIndex={
-              animatedPunch && animatedPunch.cardId === card.id
-                ? animatedPunch.punchIndex
+              localAnimatedPunch && localAnimatedPunch.cardId === card.id
+                ? localAnimatedPunch.punchIndex
                 : undefined
             }
-            shouldSlideIn={animatingCardIds.has(card.id)}
-            shouldSlideRight={slidingRightCardIds.has(card.id)}
+            shouldSlideIn={slideInCards.has(card.id)}
+            shouldSlideRight={slideRightCards.has(card.id)}
           />
         ))}
       </div>
     );
   };
 
-  return renderContent();
+  return (
+    <>
+      {alert && (
+        <div className={styles.alert}>
+          {alert}
+        </div>
+      )}
+      {renderContent()}
+    </>
+  );
 };
 
 const DashboardPage: React.FC = () => {
@@ -254,52 +259,33 @@ const DashboardPage: React.FC = () => {
   
   useWebSocketEventHandler();
 
-  const unprocessedEvents = useSelector((state: RootState) => selectUnprocessedEvents(state));
-  const highlightedCardId = useSelector((state: RootState) => selectHighlightedCardId(state));
-  const animatedPunch = useSelector((state: RootState) => selectAnimatedPunch(state));
-  const alert = useSelector((state: RootState) => selectAlert(state));
+  const punchCards = useSelector((state: RootState) => selectPunchCards(state));
+  const isLoading = useSelector((state: RootState) => selectPunchCardsLoading(state));
+  const error = useSelector((state: RootState) => selectPunchCardsError(state));
 
   useEffect(() => {
-    unprocessedEvents.forEach(event => {
-      if (event.type === 'PUNCH_ADDED') {
-        const alertMessage = "✨ You've got a new punch!";
-        dispatch(setAlert(alertMessage));
-        dispatch(setHighlightedCard(event.cardId));
-        
-        if (event.punchIndex !== undefined) {
-          dispatch(setAnimatedPunch({
-            cardId: event.cardId,
-            punchIndex: event.punchIndex
-          }));
-        }
-
-        setTimeout(() => {
-          dispatch(clearAllAnimations());
-        }, 3000);
-
-      } else if (event.type === 'CARD_CREATED') {
-        // Just mark as processed, no UI action needed
-      }
-
-      dispatch(markEventProcessed(event.id));
-    });
-
-    if (unprocessedEvents.length > 0) {
-      setTimeout(() => {
-        dispatch(cleanupProcessedEvents());
-      }, 5000);
+    if (userId === null) {
+      dispatch(clearPunchCards());
+      return;
     }
-  }, [unprocessedEvents, dispatch]);
+    if (userId) {
+      dispatch(fetchPunchCards(userId));
+    } else {
+      dispatch(clearPunchCards());
+    }
+  }, [userId, dispatch]);
+
+  useEffect(() => {
+    if (isLoading || punchCards === undefined) {
+      // Handle loading or empty state
+    } else if (!error && punchCards.length === 0) {
+      // Handle empty state
+    }
+  }, [isLoading, error, punchCards]);
 
   return (
     <div className={styles.pageContainer}>
       <AppHeader title="EPunch" />
-      
-      {alert && (
-        <div className={styles.alert}>
-          {alert}
-        </div>
-      )}
       
       <main className={styles.mainContent}>
         <div className={styles.qrSection}>
@@ -311,8 +297,8 @@ const DashboardPage: React.FC = () => {
         <div className={styles.cardsSection}>
           <PunchCardsSection
             userId={userId}
-            highlightedCardId={highlightedCardId}
-            animatedPunch={animatedPunch}
+            highlightedCardId={null}
+            animatedPunch={null}
           />
         </div>
       </main>
