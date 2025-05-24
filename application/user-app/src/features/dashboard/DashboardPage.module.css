@@ -1,19 +1,23 @@
 /* DashboardPage.module.css - Mobile-first 3-section layout */
 
 .pageContainer {
-  height: calc(var(--vh, 1vh) * 100);
+  height: 100vh;
+  height: 100dvh;
   background-color: #424242;
-  display: grid;
-  grid-template-rows: 70px 1fr 180px;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
-  transition: all 0.3s ease;
 }
 
-.headerSpacer {
-  /* Empty space to account for fixed header */
+.mainContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-top: 70px;
 }
 
 .qrSection {
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -34,11 +38,11 @@
 }
 
 .cardsSection {
-  height: 180px;
+  height: 250px;
   background-color: #795548;
+  overflow-x: auto;
   overflow-y: hidden;
-  display: flex;
-  flex-direction: column;
+  padding: 15px 20px;
 }
 
 .cardsTitle {
@@ -57,16 +61,16 @@
 
 .punchCardsList {
   display: flex;
-  padding: 0 0px;
   gap: 20px;
+  height: 100%;
   align-items: center;
-  min-height: 180px;
 }
 
 .punchCardItem {
   background-color: #8d6e63;
   border-radius: 12px;
   min-width: 280px;
+  height: 220px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   flex-shrink: 0;
   display: flex;
@@ -81,17 +85,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-shrink: 0;
+  font-size: 0.85em;
 }
 
 .headerLeft {
   display: flex;
   align-items: center;
-  font-size: 0.9em;
 }
 
 .headerRight {
-  font-size: 0.8em;
   opacity: 0.8;
 }
 
@@ -100,22 +102,20 @@
   width: 14px;
   height: 14px;
   fill: #f5f5dc;
-  flex-shrink: 0;
 }
 
 .punchCardBody {
   padding: 20px;
   flex: 1;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  align-items: center;
 }
 
 .punchCirclesContainer {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
-  margin-bottom: 15px;
+  width: 100%;
 }
 
 .punchCircle {
@@ -152,11 +152,10 @@
 }
 
 .punchCardFooter {
-  padding: 15px 18px 18px 18px;
+  padding: 15px 18px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-shrink: 0;
 }
 
 .shopName {
@@ -210,7 +209,6 @@
   justify-content: center;
   align-items: center;
   height: 100%;
-  min-height: 180px;
 }
 
 .loadingDots {
@@ -249,7 +247,6 @@
   align-items: center;
   height: 100%;
   padding: 20px;
-  min-height: 180px;
 }
 
 .emptyStateContent {

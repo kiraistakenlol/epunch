@@ -5,7 +5,7 @@ import styles from './DashboardPage.module.css';
 import type { RootState, AppDispatch } from '../../store/store';
 import { selectUserId } from '../auth/authSlice';
 import { PunchCardDto, AppEvent } from 'e-punch-common-core';
-import { AppHeader, useViewportHeight } from 'e-punch-common-ui';
+import { AppHeader } from 'e-punch-common-ui';
 import {
   fetchPunchCards,
   selectPunchCards,
@@ -178,27 +178,17 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
     );
   };
 
-  return (
-    <div className={styles.cardsContent}>
-      {renderContent()}
-    </div>
-  );
+  return renderContent();
 };
 
 const DashboardPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const userId = useSelector((state: RootState) => selectUserId(state));
-
-  // WebSocket events
   const { events } = useWebSocket();
-
-  // Initialize viewport height handling for mobile Safari
-  useViewportHeight();
 
   // State for alerts and animations
   const [alert, setAlert] = useState<string | null>(null);
   const [highlightedCardId, setHighlightedCardId] = useState<string | null>(null);
-  const [newCardAnimation, setNewCardAnimation] = useState<boolean>(false);
   const [animatedPunch, setAnimatedPunch] = useState<{ cardId: string; punchIndex: number } | null>(null);
 
   // Handle WebSocket events
@@ -241,12 +231,9 @@ const DashboardPage: React.FC = () => {
         if (punchCard) {
           setTimeout(() => {
             dispatch(addPunchCard(punchCard));
-
-            setNewCardAnimation(true);
             setAlert("🆕 New punch card created!");
 
             setTimeout(() => {
-              setNewCardAnimation(false);
               setAlert(null);
             }, 3000);
           }, 1800);
@@ -256,16 +243,16 @@ const DashboardPage: React.FC = () => {
   }, [events, userId, dispatch]);
 
   return (
-    <>
+    <div className={styles.pageContainer}>
       <AppHeader title="EPunch" />
+      
       {alert && (
         <div className={styles.alert}>
           {alert}
         </div>
       )}
-      <div className={`${styles.pageContainer} ${newCardAnimation ? styles.newCardAnimation : ''}`}>
-        <div className={styles.headerSpacer}></div>
-
+      
+      <main className={styles.mainContent}>
         <div className={styles.qrSection}>
           <div className={styles.qrCodeContainer}>
             {userId && <UserQRCode userId={userId} />}
@@ -279,8 +266,8 @@ const DashboardPage: React.FC = () => {
             animatedPunch={animatedPunch}
           />
         </div>
-      </div>
-    </>
+      </main>
+    </div>
   );
 };
 
