@@ -6,10 +6,10 @@ import type { RootState, AppDispatch } from '../../store/store';
 import { selectUserId } from '../auth/authSlice';
 import { PunchCardDto, AppEvent } from 'e-punch-common-core';
 import { AppHeader, useViewportHeight } from 'e-punch-common-ui';
-import { 
-  fetchPunchCards, 
-  selectPunchCards, 
-  selectPunchCardsLoading, 
+import {
+  fetchPunchCards,
+  selectPunchCards,
+  selectPunchCardsLoading,
   selectPunchCardsError,
   clearPunchCards,
   addPunchCard,
@@ -30,14 +30,14 @@ const LocationPinIcon = () => (
   </svg>
 );
 
-const PunchCardItem: React.FC<PunchCardItemProps> = ({ 
-  shopName, 
-  shopAddress, 
-  currentPunches, 
-  totalPunches, 
-  status, 
-  createdAt, 
-  isHighlighted = false, 
+const PunchCardItem: React.FC<PunchCardItemProps> = ({
+  shopName,
+  shopAddress,
+  currentPunches,
+  totalPunches,
+  status,
+  createdAt,
+  isHighlighted = false,
   animatedPunchIndex
 }) => {
   const punchCircles = [];
@@ -45,8 +45,8 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
     const isFilled = i < currentPunches;
     const isAnimated = animatedPunchIndex === i;
     punchCircles.push(
-      <div 
-        key={i} 
+      <div
+        key={i}
         className={`${styles.punchCircle} ${isFilled ? styles.punchCircleFilled : ''} ${isAnimated ? styles.punchCircleAnimated : ''}`}
       ></div>
     );
@@ -128,7 +128,7 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
     }
   }, [isLoading, error, punchCards]);
 
-  const renderPunchCardContent = () => {
+  const renderContent = () => {
     if (isLoading || punchCards === undefined) {
       return (
         <div className={styles.loadingContainer}>
@@ -139,7 +139,7 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
           </div>
         </div>
       );
-    } 
+    }
     if (error) {
       return (
         <div className={styles.emptyStateContainer}>
@@ -149,7 +149,7 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
           </div>
         </div>
       );
-    } 
+    }
     if (showEmptyState) {
       return (
         <div className={styles.emptyStateContainer}>
@@ -160,47 +160,41 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
         </div>
       );
     }
-    return punchCards.map((card, index) => (
-      <PunchCardItem 
-        key={`${card.shopName}-${index}`} 
-        {...card} 
-        isHighlighted={highlightedCardId === card.id}
-        animatedPunchIndex={
-          animatedPunch && animatedPunch.cardId === card.id 
-            ? animatedPunch.punchIndex 
-            : undefined
-        }
-      />
-    ));
+    return (
+      <div className={styles.punchCardsList}>
+        {punchCards.map((card, index) => (
+          <PunchCardItem
+            key={`${card.shopName}-${index}`}
+            {...card}
+            isHighlighted={highlightedCardId === card.id}
+            animatedPunchIndex={
+              animatedPunch && animatedPunch.cardId === card.id
+                ? animatedPunch.punchIndex
+                : undefined
+            }
+          />
+        ))}
+      </div>
+    );
   };
 
-  if (isLoading || punchCards === undefined || error || showEmptyState) {
-    return (
-      <section className={`${styles.punchCardsSection} ${styles.noScroll}`}>
-        {renderPunchCardContent()}
-      </section>
-    );
-  }
-
   return (
-    <section className={styles.punchCardsSection}>
-      <div className={styles.punchCardsList}>
-        {renderPunchCardContent()}
-      </div>
-    </section>
+    <div className={styles.cardsContent}>
+      {renderContent()}
+    </div>
   );
 };
 
 const DashboardPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const userId = useSelector((state: RootState) => selectUserId(state));
-  
+
   // WebSocket events
   const { events } = useWebSocket();
-  
+
   // Initialize viewport height handling for mobile Safari
   useViewportHeight();
-  
+
   // State for alerts and animations
   const [alert, setAlert] = useState<string | null>(null);
   const [highlightedCardId, setHighlightedCardId] = useState<string | null>(null);
@@ -212,45 +206,45 @@ const DashboardPage: React.FC = () => {
     if (!userId || events.length === 0) return;
 
     const latestEvent = events[events.length - 1];
-    
+
     if (latestEvent.type === 'punch_event' && latestEvent.data && latestEvent.data[0]) {
       const appEvent = latestEvent.data[0] as AppEvent;
-      
+
       if (appEvent.userId !== userId) return;
 
       if (appEvent.type === 'PUNCH_ADDED') {
         const { punchCard } = appEvent;
-        
+
         dispatch(updatePunchCard(punchCard));
-        
-        const alertMessage = punchCard.status === 'REWARD_READY' 
+
+        const alertMessage = punchCard.status === 'REWARD_READY'
           ? "🎉 You've got a new punch and your reward is ready!"
           : "✨ You've got a new punch!";
         setAlert(alertMessage);
-        
+
         setHighlightedCardId(punchCard.id);
-        
-        setAnimatedPunch({ 
-          cardId: punchCard.id, 
+
+        setAnimatedPunch({
+          cardId: punchCard.id,
           punchIndex: punchCard.currentPunches - 1
         });
-        
+
         setTimeout(() => {
           setAlert(null);
           setHighlightedCardId(null);
           setAnimatedPunch(null);
         }, 3000);
-        
+
       } else if (appEvent.type === 'CARD_CREATED') {
         const { punchCard } = appEvent;
-        
+
         if (punchCard) {
           setTimeout(() => {
             dispatch(addPunchCard(punchCard));
-            
+
             setNewCardAnimation(true);
             setAlert("🆕 New punch card created!");
-            
+
             setTimeout(() => {
               setNewCardAnimation(false);
               setAlert(null);
@@ -269,19 +263,22 @@ const DashboardPage: React.FC = () => {
           {alert}
         </div>
       )}
-      <div className={`${styles.pageContainer} ${newCardAnimation ? styles.newCardAnimation : ''}`}>
+      <div className={styles.pageContainer}>
+        <div className={styles.headerSpacer}></div>
 
-        <section className={styles.qrSection}>
-          <div className={styles.qrCodeWrapper}>
+        <div className={styles.qrSection}>
+          <div className={styles.qrCodeContainer}>
             {userId && <UserQRCode userId={userId} />}
           </div>
-        </section>
+        </div>
 
-        <PunchCardsSection 
-          userId={userId}
-          highlightedCardId={highlightedCardId}
-          animatedPunch={animatedPunch}
-        />
+        <div className={styles.cardsSection}>
+          <PunchCardsSection
+            userId={userId}
+            highlightedCardId={highlightedCardId}
+            animatedPunch={animatedPunch}
+          />
+        </div>
       </div>
     </>
   );
