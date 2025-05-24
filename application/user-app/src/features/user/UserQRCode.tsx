@@ -1,26 +1,14 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { QRCodeCanvas } from 'qrcode.react';
-import { selectUserId, selectAuthLoading } from '../auth/authSlice';
-import type { RootState } from '../../store/store';
 
-const UserQRCode: React.FC = () => {
-  const currentUserId = useSelector((state: RootState) => selectUserId(state));
-  const isLoading = useSelector((state: RootState) => selectAuthLoading(state));
+interface UserQRCodeProps {
+  userId: string;
+}
 
-  if (isLoading) {
-    return <p>Loading QR Code...</p>;
-  }
-
-  if (!currentUserId) {
-    return <p>Error: Could not retrieve user ID for QR Code.</p>;
-  }
-
-  const qrValue = currentUserId;
-
+const UserQRCode: React.FC<UserQRCodeProps> = ({ userId }) => {
   return (
     <QRCodeCanvas 
-      value={qrValue} 
+      value={userId} 
       size={400} 
       level="H" 
       style={{ width: '100%', height: 'auto' }}

@@ -273,7 +273,7 @@ const DashboardPage: React.FC = () => {
 
         <section className={styles.qrSection}>
           <div className={styles.qrCodeWrapper}>
-            <UserQRCode />
+            {userId && <UserQRCode userId={userId} />}
           </div>
         </section>
 
