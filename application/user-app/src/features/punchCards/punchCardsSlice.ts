@@ -3,14 +3,14 @@ import { PunchCardDto, PunchCardStatusDto } from 'e-punch-common-core';
 import { apiClient } from 'e-punch-common-ui';
 
 export interface PunchCardsState {
-  cards: PunchCardDto[];
+  cards: PunchCardDto[] | undefined;
   isLoading: boolean;
   error: string | null;
   lastFetched: number | null;
 }
 
 const initialState: PunchCardsState = {
-  cards: [],
+  cards: undefined,
   isLoading: false,
   error: null,
   lastFetched: null,
@@ -41,11 +41,15 @@ const punchCardsSlice = createSlice({
   initialState,
   reducers: {
     clearPunchCards: (state) => {
-      state.cards = [];
+      state.cards = undefined;
       state.error = null;
       state.lastFetched = null;
     },
     updatePunchCard: (state, action: PayloadAction<PunchCardDto>) => {
+      if (!state.cards) {
+        state.cards = [action.payload];
+        return;
+      }
       const index = state.cards.findIndex(
         card => card.shopName === action.payload.shopName
       );
@@ -56,6 +60,7 @@ const punchCardsSlice = createSlice({
       }
     },
     updatePunchCardById: (state, action: PayloadAction<{ id: string; status: PunchCardStatusDto }>) => {
+      if (!state.cards) return;
       const index = state.cards.findIndex(
         card => card.id === action.payload.id
       );
@@ -64,14 +69,19 @@ const punchCardsSlice = createSlice({
       }
     },
     addPunchCard: (state, action: PayloadAction<PunchCardDto>) => {
+      if (!state.cards) {
+        state.cards = [action.payload];
+        return;
+      }
       const exists = state.cards.some(
         card => card.id === action.payload.id
       );
       if (!exists) {
-        state.cards.unshift(action.payload); // Add to beginning to match API ordering (newest first)
+        state.cards.unshift(action.payload);
       }
     },
     incrementPunch: (state, action: PayloadAction<{ shopName: string }>) => {
+      if (!state.cards) return;
       const card = state.cards.find(
         card => card.shopName === action.payload.shopName
       );
@@ -83,6 +93,7 @@ const punchCardsSlice = createSlice({
       }
     },
     incrementPunchById: (state, action: PayloadAction<{ id: string; status: PunchCardStatusDto }>) => {
+      if (!state.cards) return;
       const card = state.cards.find(
         card => card.id === action.payload.id
       );

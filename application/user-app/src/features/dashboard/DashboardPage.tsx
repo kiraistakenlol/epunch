@@ -87,25 +87,49 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
 
 // Props for the PunchCardsSection component
 interface PunchCardsSectionProps {
-  cards: PunchCardDto[];
-  isLoading: boolean;
-  error: string | null;
+  userId: string | null;
   highlightedCardId: string | null;
   animatedPunch: { cardId: string; punchIndex: number } | null;
 }
 
 const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
-  cards,
-  isLoading,
-  error,
+  userId,
   highlightedCardId,
   animatedPunch
 }) => {
-  const cardsArray = Array.isArray(cards) ? cards : [];
+  const dispatch = useDispatch<AppDispatch>();
+  const punchCards = useSelector((state: RootState) => selectPunchCards(state));
+  const isLoading = useSelector((state: RootState) => selectPunchCardsLoading(state));
+  const error = useSelector((state: RootState) => selectPunchCardsError(state));
+  const [showEmptyState, setShowEmptyState] = useState(false);
 
-  // Render content based on loading and data state
+  useEffect(() => {
+    if (userId === null) {
+      dispatch(clearPunchCards());
+      return;
+    }
+    if (userId) {
+      dispatch(fetchPunchCards(userId));
+    } else {
+      dispatch(clearPunchCards());
+    }
+  }, [userId, dispatch]);
+
+  useEffect(() => {
+    if (isLoading || punchCards === undefined) {
+      setShowEmptyState(false);
+    } else if (!error && punchCards.length === 0) {
+      const timer = setTimeout(() => {
+        setShowEmptyState(true);
+      }, 300);
+      return () => clearTimeout(timer);
+    } else {
+      setShowEmptyState(false);
+    }
+  }, [isLoading, error, punchCards]);
+
   const renderPunchCardContent = () => {
-    if (isLoading) {
+    if (isLoading || punchCards === undefined) {
       return (
         <div className={styles.loadingContainer}>
           <div className={styles.loadingDots}>
@@ -126,7 +150,7 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
         </div>
       );
     } 
-    if (cardsArray.length === 0) {
+    if (showEmptyState) {
       return (
         <div className={styles.emptyStateContainer}>
           <div className={styles.emptyStateContent}>
@@ -136,7 +160,7 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
         </div>
       );
     }
-    return cardsArray.map((card, index) => (
+    return punchCards.map((card, index) => (
       <PunchCardItem 
         key={`${card.shopName}-${index}`} 
         {...card} 
@@ -150,9 +174,7 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
     ));
   };
 
-  // For empty states (loading, error, no cards), render directly in section
-  // For cards, wrap in punchCardsList for horizontal scrolling
-  if (isLoading || error || cardsArray.length === 0) {
+  if (isLoading || punchCards === undefined || error || showEmptyState) {
     return (
       <section className={`${styles.punchCardsSection} ${styles.noScroll}`}>
         {renderPunchCardContent()}
@@ -172,9 +194,6 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
 const DashboardPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const userId = useSelector((state: RootState) => selectUserId(state));
-  const punchCards = useSelector((state: RootState) => selectPunchCards(state));
-  const isLoading = useSelector((state: RootState) => selectPunchCardsLoading(state));
-  const error = useSelector((state: RootState) => selectPunchCardsError(state));
   
   // WebSocket events
   const { events } = useWebSocket();
@@ -188,53 +207,34 @@ const DashboardPage: React.FC = () => {
   const [newCardAnimation, setNewCardAnimation] = useState<boolean>(false);
   const [animatedPunch, setAnimatedPunch] = useState<{ cardId: string; punchIndex: number } | null>(null);
 
-  useEffect(() => {
-    if (userId === null) {
-      dispatch(clearPunchCards());
-      return;
-    }
-    if (userId) {
-      dispatch(fetchPunchCards(userId));
-    } else {
-      dispatch(clearPunchCards());
-    }
-  }, [userId, dispatch]);
-
   // Handle WebSocket events
   useEffect(() => {
     if (!userId || events.length === 0) return;
 
     const latestEvent = events[events.length - 1];
     
-    // Only process punch_event type that contains our AppEvent data
     if (latestEvent.type === 'punch_event' && latestEvent.data && latestEvent.data[0]) {
       const appEvent = latestEvent.data[0] as AppEvent;
       
-      // Only handle events for current user
       if (appEvent.userId !== userId) return;
 
       if (appEvent.type === 'PUNCH_ADDED') {
         const { punchCard } = appEvent;
         
-        // Update the entire punch card with the new data
         dispatch(updatePunchCard(punchCard));
         
-        // Show alert
         const alertMessage = punchCard.status === 'REWARD_READY' 
           ? "🎉 You've got a new punch and your reward is ready!"
           : "✨ You've got a new punch!";
         setAlert(alertMessage);
         
-        // Highlight the card
         setHighlightedCardId(punchCard.id);
         
-        // Use the punch card data from the event for animation
         setAnimatedPunch({ 
           cardId: punchCard.id, 
-          punchIndex: punchCard.currentPunches - 1 // Current punches - 1 is the newly added punch index
+          punchIndex: punchCard.currentPunches - 1
         });
         
-        // Clear alert, highlight, and animation after 3 seconds
         setTimeout(() => {
           setAlert(null);
           setHighlightedCardId(null);
@@ -245,24 +245,21 @@ const DashboardPage: React.FC = () => {
         const { punchCard } = appEvent;
         
         if (punchCard) {
-          // Delay card creation until after punch animation finishes (1.8 seconds)
           setTimeout(() => {
             dispatch(addPunchCard(punchCard));
             
-            // Show new card animation
             setNewCardAnimation(true);
             setAlert("🆕 New punch card created!");
             
-            // Clear animation and alert after 3 seconds
             setTimeout(() => {
               setNewCardAnimation(false);
               setAlert(null);
             }, 3000);
-          }, 1800); // Wait for punch animation to complete
+          }, 1800);
         }
       }
     }
-  }, [events, userId, dispatch]); // Removed punchCards to prevent infinite loop
+  }, [events, userId, dispatch]);
 
   return (
     <>
@@ -281,9 +278,7 @@ const DashboardPage: React.FC = () => {
         </section>
 
         <PunchCardsSection 
-          cards={punchCards}
-          isLoading={isLoading}
-          error={error}
+          userId={userId}
           highlightedCardId={highlightedCardId}
           animatedPunch={animatedPunch}
         />
