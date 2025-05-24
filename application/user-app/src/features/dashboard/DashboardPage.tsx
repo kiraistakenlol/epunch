@@ -13,7 +13,7 @@ import {
   selectPunchCardsError,
   clearPunchCards,
   addPunchCard,
-  incrementPunchById
+  updatePunchCard
 } from '../punchCards/punchCardsSlice';
 import { useWebSocket } from '../../hooks/useWebSocket';
 
@@ -115,30 +115,25 @@ const DashboardPage: React.FC = () => {
       if (appEvent.userId !== userId) return;
 
       if (appEvent.type === 'PUNCH_ADDED') {
-        const { punchCardId, punchCardStatus } = appEvent.data;
+        const { punchCard } = appEvent;
         
-        // Increment punch count and update status
-        dispatch(incrementPunchById({ id: punchCardId, status: punchCardStatus }));
+        // Update the entire punch card with the new data
+        dispatch(updatePunchCard(punchCard));
         
         // Show alert
-        const alertMessage = punchCardStatus === 'REWARD_READY' 
+        const alertMessage = punchCard.status === 'REWARD_READY' 
           ? "🎉 You've got a new punch and your reward is ready!"
           : "✨ You've got a new punch!";
         setAlert(alertMessage);
         
         // Highlight the card
-        setHighlightedCardId(punchCardId);
+        setHighlightedCardId(punchCard.id);
         
-        // Get current cards array for animation
-        const currentCards = Array.isArray(punchCards) ? punchCards : [];
-        const card = currentCards.find(c => c.id === punchCardId);
-        if (card) {
-          // Animate the new punch (after increment, so currentPunches is the new punch index)
-          setAnimatedPunch({ 
-            cardId: punchCardId, 
-            punchIndex: card.currentPunches // This will be the new punch index after increment
-          });
-        }
+        // Use the punch card data from the event for animation
+        setAnimatedPunch({ 
+          cardId: punchCard.id, 
+          punchIndex: punchCard.currentPunches - 1 // Current punches - 1 is the newly added punch index
+        });
         
         // Clear alert, highlight, and animation after 3 seconds
         setTimeout(() => {
@@ -148,16 +143,11 @@ const DashboardPage: React.FC = () => {
         }, 3000);
         
       } else if (appEvent.type === 'CARD_CREATED') {
-        console.log('[DashboardPage] CARD_CREATED event received:', appEvent);
-        console.log('[DashboardPage] appEvent.data:', appEvent.data);
-        
-        const { punchCard } = appEvent.data;
-        console.log('[DashboardPage] Extracted punchCard:', punchCard);
+        const { punchCard } = appEvent;
         
         if (punchCard) {
           // Delay card creation until after punch animation finishes (1.8 seconds)
           setTimeout(() => {
-            console.log('[DashboardPage] Dispatching addPunchCard with:', punchCard);
             dispatch(addPunchCard(punchCard));
             
             // Show new card animation
@@ -170,8 +160,6 @@ const DashboardPage: React.FC = () => {
               setAlert(null);
             }, 3000);
           }, 1800); // Wait for punch animation to complete
-        } else {
-          console.error('[DashboardPage] No punchCard found in CARD_CREATED event data');
         }
       }
     }

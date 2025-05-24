@@ -4,25 +4,17 @@ import { PunchCardStatusDto, PunchCardDto } from './punch-card.dto';
 export interface BaseEvent {
   type: string;
   userId: string;
-  data: {
-    [key: string]: any;
-  };
 }
 
 // Specific event types
 export interface PunchAddedEvent extends BaseEvent {
   type: 'PUNCH_ADDED';
-  data: {
-    punchCardId: string;
-    punchCardStatus: PunchCardStatusDto;
-  };
+  punchCard: PunchCardDto;
 }
 
 export interface CardCreatedEvent extends BaseEvent {
   type: 'CARD_CREATED';
-  data: {
-    punchCard: PunchCardDto;
-  };
+  punchCard: PunchCardDto;
 }
 
 // Union type for all events

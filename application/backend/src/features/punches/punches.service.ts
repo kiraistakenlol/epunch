@@ -74,6 +74,13 @@ export class PunchesService {
 
     await this.punchCardsRepository.createPunchRecord(updatedPunchCard.id);
 
+    // Get merchant info once for both events
+    const merchant = await this.loyaltyRepository.findMerchantById(loyaltyProgram.merchant_id);
+    if (!merchant) {
+      this.logger.error(`Merchant ${loyaltyProgram.merchant_id} not found for loyalty program ${loyaltyProgramId}.`);
+      throw new BadRequestException(`Merchant details not found for loyalty program ${loyaltyProgramId}. Critical data missing.`);
+    }
+
     let newPunchCardDto: PunchCardDto | undefined = undefined;
 
     if (newStatus === 'REWARD_READY') {
@@ -87,11 +94,6 @@ export class PunchesService {
 
       this.logger.log(`New active card ${newActiveCardEntity.id} created for user ${userId}, program ${loyaltyProgramId}.`);
 
-      const merchant = await this.loyaltyRepository.findMerchantById(loyaltyProgram.merchant_id);
-      if (!merchant) {
-        this.logger.error(`Merchant ${loyaltyProgram.merchant_id} not found for loyalty program ${loyaltyProgramId}.`);
-        throw new BadRequestException(`Merchant details not found for loyalty program ${loyaltyProgramId}. Critical data missing.`);
-      }
       newPunchCardDto = {
         id: newActiveCardEntity.id,
         shopName: merchant.name,
@@ -108,15 +110,22 @@ export class PunchesService {
       `New punch count: ${newPunchCount}. Reward achieved: ${rewardAchieved}. ` +
       `New active card created: ${newPunchCardDto ? newPunchCardDto.id : 'No'}`
     );
+    
+    const updatedPunchCardDto: PunchCardDto = {
+      id: updatedPunchCard.id,
+      shopName: merchant.name,
+      shopAddress: merchant.address || 'Address Unavailable',
+      currentPunches: newPunchCount,
+      totalPunches: loyaltyProgram.required_punches,
+      status: newStatus as 'ACTIVE' | 'REWARD_READY',
+      createdAt: updatedPunchCard.created_at.toISOString(),
+    };
 
     this.logger.log(`Emitting PUNCH_ADDED event for user ${userId}, card ${updatedPunchCard.id}`);
     this.eventService.emitAppEvent({
       type: 'PUNCH_ADDED',
       userId,
-      data: {
-        punchCardId: updatedPunchCard.id,
-        punchCardStatus: newStatus as 'ACTIVE' | 'REWARD_READY',
-      },
+      punchCard: updatedPunchCardDto,
     });
 
     if (newPunchCardDto) {
@@ -124,9 +133,7 @@ export class PunchesService {
       this.eventService.emitAppEvent({
         type: 'CARD_CREATED',
         userId,
-        data: {
-          punchCard: newPunchCardDto,
-        },
+        punchCard: newPunchCardDto,
       });
     }
 
