@@ -4,18 +4,28 @@ import UserQRCode from '../user/UserQRCode';
 import styles from './DashboardPage.module.css';
 import type { RootState, AppDispatch } from '../../store/store';
 import { selectUserId } from '../auth/authSlice';
-import { PunchCardDto, AppEvent } from 'e-punch-common-core';
+import { PunchCardDto } from 'e-punch-common-core';
 import { AppHeader } from 'e-punch-common-ui';
 import {
   fetchPunchCards,
   selectPunchCards,
   selectPunchCardsLoading,
   selectPunchCardsError,
-  clearPunchCards,
-  addPunchCard,
-  updatePunchCard
+  clearPunchCards
 } from '../punchCards/punchCardsSlice';
-import { useWebSocket } from '../../hooks/useWebSocket';
+import {
+  selectUnprocessedEvents,
+  selectHighlightedCardId,
+  selectAnimatedPunch,
+  selectAlert,
+  markEventProcessed,
+  setHighlightedCard,
+  setAnimatedPunch,
+  setAlert,
+  clearAllAnimations,
+  cleanupProcessedEvents
+} from '../ui/uiEventsSlice';
+import { useWebSocketEventHandler } from '../../hooks/useWebSocketEventHandler';
 
 // Interface for component props, maps DTO to what component expects
 interface PunchCardItemProps extends PunchCardDto {
@@ -241,58 +251,45 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
 const DashboardPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const userId = useSelector((state: RootState) => selectUserId(state));
-  const { events } = useWebSocket();
+  
+  useWebSocketEventHandler();
 
-  // State for alerts and animations
-  const [alert, setAlert] = useState<string | null>(null);
-  const [highlightedCardId, setHighlightedCardId] = useState<string | null>(null);
-  const [animatedPunch, setAnimatedPunch] = useState<{ cardId: string; punchIndex: number } | null>(null);
+  const unprocessedEvents = useSelector((state: RootState) => selectUnprocessedEvents(state));
+  const highlightedCardId = useSelector((state: RootState) => selectHighlightedCardId(state));
+  const animatedPunch = useSelector((state: RootState) => selectAnimatedPunch(state));
+  const alert = useSelector((state: RootState) => selectAlert(state));
 
-  // Handle WebSocket events
   useEffect(() => {
-    if (!userId || events.length === 0) return;
-
-    const latestEvent = events[events.length - 1];
-
-    if (latestEvent.type === 'punch_event' && latestEvent.data && latestEvent.data[0]) {
-      const appEvent = latestEvent.data[0] as AppEvent;
-
-      if (appEvent.userId !== userId) return;
-
-      if (appEvent.type === 'PUNCH_ADDED') {
-        const { punchCard } = appEvent;
-
-        dispatch(updatePunchCard(punchCard));
-
-        const alertMessage = punchCard.status === 'REWARD_READY'
-          ? "🎉 You've got a new punch and your reward is ready!"
-          : "✨ You've got a new punch!";
-        setAlert(alertMessage);
-
-        setHighlightedCardId(punchCard.id);
-
-        setAnimatedPunch({
-          cardId: punchCard.id,
-          punchIndex: punchCard.currentPunches - 1
-        });
+    unprocessedEvents.forEach(event => {
+      if (event.type === 'PUNCH_ADDED') {
+        const alertMessage = "✨ You've got a new punch!";
+        dispatch(setAlert(alertMessage));
+        dispatch(setHighlightedCard(event.cardId));
+        
+        if (event.punchIndex !== undefined) {
+          dispatch(setAnimatedPunch({
+            cardId: event.cardId,
+            punchIndex: event.punchIndex
+          }));
+        }
 
         setTimeout(() => {
-          setAlert(null);
-          setHighlightedCardId(null);
-          setAnimatedPunch(null);
+          dispatch(clearAllAnimations());
         }, 3000);
 
-      } else if (appEvent.type === 'CARD_CREATED') {
-        const { punchCard } = appEvent;
-
-        if (punchCard) {
-          setTimeout(() => {
-            dispatch(addPunchCard(punchCard));
-          }, 2500);
-        }
+      } else if (event.type === 'CARD_CREATED') {
+        // Just mark as processed, no UI action needed
       }
+
+      dispatch(markEventProcessed(event.id));
+    });
+
+    if (unprocessedEvents.length > 0) {
+      setTimeout(() => {
+        dispatch(cleanupProcessedEvents());
+      }, 5000);
     }
-  }, [events, userId, dispatch]);
+  }, [unprocessedEvents, dispatch]);
 
   return (
     <div className={styles.pageContainer}>
