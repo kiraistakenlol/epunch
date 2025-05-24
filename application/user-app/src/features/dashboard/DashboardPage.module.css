@@ -4,8 +4,9 @@
   height: calc(var(--vh, 1vh) * 100);
   background-color: #424242;
   display: grid;
-  grid-template-rows: 70px 1fr 250px;
+  grid-template-rows: 70px 1fr 180px;
   overflow: hidden;
+  transition: all 0.3s ease;
 }
 
 .headerSpacer {
@@ -56,7 +57,7 @@
 
 .punchCardsList {
   display: flex;
-  padding: 0 25px;
+  padding: 0 0px;
   gap: 20px;
   align-items: center;
   min-height: 180px;
@@ -268,4 +269,23 @@
   color: rgba(245, 245, 220, 0.85);
   font-size: 1em;
   line-height: 1.4;
+}
+
+.newCardAnimation {
+  animation: newCardCreated 1.5s ease-out;
+}
+
+@keyframes newCardCreated {
+  0% {
+    transform: scale(1);
+    background-color: #424242;
+  }
+  30% {
+    transform: scale(1.01);
+    background-color: #4a4a4a;
+  }
+  100% {
+    transform: scale(1);
+    background-color: #424242;
+  }
 } 

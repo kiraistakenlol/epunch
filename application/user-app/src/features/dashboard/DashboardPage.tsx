@@ -263,7 +263,7 @@ const DashboardPage: React.FC = () => {
           {alert}
         </div>
       )}
-      <div className={styles.pageContainer}>
+      <div className={`${styles.pageContainer} ${newCardAnimation ? styles.newCardAnimation : ''}`}>
         <div className={styles.headerSpacer}></div>
 
         <div className={styles.qrSection}>
