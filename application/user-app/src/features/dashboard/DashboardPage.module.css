@@ -3,7 +3,9 @@
 .pageContainer {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* Fixed height instead of min-height */
+  height: 100vh; /* Fallback for older browsers */
+  height: calc(var(--vh, 1vh) * 100); /* JavaScript fallback */
+  height: 100dvh; /* Dynamic viewport height - adjusts to browser UI */
   overflow: hidden; /* Prevent scrolling */
   font-family: Arial, sans-serif; /* Placeholder font */
   padding-top: 50px; /* Account for fixed header */

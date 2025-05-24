@@ -16,6 +16,7 @@ import {
   updatePunchCard
 } from '../punchCards/punchCardsSlice';
 import { useWebSocket } from '../../hooks/useWebSocket';
+import { useViewportHeight } from '../../hooks/useViewportHeight';
 
 // Interface for component props, maps DTO to what component expects
 interface PunchCardItemProps extends PunchCardDto {
@@ -82,6 +83,9 @@ const DashboardPage: React.FC = () => {
   
   // WebSocket events
   const { events } = useWebSocket();
+  
+  // Initialize viewport height handling for mobile Safari
+  useViewportHeight();
   
   // State for alerts and animations
   const [alert, setAlert] = useState<string | null>(null);
