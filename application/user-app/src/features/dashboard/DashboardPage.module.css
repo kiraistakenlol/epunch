@@ -40,6 +40,10 @@
   max-height: 60vh; /* Increased from 50vh to 60vh */
 }
 
+.punchCardsSection.noScroll {
+  overflow-x: hidden; /* Disable horizontal scrolling when no cards */
+}
+
 .punchCardsList {
   display: flex; /* Arrange cards horizontally */
   padding-left: 25px; /* Reduced from 35px to show more of next card */
@@ -251,7 +255,7 @@
   align-items: center;
   justify-content: center;
   padding: 40px 20px;
-  min-height: 120px;
+  min-height: 200px;
   width: 100%;
   text-align: center;
 }
@@ -292,6 +296,71 @@
     transform: scale(1);
     opacity: 1;
   }
+}
+
+/* Empty state styles */
+.emptyStateContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 30px;
+  min-height: 200px;
+  width: 100%;
+  overflow: visible;
+}
+
+.emptyStateContent {
+  text-align: center;
+  max-width: none;
+  width: calc(100% - 40px);
+  padding: 0 20px;
+  overflow: visible;
+}
+
+.emptyStateHeadline {
+  margin: 0 0 18px 0;
+  color: #f5f5dc;
+  font-size: 1.7em;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg, #f5f5dc 0%, #e8dcc0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  white-space: normal;
+  overflow: visible;
+  max-width: none;
+}
+
+.emptyStateSubtext {
+  margin: 0;
+  color: rgba(245, 245, 220, 0.85);
+  font-size: 1em;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.2px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  word-wrap: break-word;
+  hyphens: auto;
+  white-space: normal;
+  overflow: visible;
+  max-width: none;
+}
+
+.emptyStateText {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 25px;
+  min-height: 200px;
+  width: 100%;
+  color: #5d4037;
+  font-size: 1.5em;
+  font-weight: 700;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(93, 64, 55, 0.3);
+  letter-spacing: 0.5px;
 }
 
 /* For mobile-first, these are the base styles. Add media queries for larger screens if needed */ 

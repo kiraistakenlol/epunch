@@ -13,7 +13,7 @@ const headerStyle: React.CSSProperties = {
   top: 0,
   left: 0,
   width: "100%",
-  height: "50px",
+  height: "70px",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",

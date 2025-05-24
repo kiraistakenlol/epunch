@@ -22,7 +22,7 @@ const UserQRCode: React.FC = () => {
 
   return (
     <div>
-      <QRCodeCanvas value={qrValue} size={300} level="H" />
+      <QRCodeCanvas value={qrValue} size={260} level="H" />
     </div>
   );
 };

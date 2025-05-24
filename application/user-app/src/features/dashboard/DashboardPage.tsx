@@ -30,13 +30,25 @@ const LocationPinIcon = () => (
   </svg>
 );
 
-const PunchCardItem: React.FC<PunchCardItemProps> = ({ shopName, shopAddress, currentPunches, totalPunches, status, createdAt, isHighlighted = false, animatedPunchIndex }) => {
+const PunchCardItem: React.FC<PunchCardItemProps> = ({ 
+  shopName, 
+  shopAddress, 
+  currentPunches, 
+  totalPunches, 
+  status, 
+  createdAt, 
+  isHighlighted = false, 
+  animatedPunchIndex
+}) => {
   const punchCircles = [];
   for (let i = 0; i < totalPunches; i++) {
     const isFilled = i < currentPunches;
     const isAnimated = animatedPunchIndex === i;
     punchCircles.push(
-      <div key={i} className={`${styles.punchCircle} ${isFilled ? styles.punchCircleFilled : ''} ${isAnimated ? styles.punchCircleAnimated : ''}`}></div>
+      <div 
+        key={i} 
+        className={`${styles.punchCircle} ${isFilled ? styles.punchCircleFilled : ''} ${isAnimated ? styles.punchCircleAnimated : ''}`}
+      ></div>
     );
   }
 
@@ -70,6 +82,90 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({ shopName, shopAddress, cu
         <span className={styles.cardStatus}>{status.replace('_', ' ')}</span>
       </div>
     </div>
+  );
+};
+
+// Props for the PunchCardsSection component
+interface PunchCardsSectionProps {
+  cards: PunchCardDto[];
+  isLoading: boolean;
+  error: string | null;
+  highlightedCardId: string | null;
+  animatedPunch: { cardId: string; punchIndex: number } | null;
+}
+
+const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
+  cards,
+  isLoading,
+  error,
+  highlightedCardId,
+  animatedPunch
+}) => {
+  const cardsArray = Array.isArray(cards) ? cards : [];
+
+  // Render content based on loading and data state
+  const renderPunchCardContent = () => {
+    if (isLoading) {
+      return (
+        <div className={styles.loadingContainer}>
+          <div className={styles.loadingDots}>
+            <div className={styles.dot}></div>
+            <div className={styles.dot}></div>
+            <div className={styles.dot}></div>
+          </div>
+        </div>
+      );
+    } 
+    if (error) {
+      return (
+        <div className={styles.emptyStateContainer}>
+          <div className={styles.emptyStateContent}>
+            <h2 className={styles.emptyStateHeadline}>Oops!</h2>
+            <p className={styles.emptyStateSubtext}>Error: {error}</p>
+          </div>
+        </div>
+      );
+    } 
+    if (cardsArray.length === 0) {
+      return (
+        <div className={styles.emptyStateContainer}>
+          <div className={styles.emptyStateContent}>
+            <h2 className={styles.emptyStateHeadline}>Your rewards await!</h2>
+            <p className={styles.emptyStateSubtext}>Start collecting punches at your favorite spots and unlock amazing rewards</p>
+          </div>
+        </div>
+      );
+    }
+    return cardsArray.map((card, index) => (
+      <PunchCardItem 
+        key={`${card.shopName}-${index}`} 
+        {...card} 
+        isHighlighted={highlightedCardId === card.id}
+        animatedPunchIndex={
+          animatedPunch && animatedPunch.cardId === card.id 
+            ? animatedPunch.punchIndex 
+            : undefined
+        }
+      />
+    ));
+  };
+
+  // For empty states (loading, error, no cards), render directly in section
+  // For cards, wrap in punchCardsList for horizontal scrolling
+  if (isLoading || error || cardsArray.length === 0) {
+    return (
+      <section className={`${styles.punchCardsSection} ${styles.noScroll}`}>
+        {renderPunchCardContent()}
+      </section>
+    );
+  }
+
+  return (
+    <section className={styles.punchCardsSection}>
+      <div className={styles.punchCardsList}>
+        {renderPunchCardContent()}
+      </div>
+    </section>
   );
 };
 
@@ -168,41 +264,6 @@ const DashboardPage: React.FC = () => {
     }
   }, [events, userId, dispatch]); // Removed punchCards to prevent infinite loop
 
-  const cardsArray = Array.isArray(punchCards) ? punchCards : [];
-
-  // Render content based on loading and data state
-  const renderPunchCardContent = () => {
-    if (isLoading) {
-      return (
-        <div className={styles.loadingContainer}>
-          <div className={styles.loadingDots}>
-            <div className={styles.dot}></div>
-            <div className={styles.dot}></div>
-            <div className={styles.dot}></div>
-          </div>
-        </div>
-      );
-    } 
-    if (error) {
-      return <p>Error: {error}</p>;
-    } 
-    if (cardsArray.length === 0) {
-      return <p>No punch cards yet. Start collecting!</p>;
-    }
-    return cardsArray.map((card, index) => (
-      <PunchCardItem 
-        key={`${card.shopName}-${index}`} 
-        {...card} 
-        isHighlighted={highlightedCardId === card.id}
-        animatedPunchIndex={
-          animatedPunch && animatedPunch.cardId === card.id 
-            ? animatedPunch.punchIndex 
-            : undefined
-        }
-      />
-    ));
-  };
-
   return (
     <>
       <AppHeader title="EPunch" />
@@ -219,11 +280,13 @@ const DashboardPage: React.FC = () => {
           </div>
         </section>
 
-        <section className={styles.punchCardsSection}>
-          <div className={styles.punchCardsList}>
-            {renderPunchCardContent()}
-          </div>
-        </section>
+        <PunchCardsSection 
+          cards={punchCards}
+          isLoading={isLoading}
+          error={error}
+          highlightedCardId={highlightedCardId}
+          animatedPunch={animatedPunch}
+        />
       </div>
     </>
   );
