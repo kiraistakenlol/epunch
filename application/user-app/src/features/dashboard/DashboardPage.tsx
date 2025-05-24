@@ -12,7 +12,7 @@ import {
   selectPunchCardsLoading,
   selectPunchCardsError,
   clearPunchCards,
-  clearAnimationFlag
+  updatePunchCardById
 } from '../punchCards/punchCardsSlice';
 import { useWebSocketEventHandler } from '../../hooks/useWebSocketEventHandler';
 
@@ -149,13 +149,13 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({ userId }) => {
           setAlert(null);
           setLocalHighlightedCardId(null);
           setLocalAnimatedPunch(null);
-          dispatch(clearAnimationFlag({ cardId: card.id, flag: 'animateNewPunch' }));
+          dispatch(updatePunchCardById({ id: card.id, updates: { animateNewPunch: false } }));
         }, 3000);
       }
 
       if (card.animateNewCard) {
         setTimeout(() => {
-          dispatch(clearAnimationFlag({ cardId: card.id, flag: 'animateNewCard' }));
+          dispatch(updatePunchCardById({ id: card.id, updates: { animateNewCard: false } }));
         }, 600);
       }
     });

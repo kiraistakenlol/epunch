@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useWebSocket } from './useWebSocket';
 import { selectUserId } from '../features/auth/authSlice';
-import { updatePunchCardWithAnimation, addPunchCardWithAnimation } from '../features/punchCards/punchCardsSlice';
+import { updatePunchCard, addPunchCard, type PunchCardWithAnimations } from '../features/punchCards/punchCardsSlice';
 import { AppEvent } from 'e-punch-common-core';
 import type { AppDispatch } from '../store/store';
 
@@ -23,14 +23,16 @@ export const useWebSocketEventHandler = () => {
 
       if (appEvent.type === 'PUNCH_ADDED') {
         const { punchCard } = appEvent;
-        dispatch(updatePunchCardWithAnimation(punchCard));
+        const cardWithAnimation: PunchCardWithAnimations = { ...punchCard, animateNewPunch: true };
+        dispatch(updatePunchCard(cardWithAnimation));
 
       } else if (appEvent.type === 'CARD_CREATED') {
         const { punchCard } = appEvent;
 
         if (punchCard) {
           setTimeout(() => {
-            dispatch(addPunchCardWithAnimation(punchCard));
+            const cardWithAnimation: PunchCardWithAnimations = { ...punchCard, animateNewCard: true };
+            dispatch(addPunchCard(cardWithAnimation));
           }, 2500);
         }
       }
