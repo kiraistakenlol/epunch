@@ -29,12 +29,8 @@ export const useWebSocketEventHandler = () => {
       } else if (appEvent.type === 'CARD_CREATED') {
         const { punchCard } = appEvent;
 
-        if (punchCard) {
-          setTimeout(() => {
-            const cardWithAnimation: PunchCardWithAnimations = { ...punchCard, animateNewCard: true };
-            dispatch(addPunchCard(cardWithAnimation));
-          }, 2500);
-        }
+        const cardWithAnimation: PunchCardWithAnimations = { ...punchCard, animateNewCard: true };
+        dispatch(addPunchCard(cardWithAnimation));
       }
     }
   }, [events, userId, dispatch]);

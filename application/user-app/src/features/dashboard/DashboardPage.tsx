@@ -133,6 +133,9 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({ userId }) => {
   useEffect(() => {
     if (!punchCards) return;
 
+    const hasActivePunchAnimation = punchCards.some(card => card.animateNewPunch);
+    const hasNewCards = punchCards.some(card => card.animateNewCard);
+
     punchCards.forEach(card => {
       if (card.animateNewPunch) {
         const alertMessage = card.status === 'REWARD_READY'
@@ -152,33 +155,41 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({ userId }) => {
           dispatch(updatePunchCardById({ id: card.id, updates: { animateNewPunch: false } }));
         }, 3000);
       }
-
-      if (card.animateNewCard) {
-        setTimeout(() => {
-          dispatch(updatePunchCardById({ id: card.id, updates: { animateNewCard: false } }));
-        }, 600);
-      }
     });
+
+    if (hasNewCards && !hasActivePunchAnimation) {
+      punchCards.forEach(card => {
+        if (card.animateNewCard) {
+          setTimeout(() => {
+            dispatch(updatePunchCardById({ id: card.id, updates: { animateNewCard: false } }));
+          }, 600);
+        }
+      });
+    }
   }, [punchCards, dispatch]);
 
   const getCardAnimations = () => {
     if (!punchCards) return { slideInCards: new Set(), slideRightCards: new Set() };
-
+    
     const slideInCards = new Set<string>();
     const slideRightCards = new Set<string>();
-
-    punchCards.forEach((card, index) => {
-      if (card.animateNewCard) {
-        slideInCards.add(card.id);
-
-        punchCards.forEach((otherCard, otherIndex) => {
-          if (otherIndex > index && !otherCard.animateNewCard) {
-            slideRightCards.add(otherCard.id);
-          }
-        });
-      }
-    });
-
+    
+    const hasActivePunchAnimation = punchCards.some(card => card.animateNewPunch);
+    
+    if (!hasActivePunchAnimation) {
+      punchCards.forEach((card, index) => {
+        if (card.animateNewCard) {
+          slideInCards.add(card.id);
+          
+          punchCards.forEach((otherCard, otherIndex) => {
+            if (otherIndex > index && !otherCard.animateNewCard) {
+              slideRightCards.add(otherCard.id);
+            }
+          });
+        }
+      });
+    }
+    
     return { slideInCards, slideRightCards };
   };
 
