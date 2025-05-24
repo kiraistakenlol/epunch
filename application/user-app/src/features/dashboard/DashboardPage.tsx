@@ -105,6 +105,7 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
   const error = useSelector((state: RootState) => selectPunchCardsError(state));
   const [showEmptyState, setShowEmptyState] = useState(false);
   const [animatingCardIds, setAnimatingCardIds] = useState<Set<string>>(new Set());
+  const [seenCardIds, setSeenCardIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (userId === null) {
@@ -135,11 +136,13 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
     if (!punchCards || punchCards.length === 0) return;
 
     const newCardIds = new Set(animatingCardIds);
+    const updatedSeenCardIds = new Set(seenCardIds);
     let hasNewCards = false;
 
-    punchCards.forEach((card, index) => {
-      if (!animatingCardIds.has(card.id)) {
+    punchCards.forEach((card) => {
+      if (!seenCardIds.has(card.id)) {
         newCardIds.add(card.id);
+        updatedSeenCardIds.add(card.id);
         hasNewCards = true;
         
         setTimeout(() => {
@@ -154,6 +157,7 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
 
     if (hasNewCards) {
       setAnimatingCardIds(newCardIds);
+      setSeenCardIds(updatedSeenCardIds);
     }
   }, [punchCards]);
 
