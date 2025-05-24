@@ -21,6 +21,7 @@ import { useWebSocket } from '../../hooks/useWebSocket';
 interface PunchCardItemProps extends PunchCardDto {
   isHighlighted?: boolean;
   animatedPunchIndex?: number;
+  shouldSlideIn?: boolean;
 }
 
 // Placeholder for icons - replace with actual SVGs or an icon library
@@ -38,7 +39,8 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
   status,
   createdAt,
   isHighlighted = false,
-  animatedPunchIndex
+  animatedPunchIndex,
+  shouldSlideIn = false
 }) => {
   const punchCircles = [];
   for (let i = 0; i < totalPunches; i++) {
@@ -62,7 +64,7 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
   };
 
   return (
-    <div className={`${styles.punchCardItem} ${styles[`status${status}`]} ${isHighlighted ? styles.highlighted : ''}`}>
+    <div className={`${styles.punchCardItem} ${styles[`status${status}`]} ${isHighlighted ? styles.highlighted : ''} ${shouldSlideIn ? styles.punchCardSlideIn : ''}`}>
       <div className={styles.punchCardHeader}>
         <div className={styles.headerLeft}>
           <LocationPinIcon />
@@ -102,6 +104,7 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
   const isLoading = useSelector((state: RootState) => selectPunchCardsLoading(state));
   const error = useSelector((state: RootState) => selectPunchCardsError(state));
   const [showEmptyState, setShowEmptyState] = useState(false);
+  const [animatingCardIds, setAnimatingCardIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (userId === null) {
@@ -127,6 +130,32 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
       setShowEmptyState(false);
     }
   }, [isLoading, error, punchCards]);
+
+  useEffect(() => {
+    if (!punchCards || punchCards.length === 0) return;
+
+    const newCardIds = new Set(animatingCardIds);
+    let hasNewCards = false;
+
+    punchCards.forEach((card, index) => {
+      if (!animatingCardIds.has(card.id)) {
+        newCardIds.add(card.id);
+        hasNewCards = true;
+        
+        setTimeout(() => {
+          setAnimatingCardIds(prev => {
+            const updated = new Set(prev);
+            updated.delete(card.id);
+            return updated;
+          });
+        }, 600);
+      }
+    });
+
+    if (hasNewCards) {
+      setAnimatingCardIds(newCardIds);
+    }
+  }, [punchCards]);
 
   const renderContent = () => {
     if (isLoading || punchCards === undefined) {
@@ -172,6 +201,7 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
                 ? animatedPunch.punchIndex
                 : undefined
             }
+            shouldSlideIn={animatingCardIds.has(card.id)}
           />
         ))}
       </div>
