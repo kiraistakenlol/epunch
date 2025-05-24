@@ -217,7 +217,7 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
     }
     return (
       <div className={styles.punchCardsList}>
-        {punchCards.map((card, index) => (
+        {punchCards.map((card) => (
           <PunchCardItem
             key={card.id}
             {...card}
