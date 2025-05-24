@@ -8,8 +8,6 @@ const UserQRCode: React.FC = () => {
   const currentUserId = useSelector((state: RootState) => selectUserId(state));
   const isLoading = useSelector((state: RootState) => selectAuthLoading(state));
 
-  
-
   if (isLoading) {
     return <p>Loading QR Code...</p>;
   }
@@ -21,9 +19,12 @@ const UserQRCode: React.FC = () => {
   const qrValue = currentUserId;
 
   return (
-    <div>
-      <QRCodeCanvas value={qrValue} size={260} level="H" />
-    </div>
+    <QRCodeCanvas 
+      value={qrValue} 
+      size={400} 
+      level="H" 
+      style={{ width: '100%', height: 'auto' }}
+    />
   );
 };
 

@@ -1,43 +1,48 @@
-/* DashboardPage.module.css */
+/* DashboardPage.module.css - Simplified Layout */
 
 .pageContainer {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* Keep fixed height for dashboard - it should fit on screen */
-  height: calc(var(--vh, 1vh) * 100); /* JavaScript fallback */
-  height: 100dvh; /* Dynamic viewport height - adjusts to browser UI */
-  overflow: hidden; /* Dashboard should not scroll */
-  font-family: Arial, sans-serif; /* Placeholder font */
+  min-height: 100vh;
+  min-height: calc(var(--vh, 1vh) * 100);
+  min-height: 100dvh;
+  background-color: #424242; /* Grey background for entire page */
+  font-family: Arial, sans-serif;
   padding-top: 50px; /* Account for fixed header */
 }
 
 .qrSection {
-  background-color: #424242; /* Dark Grey/Charcoal */
+  background-color: transparent; /* Inherit grey from pageContainer */
   padding: 30px 20px;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex: 1; /* Take available space */
-  min-height: 0; /* Allow flex item to shrink */
+  flex: 1; /* Take remaining space after cards section */
+  min-height: 0;
 }
 
 .qrCodeWrapper {
-  background-color: #f5f5dc; /* Light Beige/Cream for QR code background */
+  background-color: #f5f5dc;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  width: min(70vw, 280px); /* Responsive to 70% of viewport width, max 280px */
+  min-width: 180px; /* Lower limit for very small screens */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .punchCardsSection {
   background-color: #795548; /* Medium Brown */
-  padding: 35px 0; /* Increased from 25px */
-  overflow-x: auto; /* Enable horizontal scrolling only */
-  overflow-y: hidden; /* Prevent vertical scrolling */
-  white-space: nowrap; /* Keep items in a single line */
-  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-  flex-shrink: 0; /* Prevent section from shrinking */
-  height: auto; /* Let content determine height */
-  max-height: 60vh; /* Increased from 50vh to 60vh */
+  padding: 25px 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  flex-shrink: 0; /* Don't shrink */
+  min-height: 200px; /* Fixed minimum height */
+  max-height: 300px; /* Maximum height on any device */
 }
 
 .punchCardsSection.noScroll {
@@ -85,7 +90,6 @@
 
 .locationIcon {
   margin-right: 8px;
-  /* Add styles for your pin icon here if using an SVG or font icon */
   width: 16px;
   height: 16px;
   fill: #f5f5dc;
@@ -145,18 +149,10 @@
   align-items: flex-end;
 }
 
-.starIcon {
-  /* Styles for your star icon */
-  width: 20px;
-  height: 20px;
-  fill: #f5f5dc;
-}
-
 .shopName {
   color: #5d4037; /* Dark Brown text for shop name */
   font-size: 1.4em;
   font-weight: bold;
-  /* Consider a specific font if you have one */
   text-shadow: 1px 1px 1px #a1887f; /* Lighter brown shadow */
 }
 
@@ -346,21 +342,4 @@
   white-space: normal;
   overflow: visible;
   max-width: none;
-}
-
-.emptyStateText {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 40px 25px;
-  min-height: 200px;
-  width: 100%;
-  color: #5d4037;
-  font-size: 1.5em;
-  font-weight: 700;
-  text-align: center;
-  text-shadow: 1px 1px 2px rgba(93, 64, 55, 0.3);
-  letter-spacing: 0.5px;
-}
-
-/* For mobile-first, these are the base styles. Add media queries for larger screens if needed */ 
+} 
