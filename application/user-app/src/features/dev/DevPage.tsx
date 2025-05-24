@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { RootState } from '../../store/store';
 import { selectUserId, setUserId } from '../auth/authSlice';
 import { apiClient } from 'e-punch-common-ui';
@@ -129,6 +130,7 @@ const styles = {
 const DevPage: React.FC = () => {
   const userId = useSelector((state: RootState) => selectUserId(state));
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [apiStatus, setApiStatus] = useState<string>('No API calls made yet');
   const [loading, setLoading] = useState<boolean>(false);
   const [customUserId, setCustomUserId] = useState<string>('412dbe6d-e933-464e-87e2-31fe9c9ee6ac');
@@ -242,6 +244,17 @@ const DevPage: React.FC = () => {
       <header style={styles.header}>
         <h1 style={styles.title}>E-PUNCH.io Development Tools</h1>
       </header>
+
+      <DevSection title="Navigation">
+        <div>
+          <button 
+            style={styles.button} 
+            onClick={() => navigate('/')}
+          >
+            Go to Dashboard
+          </button>
+        </div>
+      </DevSection>
 
       <DevSection title="User Information">
         <div style={styles.userInfo}>
