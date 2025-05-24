@@ -9,6 +9,7 @@
   background-color: #424242; /* Grey background for entire page */
   font-family: Arial, sans-serif;
   padding-top: 50px; /* Account for fixed header */
+  padding-bottom: env(safe-area-inset-bottom, 20px); /* Safe area for iOS devices */
 }
 
 .qrSection {
@@ -36,13 +37,14 @@
 .punchCardsSection {
   background-color: #795548; /* Medium Brown */
   padding: 25px 0;
+  padding-bottom: max(25px, env(safe-area-inset-bottom, 0px)); /* Extra bottom padding for Safari */
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
   -webkit-overflow-scrolling: touch;
   flex-shrink: 0; /* Don't shrink */
   min-height: 200px; /* Fixed minimum height */
-  max-height: 300px; /* Maximum height on any device */
+  max-height: min(300px, 35vh); /* Limit height to prevent going below search bar */
 }
 
 .punchCardsSection.noScroll {
