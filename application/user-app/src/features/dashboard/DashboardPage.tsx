@@ -95,11 +95,7 @@ interface PunchCardsSectionProps {
   animatedPunch: { cardId: string; punchIndex: number } | null;
 }
 
-const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
-  userId,
-  highlightedCardId,
-  animatedPunch
-}) => {
+const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({ userId }) => {
   const dispatch = useDispatch<AppDispatch>();
   const punchCards = useSelector((state: RootState) => selectPunchCards(state));
   const isLoading = useSelector((state: RootState) => selectPunchCardsLoading(state));
@@ -108,7 +104,6 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
   const [localHighlightedCardId, setLocalHighlightedCardId] = useState<string | null>(null);
   const [localAnimatedPunch, setLocalAnimatedPunch] = useState<{ cardId: string; punchIndex: number } | null>(null);
   const [alert, setAlert] = useState<string | null>(null);
-  const prevPunchCardsRef = useRef<PunchCardDto[] | undefined>(undefined);
 
   useEffect(() => {
     if (userId === null) {
@@ -168,14 +163,14 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
 
   const getCardAnimations = () => {
     if (!punchCards) return { slideInCards: new Set(), slideRightCards: new Set() };
-    
+
     const slideInCards = new Set<string>();
     const slideRightCards = new Set<string>();
-    
+
     punchCards.forEach((card, index) => {
       if (card.animateNewCard) {
         slideInCards.add(card.id);
-        
+
         punchCards.forEach((otherCard, otherIndex) => {
           if (otherIndex > index && !otherCard.animateNewCard) {
             slideRightCards.add(otherCard.id);
@@ -183,7 +178,7 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
         });
       }
     });
-    
+
     return { slideInCards, slideRightCards };
   };
 
@@ -256,7 +251,7 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
 const DashboardPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const userId = useSelector((state: RootState) => selectUserId(state));
-  
+
   useWebSocketEventHandler();
 
   const punchCards = useSelector((state: RootState) => selectPunchCards(state));
@@ -286,7 +281,7 @@ const DashboardPage: React.FC = () => {
   return (
     <div className={styles.pageContainer}>
       <AppHeader title="EPunch" />
-      
+
       <main className={styles.mainContent}>
         <div className={styles.qrSection}>
           <div className={styles.qrCodeContainer}>
