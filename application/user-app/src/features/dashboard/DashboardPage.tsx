@@ -231,11 +231,6 @@ const DashboardPage: React.FC = () => {
         if (punchCard) {
           setTimeout(() => {
             dispatch(addPunchCard(punchCard));
-            setAlert("🆕 New punch card created!");
-
-            setTimeout(() => {
-              setAlert(null);
-            }, 3000);
           }, 1800);
         }
       }
