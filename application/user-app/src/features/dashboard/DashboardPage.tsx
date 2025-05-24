@@ -219,7 +219,7 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
       <div className={styles.punchCardsList}>
         {punchCards.map((card, index) => (
           <PunchCardItem
-            key={`${card.shopName}-${index}`}
+            key={card.id}
             {...card}
             isHighlighted={highlightedCardId === card.id}
             animatedPunchIndex={
