@@ -3,10 +3,10 @@
 .pageContainer {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* Fallback for older browsers */
+  height: 100vh; /* Keep fixed height for dashboard - it should fit on screen */
   height: calc(var(--vh, 1vh) * 100); /* JavaScript fallback */
   height: 100dvh; /* Dynamic viewport height - adjusts to browser UI */
-  overflow: hidden; /* Prevent scrolling */
+  overflow: hidden; /* Dashboard should not scroll */
   font-family: Arial, sans-serif; /* Placeholder font */
   padding-top: 50px; /* Account for fixed header */
 }

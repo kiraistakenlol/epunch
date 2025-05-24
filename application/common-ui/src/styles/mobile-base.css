@@ -3,7 +3,7 @@
 /* Mobile-First Reset & Body Styles */
 html {
   height: 100%;
-  overflow: hidden; /* Prevent page scrolling */
+  overflow-x: hidden; /* Prevent horizontal scrolling only */
   -webkit-text-size-adjust: 100%; /* Prevent iOS text size adjustment */
   touch-action: manipulation; /* Prevent double-tap zoom */
 }
@@ -12,25 +12,25 @@ body {
   margin: 0;
   padding: 0;
   /* Use modern viewport units with fallbacks */
-  height: 100vh; /* Fallback for older browsers */
-  height: calc(var(--vh, 1vh) * 100); /* JavaScript fallback */
-  height: 100dvh; /* Dynamic viewport height - excludes browser UI */
-  overflow: hidden; /* Prevent body scrolling */
+  min-height: 100vh; /* Use min-height instead of fixed height */
+  min-height: calc(var(--vh, 1vh) * 100); /* JavaScript fallback */
+  min-height: 100dvh; /* Dynamic viewport height - excludes browser UI */
+  overflow-x: hidden; /* Prevent horizontal scrolling only */
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   box-sizing: border-box;
-  position: fixed; /* Prevent bounce scrolling on iOS */
   width: 100%;
+  /* Remove position: fixed to allow scrolling */
 }
 
 #root {
-  height: 100vh; /* Fallback for older browsers */
-  height: calc(var(--vh, 1vh) * 100); /* JavaScript fallback */
-  height: 100dvh; /* Dynamic viewport height */
-  overflow: hidden;
+  min-height: 100vh; /* Use min-height instead of fixed height */
+  min-height: calc(var(--vh, 1vh) * 100); /* JavaScript fallback */
+  min-height: 100dvh; /* Dynamic viewport height */
+  overflow-x: hidden; /* Prevent horizontal scrolling only */
   display: flex;
   flex-direction: column;
 }
