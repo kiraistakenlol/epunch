@@ -1,7 +1,7 @@
 /* DashboardPage.module.css - Simple 3-section layout */
 
 .pageContainer {
-  height: 100vh;
+  height: 100dvh;
   background-color: #424242;
   padding-top: 50px;
   display: flex;
