@@ -24,39 +24,48 @@ const initialState: AuthState = {
 export const initializeUser = createAsyncThunk<void, void, {}>(
   'auth/initializeUser',
   async (_, { dispatch }) => {
-    // Always set a fallback userId from localStorage first
-    const fallbackUserId = getOrInitializeUserIdFromLocalStorage();
-    dispatch(setUserId(fallbackUserId));
+    const userId = getOrInitializeUserIdFromLocalStorage();
+    console.log('Setting initial userId:', userId);
+    dispatch(setUserId(userId));
 
     try {
-      console.log('Checking for authenticated user...');
+      console.log('Starting user authentication check...');
       
-      // First check if we have a valid session
+      console.log('Fetching auth session...');
       const session = await fetchAuthSession();
       const idToken = session.tokens?.idToken?.toString();
       
       if (!idToken) {
-        console.log('No authentication token found - user not authenticated');
+        console.log('No authentication token found in session:', session);
         return;
       }
 
-      // If we have a token, get the Cognito user details
+      console.log('Found ID token, fetching Cognito user details...');
       const cognitoUser = await getCurrentUser();
-      console.log('Got current Cognito user:', cognitoUser);
+      console.log('Got Cognito user details:', {
+        username: cognitoUser.username,
+        userId: cognitoUser.userId,
+        signInDetails: cognitoUser.signInDetails
+      });
       
-      // Get user data from our backend
-      console.log('Fetching user data from backend...');
+      console.log('Fetching user data from backend with ID token...');
       const backendUser = await apiClient.getCurrentUser(idToken);
-      console.log('Got backend user:', backendUser);
+      console.log('Got backend user data:', {
+        id: backendUser.id,
+        email: backendUser.email
+      });
       
       // Update state with authenticated user data
+      console.log('Updating Redux state with authenticated user data...');
       dispatch(setUserId(backendUser.id));
       dispatch(setCognitoUser(cognitoUser));
       dispatch(setAuthenticated(true));
+      console.log('Successfully initialized authenticated user');
       
     } catch (error) {
-      console.log('User not authenticated or error occurred:', error);
-      // Keep the fallback userId and unauthenticated state
+      console.error('Error during user initialization:', error);
+      console.log('Keeping fallback user ID:', userId);
+      console.log('User will remain in unauthenticated state');
     }
   }
 );
