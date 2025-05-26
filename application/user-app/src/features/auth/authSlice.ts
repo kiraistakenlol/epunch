@@ -1,32 +1,53 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
+import { getCurrentUser, fetchAuthSession, type GetCurrentUserOutput } from 'aws-amplify/auth';
+import { apiClient } from 'e-punch-common-ui';
 
-const LOCAL_STORAGE_USER_ID_KEY = 'epunch_user_id';
+export const LOCAL_STORAGE_USER_ID_KEY = 'epunch_user_id';
 
 export interface AuthState {
   userId: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
+  cognitoUser: GetCurrentUserOutput | null;
 }
 
 const initialState: AuthState = {
   userId: null,
   isAuthenticated: false,
-  isLoading: false,
+  isLoading: true,
   error: null,
+  cognitoUser: null,
 };
 
-export const loadOrInitializeUserId = createAsyncThunk<string, void, {}>(
-  'auth/loadOrInitializeUserId',
+export const initializeUser = createAsyncThunk<void, void, {}>(
+  'auth/initializeUser',
   async (_, { dispatch }) => {
-    let currentUserId = localStorage.getItem(LOCAL_STORAGE_USER_ID_KEY);
-    if (!currentUserId) {
-      currentUserId = uuidv4();
-      localStorage.setItem(LOCAL_STORAGE_USER_ID_KEY, currentUserId);
+    try {
+      console.log('Attempting to get current user...');
+      const cognitoUser = await getCurrentUser();
+      console.log('Got current Cognito user:', cognitoUser);
+      
+      const session = await fetchAuthSession();
+      const idToken = session.tokens?.idToken?.toString();
+      
+      if (idToken) {
+        console.log('Fetching user data from backend...');
+        const backendUser = await apiClient.getCurrentUser(idToken);
+        console.log('Got backend user:', backendUser);
+        
+        dispatch(setUserId(backendUser.id));
+        dispatch(setCognitoUser(cognitoUser));
+        dispatch(setAuthenticated(true));
+        return;
+      }
+    } catch (error) {
+      console.log('Failed to get authenticated user, falling back to local storage', error);
     }
-    dispatch(setUserId(currentUserId));
-    return currentUserId;
+    
+    const userId = getOrInitializeUserIdFromLocalStorage();
+    dispatch(setUserId(userId));
   }
 );
 
@@ -35,42 +56,27 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setUserId: (state, action: PayloadAction<string>) => {
-      state.userId = action.payload;
+      const userId = action.payload;
+      state.userId = userId;
+      localStorage.setItem(LOCAL_STORAGE_USER_ID_KEY, userId);
     },
-    // Example future actions:
-    // loginStart: (state) => {
-    //   state.isLoading = true;
-    //   state.error = null;
-    // },
-    // loginSuccess: (state, action: PayloadAction<{ token: string; userProfile: any }>) => {
-    //   state.isAuthenticated = true;
-    //   state.isLoading = false;
-    //   state.token = action.payload.token;
-    //   state.userProfile = action.payload.userProfile;
-    //   // Potentially clear anonymousUserId or handle merging logic here or in a thunk
-    // },
-    // loginFailure: (state, action: PayloadAction<string>) => {
-    //   state.isLoading = false;
-    //   state.error = action.payload;
-    // },
-    // logout: (state) => {
-    //   state.isAuthenticated = false;
-    //   state.token = null;
-    //   state.userProfile = null;
-    //   // Don't clear anonymousUserId on logout, user might still want to use app anonymously
-    // },
+    setAuthenticated: (state, action: PayloadAction<boolean>) => {
+      state.isAuthenticated = action.payload;
+    },
+    setCognitoUser: (state, action: PayloadAction<GetCurrentUserOutput | null>) => {
+      state.cognitoUser = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(loadOrInitializeUserId.pending, (state) => {
+      .addCase(initializeUser.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(loadOrInitializeUserId.fulfilled, (state, action: PayloadAction<string>) => {
-        state.userId = action.payload;
+      .addCase(initializeUser.fulfilled, (state) => {
         state.isLoading = false;
       })
-      .addCase(loadOrInitializeUserId.rejected, (state, action) => {
+      .addCase(initializeUser.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Failed to initialize user ID';
       });
@@ -79,14 +85,18 @@ const authSlice = createSlice({
 
 export const {
   setUserId,
-  // loginStart, loginSuccess, loginFailure, logout // Export future actions
+  setAuthenticated,
+  setCognitoUser,
 } = authSlice.actions;
 
-// Selectors (Update RootState path if necessary)
-// Example: import { RootState } from '../store';
-// Make sure your RootState is correctly defined elsewhere and includes the auth slice.
-// For example, if your store is: const store = configureStore({ reducer: { auth: authReducer } })
-// then RootState would be: type RootState = ReturnType<typeof store.getState>;
+export const getOrInitializeUserIdFromLocalStorage = (): string => {
+  let userId = localStorage.getItem(LOCAL_STORAGE_USER_ID_KEY);
+  if (!userId) {
+    userId = uuidv4();
+    localStorage.setItem(LOCAL_STORAGE_USER_ID_KEY, userId);
+  }
+  return userId;
+};
 
 export const selectUserId = (state: { auth: AuthState }) => state.auth.userId;
 export const selectIsAuthenticated = (state: { auth: AuthState }) => state.auth.isAuthenticated;

@@ -1,0 +1,107 @@
+import React from 'react';
+import ReactModal from 'react-modal';
+
+interface EPunchModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  children: React.ReactNode;
+  maxWidth?: string;
+}
+
+const modalStyles: ReactModal.Styles = {
+  overlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    zIndex: 2000,
+  },
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    padding: '0',
+    border: 'none',
+    borderRadius: '12px',
+    maxWidth: '400px',
+    width: '90%',
+    maxHeight: '80vh',
+    overflow: 'auto',
+  },
+};
+
+const headerStyle: React.CSSProperties = {
+  backgroundColor: '#5d4037',
+  color: '#f5f5dc',
+  padding: '20px',
+  textAlign: 'center',
+  fontSize: '1.2em',
+  fontWeight: 'bold',
+  position: 'relative',
+};
+
+const contentStyle: React.CSSProperties = {
+  padding: '30px',
+  backgroundColor: 'white',
+};
+
+const closeButtonStyle: React.CSSProperties = {
+  position: 'absolute',
+  top: '10px',
+  right: '15px',
+  background: 'none',
+  border: 'none',
+  fontSize: '24px',
+  color: '#f5f5dc',
+  cursor: 'pointer',
+  padding: '0',
+  width: '30px',
+  height: '30px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+};
+
+const EPunchModal: React.FC<EPunchModalProps> = ({ 
+  isOpen, 
+  onClose, 
+  title, 
+  children, 
+  maxWidth = '400px' 
+}) => {
+  const customModalStyles = {
+    ...modalStyles,
+    content: {
+      ...modalStyles.content,
+      maxWidth,
+    },
+  };
+
+  const Modal = ReactModal as any;
+
+  return (
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={onClose}
+      style={customModalStyles}
+      contentLabel={title}
+      ariaHideApp={false}
+    >
+      <div style={{ position: 'relative' }}>
+        <div style={headerStyle}>
+          {title}
+          <button style={closeButtonStyle} onClick={onClose}>
+            ×
+          </button>
+        </div>
+        
+        <div style={contentStyle}>
+          {children}
+        </div>
+      </div>
+    </Modal>
+  );
+};
+
+export default EPunchModal; 

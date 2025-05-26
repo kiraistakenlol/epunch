@@ -1,4 +1,5 @@
 import { io, Socket } from 'socket.io-client';
+import { config } from '../config/env';
 
 export interface WebSocketEvent {
   type: string;
@@ -22,17 +23,12 @@ class WebSocketClient {
   }
 
   private setupConnection() {
-    const apiUrl = (import.meta as any).env?.VITE_API_URL;
     // Remove /api/v1 from the URL to get the base WebSocket URL
-    const backendUrl = apiUrl?.replace('/api/v1', '') || 'http://localhost:4000';
-    
-    console.log('[WebSocketClient] API URL:', apiUrl);
-    console.log('[WebSocketClient] WebSocket URL:', backendUrl);
+    const backendUrl = config.api.baseUrl.replace('/api/v1', '') || 'http://localhost:4000';
     
     this.socket = io(backendUrl);
 
     this.socket.on('connect', () => {
-      console.log('[WebSocketClient] Connected to WebSocket server');
       this.notifyConnectionCallbacks({ connected: true, error: null });
       
       // If we have a userId, register it immediately
@@ -41,36 +37,16 @@ class WebSocketClient {
       }
     });
 
-    this.socket.on('registration_confirmed', (data: { userId: string }) => {
-      console.log('[WebSocketClient] User registration confirmed:', data.userId);
-    });
-
     this.socket.on('disconnect', (reason) => {
-      console.log('[WebSocketClient] Disconnected:', reason);
       this.notifyConnectionCallbacks({ connected: false, error: reason });
     });
 
     this.socket.on('connect_error', (error) => {
-      console.error('[WebSocketClient] Connection error:', error);
       this.notifyConnectionCallbacks({ connected: false, error: error.message });
     });
 
     // Listen for all events (catch-all)
     this.socket.onAny((eventName, ...args) => {
-      console.group(`[WebSocketClient] Received event: ${eventName}`);
-      console.log('Event Type:', eventName);
-      console.log('Event Data:', args);
-      console.log('Timestamp:', new Date().toISOString());
-      
-      // Special handling for punch_event to show the nested AppEvent
-      if (eventName === 'punch_event' && args[0]) {
-        console.log('AppEvent Type:', args[0].type);
-        console.log('AppEvent UserId:', args[0].userId);
-        console.log('AppEvent Data:', args[0].data);
-      }
-      
-      console.groupEnd();
-      
       this.notifyEventCallbacks({
         type: eventName,
         data: args,
@@ -107,7 +83,6 @@ class WebSocketClient {
       try {
         callback(status);
       } catch (error) {
-        console.error('[WebSocketClient] Error in connection callback:', error);
       }
     });
   }
@@ -137,11 +112,9 @@ class WebSocketClient {
 
   private registerUser(userId: string): void {
     if (!this.socket?.connected) {
-      console.log('[WebSocketClient] Cannot register user - not connected');
       return;
     }
 
-    console.log('[WebSocketClient] Registering user:', userId);
     this.socket.emit('register_user', { userId });
   }
 }

@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from '../../store/store';
-import { selectUserId, setUserId } from '../auth/authSlice';
+import { LOCAL_STORAGE_USER_ID_KEY, selectUserId, setUserId } from '../auth/authSlice';
 import { apiClient } from 'e-punch-common-ui';
 import { useWebSocket } from '../../hooks/useWebSocket';
 import { webSocketClient } from '../../api/websocketClient';
 
-const LOCAL_STORAGE_USER_ID_KEY = 'epunch_user_id';
 
 // Reusable collapsible section component
 interface DevSectionProps {

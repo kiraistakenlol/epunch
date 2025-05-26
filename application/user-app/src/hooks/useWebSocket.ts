@@ -42,9 +42,7 @@ export function useWebSocket(): UseWebSocketReturn {
 
   // Register user with WebSocket when userId becomes available
   useEffect(() => {
-    console.log('[useWebSocket] userId changed:', userId);
     if (userId) {
-      console.log('[useWebSocket] Setting userId in WebSocket client:', userId);
       webSocketClient.setUserId(userId);
     }
   }, [userId]);

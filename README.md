@@ -89,6 +89,9 @@ This approach ensures that changes to the common packages are always visible wit
 * **Backend:** NestJS (Node.js framework), TypeScript, PostgreSQL client (pg)
 * **Database:** PostgreSQL (via Supabase as database host)
 * **Package Manager:** Yarn (all shared dev dependencies, e.g., typescript, are kept in the root package.json for the workspace)
+* **UI Framework:** Bootstrap 5 with React Bootstrap components and Bootstrap Icons (bundled in common-ui package)
+
+**Note:** This project uses Yarn as the package manager, not npm. Always use `yarn add` instead of `npm install` when adding dependencies.
 
 ### Infrastructure & Deployment
 * **Frontend Hosting:** Vercel (for both User and Merchant apps)
@@ -162,6 +165,22 @@ The backend includes automated deployment scripts:
    fly logs -a e-punch-backend --lines 100
    ```
 
+#### AWS Cognito Deployment (Authentication)
+
+Minimalistic Terraform setup for AWS Cognito User Pool with email authentication:
+
+1. **Deploy Cognito User Pool:**
+   ```bash
+   cd terraform/env/dev
+   ./deploy.sh
+   ```
+
+2. **Configure environment variables:**
+   ```bash
+   # Get the output values and copy to frontend .env
+   terraform output -json environment_variables
+   ```
+
 ### Project Structure
 
 The application code resides within the `application/` directory and is structured as a multi-module TypeScript project:
@@ -186,13 +205,35 @@ infra/
 │       └── set-fly-secrets.sh # Script for setting Fly.io secrets
 ├── user-app/      # User App infrastructure
 ├── merchant-app/  # Merchant App infrastructure
-└── terraform/     # Terraform IaC (if needed)
+└── terraform/     # Terraform IaC configurations
+
+terraform/
+└── env/
+    └── dev/              # Development environment
+        ├── main.tf       # Cognito User Pool configuration
+        ├── variables.tf  # Input variables
+        ├── outputs.tf    # Output values for frontend
+        ├── deploy.sh     # Automated deployment script
+        └── README.md     # Deployment instructions
 ```
 * `common-core/` contains shared TypeScript types, DTOs, and constants used by all applications.
-* `common-ui/` contains shared React UI components and API client.
+* `common-ui/` contains shared React UI components, API client, and bundled CSS (Bootstrap + Bootstrap Icons + mobile-first base styles).
 * `backend/` imports from `common-core/` for DTOs and types.
 * `user-app/` and `merchant-app/` import from both `common-core/` and `common-ui/`.
 * `infra/` contains all infrastructure and deployment configurations.
+
+#### Common-UI Package Structure
+The `common-ui` package is built as a Vite library and includes:
+* **React Components:** Shared UI components using React Bootstrap
+* **Bundled CSS:** Single CSS file containing Bootstrap, Bootstrap Icons, and mobile-first base styles
+* **API Client:** Configured Axios client for backend communication
+* **TypeScript Types:** Component prop types and interfaces
+
+**CSS Import Pattern:**
+```css
+/* In each app's global.css */
+@import 'e-punch-common-ui/dist/style.css';
+```
 
 #### User App Directory Structure (`application/user-app/src/`)
 
@@ -230,7 +271,7 @@ src/
 │   └── store.ts
 │
 ├── styles/               # Global styles, theme configuration
-│   └── global.css
+│   └── global.css        # Imports common-ui CSS + app-specific styles
 │
 └── utils/                # General utility functions (not React-specific)
 ```
@@ -247,7 +288,7 @@ src/
 ├── App.tsx               # Main application component
 ├── main.tsx              # Entry point, renders App
 ├── styles/
-│   └── global.css
+│   └── global.css        # Imports common-ui CSS + app-specific styles
 └── (other directories like api/, assets/, components/, features/, hooks/, store/, utils/ will be added as needed)
 ```
 
@@ -299,6 +340,12 @@ src/
 - Avoid leaving comments.
 - Always use types, avoid `any`.
 - The website is developed with a mobile-first approach.
+
+**Common-UI Package**
+- Built as a Vite library with bundled CSS containing Bootstrap, Bootstrap Icons, and mobile-first base styles.
+- Components use React Bootstrap for consistent UI patterns.
+- CSS is imported once per app in `global.css` files, not in individual components.
+- Package exports both JavaScript components and CSS bundle via separate entry points.
 
 **User App (Frontend)**
 - For real-time updates, implement polling or server-sent events from backend API

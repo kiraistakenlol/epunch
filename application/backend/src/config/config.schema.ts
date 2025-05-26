@@ -11,4 +11,6 @@ export const configSchema = Joi.object({
   DB_DATABASE: Joi.string().required(),
   DB_USERNAME: Joi.string().required(),
   DB_PASSWORD: secret(Joi.string().required()),
+  AWS_COGNITO_USER_POOL_ID: Joi.string().required(),
+  AWS_REGION: Joi.string().required(),
 }); 

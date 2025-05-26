@@ -7,14 +7,17 @@
       "import": "./dist/index.es.js",
       "types": "./dist/index.d.ts"
     },
-    "./dist/styles/mobile-base.css": "./dist/styles/mobile-base.css"
+    "./dist/style.css": "./dist/style.css"
   },
   "files": [
     "dist"
   ],
   "dependencies": {
+    "axios": "^1.6.0",
+    "bootstrap": "^5.3.6",
+    "bootstrap-icons": "^1.13.1",
     "e-punch-common-core": "1.0.0",
-    "axios": "^1.6.0"
+    "react-bootstrap": "^2.10.10"
   },
   "peerDependencies": {
     "react": "^18.0.0",

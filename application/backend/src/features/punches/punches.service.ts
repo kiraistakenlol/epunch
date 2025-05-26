@@ -33,7 +33,7 @@ export class PunchesService {
 
     let user = await this.userRepository.findUserById(userId);
     if (!user) {
-      user = await this.userRepository.createUserWithId(userId);
+      user = await this.userRepository.createAnonymousUser(userId);
     }
 
     const loyaltyProgram = await this.loyaltyRepository.findLoyaltyProgramById(loyaltyProgramId);

@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { CreatePunchDto, PunchCardDto, PunchOperationResultDto } from 'e-punch-common-core';
+import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, AuthResponseDto, UserDto } from 'e-punch-common-core';
 
 // The API URL will be set by the app using this client
 let API_BASE_URL: string;
@@ -54,7 +54,6 @@ let instance = createInstance('');
 
 export const configureApiClient = (baseURL: string) => {
   API_BASE_URL = baseURL;
-  console.log('API_BASE_URL configured:', API_BASE_URL);
   instance = createInstance(baseURL);
 };
 
@@ -106,6 +105,29 @@ export const apiClient = {
     }
     const payload: CreatePunchDto = { userId, loyaltyProgramId };
     const response = await instance.post<PunchOperationResultDto>('/punches', payload);
+    return response.data;
+  },
+
+  // Authentication method
+  async authenticateUser(authToken: string, userId: string): Promise<AuthResponseDto> {
+    if (!authToken || !userId) {
+      return Promise.reject(new Error('Auth token and user ID are required.'));
+    }
+    const payload: AuthRequestDto = { authToken, userId };
+    const response = await instance.post<AuthResponseDto>('/auth', payload);
+    return response.data;
+  },
+
+  // Get current user
+  async getCurrentUser(authToken: string): Promise<UserDto> {
+    if (!authToken) {
+      return Promise.reject(new Error('Auth token is required.'));
+    }
+    const response = await instance.get<UserDto>('/users/me', {
+      headers: {
+        Authorization: `Bearer ${authToken}`
+      }
+    });
     return response.data;
   }
 }; 

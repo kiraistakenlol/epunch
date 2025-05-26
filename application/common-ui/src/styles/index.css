@@ -1,5 +1,7 @@
-/* Mobile-First Base Styles - Simplified */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
 
+/* Mobile-First Base Styles */
 html {
   height: 100%;
   overflow-x: hidden;
@@ -26,4 +28,9 @@ body {
 img, video {
   max-width: 100%;
   height: auto;
+}
+
+/* Custom Component Styles */
+.custom-dropdown-toggle::after {
+  display: none !important;
 } 

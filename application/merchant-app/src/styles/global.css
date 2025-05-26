@@ -1,6 +1,6 @@
 /* application/merchant-app/src/styles/global.css */
 
-/* Import shared mobile-first base styles from common-ui */
-@import 'e-punch-common-ui/dist/styles/mobile-base.css';
+/* Import shared styles from common-ui */
+@import 'e-punch-common-ui/dist/style.css';
 
 /* Merchant-specific global styles go here */ 
