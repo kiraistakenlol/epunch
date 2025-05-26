@@ -386,6 +386,129 @@ const DevPage: React.FC = () => {
         </div>
       </DevSection>
 
+      <DevSection title="Local Storage Debug">
+        <div style={styles.userInfo}>
+          <p><strong>Local Storage Items:</strong> {Object.keys(localStorage).length} items</p>
+          <p style={{ fontSize: '12px', color: '#666', margin: '5px 0' }}>
+            View and manage all local storage data for debugging.
+          </p>
+        </div>
+        <div>
+          <button 
+            style={styles.button} 
+            onClick={() => {
+              const keys = Object.keys(localStorage);
+              keys.forEach(key => localStorage.removeItem(key));
+              setApiStatus('All local storage items cleared');
+            }}
+            disabled={loading}
+          >
+            Clear All Local Storage
+          </button>
+          <button 
+            style={styles.button} 
+            onClick={() => {
+              localStorage.setItem('test_item', JSON.stringify({ 
+                message: 'Test data', 
+                timestamp: new Date().toISOString() 
+              }));
+              setApiStatus('Test item added to local storage');
+            }}
+            disabled={loading}
+          >
+            Add Test Item
+          </button>
+        </div>
+        <div>
+          <h3>Local Storage Contents:</h3>
+          <div style={{ 
+            ...styles.statusBox, 
+            maxHeight: '300px', 
+            fontSize: '11px',
+            backgroundColor: '#f8f9fa',
+            border: '1px solid #dee2e6'
+          }}>
+            {Object.keys(localStorage).length === 0 ? (
+              <div style={{ color: '#666' }}>Local storage is empty</div>
+            ) : (
+              Object.keys(localStorage).map((key) => {
+                let value;
+                let isJson = false;
+                try {
+                  const rawValue = localStorage.getItem(key);
+                  JSON.parse(rawValue || '');
+                  value = JSON.stringify(JSON.parse(rawValue || ''), null, 2);
+                  isJson = true;
+                } catch {
+                  value = localStorage.getItem(key);
+                }
+
+                return (
+                  <div key={key} style={{ 
+                    marginBottom: '12px', 
+                    padding: '8px', 
+                    backgroundColor: '#ffffff', 
+                    borderRadius: '4px',
+                    border: '1px solid #e9ecef'
+                  }}>
+                    <div style={{ 
+                      display: 'flex', 
+                      justifyContent: 'space-between', 
+                      alignItems: 'center',
+                      marginBottom: '6px'
+                    }}>
+                      <span style={{ 
+                        fontWeight: 'bold', 
+                        color: '#495057',
+                        fontSize: '12px'
+                      }}>
+                        🔑 {key}
+                      </span>
+                      <button
+                        style={{
+                          ...styles.button,
+                          padding: '2px 6px',
+                          fontSize: '10px',
+                          backgroundColor: '#dc3545',
+                          margin: 0
+                        }}
+                        onClick={() => {
+                          localStorage.removeItem(key);
+                          setApiStatus(`Removed "${key}" from local storage`);
+                        }}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                    <div style={{
+                      fontSize: '10px',
+                      color: '#6c757d',
+                      marginBottom: '4px'
+                    }}>
+                      Type: {isJson ? 'JSON' : 'String'} | Size: {(localStorage.getItem(key) || '').length} chars
+                    </div>
+                    <pre style={{ 
+                      margin: 0, 
+                      fontSize: '10px', 
+                      color: '#212529',
+                      whiteSpace: 'pre-wrap',
+                      wordBreak: 'break-word',
+                      backgroundColor: '#f8f9fa',
+                      padding: '4px',
+                      borderRadius: '2px',
+                      maxHeight: '100px',
+                      overflowY: 'auto'
+                    }}>
+                      {value}
+                    </pre>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
+      </DevSection>
+
       <DevSection title="Console Debug (Mobile Safari)" defaultExpanded={true}>
         <div style={styles.userInfo}>
           <p><strong>Console Messages:</strong> {consoleMessages.length} captured</p>
