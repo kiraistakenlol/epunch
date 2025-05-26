@@ -104,6 +104,14 @@
   fill: #f5f5dc;
 }
 
+.checkIcon {
+  width: 24px;
+  height: 24px;
+  fill: #4caf50;
+  stroke: #4caf50;
+  stroke-width: 0.5;
+}
+
 .punchCardBody {
   padding: 20px;
   flex: 1;
@@ -170,20 +178,16 @@
 }
 
 .statusACTIVE {
-  border-left: 4px solid #2196f3;
+  border-left: 4px solid #ff9800;
 }
 
 .statusREWARD_READY {
-  border-left: 4px solid #ff9800;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), 0 0 8px rgba(255, 152, 0, 0.3);
-}
-
-.statusREWARD_READY .shopName {
-  color: #ff9800;
+  border-left: 4px solid #4caf50;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), 0 0 8px rgba(76, 175, 80, 0.3);
 }
 
 .statusREWARD_REDEEMED {
-  border-left: 4px solid #4caf50;
+  border-left: 4px solid #757575;
   opacity: 0.8;
 }
 
