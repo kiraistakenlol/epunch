@@ -4,18 +4,22 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { configureApiClient } from 'e-punch-common-ui';
 import DashboardPage from './features/dashboard/DashboardPage';
 import DevPage from './features/dev/DevPage';
-import { initializeUser as initializeUser } from './features/auth/authSlice';
+import { initializeUser as initializeUser, selectUserId } from './features/auth/authSlice';
 import { configureAmplify, setupAuthListener } from './config/amplify';
 import { config } from './config/env';
 import type { AppDispatch } from './store/store';
 import './styles/global.css';
 import { useWebSocketEventHandler } from './hooks/useWebSocketEventHandler';
+import { fetchPunchCards } from './features/punchCards/punchCardsSlice';
+import { useAppSelector } from './store/hooks';
 
 configureApiClient(config.api.baseUrl);
 
 function App() {
   const dispatch: AppDispatch = useDispatch();
 
+  const userId = useAppSelector(selectUserId);
+  
   useWebSocketEventHandler();
 
   useEffect(() => {
@@ -29,6 +33,12 @@ function App() {
       removeAuthListener();
     };
   }, [dispatch]);
+
+  useEffect(() => {
+    if (userId) {
+      dispatch(fetchPunchCards(userId));
+    }
+  }, [userId, dispatch]);
 
   return (
     <BrowserRouter>
