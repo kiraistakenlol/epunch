@@ -119,19 +119,6 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode }) =
       ) : (
         <>
           <button
-            style={googleButtonStyle}
-            onClick={handleGoogleAuth}
-            onMouseOver={(e) => {
-              e.currentTarget.style.backgroundColor = '#3367d6';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.backgroundColor = '#4285f4';
-            }}
-          >
-            Continue with Google
-          </button>
-          
-          <button
             style={emailButtonStyle}
             onClick={handleEmailAuth}
             onMouseOver={(e) => {
@@ -142,6 +129,25 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode }) =
             }}
           >
             Continue with Email
+          </button>
+
+          <button
+            style={{
+              ...googleButtonStyle,
+              opacity: 0.2,
+              backgroundColor: 'grey',
+              cursor: 'not-allowed'
+            }}
+            disabled={true}
+            onClick={handleGoogleAuth}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = '#3367d6';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = '#4285f4';
+            }}
+          >
+            Continue with Google (Coming soon)
           </button>
         </>
       )}
