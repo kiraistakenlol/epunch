@@ -24,30 +24,40 @@ const initialState: AuthState = {
 export const initializeUser = createAsyncThunk<void, void, {}>(
   'auth/initializeUser',
   async (_, { dispatch }) => {
+    // Always set a fallback userId from localStorage first
+    const fallbackUserId = getOrInitializeUserIdFromLocalStorage();
+    dispatch(setUserId(fallbackUserId));
+
     try {
-      console.log('Attempting to get current user...');
-      const cognitoUser = await getCurrentUser();
-      console.log('Got current Cognito user:', cognitoUser);
+      console.log('Checking for authenticated user...');
       
+      // First check if we have a valid session
       const session = await fetchAuthSession();
       const idToken = session.tokens?.idToken?.toString();
       
-      if (idToken) {
-        console.log('Fetching user data from backend...');
-        const backendUser = await apiClient.getCurrentUser(idToken);
-        console.log('Got backend user:', backendUser);
-        
-        dispatch(setUserId(backendUser.id));
-        dispatch(setCognitoUser(cognitoUser));
-        dispatch(setAuthenticated(true));
+      if (!idToken) {
+        console.log('No authentication token found - user not authenticated');
         return;
       }
+
+      // If we have a token, get the Cognito user details
+      const cognitoUser = await getCurrentUser();
+      console.log('Got current Cognito user:', cognitoUser);
+      
+      // Get user data from our backend
+      console.log('Fetching user data from backend...');
+      const backendUser = await apiClient.getCurrentUser(idToken);
+      console.log('Got backend user:', backendUser);
+      
+      // Update state with authenticated user data
+      dispatch(setUserId(backendUser.id));
+      dispatch(setCognitoUser(cognitoUser));
+      dispatch(setAuthenticated(true));
+      
     } catch (error) {
-      console.log('Failed to get authenticated user, falling back to local storage', error);
+      console.log('User not authenticated or error occurred:', error);
+      // Keep the fallback userId and unauthenticated state
     }
-    
-    const userId = getOrInitializeUserIdFromLocalStorage();
-    dispatch(setUserId(userId));
   }
 );
 
