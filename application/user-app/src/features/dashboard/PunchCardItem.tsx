@@ -28,7 +28,6 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
   currentPunches,
   totalPunches,
   status,
-  createdAt,
   isHighlighted = false,
   animatedPunchIndex,
   shouldSlideIn = false,
@@ -45,14 +44,6 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
       ></div>
     );
   }
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    const year = date.getFullYear().toString().slice(-2);
-    return `${month}/${day}/${year}`;
-  };
 
   return (
     <div className={`${styles.punchCardItem} ${styles[`status${status}`]} ${isHighlighted ? styles.highlighted : ''} ${shouldSlideIn ? styles.punchCardSlideIn : ''} ${shouldSlideRight ? styles.punchCardSlideRight : ''}`}>
