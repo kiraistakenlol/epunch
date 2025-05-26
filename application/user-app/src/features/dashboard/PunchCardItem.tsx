@@ -65,7 +65,6 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
       </div>
       <div className={styles.punchCardFooter}>
         <span className={styles.shopName}>{shopName}</span>
-        <span className={styles.cardStatus}>{status.replace('_', ' ')}</span>
       </div>
     </div>
   );

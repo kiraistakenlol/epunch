@@ -169,23 +169,22 @@
   font-weight: bold;
 }
 
-.cardStatus {
-  color: #5d4037;
-  font-size: 0.85em;
-  font-weight: bold;
-  text-transform: uppercase;
+.statusACTIVE {
+  border-left: 4px solid #2196f3;
 }
 
-.statusACTIVE .cardStatus {
-  color: #2196f3;
+.statusREWARD_READY {
+  border-left: 4px solid #ff9800;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), 0 0 8px rgba(255, 152, 0, 0.3);
 }
 
-.statusREWARD_READY .cardStatus {
+.statusREWARD_READY .shopName {
   color: #ff9800;
 }
 
-.statusREWARD_REDEEMED .cardStatus {
-  color: #4caf50;
+.statusREWARD_REDEEMED {
+  border-left: 4px solid #4caf50;
+  opacity: 0.8;
 }
 
 .highlighted {
