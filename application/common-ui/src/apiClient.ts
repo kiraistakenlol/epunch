@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, AuthResponseDto, UserDto } from 'e-punch-common-core';
+import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, AuthResponseDto, UserDto, LoyaltyProgramDto } from 'e-punch-common-core';
 
 // The API URL will be set by the app using this client
 let API_BASE_URL: string;
@@ -113,6 +113,22 @@ export const apiClient = {
       return Promise.reject(new Error('Punch card ID is required.'));
     }
     const response = await instance.post<PunchCardDto>(`/punch-cards/${punchCardId}/redeem`);
+    return response.data;
+  },
+
+  async getPunchCard(punchCardId: string): Promise<PunchCardDto> {
+    if (!punchCardId) {
+      return Promise.reject(new Error('Punch card ID is required.'));
+    }
+    const response = await instance.get<PunchCardDto>(`/punch-cards/${punchCardId}`);
+    return response.data;
+  },
+
+  async getMerchantLoyaltyPrograms(merchantId: string): Promise<LoyaltyProgramDto[]> {
+    if (!merchantId) {
+      return Promise.reject(new Error('Merchant ID is required.'));
+    }
+    const response = await instance.get<LoyaltyProgramDto[]>(`/merchants/${merchantId}/loyalty-programs`);
     return response.data;
   },
 

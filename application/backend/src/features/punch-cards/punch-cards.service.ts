@@ -61,4 +61,22 @@ export class PunchCardsService {
       throw error;
     }
   }
+
+  async getPunchCard(punchCardId: string): Promise<PunchCardDto> {
+    this.logger.log(`Fetching punch card: ${punchCardId}`);
+    
+    try {
+      const punchCard = await this.punchCardsRepository.findPunchCardById(punchCardId);
+      
+      if (!punchCard) {
+        throw new NotFoundException(`Punch card with ID ${punchCardId} not found`);
+      }
+      
+      this.logger.log(`Found punch card: ${punchCardId}`);
+      return punchCard;
+    } catch (error: any) {
+      this.logger.error(`Error fetching punch card ${punchCardId}: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
 } 

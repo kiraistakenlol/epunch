@@ -9,6 +9,7 @@ import { DatabaseModule } from './database/database.module';
 import { LoyaltyModule } from './features/loyalty/loyalty.module';
 import { PunchesModule } from './features/punches/punches.module';
 import { WebSocketModule } from './websocket/websocket.module';
+import { MerchantModule } from './features/merchant/merchant.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { WebSocketModule } from './websocket/websocket.module';
     UserModule,
     DevModule,
     LoyaltyModule,
+    MerchantModule,
     WebSocketModule,
   ],
 })

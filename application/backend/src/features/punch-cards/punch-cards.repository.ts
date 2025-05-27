@@ -169,6 +169,7 @@ export class PunchCardsRepository {
       
       return {
         id: row.id,
+        loyaltyProgramId: row.loyalty_program_id,
         shopName: row.merchant_name,
         shopAddress: row.merchant_address || '',
         currentPunches: row.current_punches,
@@ -209,6 +210,7 @@ export class PunchCardsRepository {
     
     return {
       id: row.id,
+      loyaltyProgramId: row.loyalty_program_id,
       shopName: row.merchant_name,
       shopAddress: row.merchant_address || '',
       currentPunches: row.current_punches,
@@ -259,6 +261,7 @@ export class PunchCardsRepository {
     
     return {
       id: row.id,
+      loyaltyProgramId: row.loyalty_program_id,
       shopName: row.merchant_name,
       shopAddress: row.merchant_address || '',
       currentPunches: row.current_punches,

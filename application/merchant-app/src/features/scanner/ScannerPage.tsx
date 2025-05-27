@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import jsQR from 'jsqr';
 import { apiClient, AppHeader } from 'e-punch-common-ui';
-import { QRValueDto } from 'e-punch-common-core';
+import { QRValueDto, LoyaltyProgramDto, PunchCardDto } from 'e-punch-common-core';
 import styles from './ScannerPage.module.css';
 
 /**
@@ -23,11 +23,18 @@ import styles from './ScannerPage.module.css';
  * 5. `stopVideoStream`: Halts camera tracks and cancels `requestAnimationFrame` for `scanFrame`.
  */
 
+const HARDCODED_MERCHANT_ID = '251dc2f0-f969-455f-aa7d-959a551eae67';
+
 const ScannerPage: React.FC = () => {
     const [scanResult, setScanResult] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [punchMessage, setPunchMessage] = useState<string | null>(null);
     const [parsedQRData, setParsedQRData] = useState<QRValueDto | null>(null);
+    const [loyaltyPrograms, setLoyaltyPrograms] = useState<LoyaltyProgramDto[]>([]);
+    const [selectedLoyaltyProgramId, setSelectedLoyaltyProgramId] = useState<string>('');
+    const [punchCardDetails, setPunchCardDetails] = useState<PunchCardDto | null>(null);
+    const [isLoadingLoyaltyPrograms, setIsLoadingLoyaltyPrograms] = useState(false);
+    const [isLoadingPunchCard, setIsLoadingPunchCard] = useState(false);
 
     const videoRef = useRef<HTMLVideoElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -36,6 +43,45 @@ const ScannerPage: React.FC = () => {
 
     const [isCameraInitialized, setIsCameraInitialized] = useState(false);
     const [isProcessingPunch, setIsProcessingPunch] = useState(false);
+
+    useEffect(() => {
+        const fetchLoyaltyPrograms = async () => {
+            setIsLoadingLoyaltyPrograms(true);
+            try {
+                const programs = await apiClient.getMerchantLoyaltyPrograms(HARDCODED_MERCHANT_ID);
+                setLoyaltyPrograms(programs);
+                if (programs.length > 0) {
+                    setSelectedLoyaltyProgramId(programs[0].id);
+                }
+            } catch (error: any) {
+                console.error('Failed to fetch loyalty programs:', error);
+                setErrorMessage(`Failed to load loyalty programs: ${error.message}`);
+            } finally {
+                setIsLoadingLoyaltyPrograms(false);
+            }
+        };
+
+        fetchLoyaltyPrograms();
+    }, []);
+
+    useEffect(() => {
+        const fetchPunchCardDetails = async () => {
+            if (parsedQRData?.type === 'redemption_punch_card_id' && parsedQRData.punch_card_id) {
+                setIsLoadingPunchCard(true);
+                try {
+                    const punchCard = await apiClient.getPunchCard(parsedQRData.punch_card_id);
+                    setPunchCardDetails(punchCard);
+                } catch (error: any) {
+                    console.error('Failed to fetch punch card details:', error);
+                    setErrorMessage(`Failed to load punch card details: ${error.message}`);
+                } finally {
+                    setIsLoadingPunchCard(false);
+                }
+            }
+        };
+
+        fetchPunchCardDetails();
+    }, [parsedQRData]);
 
     const parseQRData = (qrString: string): QRValueDto | null => {
         try {
@@ -165,6 +211,7 @@ const ScannerPage: React.FC = () => {
         setParsedQRData(null);
         setPunchMessage(null);
         setErrorMessage(null);
+        setPunchCardDetails(null);
     };
 
     const handlePunchAndRestartScan = async () => {
@@ -180,16 +227,14 @@ const ScannerPage: React.FC = () => {
                 const result = await apiClient.redeemPunchCard(parsedQRData.punch_card_id);
                 setPunchMessage(`Reward Redeemed! ${result.shopName}`);
             } else if (parsedQRData.type === 'user_id') {
-                const loyaltyProgramId = "ca8a6765-e272-4aaa-b7a9-c25863ff1678";
-
-                if (!loyaltyProgramId) {
-                    setErrorMessage("Loyalty Program ID is not configured. Cannot punch.");
+                if (!selectedLoyaltyProgramId) {
+                    setErrorMessage("Please select a loyalty program.");
                     setIsProcessingPunch(false);
                     return;
                 }
 
-                console.log(`Attempting to punch for user: ${parsedQRData.user_id} on program: ${loyaltyProgramId}`);
-                const result = await apiClient.recordPunch(parsedQRData.user_id, loyaltyProgramId);
+                console.log(`Attempting to punch for user: ${parsedQRData.user_id} on program: ${selectedLoyaltyProgramId}`);
+                const result = await apiClient.recordPunch(parsedQRData.user_id, selectedLoyaltyProgramId);
                 setPunchMessage(result.rewardAchieved ? "Reward Achieved!" : "Great.");
             } else {
                 setErrorMessage("Invalid QR code type.");
@@ -204,6 +249,7 @@ const ScannerPage: React.FC = () => {
                 setScanResult(null);
                 setParsedQRData(null);
                 setIsProcessingPunch(false);
+                setPunchCardDetails(null);
             }, 2000);
         }
     };
@@ -217,6 +263,63 @@ const ScannerPage: React.FC = () => {
             return `Reward Redemption: ${parsedQRData.punch_card_id.substring(0, 8)}...`;
         }
         return null;
+    };
+
+    const renderLoyaltyProgramSelector = () => {
+        if (parsedQRData?.type !== 'user_id' || loyaltyPrograms.length === 0) return null;
+
+        return (
+            <div style={{ marginBottom: '15px' }}>
+                <label style={{ 
+                    color: '#f5f5dc', 
+                    fontSize: '1em', 
+                    marginBottom: '8px',
+                    display: 'block'
+                }}>
+                    Select Loyalty Program:
+                </label>
+                <select
+                    value={selectedLoyaltyProgramId}
+                    onChange={(e) => setSelectedLoyaltyProgramId(e.target.value)}
+                    style={{
+                        width: '100%',
+                        padding: '8px',
+                        fontSize: '1em',
+                        borderRadius: '4px',
+                        border: '1px solid #ccc',
+                        backgroundColor: '#fff'
+                    }}
+                >
+                    {loyaltyPrograms.map((program) => (
+                        <option key={program.id} value={program.id}>
+                            {program.name} - {program.rewardDescription}
+                        </option>
+                    ))}
+                </select>
+            </div>
+        );
+    };
+
+    const renderPunchCardDetails = () => {
+        if (parsedQRData?.type !== 'redemption_punch_card_id' || !punchCardDetails) return null;
+
+        return (
+            <div style={{ 
+                color: '#f5f5dc', 
+                fontSize: '0.9em', 
+                marginBottom: '15px',
+                backgroundColor: 'rgba(0,0,0,0.3)',
+                padding: '10px',
+                borderRadius: '8px'
+            }}>
+                <h4 style={{ margin: '0 0 8px 0', color: '#fff' }}>Redemption Details:</h4>
+                <p style={{ margin: '4px 0' }}><strong>Shop:</strong> {punchCardDetails.shopName}</p>
+                <p style={{ margin: '4px 0' }}><strong>Address:</strong> {punchCardDetails.shopAddress}</p>
+                <p style={{ margin: '4px 0' }}><strong>Punches:</strong> {punchCardDetails.currentPunches}/{punchCardDetails.totalPunches}</p>
+                <p style={{ margin: '4px 0' }}><strong>Status:</strong> {punchCardDetails.status}</p>
+                <p style={{ margin: '4px 0' }}><strong>Card ID:</strong> {punchCardDetails.id.substring(0, 8)}...</p>
+            </div>
+        );
     };
 
     return (
@@ -241,11 +344,22 @@ const ScannerPage: React.FC = () => {
                             }}>
                                 {getDisplayMessage()}
                             </div>
+                            
+                            {isLoadingPunchCard && (
+                                <div style={{ color: '#f5f5dc', textAlign: 'center', marginBottom: '15px' }}>
+                                    Loading punch card details...
+                                </div>
+                            )}
+                            
+                            {renderPunchCardDetails()}
+                            {renderLoyaltyProgramSelector()}
+                            
                             <div className={styles.buttonsContainer}>
                                 <button
                                     onClick={handlePunchAndRestartScan}
                                     className={styles.punchButton}
-                                    disabled={!scanResult || isProcessingPunch}
+                                    disabled={!scanResult || isProcessingPunch || isLoadingPunchCard || 
+                                             (parsedQRData?.type === 'user_id' && !selectedLoyaltyProgramId)}
                                 >
                                     {parsedQRData?.type === 'redemption_punch_card_id' ? 'REDEEM!' : 'PUNCH!'}
                                 </button>
@@ -264,6 +378,9 @@ const ScannerPage: React.FC = () => {
                     {punchMessage && <p className={styles.punchSuccessMessage}>{punchMessage}</p>}
                     {!scanResult && !isCameraInitialized && !errorMessage && (
                         <p className={styles.initializingMessage}>Initializing Camera...</p>
+                    )}
+                    {isLoadingLoyaltyPrograms && (
+                        <p className={styles.initializingMessage}>Loading loyalty programs...</p>
                     )}
                 </div>
 

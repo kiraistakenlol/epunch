@@ -6,6 +6,13 @@ import { PunchCardsService } from './punch-cards.service';
 export class PunchCardsController {
   constructor(private readonly punchCardsService: PunchCardsService) {}
 
+  @Get(':punchCardId')
+  async getPunchCard(
+    @Param('punchCardId', ParseUUIDPipe) punchCardId: string,
+  ): Promise<PunchCardDto> {
+    return this.punchCardsService.getPunchCard(punchCardId);
+  }
+
   @Post(':punchCardId/redeem')
   async redeemPunchCard(
     @Param('punchCardId', ParseUUIDPipe) punchCardId: string,

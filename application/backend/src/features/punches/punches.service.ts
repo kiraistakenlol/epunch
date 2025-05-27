@@ -96,6 +96,7 @@ export class PunchesService {
 
       newPunchCardDto = {
         id: newActiveCardEntity.id,
+        loyaltyProgramId: loyaltyProgramId,
         shopName: merchant.name,
         shopAddress: merchant.address || 'Address Unavailable',
         currentPunches: newActiveCardEntity.current_punches,
@@ -113,6 +114,7 @@ export class PunchesService {
     
     const updatedPunchCardDto: PunchCardDto = {
       id: updatedPunchCard.id,
+      loyaltyProgramId: loyaltyProgramId,
       shopName: merchant.name,
       shopAddress: merchant.address || 'Address Unavailable',
       currentPunches: newPunchCount,
