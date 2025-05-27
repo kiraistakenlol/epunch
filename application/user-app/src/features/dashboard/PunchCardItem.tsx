@@ -1,5 +1,6 @@
-import React from 'react';
-import { PunchCardDto } from 'e-punch-common-core';
+import React, { useState, useEffect } from 'react';
+import { PunchCardDto, LoyaltyProgramDto } from 'e-punch-common-core';
+import { apiClient } from 'e-punch-common-ui';
 import styles from './DashboardPage.module.css';
 
 interface PunchCardItemProps extends PunchCardDto {
@@ -27,6 +28,7 @@ const CheckCircleIcon = () => (
 
 const PunchCardItem: React.FC<PunchCardItemProps> = ({
   id,
+  loyaltyProgramId,
   shopName,
   shopAddress,
   currentPunches,
@@ -40,6 +42,27 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
   onCardClick,
   animateRewardClaimed
 }) => {
+  const [loyaltyProgram, setLoyaltyProgram] = useState<LoyaltyProgramDto | null>(null);
+  const [isLoadingProgram, setIsLoadingProgram] = useState(false);
+
+  useEffect(() => {
+    const fetchLoyaltyProgram = async () => {
+      if (!loyaltyProgramId) return;
+      
+      setIsLoadingProgram(true);
+      try {
+        const program = await apiClient.getLoyaltyProgram(loyaltyProgramId);
+        setLoyaltyProgram(program);
+      } catch (error) {
+        console.error('Failed to fetch loyalty program:', error);
+      } finally {
+        setIsLoadingProgram(false);
+      }
+    };
+
+    fetchLoyaltyProgram();
+  }, [loyaltyProgramId]);
+
   const punchCircles = [];
   for (let i = 0; i < totalPunches; i++) {
     const isFilled = i < currentPunches;
@@ -66,7 +89,7 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
     shouldSlideRight ? styles.punchCardSlideRight : '',
     isSelected ? styles.selectedForRedemption : '',
     status === 'REWARD_READY' ? styles.clickableCard : '',
-          animateRewardClaimed ? styles.punchCardSlideOut : ''
+    animateRewardClaimed ? styles.punchCardSlideOut : ''
   ].filter(Boolean).join(' ');
 
   return (
@@ -91,6 +114,9 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
       </div>
       <div className={styles.punchCardFooter}>
         <span className={styles.shopName}>{shopName}</span>
+        {loyaltyProgram && (
+          <div className={styles.loyaltyProgramName}>{loyaltyProgram.name}</div>
+        )}
       </div>
       {isSelected && (
         <div className={styles.redemptionOverlay}>

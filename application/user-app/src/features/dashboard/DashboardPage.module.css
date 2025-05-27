@@ -139,10 +139,11 @@
 }
 
 .punchCardBody {
-  padding: 16px;
+  padding: 15px;
   flex: 1;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .punchCirclesContainer {
@@ -192,16 +193,23 @@
 }
 
 .punchCardFooter {
-  padding: 15px 18px;
+  padding: 12px 15px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .shopName {
   color: #5d4037;
   font-size: 1.3em;
   font-weight: bold;
+}
+
+.loyaltyProgramName {
+  color: #795548;
+  font-size: 0.9em;
+  font-weight: 500;
+  font-style: italic;
 }
 
 .statusACTIVE {
@@ -468,6 +476,10 @@
   .shopName {
     font-size: 1.2em;
   }
+  
+  .loyaltyProgramName {
+    font-size: 0.85em;
+  }
 }
 
 @media (max-height: 600px) {
@@ -526,6 +538,10 @@
   .checkIcon {
     width: 18px;
     height: 18px;
+  }
+  
+  .loyaltyProgramName {
+    font-size: 0.8em;
   }
 }
 

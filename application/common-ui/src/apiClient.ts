@@ -155,6 +155,14 @@ export const apiClient = {
     await instance.delete(`/merchants/${merchantId}/loyalty-programs/${programId}`);
   },
 
+  async getLoyaltyProgram(loyaltyProgramId: string): Promise<LoyaltyProgramDto> {
+    if (!loyaltyProgramId) {
+      return Promise.reject(new Error('Loyalty Program ID is required.'));
+    }
+    const response = await instance.get<LoyaltyProgramDto>(`/loyalty-programs/${loyaltyProgramId}`);
+    return response.data;
+  },
+
   // Authentication method
   async authenticateUser(authToken: string, userId: string): Promise<AuthResponseDto> {
     if (!authToken || !userId) {
