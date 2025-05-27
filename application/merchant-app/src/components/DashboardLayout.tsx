@@ -25,7 +25,7 @@ import {
   Loyalty,
   AccountCircle,
 } from '@mui/icons-material';
-import { useAppDispatch } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { logout } from '../store/authSlice';
 
 const drawerWidth = 280;
@@ -44,6 +44,7 @@ export const DashboardLayout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useAppDispatch();
+  const merchant = useAppSelector(state => state.auth.merchant);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -152,6 +153,21 @@ export const DashboardLayout: React.FC = () => {
             }}
           >
             {isMobile ? 'E PUNCH MERCHANT' : 'E PUNCH.IO MERCHANT'}
+            {merchant && (
+              <Typography
+                component="span"
+                sx={{
+                  display: 'block',
+                  fontSize: isMobile ? '0.7em' : '0.6em',
+                  fontWeight: 'normal',
+                  opacity: 0.9,
+                  lineHeight: 1,
+                  mt: isMobile ? 0.5 : 0.2,
+                }}
+              >
+                {merchant.name}
+              </Typography>
+            )}
           </Typography>
           <IconButton
             size="large"

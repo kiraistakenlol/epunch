@@ -163,56 +163,75 @@ export const LoyaltyPrograms: React.FC = () => {
               key={program.id}
               sx={{
                 backgroundColor: '#f5f5dc',
-                borderRadius: '12px',
-                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
+                borderRadius: '8px',
+                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
                 transition: 'all 0.2s ease',
+                border: '1px solid rgba(93, 64, 55, 0.1)',
                 '&:hover': {
-                  transform: isMobile ? 'none' : 'translateY(-2px)',
-                  boxShadow: isMobile ? '0 4px 8px rgba(0, 0, 0, 0.3)' : '0 6px 12px rgba(0, 0, 0, 0.4)',
+                  transform: isMobile ? 'none' : 'translateY(-1px)',
+                  boxShadow: isMobile ? '0 2px 4px rgba(0, 0, 0, 0.1)' : '0 4px 8px rgba(0, 0, 0, 0.15)',
                 },
               }}
             >
-              <CardContent>
+              <CardContent sx={{ padding: isMobile ? '16px' : '20px', '&:last-child': { paddingBottom: isMobile ? '16px' : '20px' } }}>
                 <Box
                   display="flex"
                   justifyContent="space-between"
                   alignItems="flex-start"
-                  mb={2}
-                  flexDirection={isMobile ? 'column' : 'row'}
-                  gap={isMobile ? 1 : 0}
+                  mb={1.5}
                 >
-                  <Box flex={1}>
+                  <Box flex={1} mr={2}>
+                    <Box display="flex" alignItems="center" gap={1} mb={0.5}>
+                      <Typography
+                        variant="h6"
+                        component="h3"
+                        sx={{
+                          color: '#3e2723',
+                          fontWeight: 600,
+                          fontSize: isMobile ? '1.1rem' : '1.25rem',
+                          lineHeight: 1.2,
+                        }}
+                      >
+                        {program.name}
+                      </Typography>
+                      
+                      <Chip
+                        label={program.isActive ? 'Active' : 'Inactive'}
+                        size="small"
+                        sx={{
+                          height: '20px',
+                          fontSize: '0.75rem',
+                          backgroundColor: program.isActive ? '#e8f5e8' : '#f5f5f5',
+                          color: program.isActive ? '#2e7d32' : '#757575',
+                          border: program.isActive ? '1px solid #c8e6c9' : '1px solid #e0e0e0',
+                        }}
+                      />
+                    </Box>
+                    
                     <Typography
-                      variant="h6"
-                      component="h3"
+                      variant="body2"
                       sx={{
-                        color: '#3e2723',
-                        fontWeight: 'bold',
-                        mb: 1,
+                        color: '#5d4037',
+                        fontWeight: 500,
+                        fontSize: '0.9rem',
                       }}
                     >
-                      {program.name}
+                      {program.requiredPunches} punches → {program.rewardDescription}
                     </Typography>
-                    
-                    <Chip
-                      label={program.isActive ? 'Active' : 'Inactive'}
-                      color={program.isActive ? 'success' : 'default'}
-                      size="small"
-                      sx={{ mb: 1 }}
-                    />
                   </Box>
                   
-                  <Box display="flex" gap={1} flexShrink={0}>
+                  <Box display="flex" gap={0.5} flexShrink={0}>
                     <IconButton
                       onClick={() => handleEdit(program.id)}
+                      size="small"
                       sx={{
-                        backgroundColor: '#8d6e63',
-                        color: '#f5f5dc',
+                        backgroundColor: 'rgba(93, 64, 55, 0.08)',
+                        color: '#5d4037',
                         '&:hover': {
-                          backgroundColor: '#6d4c41',
+                          backgroundColor: 'rgba(93, 64, 55, 0.15)',
                         },
-                        width: 36,
-                        height: 36,
+                        width: 32,
+                        height: 32,
                       }}
                     >
                       <EditIcon fontSize="small" />
@@ -220,14 +239,15 @@ export const LoyaltyPrograms: React.FC = () => {
                     
                     <IconButton
                       onClick={() => handleDelete(program.id, program.name)}
+                      size="small"
                       sx={{
-                        backgroundColor: '#d32f2f',
-                        color: '#fff',
+                        backgroundColor: 'rgba(211, 47, 47, 0.08)',
+                        color: '#d32f2f',
                         '&:hover': {
-                          backgroundColor: '#c62828',
+                          backgroundColor: 'rgba(211, 47, 47, 0.15)',
                         },
-                        width: 36,
-                        height: 36,
+                        width: 32,
+                        height: 32,
                       }}
                     >
                       <DeleteIcon fontSize="small" />
@@ -238,41 +258,17 @@ export const LoyaltyPrograms: React.FC = () => {
                 {program.description && (
                   <Typography
                     variant="body2"
-                    color="text.secondary"
-                    sx={{ mb: 2 }}
+                    sx={{
+                      color: '#795548',
+                      fontSize: '0.85rem',
+                      fontStyle: 'italic',
+                      mt: 1,
+                      lineHeight: 1.4,
+                    }}
                   >
                     {program.description}
                   </Typography>
                 )}
-
-                <Box
-                  display="flex"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  flexDirection={isMobile ? 'column' : 'row'}
-                  gap={isMobile ? 1 : 0}
-                >
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      color: '#5d4037',
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    {program.requiredPunches} punches required
-                  </Typography>
-                  
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      color: '#795548',
-                      fontStyle: 'italic',
-                      textAlign: isMobile ? 'center' : 'right',
-                    }}
-                  >
-                    Reward: {program.rewardDescription}
-                  </Typography>
-                </Box>
               </CardContent>
             </Card>
           ))}
