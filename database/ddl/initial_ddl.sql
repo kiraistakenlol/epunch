@@ -38,11 +38,6 @@ CREATE TABLE punch_card (
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
--- Ensures only one ACTIVE card per user/loyalty program combination
-CREATE UNIQUE INDEX UQ_user_loyalty_program_active_status
-ON punch_card (user_id, loyalty_program_id)
-WHERE (status = 'ACTIVE');
-
 CREATE TABLE punch (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     punch_card_id UUID NOT NULL REFERENCES punch_card(id) ON DELETE CASCADE,

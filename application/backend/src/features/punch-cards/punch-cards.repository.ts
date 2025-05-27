@@ -178,4 +178,15 @@ export class PunchCardsRepository {
       };
     });
   }
+
+  async transferCards(fromUserId: string, toUserId: string): Promise<number> {
+    const query = `
+      UPDATE punch_card 
+      SET user_id = $2
+      WHERE user_id = $1
+    `;
+    
+    const result = await this.pool.query(query, [fromUserId, toUserId]);
+    return result.rowCount || 0;
+  }
 } 

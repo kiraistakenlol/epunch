@@ -1,11 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { decodeJwt } from 'jose';
 import { UserRepository } from '../user/user.repository';
+import { PunchCardsRepository } from '../punch-cards/punch-cards.repository';
 import { AuthRequestDto, AuthResponseDto, UserDto } from 'e-punch-common-core';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class AuthService {
-  constructor(private userRepository: UserRepository) {}
+  private readonly logger = new Logger(AuthService.name);
+
+  constructor(
+    private userRepository: UserRepository,
+    private punchCardsRepository: PunchCardsRepository
+  ) { }
 
   async authenticateUser(authRequest: AuthRequestDto): Promise<AuthResponseDto> {
     const { authToken, userId } = authRequest;
@@ -17,7 +24,12 @@ export class AuthService {
     let user = await this.userRepository.findUserByExternalId(externalId);
 
     if (!user) {
-      user = await this.userRepository.createUser(userId, externalId, email);
+      user = await this.userRepository.createUser(uuidv4(), externalId, email);
+    }
+
+    const transferredCards = await this.punchCardsRepository.transferCards(userId, user.id);
+    if (transferredCards > 0) {
+      this.logger.log(`Transferred ${transferredCards} anonymous cards to authenticated user ${user.id}`);
     }
 
     return {

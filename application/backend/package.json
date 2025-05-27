@@ -12,6 +12,7 @@
     "e-punch-common-core": "1.0.0",
     "joi": "^17.13.3",
     "jwks-rsa": "^3.0.0",
+    "uuid": "^9.0.1",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0",
     "pg": "^8.16.0",
