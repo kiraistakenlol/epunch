@@ -43,20 +43,16 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
   animateRewardClaimed
 }) => {
   const [loyaltyProgram, setLoyaltyProgram] = useState<LoyaltyProgramDto | null>(null);
-  const [isLoadingProgram, setIsLoadingProgram] = useState(false);
 
   useEffect(() => {
     const fetchLoyaltyProgram = async () => {
       if (!loyaltyProgramId) return;
       
-      setIsLoadingProgram(true);
       try {
         const program = await apiClient.getLoyaltyProgram(loyaltyProgramId);
         setLoyaltyProgram(program);
       } catch (error) {
         console.error('Failed to fetch loyalty program:', error);
-      } finally {
-        setIsLoadingProgram(false);
       }
     };
 
