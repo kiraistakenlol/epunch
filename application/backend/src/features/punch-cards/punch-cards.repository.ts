@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { PunchCardDto, PunchCardStatusDto } from 'e-punch-common-core';
+import { PunchCardDto, PunchCardStatusDto as PunchCardStatus } from 'e-punch-common-core';
 import { Pool, PoolClient } from 'pg';
 
 export interface PunchCard {
@@ -33,8 +33,6 @@ export interface Punch {
   punch_card_id: string;
   created_at: Date;
 }
-
-export type PunchCardStatus = 'ACTIVE' | 'REWARD_READY' | 'REWARD_REDEEMED';
 
 @Injectable()
 export class PunchCardsRepository {
@@ -194,13 +192,7 @@ export class PunchCardsRepository {
     }
 
     const row = result.rows[0];
-    let status: PunchCardStatusDto;
-    if (row.current_punches >= row.required_punches) {
-      status = 'REWARD_READY';
-    } else {
-      status = 'ACTIVE';
-    }
-    
+   
     return {
       id: row.id,
       loyaltyProgramId: row.loyalty_program_id,
@@ -208,7 +200,7 @@ export class PunchCardsRepository {
       shopAddress: row.merchant_address || '',
       currentPunches: row.current_punches,
       totalPunches: row.required_punches,
-      status: status,
+      status: row.status,
       createdAt: row.created_at.toISOString(),
     };
   }
@@ -227,41 +219,11 @@ export class PunchCardsRepository {
       throw new Error('Failed to update punch card status');
     }
 
-    const selectQuery = `
-      SELECT 
-        pc.*,
-        lp.name as loyalty_program_name,
-        lp.required_punches,
-        m.name as merchant_name,
-        m.address as merchant_address
-      FROM punch_card pc
-      JOIN loyalty_program lp ON pc.loyalty_program_id = lp.id
-      JOIN merchant m ON lp.merchant_id = m.id
-      WHERE pc.id = $1
-    `;
-    
-    const selectResult = await this.pool.query(selectQuery, [punchCardId]);
-    const row = selectResult.rows[0];
-    
-    let statusDto: PunchCardStatusDto;
-    if (row.current_punches >= row.required_punches && status !== 'REWARD_REDEEMED') {
-      statusDto = 'REWARD_READY';
-    } else if (status === 'REWARD_REDEEMED') {
-      statusDto = 'REWARD_REDEEMED';
-    } else {
-      statusDto = 'ACTIVE';
+    const punchCard = await this.findPunchCardById(punchCardId);
+    if (!punchCard) {
+      throw new Error('Punch card not found');
     }
-    
-    return {
-      id: row.id,
-      loyaltyProgramId: row.loyalty_program_id,
-      shopName: row.merchant_name,
-      shopAddress: row.merchant_address || '',
-      currentPunches: row.current_punches,
-      totalPunches: row.required_punches,
-      status: statusDto,
-      createdAt: row.created_at.toISOString(),
-    };
+    return punchCard;
   }
 
   async transferCards(fromUserId: string, toUserId: string): Promise<number> {
