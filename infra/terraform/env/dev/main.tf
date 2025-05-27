@@ -27,6 +27,28 @@ resource "aws_cognito_user_pool" "epunch_dev" {
   }
 }
 
+resource "aws_cognito_user_pool_domain" "epunch_dev_domain" {
+  domain       = var.cognito_domain_prefix
+  user_pool_id = aws_cognito_user_pool.epunch_dev.id
+}
+
+resource "aws_cognito_identity_provider" "google" {
+  user_pool_id  = aws_cognito_user_pool.epunch_dev.id
+  provider_name = "Google"
+  provider_type = "Google"
+
+  provider_details = {
+    client_id        = var.google_client_id
+    client_secret    = var.google_client_secret
+    authorize_scopes = "email openid profile"
+  }
+
+  attribute_mapping = {
+    email    = "email"
+    username = "sub"
+  }
+}
+
 resource "aws_cognito_user_pool_client" "epunch_dev_client" {
   name         = "epunch-dev-client"
   user_pool_id = aws_cognito_user_pool.epunch_dev.id
@@ -38,4 +60,15 @@ resource "aws_cognito_user_pool_client" "epunch_dev_client" {
     "ALLOW_USER_PASSWORD_AUTH",
     "ALLOW_REFRESH_TOKEN_AUTH"
   ]
+
+  supported_identity_providers = ["COGNITO", "Google"]
+
+  callback_urls = var.callback_urls
+  logout_urls   = var.logout_urls
+
+  allowed_oauth_flows                  = ["code"]
+  allowed_oauth_flows_user_pool_client = true
+  allowed_oauth_scopes                 = ["email", "openid", "profile"]
+
+  depends_on = [aws_cognito_identity_provider.google]
 } 

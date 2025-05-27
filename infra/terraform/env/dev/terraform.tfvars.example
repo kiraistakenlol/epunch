@@ -1,2 +1,20 @@
 # AWS Configuration
-aws_region = "us-east-1" 
+aws_region = "us-east-1"
+
+# Cognito Configuration
+cognito_domain_prefix = "epunch-dev-your-unique-suffix"
+
+# Google OAuth Configuration
+google_client_id     = "your-google-client-id.apps.googleusercontent.com"
+google_client_secret = "your-google-client-secret"
+
+# OAuth URLs
+callback_urls = [
+  "http://localhost:5173",
+  "https://your-production-domain.com"
+]
+
+logout_urls = [
+  "http://localhost:5173",
+  "https://your-production-domain.com"
+] 

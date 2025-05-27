@@ -132,13 +132,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode }) =
           </button>
 
           <button
-            style={{
-              ...googleButtonStyle,
-              opacity: 0.2,
-              backgroundColor: 'grey',
-              cursor: 'not-allowed'
-            }}
-            disabled={true}
+            style={googleButtonStyle}
             onClick={handleGoogleAuth}
             onMouseOver={(e) => {
               e.currentTarget.style.backgroundColor = '#3367d6';
@@ -147,7 +141,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode }) =
               e.currentTarget.style.backgroundColor = '#4285f4';
             }}
           >
-            Continue with Google (Coming soon)
+            Continue with Google
           </button>
         </>
       )}
