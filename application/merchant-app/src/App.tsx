@@ -2,6 +2,7 @@ import './styles/global.css';
 import { Admin, Resource } from 'react-admin';
 import { configureApiClient } from 'e-punch-common-ui';
 import { dataProvider } from './dataProvider';
+import { authProvider } from './authProvider';
 import { LoyaltyProgramList, LoyaltyProgramShow, LoyaltyProgramEdit, LoyaltyProgramCreate } from './resources/loyaltyPrograms';
 import { Scanner } from './resources/scanner';
 import { Dashboard } from './components/Dashboard';
@@ -21,6 +22,7 @@ function App() {
   return (
     <Admin 
       dataProvider={dataProvider} 
+      authProvider={authProvider}
       title="E-PUNCH Merchant"
       dashboard={Dashboard}
       layout={Layout}

@@ -1,13 +1,22 @@
-import { DataProvider, GetListParams, GetOneParams, GetManyParams } from 'react-admin';
+import { DataProvider, GetOneParams, GetManyParams } from 'react-admin';
 import { apiClient } from 'e-punch-common-ui';
-
-const HARDCODED_MERCHANT_ID = '251dc2f0-f969-455f-aa7d-959a551eae67';
+import { store } from './store/store';
 
 export const dataProvider: DataProvider = {
-  getList: async (resource: string, params: GetListParams) => {
+  getList: async (resource: string) => {
+    const state = store.getState();
+    const merchantId = state.auth.merchant?.id;
+    
+    if (!merchantId) {
+      return {
+        data: [],
+        total: 0,
+      };
+    }
+
     switch (resource) {
       case 'loyalty-programs':
-        const programs = await apiClient.getMerchantLoyaltyPrograms(HARDCODED_MERCHANT_ID);
+        const programs = await apiClient.getMerchantLoyaltyPrograms(merchantId);
         return {
           data: programs.map(program => ({ ...program, id: program.id })) as any,
           total: programs.length,
@@ -19,9 +28,16 @@ export const dataProvider: DataProvider = {
   },
 
   getOne: async (resource: string, params: GetOneParams) => {
+    const state = store.getState();
+    const merchantId = state.auth.merchant?.id;
+    
+    if (!merchantId) {
+      throw new Error('Merchant not authenticated');
+    }
+
     switch (resource) {
       case 'loyalty-programs':
-        const programs = await apiClient.getMerchantLoyaltyPrograms(HARDCODED_MERCHANT_ID);
+        const programs = await apiClient.getMerchantLoyaltyPrograms(merchantId);
         const program = programs.find(p => p.id === params.id);
         if (!program) throw new Error('Program not found');
         return { data: program as any };
@@ -32,11 +48,18 @@ export const dataProvider: DataProvider = {
   },
 
   getMany: async (resource: string, params: GetManyParams) => {
+    const state = store.getState();
+    const merchantId = state.auth.merchant?.id;
+    
+    if (!merchantId) {
+      return { data: [] };
+    }
+
     const { ids } = params;
     
     switch (resource) {
       case 'loyalty-programs':
-        const programs = await apiClient.getMerchantLoyaltyPrograms(HARDCODED_MERCHANT_ID);
+        const programs = await apiClient.getMerchantLoyaltyPrograms(merchantId);
         const filteredPrograms = programs.filter(p => ids.includes(p.id));
         return { data: filteredPrograms as any };
       

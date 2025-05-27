@@ -1,4 +1,3 @@
-import React from 'react';
 import { Menu as RaMenu, MenuItemLink } from 'react-admin';
 import { QrCodeScanner, Loyalty, Dashboard } from '@mui/icons-material';
 

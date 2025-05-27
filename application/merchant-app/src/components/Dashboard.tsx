@@ -1,7 +1,6 @@
 import { Card, CardContent, Typography, Grid, Box } from '@mui/material';
 import { useGetList } from 'react-admin';
 
-const HARDCODED_MERCHANT_ID = '251dc2f0-f969-455f-aa7d-959a551eae67';
 
 export const Dashboard = () => {
   const { data: loyaltyPrograms, isLoading } = useGetList('loyalty-programs');

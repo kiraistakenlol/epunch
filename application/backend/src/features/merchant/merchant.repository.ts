@@ -6,6 +6,8 @@ export interface Merchant {
   id: string;
   name: string;
   address: string | null;
+  login?: string;
+  password_hash?: string;
   created_at: Date;
 }
 
@@ -36,6 +38,16 @@ export class MerchantRepository {
     return result.rows[0] || null;
   }
 
+  async findMerchantByLogin(login: string): Promise<Merchant | null> {
+    const query = `
+      SELECT * FROM merchant 
+      WHERE login = $1
+    `;
+    
+    const result = await this.pool.query(query, [login]);
+    return result.rows[0] || null;
+  }
+
   async findLoyaltyProgramsByMerchantId(merchantId: string): Promise<LoyaltyProgramDto[]> {
     const query = `
       SELECT 
@@ -62,7 +74,7 @@ export class MerchantRepository {
         name: row.merchant_name,
         address: row.merchant_address,
         createdAt: row.merchant_created_at.toISOString(),
-      },
+      } as MerchantDto,
       createdAt: row.created_at.toISOString(),
     }));
   }

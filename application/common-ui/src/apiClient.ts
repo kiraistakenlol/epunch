@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, AuthResponseDto, UserDto, LoyaltyProgramDto } from 'e-punch-common-core';
+import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, AuthResponseDto, UserDto, LoyaltyProgramDto, MerchantLoginDto, MerchantLoginResponse } from 'e-punch-common-core';
 
 // The API URL will be set by the app using this client
 let API_BASE_URL: string;
@@ -152,6 +152,16 @@ export const apiClient = {
         Authorization: `Bearer ${authToken}`
       }
     });
+    return response.data;
+  },
+
+  // Merchant authentication
+  async authenticateMerchant(login: string, password: string): Promise<MerchantLoginResponse> {
+    if (!login || !password) {
+      return Promise.reject(new Error('Login and password are required.'));
+    }
+    const payload: MerchantLoginDto = { login, password };
+    const response = await instance.post<MerchantLoginResponse>('/merchants/auth', payload);
     return response.data;
   }
 }; 
