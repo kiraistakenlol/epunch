@@ -15,7 +15,15 @@ import {
 
 const NEW_CARD_ANIMATION_DELAY = 1500;
 
-const PunchCardsSection: React.FC = () => {
+interface PunchCardsSectionProps {
+  selectedCardId?: string | null;
+  onCardClick?: (cardId: string) => void;
+}
+
+const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({ 
+  selectedCardId, 
+  onCardClick 
+}) => {
   const dispatch = useDispatch<AppDispatch>();
   const userId = useSelector((state: RootState) => selectUserId(state));
   const punchCards = useSelector((state: RootState) => selectPunchCards(state));
@@ -169,6 +177,8 @@ const PunchCardsSection: React.FC = () => {
             }
             shouldSlideIn={slideInCards.has(card.id)}
             shouldSlideRight={slideRightCards.has(card.id)}
+            isSelected={selectedCardId === card.id}
+            onCardClick={onCardClick}
           />
         ))}
       </div>

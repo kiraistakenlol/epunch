@@ -7,6 +7,8 @@ interface PunchCardItemProps extends PunchCardDto {
   animatedPunchIndex?: number;
   shouldSlideIn?: boolean;
   shouldSlideRight?: boolean;
+  isSelected?: boolean;
+  onCardClick?: (cardId: string) => void;
 }
 
 const LocationPinIcon = () => (
@@ -23,6 +25,7 @@ const CheckCircleIcon = () => (
 );
 
 const PunchCardItem: React.FC<PunchCardItemProps> = ({
+  id,
   shopName,
   shopAddress,
   currentPunches,
@@ -31,7 +34,9 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
   isHighlighted = false,
   animatedPunchIndex,
   shouldSlideIn = false,
-  shouldSlideRight = false
+  shouldSlideRight = false,
+  isSelected = false,
+  onCardClick
 }) => {
   const punchCircles = [];
   for (let i = 0; i < totalPunches; i++) {
@@ -45,8 +50,28 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
     );
   }
 
+  const handleClick = () => {
+    if (status === 'REWARD_READY' && onCardClick) {
+      onCardClick(id);
+    }
+  };
+
+  const cardClasses = [
+    styles.punchCardItem,
+    styles[`status${status}`],
+    isHighlighted ? styles.highlighted : '',
+    shouldSlideIn ? styles.punchCardSlideIn : '',
+    shouldSlideRight ? styles.punchCardSlideRight : '',
+    isSelected ? styles.selectedForRedemption : '',
+    status === 'REWARD_READY' ? styles.clickableCard : ''
+  ].filter(Boolean).join(' ');
+
   return (
-    <div className={`${styles.punchCardItem} ${styles[`status${status}`]} ${isHighlighted ? styles.highlighted : ''} ${shouldSlideIn ? styles.punchCardSlideIn : ''} ${shouldSlideRight ? styles.punchCardSlideRight : ''}`}>
+    <div 
+      className={cardClasses}
+      onClick={handleClick}
+      style={{ cursor: status === 'REWARD_READY' ? 'pointer' : 'default', position: 'relative' }}
+    >
       <div className={styles.punchCardHeader}>
         <div className={styles.headerLeft}>
           <LocationPinIcon />
@@ -64,6 +89,13 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
       <div className={styles.punchCardFooter}>
         <span className={styles.shopName}>{shopName}</span>
       </div>
+      {isSelected && (
+        <div className={styles.redemptionOverlay}>
+          <span className={styles.redemptionLabel}>
+            Selected for Redemption
+          </span>
+        </div>
+      )}
     </div>
   );
 };
