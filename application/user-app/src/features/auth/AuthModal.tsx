@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { EPunchModal } from 'e-punch-common-ui';
 import EmailAuthForm from './EmailAuthForm';
+import { signInWithRedirect } from 'aws-amplify/auth';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -62,7 +63,6 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode }) =
 
   const handleGoogleAuth = async () => {
     try {
-      const { signInWithRedirect } = await import('aws-amplify/auth');
       await signInWithRedirect({ provider: 'Google' });
     } catch (error) {
       console.error('Google auth error:', error);

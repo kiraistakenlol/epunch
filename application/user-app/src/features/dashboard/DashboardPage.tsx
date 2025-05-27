@@ -68,6 +68,7 @@ const DashboardPage: React.FC = () => {
         title="EPunch" 
         showProfileMenu={isAuthenticated}
         onSignOut={handleSignOut}
+        showDevLink={true}
       />
       {!isAuthLoading && <AuthContainer />}
 

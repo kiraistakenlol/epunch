@@ -5,6 +5,7 @@ interface AppHeaderProps {
   title?: string;
   showProfileMenu?: boolean;
   onSignOut?: () => void;
+  showDevLink?: boolean;
 }
 
 const headerStyle: React.CSSProperties = {
@@ -46,13 +47,41 @@ const profileIconStyle: React.CSSProperties = {
   transition: "background-color 0.2s ease"
 };
 
+const devLinkStyle: React.CSSProperties = {
+  fontSize: "10px",
+  color: "rgba(245, 245, 220, 0.4)",
+  textDecoration: "none",
+  padding: "2px 4px",
+  borderRadius: "2px",
+  transition: "color 0.2s ease",
+  position: "absolute",
+  left: "10px",
+  top: "50%",
+  transform: "translateY(-50%)"
+};
+
 const AppHeader: React.FC<AppHeaderProps> = ({ 
   title = "E PUNCH.IO", 
   showProfileMenu = false, 
-  onSignOut 
+  onSignOut,
+  showDevLink = false
 }) => {
   return (
     <header style={headerStyle}>
+      {showDevLink && (
+        <a 
+          href="/dev" 
+          style={devLinkStyle}
+          onMouseOver={(e) => {
+            e.currentTarget.style.color = 'rgba(245, 245, 220, 0.7)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.color = 'rgba(245, 245, 220, 0.4)';
+          }}
+        >
+          dev
+        </a>
+      )}
       <div style={{ width: showProfileMenu ? "40px" : "0" }}></div>
       <div style={logoStyle}>{title}</div>
       

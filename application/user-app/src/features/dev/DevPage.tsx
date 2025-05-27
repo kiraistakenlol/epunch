@@ -288,6 +288,132 @@ const DevPage: React.FC = () => {
         </div>
       </DevSection>
 
+      <DevSection title="Console Debug (Mobile Safari)" defaultExpanded={true}>
+        <div style={styles.userInfo}>
+          <p><strong>Console Messages:</strong> {consoleMessages.length} captured</p>
+          <p style={{ fontSize: '12px', color: '#666', margin: '5px 0' }}>
+            All console.log, console.error, console.warn, and unhandled errors are captured here for mobile debugging.
+          </p>
+        </div>
+        <div>
+          <button 
+            style={styles.button} 
+            onClick={clearConsoleMessages}
+            disabled={loading}
+          >
+            Clear Console ({consoleMessages.length})
+          </button>
+          <button 
+            style={styles.button} 
+            onClick={() => {
+              console.log('Test log message', { timestamp: new Date() });
+              console.warn('Test warning message');
+              console.error('Test error message');
+            }}
+            disabled={loading}
+          >
+            Generate Test Messages
+          </button>
+        </div>
+        <div>
+          <h3>Console Output:</h3>
+          <div style={{ 
+            ...styles.statusBox, 
+            maxHeight: '400px', 
+            fontSize: '11px',
+            backgroundColor: '#1e1e1e',
+            color: '#f0f0f0',
+            border: '1px solid #333'
+          }}>
+            {consoleMessages.length === 0 ? (
+              <div style={{ color: '#888' }}>No console messages captured yet...</div>
+            ) : (
+              consoleMessages.map((msg) => {
+                const getMessageColor = (type: ConsoleMessage['type']) => {
+                  switch (type) {
+                    case 'error': return '#ff6b6b';
+                    case 'warn': return '#ffd93d';
+                    case 'info': return '#74c0fc';
+                    case 'log': return '#f0f0f0';
+                    default: return '#f0f0f0';
+                  }
+                };
+
+                const getTypeIcon = (type: ConsoleMessage['type']) => {
+                  switch (type) {
+                    case 'error': return '❌';
+                    case 'warn': return '⚠️';
+                    case 'info': return 'ℹ️';
+                    case 'log': return '📝';
+                    default: return '📝';
+                  }
+                };
+
+                return (
+                                     <div key={msg.id} style={{ 
+                     marginBottom: '8px', 
+                     padding: '6px', 
+                     backgroundColor: msg.type === 'error' ? '#2d1b1b' : msg.type === 'warn' ? '#2d2a1b' : '#1a1a1a', 
+                     borderRadius: '3px',
+                     borderLeft: `3px solid ${getMessageColor(msg.type)}`,
+                     fontSize: '10px'
+                   }}>
+                    <div style={{ 
+                      display: 'flex', 
+                      justifyContent: 'space-between', 
+                      alignItems: 'center',
+                      marginBottom: '4px'
+                    }}>
+                      <span style={{ 
+                        color: getMessageColor(msg.type), 
+                        fontWeight: 'bold',
+                        fontSize: '11px'
+                      }}>
+                        {getTypeIcon(msg.type)} {msg.type.toUpperCase()}
+                      </span>
+                      <span style={{ 
+                        color: '#888', 
+                        fontSize: '9px' 
+                      }}>
+                        {msg.timestamp.toLocaleTimeString()}
+                      </span>
+                    </div>
+                    <pre style={{ 
+                      margin: 0, 
+                      fontSize: '10px', 
+                      color: '#f0f0f0',
+                      whiteSpace: 'pre-wrap',
+                      wordBreak: 'break-word'
+                    }}>
+                      {msg.message}
+                    </pre>
+                    {msg.stack && (
+                      <details style={{ marginTop: '4px' }}>
+                        <summary style={{ 
+                          color: '#888', 
+                          fontSize: '9px', 
+                          cursor: 'pointer' 
+                        }}>
+                          Stack trace
+                        </summary>
+                        <pre style={{ 
+                          margin: '4px 0 0 0', 
+                          fontSize: '9px', 
+                          color: '#ccc',
+                          whiteSpace: 'pre-wrap'
+                        }}>
+                          {msg.stack}
+                        </pre>
+                      </details>
+                    )}
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
+      </DevSection>
+      
       <DevSection title="API Testing">
         <div>
           <button 
@@ -501,132 +627,6 @@ const DevPage: React.FC = () => {
                     }}>
                       {value}
                     </pre>
-                  </div>
-                );
-              })
-            )}
-          </div>
-        </div>
-      </DevSection>
-
-      <DevSection title="Console Debug (Mobile Safari)" defaultExpanded={true}>
-        <div style={styles.userInfo}>
-          <p><strong>Console Messages:</strong> {consoleMessages.length} captured</p>
-          <p style={{ fontSize: '12px', color: '#666', margin: '5px 0' }}>
-            All console.log, console.error, console.warn, and unhandled errors are captured here for mobile debugging.
-          </p>
-        </div>
-        <div>
-          <button 
-            style={styles.button} 
-            onClick={clearConsoleMessages}
-            disabled={loading}
-          >
-            Clear Console ({consoleMessages.length})
-          </button>
-          <button 
-            style={styles.button} 
-            onClick={() => {
-              console.log('Test log message', { timestamp: new Date() });
-              console.warn('Test warning message');
-              console.error('Test error message');
-            }}
-            disabled={loading}
-          >
-            Generate Test Messages
-          </button>
-        </div>
-        <div>
-          <h3>Console Output:</h3>
-          <div style={{ 
-            ...styles.statusBox, 
-            maxHeight: '400px', 
-            fontSize: '11px',
-            backgroundColor: '#1e1e1e',
-            color: '#f0f0f0',
-            border: '1px solid #333'
-          }}>
-            {consoleMessages.length === 0 ? (
-              <div style={{ color: '#888' }}>No console messages captured yet...</div>
-            ) : (
-              consoleMessages.map((msg) => {
-                const getMessageColor = (type: ConsoleMessage['type']) => {
-                  switch (type) {
-                    case 'error': return '#ff6b6b';
-                    case 'warn': return '#ffd93d';
-                    case 'info': return '#74c0fc';
-                    case 'log': return '#f0f0f0';
-                    default: return '#f0f0f0';
-                  }
-                };
-
-                const getTypeIcon = (type: ConsoleMessage['type']) => {
-                  switch (type) {
-                    case 'error': return '❌';
-                    case 'warn': return '⚠️';
-                    case 'info': return 'ℹ️';
-                    case 'log': return '📝';
-                    default: return '📝';
-                  }
-                };
-
-                return (
-                                     <div key={msg.id} style={{ 
-                     marginBottom: '8px', 
-                     padding: '6px', 
-                     backgroundColor: msg.type === 'error' ? '#2d1b1b' : msg.type === 'warn' ? '#2d2a1b' : '#1a1a1a', 
-                     borderRadius: '3px',
-                     borderLeft: `3px solid ${getMessageColor(msg.type)}`,
-                     fontSize: '10px'
-                   }}>
-                    <div style={{ 
-                      display: 'flex', 
-                      justifyContent: 'space-between', 
-                      alignItems: 'center',
-                      marginBottom: '4px'
-                    }}>
-                      <span style={{ 
-                        color: getMessageColor(msg.type), 
-                        fontWeight: 'bold',
-                        fontSize: '11px'
-                      }}>
-                        {getTypeIcon(msg.type)} {msg.type.toUpperCase()}
-                      </span>
-                      <span style={{ 
-                        color: '#888', 
-                        fontSize: '9px' 
-                      }}>
-                        {msg.timestamp.toLocaleTimeString()}
-                      </span>
-                    </div>
-                    <pre style={{ 
-                      margin: 0, 
-                      fontSize: '10px', 
-                      color: '#f0f0f0',
-                      whiteSpace: 'pre-wrap',
-                      wordBreak: 'break-word'
-                    }}>
-                      {msg.message}
-                    </pre>
-                    {msg.stack && (
-                      <details style={{ marginTop: '4px' }}>
-                        <summary style={{ 
-                          color: '#888', 
-                          fontSize: '9px', 
-                          cursor: 'pointer' 
-                        }}>
-                          Stack trace
-                        </summary>
-                        <pre style={{ 
-                          margin: '4px 0 0 0', 
-                          fontSize: '9px', 
-                          color: '#ccc',
-                          whiteSpace: 'pre-wrap'
-                        }}>
-                          {msg.stack}
-                        </pre>
-                      </details>
-                    )}
                   </div>
                 );
               })
