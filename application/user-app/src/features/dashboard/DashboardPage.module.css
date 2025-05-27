@@ -1,8 +1,8 @@
 /* DashboardPage.module.css - Mobile-first 3-section layout */
 
 .pageContainer {
-  height: 100vh;
-  height: 100dvh;
+  height: 100vh; /* Fallback for older browsers */
+  height: 100svh; /* Small viewport height - always visible */
   background-color: #424242;
   display: flex;
   flex-direction: column;
@@ -22,12 +22,14 @@
   justify-content: center;
   align-items: center;
   background-color: #424242;
-  padding: 20px;
+  padding: min(20px, 5vw);
 }
 
 .qrCodeContainer {
-  width: 250px;
-  height: 250px;
+  width: min(250px, 80vw);
+  height: min(250px, 80vw);
+  min-width: 150px;
+  min-height: 150px;
   background-color: #f5f5dc;
   border-radius: 8px;
   padding: 15px;
@@ -71,10 +73,34 @@
   border-radius: 12px;
   min-width: 280px;
   height: 220px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 8px rgba(93, 64, 55, 0.3);
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.punchCardItem::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transition: left 0.5s ease;
+  pointer-events: none;
+}
+
+.punchCardItem:hover::before {
+  left: 100%;
 }
 
 .punchCardHeader {
@@ -113,7 +139,7 @@
 }
 
 .punchCardBody {
-  padding: 20px;
+  padding: 16px;
   flex: 1;
   display: flex;
   align-items: center;
@@ -121,14 +147,15 @@
 
 .punchCirclesContainer {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
   width: 100%;
+  justify-items: center;
 }
 
 .punchCircle {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   border: 2px solid #5d4037;
   background-color: transparent;
@@ -178,48 +205,51 @@
 }
 
 .statusACTIVE {
-  border-left: 4px solid #ff9800;
+  box-shadow: 0 4px 8px rgba(255, 152, 0, 0.4);
 }
 
 .statusREWARD_READY {
-  border-left: 4px solid #4caf50;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), 0 0 8px rgba(76, 175, 80, 0.3);
+  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.4);
+  animation: rewardGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes rewardGlow {
+  0% {
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.4);
+  }
+  100% {
+    box-shadow: 0 6px 12px rgba(76, 175, 80, 0.6);
+  }
 }
 
 .statusREWARD_REDEEMED {
-  border-left: 4px solid #757575;
+  box-shadow: 0 4px 8px rgba(117, 117, 117, 0.4);
   opacity: 0.8;
 }
 
 .highlighted {
-  border: 3px solid #ffd700;
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
 }
 
 .selectedForRedemption {
-  border: 2px solid #ffd700;
-  box-shadow: 0 0 30px rgba(255, 215, 0, 0.9), 0 0 60px rgba(255, 215, 0, 0.6);
-  background-color: rgba(255, 215, 0, 0.02);
-  transform: scale3d(1.01, 1.01, 1);
+  transform: scale3d(1.05, 1.05, 1);
+  box-shadow: 0 6px 12px rgba(255, 215, 0, 0.6) !important;
   transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform, box-shadow;
 }
 
 .clickableCard:hover {
-  transform: translate3d(0, -1px, 0);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translate3d(0, -2px, 0);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .selectedForRedemption:hover {
   transform: scale3d(1.01, 1.01, 1) translate3d(0, -1px, 0);
-  box-shadow: 0 0 40px rgba(255, 215, 0, 1), 0 0 80px rgba(255, 215, 0, 0.7);
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .clickableCard {
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform;
 }
 
@@ -391,5 +421,228 @@
   100% {
     transform: translateX(-100%) scale(0.8);
     opacity: 0;
+  }
+}
+
+/* Responsive adjustments for very small screens */
+@media (max-height: 700px) {
+  .qrCodeContainer {
+    width: min(200px, 70vw);
+    height: min(200px, 70vw);
+    min-width: 140px;
+    min-height: 140px;
+    padding: 10px;
+  }
+  
+  .cardsSection {
+    height: 200px;
+  }
+  
+  .punchCardItem {
+    height: 180px;
+    min-width: 260px;
+  }
+  
+  .punchCardHeader {
+    padding: 10px 15px;
+    font-size: 0.8em;
+  }
+  
+  .punchCardBody {
+    padding: 15px;
+  }
+  
+  .punchCircle {
+    width: 26px;
+    height: 26px;
+  }
+  
+  .punchCirclesContainer {
+    gap: 5px;
+  }
+  
+  .punchCardFooter {
+    padding: 12px 15px;
+  }
+  
+  .shopName {
+    font-size: 1.2em;
+  }
+}
+
+@media (max-height: 600px) {
+  .qrCodeContainer {
+    width: min(150px, 60vw);
+    height: min(150px, 60vw);
+    min-width: 120px;
+    min-height: 120px;
+    padding: 8px;
+  }
+  
+  .cardsSection {
+    height: 150px;
+  }
+  
+  .qrSection {
+    padding: min(12px, 3vw);
+  }
+  
+  .punchCardItem {
+    height: 130px;
+    min-width: 220px;
+  }
+  
+  .punchCardHeader {
+    padding: 8px 12px;
+    font-size: 0.75em;
+  }
+  
+  .punchCardBody {
+    padding: 8px;
+  }
+  
+  .punchCircle {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .punchCirclesContainer {
+    gap: 4px;
+  }
+  
+  .punchCardFooter {
+    padding: 8px 12px;
+  }
+  
+  .shopName {
+    font-size: 1.05em;
+  }
+  
+  .locationIcon {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .checkIcon {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-height: 550px) {
+  .qrCodeContainer {
+    width: min(140px, 55vw);
+    height: min(140px, 55vw);
+    min-width: 110px;
+    min-height: 110px;
+    padding: 6px;
+  }
+  
+  .cardsSection {
+    height: 130px;
+  }
+  
+  .qrSection {
+    padding: min(10px, 2vw);
+  }
+  
+  .punchCardItem {
+    height: 110px;
+    min-width: 200px;
+  }
+  
+  .punchCardHeader {
+    padding: 6px 10px;
+    font-size: 0.7em;
+  }
+  
+  .punchCardBody {
+    padding: 6px;
+  }
+  
+  .punchCircle {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .punchCirclesContainer {
+    gap: 3px;
+  }
+  
+  .punchCardFooter {
+    padding: 6px 10px;
+  }
+  
+  .shopName {
+    font-size: 1em;
+  }
+  
+  .locationIcon {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .checkIcon {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media (max-height: 500px) {
+  .qrCodeContainer {
+    width: min(120px, 50vw);
+    height: min(120px, 50vw);
+    min-width: 100px;
+    min-height: 100px;
+    padding: 5px;
+  }
+  
+  .cardsSection {
+    height: 110px;
+  }
+  
+  .qrSection {
+    padding: min(8px, 2vw);
+  }
+  
+  .punchCardItem {
+    height: 90px;
+    min-width: 180px;
+  }
+  
+  .punchCardHeader {
+    padding: 4px 8px;
+    font-size: 0.65em;
+  }
+  
+  .punchCardBody {
+    padding: 4px;
+  }
+  
+  .punchCircle {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .punchCirclesContainer {
+    gap: 2px;
+  }
+  
+  .punchCardFooter {
+    padding: 4px 8px;
+  }
+  
+  .shopName {
+    font-size: 0.9em;
+  }
+  
+  .locationIcon {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .checkIcon {
+    width: 14px;
+    height: 14px;
   }
 } 

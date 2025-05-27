@@ -24,7 +24,14 @@ const QRCode: React.FC<QRCodeProps> = ({ value, isRewardMode = false }) => {
         value={value} 
         size={400} 
         level="H" 
-        style={{ width: '100%', height: 'auto', maxWidth: '200px', maxHeight: '200px' }}
+        style={{ 
+          width: '100%', 
+          height: 'auto', 
+          maxWidth: '200px', 
+          maxHeight: '200px',
+          minWidth: '120px',
+          minHeight: '120px'
+        }}
       />
     </div>
   );

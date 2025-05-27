@@ -160,13 +160,6 @@ export class PunchCardsRepository {
     const result = await this.pool.query(query, [userId]);
     
     return result.rows.map((row) => {
-      let status: PunchCardStatusDto;
-      if (row.current_punches >= row.required_punches) {
-        status = 'REWARD_READY';
-      } else {
-        status = 'ACTIVE';
-      }
-      
       return {
         id: row.id,
         loyaltyProgramId: row.loyalty_program_id,
@@ -174,7 +167,7 @@ export class PunchCardsRepository {
         shopAddress: row.merchant_address || '',
         currentPunches: row.current_punches,
         totalPunches: row.required_punches,
-        status: status,
+        status: row.status,
         createdAt: row.created_at.toISOString(),
       };
     });

@@ -5,8 +5,7 @@
   justify-content: center; /* Vertically center children block */
   /* Use modern viewport units with fallbacks for mobile Safari */
   height: 100vh; /* Fallback for older browsers */
-  height: calc(var(--vh, 1vh) * 100); /* JavaScript fallback */
-  height: 100dvh; /* Dynamic viewport height - excludes browser UI */
+  height: 100svh; /* Small viewport height - always visible */
   background-color: #424242; /* Match Dashboard's qrSection background */
   font-family: Arial, sans-serif; /* Placeholder font */
   padding-top: 50px; /* Account for fixed header */
