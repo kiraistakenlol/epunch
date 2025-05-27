@@ -1,4 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { apiClient } from 'e-punch-common-ui';
+import { MerchantLoginDto } from 'e-punch-common-core';
 
 interface MerchantUser {
   id: string;
@@ -37,6 +39,18 @@ const getInitialState = (): AuthState => {
 };
 
 const initialState: AuthState = getInitialState();
+
+export const loginMerchant = createAsyncThunk(
+  'auth/loginMerchant',
+  async (credentials: MerchantLoginDto, { rejectWithValue }) => {
+    try {
+      const response = await apiClient.authenticateMerchant(credentials.login, credentials.password);
+      return response;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || error.message || 'Login failed');
+    }
+  }
+);
 
 const authSlice = createSlice({
   name: 'auth',
@@ -80,6 +94,31 @@ const authSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(loginMerchant.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loginMerchant.fulfilled, (state, action) => {
+        state.isAuthenticated = true;
+        state.token = action.payload.token;
+        state.merchant = action.payload.merchant;
+        state.loading = false;
+        state.error = null;
+        localStorage.setItem('merchant_token', action.payload.token);
+        localStorage.setItem('merchant_data', JSON.stringify(action.payload.merchant));
+      })
+      .addCase(loginMerchant.rejected, (state, action) => {
+        state.isAuthenticated = false;
+        state.token = null;
+        state.merchant = null;
+        state.loading = false;
+        state.error = action.payload as string;
+        localStorage.removeItem('merchant_token');
+        localStorage.removeItem('merchant_data');
+      });
   },
 });
 

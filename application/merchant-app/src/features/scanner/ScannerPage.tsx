@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import jsQR from 'jsqr';
-import { apiClient, AppHeader } from 'e-punch-common-ui';
+import { apiClient } from 'e-punch-common-ui';
 import { QRValueDto, LoyaltyProgramDto, PunchCardDto } from 'e-punch-common-core';
 import { useAppSelector } from '../../store/hooks';
 import styles from './ScannerPage.module.css';
@@ -329,7 +329,6 @@ const ScannerPage: React.FC = () => {
 
     return (
         <>
-            <AppHeader title="EPunch Merchant" />
             <div className={styles.pageContainer}>
                 <div className={styles.cameraViewWrapper}>
                     <video
