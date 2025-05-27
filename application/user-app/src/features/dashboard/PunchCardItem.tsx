@@ -9,6 +9,7 @@ interface PunchCardItemProps extends PunchCardDto {
   shouldSlideRight?: boolean;
   isSelected?: boolean;
   onCardClick?: (cardId: string) => void;
+  animateRewardClaimed?: boolean;
 }
 
 const LocationPinIcon = () => (
@@ -36,7 +37,8 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
   shouldSlideIn = false,
   shouldSlideRight = false,
   isSelected = false,
-  onCardClick
+  onCardClick,
+  animateRewardClaimed
 }) => {
   const punchCircles = [];
   for (let i = 0; i < totalPunches; i++) {
@@ -63,7 +65,8 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
     shouldSlideIn ? styles.punchCardSlideIn : '',
     shouldSlideRight ? styles.punchCardSlideRight : '',
     isSelected ? styles.selectedForRedemption : '',
-    status === 'REWARD_READY' ? styles.clickableCard : ''
+    status === 'REWARD_READY' ? styles.clickableCard : '',
+          animateRewardClaimed ? styles.punchCardSlideOut : ''
   ].filter(Boolean).join(' ');
 
   return (

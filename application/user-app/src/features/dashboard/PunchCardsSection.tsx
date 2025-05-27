@@ -91,8 +91,17 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
   const { slideInCards, slideRightCards } = getCardAnimations();
   const hasActivePunchAnimation = punchCards ? punchCards.some(card => card.animateNewPunch) : false;
   const waitingCards = punchCards ? punchCards.filter(card => card.animateNewCard) : [];
-  const visibleCards = punchCards ? punchCards.filter(card => !card.animateNewCard) : [];
-  const cardsToRender = hasActivePunchAnimation ? visibleCards : punchCards || [];
+  const rewardClaimedCards = punchCards ? punchCards.filter(card => card.animateRewardClaimed) : [];
+  const visibleCards = punchCards ? punchCards.filter(card => 
+    !card.animateNewCard && 
+    !card.animateRewardClaimed && 
+    card.status !== 'REWARD_REDEEMED'
+  ) : [];
+  const cardsToRender = hasActivePunchAnimation 
+    ? visibleCards 
+    : punchCards?.filter(card => 
+        card.status !== 'REWARD_REDEEMED' || card.animateRewardClaimed
+      ) || [];
 
   useEffect(() => {
     if (!punchCards) return;
@@ -130,6 +139,23 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
       }
     });
   }, [punchCards, waitingCards, dispatch, localAnimatedPunch]);
+
+  // Handle reward claimed animation
+  useEffect(() => {
+    if (!punchCards) return;
+
+    rewardClaimedCards.forEach(card => {
+      setAlert("🎉 Reward redeemed! Enjoy your treat!");
+      
+      setTimeout(() => {
+        setAlert(null);
+        dispatch(updatePunchCardById({ 
+          id: card.id, 
+          updates: { animateRewardClaimed: false } 
+        }));
+      }, 1200);
+    });
+  }, [rewardClaimedCards, dispatch]);
 
   const renderContent = () => {
     if (isLoading || punchCards === undefined) {
@@ -179,6 +205,7 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
             shouldSlideRight={slideRightCards.has(card.id)}
             isSelected={selectedCardId === card.id}
             onCardClick={onCardClick}
+            animateRewardClaimed={card.animateRewardClaimed}
           />
         ))}
       </div>

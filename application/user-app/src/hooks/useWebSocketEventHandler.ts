@@ -34,7 +34,8 @@ export const useWebSocketEventHandler = () => {
 
       if (appEvent.type === 'REWARD_CLAIMED') {
         const { card } = appEvent;
-        dispatch(updatePunchCard(card));
+        const cardWithAnimation: PunchCardWithAnimations = { ...card, animateRewardClaimed: true };
+        dispatch(updatePunchCard(cardWithAnimation));
       }
     }
   }, [events, userId, dispatch]);

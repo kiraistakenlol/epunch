@@ -1,24 +1,43 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import QRCode from '../qrCode/QRCode';
 import PunchCardsSection from './PunchCardsSection';
 import AuthContainer from '../auth/AuthContainer';
 import styles from './DashboardPage.module.css';
 import type { RootState } from '../../store/store';
 import { selectUserId, selectIsAuthenticated, selectAuthLoading } from '../auth/authSlice';
-import { selectPunchCards } from '../punchCards/punchCardsSlice';
+import { selectPunchCards, updatePunchCardById } from '../punchCards/punchCardsSlice';
 import { AppHeader, SignOutModal } from 'e-punch-common-ui';
 import { signOut } from 'aws-amplify/auth';
 import { useAppSelector } from '../../store/hooks';
 import type { QRValueDto } from 'e-punch-common-core';
 
 const DashboardPage: React.FC = () => {
+  const dispatch = useDispatch();
   const isAuthLoading = useAppSelector(selectAuthLoading);
   const userId = useSelector((state: RootState) => selectUserId(state));
   const isAuthenticated = useSelector((state: RootState) => selectIsAuthenticated(state));
   const punchCards = useSelector((state: RootState) => selectPunchCards(state));
   const [isSignOutModalOpen, setIsSignOutModalOpen] = useState(false);
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
+
+  // Clear selected card when reward is claimed
+  useEffect(() => {
+    if (punchCards) {
+      const cardWithRewardClaimed = punchCards.find(card => card.animateRewardClaimed);
+      if (cardWithRewardClaimed) {
+        setSelectedCardId(null);
+        
+        // Clear the animation flag after a short delay
+        setTimeout(() => {
+          dispatch(updatePunchCardById({
+            id: cardWithRewardClaimed.id,
+            updates: { animateRewardClaimed: false }
+          }));
+        }, 1500);
+      }
+    }
+  }, [punchCards, dispatch]);
 
   const handleSignOut = () => {
     setIsSignOutModalOpen(true);

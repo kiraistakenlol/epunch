@@ -5,6 +5,7 @@ import { apiClient } from 'e-punch-common-ui';
 export interface PunchCardWithAnimations extends PunchCardDto {
   animateNewPunch?: boolean;
   animateNewCard?: boolean;
+  animateRewardClaimed?: boolean;
 }
 
 export interface PunchCardsState {
