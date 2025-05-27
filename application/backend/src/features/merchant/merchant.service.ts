@@ -1,5 +1,5 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { LoyaltyProgramDto, MerchantLoginResponse } from 'e-punch-common-core';
+import { LoyaltyProgramDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto } from 'e-punch-common-core';
 import { MerchantRepository } from './merchant.repository';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -67,6 +67,72 @@ export class MerchantService {
       return loyaltyPrograms;
     } catch (error: any) {
       this.logger.error(`Error fetching loyalty programs for merchant ${merchantId}: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  async createLoyaltyProgram(merchantId: string, data: CreateLoyaltyProgramDto): Promise<LoyaltyProgramDto> {
+    this.logger.log(`Creating loyalty program for merchant: ${merchantId}`);
+    
+    try {
+      const merchant = await this.merchantRepository.findMerchantById(merchantId);
+      
+      if (!merchant) {
+        throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
+      }
+
+      const loyaltyProgram = await this.merchantRepository.createLoyaltyProgram(merchantId, data);
+      this.logger.log(`Created loyalty program ${loyaltyProgram.id} for merchant: ${merchantId}`);
+      return loyaltyProgram;
+    } catch (error: any) {
+      this.logger.error(`Error creating loyalty program for merchant ${merchantId}: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  async updateLoyaltyProgram(merchantId: string, programId: string, data: UpdateLoyaltyProgramDto): Promise<LoyaltyProgramDto> {
+    this.logger.log(`Updating loyalty program ${programId} for merchant: ${merchantId}`);
+    
+    try {
+      const merchant = await this.merchantRepository.findMerchantById(merchantId);
+      
+      if (!merchant) {
+        throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
+      }
+
+      const loyaltyProgram = await this.merchantRepository.updateLoyaltyProgram(merchantId, programId, data);
+      
+      if (!loyaltyProgram) {
+        throw new NotFoundException(`Loyalty program with ID ${programId} not found for merchant ${merchantId}`);
+      }
+
+      this.logger.log(`Updated loyalty program ${programId} for merchant: ${merchantId}`);
+      return loyaltyProgram;
+    } catch (error: any) {
+      this.logger.error(`Error updating loyalty program ${programId} for merchant ${merchantId}: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  async deleteLoyaltyProgram(merchantId: string, programId: string): Promise<void> {
+    this.logger.log(`Deleting loyalty program ${programId} for merchant: ${merchantId}`);
+    
+    try {
+      const merchant = await this.merchantRepository.findMerchantById(merchantId);
+      
+      if (!merchant) {
+        throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
+      }
+
+      const deleted = await this.merchantRepository.deleteLoyaltyProgram(merchantId, programId);
+      
+      if (!deleted) {
+        throw new NotFoundException(`Loyalty program with ID ${programId} not found for merchant ${merchantId} or already deleted`);
+      }
+
+      this.logger.log(`Deleted loyalty program ${programId} for merchant: ${merchantId}`);
+    } catch (error: any) {
+      this.logger.error(`Error deleting loyalty program ${programId} for merchant ${merchantId}: ${error.message}`, error.stack);
       throw error;
     }
   }

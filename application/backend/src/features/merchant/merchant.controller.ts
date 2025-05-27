@@ -1,5 +1,5 @@
-import { Controller, Get, Param, ParseUUIDPipe, Post, Body, HttpException, HttpStatus } from '@nestjs/common';
-import { LoyaltyProgramDto, MerchantLoginDto, MerchantLoginResponse } from 'e-punch-common-core';
+import { Controller, Get, Param, ParseUUIDPipe, Post, Body, HttpException, HttpStatus, Put, Delete } from '@nestjs/common';
+import { LoyaltyProgramDto, MerchantLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto } from 'e-punch-common-core';
 import { MerchantService } from './merchant.service';
 
 @Controller('merchants')
@@ -32,5 +32,30 @@ export class MerchantController {
     @Param('merchantId', ParseUUIDPipe) merchantId: string,
   ): Promise<LoyaltyProgramDto[]> {
     return this.merchantService.getMerchantLoyaltyPrograms(merchantId);
+  }
+
+  @Post(':merchantId/loyalty-programs')
+  async createLoyaltyProgram(
+    @Param('merchantId', ParseUUIDPipe) merchantId: string,
+    @Body() createDto: CreateLoyaltyProgramDto,
+  ): Promise<LoyaltyProgramDto> {
+    return this.merchantService.createLoyaltyProgram(merchantId, createDto);
+  }
+
+  @Put(':merchantId/loyalty-programs/:id')
+  async updateLoyaltyProgram(
+    @Param('merchantId', ParseUUIDPipe) merchantId: string,
+    @Param('id', ParseUUIDPipe) programId: string,
+    @Body() updateDto: UpdateLoyaltyProgramDto,
+  ): Promise<LoyaltyProgramDto> {
+    return this.merchantService.updateLoyaltyProgram(merchantId, programId, updateDto);
+  }
+
+  @Delete(':merchantId/loyalty-programs/:id')
+  async deleteLoyaltyProgram(
+    @Param('merchantId', ParseUUIDPipe) merchantId: string,
+    @Param('id', ParseUUIDPipe) programId: string,
+  ): Promise<void> {
+    return this.merchantService.deleteLoyaltyProgram(merchantId, programId);
   }
 } 

@@ -25,6 +25,7 @@ CREATE TABLE loyalty_program (
     description TEXT,
     required_punches INTEGER NOT NULL,
     reward_description TEXT NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT true,
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 

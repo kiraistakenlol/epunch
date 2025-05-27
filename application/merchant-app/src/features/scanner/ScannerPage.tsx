@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import jsQR from 'jsqr';
 import { apiClient, AppHeader } from 'e-punch-common-ui';
 import { QRValueDto, LoyaltyProgramDto, PunchCardDto } from 'e-punch-common-core';
+import { useAppSelector } from '../../store/hooks';
 import styles from './ScannerPage.module.css';
 
 /**
@@ -23,9 +24,8 @@ import styles from './ScannerPage.module.css';
  * 5. `stopVideoStream`: Halts camera tracks and cancels `requestAnimationFrame` for `scanFrame`.
  */
 
-const HARDCODED_MERCHANT_ID = '251dc2f0-f969-455f-aa7d-959a551eae67';
-
 const ScannerPage: React.FC = () => {
+    const merchantId = useAppSelector(state => state.auth.merchant?.id);
     const [scanResult, setScanResult] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [punchMessage, setPunchMessage] = useState<string | null>(null);
@@ -46,9 +46,14 @@ const ScannerPage: React.FC = () => {
 
     useEffect(() => {
         const fetchLoyaltyPrograms = async () => {
+            if (!merchantId) {
+                setErrorMessage('Merchant not authenticated');
+                return;
+            }
+
             setIsLoadingLoyaltyPrograms(true);
             try {
-                const programs = await apiClient.getMerchantLoyaltyPrograms(HARDCODED_MERCHANT_ID);
+                const programs = await apiClient.getMerchantLoyaltyPrograms(merchantId);
                 setLoyaltyPrograms(programs);
                 if (programs.length > 0) {
                     setSelectedLoyaltyProgramId(programs[0].id);
@@ -62,7 +67,7 @@ const ScannerPage: React.FC = () => {
         };
 
         fetchLoyaltyPrograms();
-    }, []);
+    }, [merchantId]);
 
     useEffect(() => {
         const fetchPunchCardDetails = async () => {

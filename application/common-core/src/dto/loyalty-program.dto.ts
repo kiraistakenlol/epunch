@@ -6,6 +6,22 @@ export interface LoyaltyProgramDto {
   description: string | null;
   requiredPunches: number;
   rewardDescription: string;
+  isActive: boolean;
   merchant: MerchantDto;
   createdAt: string;
+}
+
+export interface CreateLoyaltyProgramDto {
+  name: string;
+  description?: string;
+  requiredPunches: number;
+  rewardDescription: string;
+  isActive?: boolean;
+}
+
+export interface UpdateLoyaltyProgramDto {
+  name?: string;
+  description?: string;
+  rewardDescription?: string;
+  isActive?: boolean;
 } 

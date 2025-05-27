@@ -40,21 +40,6 @@ export const Dashboard = () => {
             </CardContent>
           </Card>
         </Grid>
-        
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" component="div">
-                Quick Actions
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                • Scan QR codes
-                • Manage loyalty programs
-                • View analytics
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
       </Grid>
     </Box>
   );
