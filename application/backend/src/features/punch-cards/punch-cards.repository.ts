@@ -179,6 +179,95 @@ export class PunchCardsRepository {
     });
   }
 
+  async findPunchCardById(punchCardId: string): Promise<PunchCardDto | null> {
+    const query = `
+      SELECT 
+        pc.*,
+        lp.name as loyalty_program_name,
+        lp.required_punches,
+        m.name as merchant_name,
+        m.address as merchant_address
+      FROM punch_card pc
+      JOIN loyalty_program lp ON pc.loyalty_program_id = lp.id
+      JOIN merchant m ON lp.merchant_id = m.id
+      WHERE pc.id = $1
+    `;
+    
+    const result = await this.pool.query(query, [punchCardId]);
+    
+    if (!result.rows[0]) {
+      return null;
+    }
+
+    const row = result.rows[0];
+    let status: PunchCardStatusDto;
+    if (row.current_punches >= row.required_punches) {
+      status = 'REWARD_READY';
+    } else {
+      status = 'ACTIVE';
+    }
+    
+    return {
+      id: row.id,
+      shopName: row.merchant_name,
+      shopAddress: row.merchant_address || '',
+      currentPunches: row.current_punches,
+      totalPunches: row.required_punches,
+      status: status,
+      createdAt: row.created_at.toISOString(),
+    };
+  }
+
+  async updatePunchCardStatus(punchCardId: string, status: PunchCardStatus): Promise<PunchCardDto> {
+    const updateQuery = `
+      UPDATE punch_card 
+      SET status = $2
+      WHERE id = $1
+      RETURNING *
+    `;
+    
+    const updateResult = await this.pool.query(updateQuery, [punchCardId, status]);
+    
+    if (!updateResult.rows[0]) {
+      throw new Error('Failed to update punch card status');
+    }
+
+    const selectQuery = `
+      SELECT 
+        pc.*,
+        lp.name as loyalty_program_name,
+        lp.required_punches,
+        m.name as merchant_name,
+        m.address as merchant_address
+      FROM punch_card pc
+      JOIN loyalty_program lp ON pc.loyalty_program_id = lp.id
+      JOIN merchant m ON lp.merchant_id = m.id
+      WHERE pc.id = $1
+    `;
+    
+    const selectResult = await this.pool.query(selectQuery, [punchCardId]);
+    const row = selectResult.rows[0];
+    
+    let statusDto: PunchCardStatusDto;
+    if (row.current_punches >= row.required_punches && status !== 'REWARD_REDEEMED') {
+      statusDto = 'REWARD_READY';
+    } else if (status === 'REWARD_REDEEMED') {
+      statusDto = 'REWARD_REDEEMED';
+    } else {
+      statusDto = 'ACTIVE';
+    }
+    
+    return {
+      id: row.id,
+      shopName: row.merchant_name,
+      shopAddress: row.merchant_address || '',
+      currentPunches: row.current_punches,
+      totalPunches: row.required_punches,
+      status: statusDto,
+      createdAt: row.created_at.toISOString(),
+    };
+  }
+
   async transferCards(fromUserId: string, toUserId: string): Promise<number> {
     const query = `
       UPDATE punch_card 
@@ -188,5 +277,16 @@ export class PunchCardsRepository {
     
     const result = await this.pool.query(query, [fromUserId, toUserId]);
     return result.rowCount || 0;
+  }
+
+  async getUserIdFromPunchCard(punchCardId: string): Promise<string | null> {
+    const query = `SELECT user_id FROM punch_card WHERE id = $1`;
+    const result = await this.pool.query(query, [punchCardId]);
+    
+    if (!result.rows[0]) {
+      return null;
+    }
+    
+    return result.rows[0].user_id;
   }
 } 

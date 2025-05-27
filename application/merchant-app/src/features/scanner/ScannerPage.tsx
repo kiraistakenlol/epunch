@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import jsQR from 'jsqr';
 import { apiClient, AppHeader } from 'e-punch-common-ui';
+import { QRValueDto } from 'e-punch-common-core';
 import styles from './ScannerPage.module.css';
 
 /**
@@ -23,21 +24,38 @@ import styles from './ScannerPage.module.css';
  */
 
 const ScannerPage: React.FC = () => {
-    const [scanResult, setScanResult] = useState<string | null>(null); // Stores decoded QR data
+    const [scanResult, setScanResult] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [punchMessage, setPunchMessage] = useState<string | null>(null);
+    const [parsedQRData, setParsedQRData] = useState<QRValueDto | null>(null);
 
     const videoRef = useRef<HTMLVideoElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const requestRef = useRef<number>(); // For requestAnimationFrame
+    const requestRef = useRef<number>();
     const streamRef = useRef<MediaStream | null>(null);
 
     const [isCameraInitialized, setIsCameraInitialized] = useState(false);
     const [isProcessingPunch, setIsProcessingPunch] = useState(false);
-    // Function to draw video frame to canvas and try to decode QR
+
+    const parseQRData = (qrString: string): QRValueDto | null => {
+        try {
+            const parsed = JSON.parse(qrString) as QRValueDto;
+            if (parsed.type === 'user_id' && parsed.user_id) {
+                return parsed;
+            }
+            if (parsed.type === 'redemption_punch_card_id' && parsed.punch_card_id) {
+                return parsed;
+            }
+            return null;
+        } catch (error) {
+            console.error('Failed to parse QR data as JSON:', error);
+            return null;
+        }
+    };
+
     const scanFrame = useCallback(() => {
         if (!videoRef.current || !canvasRef.current || videoRef.current.readyState !== videoRef.current.HAVE_ENOUGH_DATA) {
-            if (streamRef.current?.active && !scanResult) { // Only request new frame if actively scanning
+            if (streamRef.current?.active && !scanResult) {
                 requestRef.current = requestAnimationFrame(scanFrame);
             }
             return;
@@ -55,26 +73,30 @@ const ScannerPage: React.FC = () => {
             try {
                 const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
                 const code = jsQR(imageData.data, imageData.width, imageData.height, {
-                    inversionAttempts: "dontInvert", // Or "attemptBoth" if needed
+                    inversionAttempts: "dontInvert",
                 });
 
                 if (code && code.data) {
                     console.log("QR Code detected:", code.data);
-                    setScanResult(code.data);
-                    stopVideoStream(); // Stop scanning once a code is found
-                    return; // Exit scan loop
+                    const parsed = parseQRData(code.data);
+                    if (parsed) {
+                        setScanResult(code.data);
+                        setParsedQRData(parsed);
+                        stopVideoStream();
+                        return;
+                    } else {
+                        console.warn("Invalid QR format detected, continuing scan...");
+                    }
                 }
             } catch (error) {
-                // console.error("jsQR error:", error); // Can be noisy
+                // console.error("jsQR error:", error);
             }
         }
-        if (streamRef.current?.active && !scanResult) { // Check scanResult here too
+        if (streamRef.current?.active && !scanResult) {
             requestRef.current = requestAnimationFrame(scanFrame);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [scanResult]); // Added scanResult to dependencies to stop loop if result is found
+    }, [scanResult]);
 
-    // Function to stop the video stream and scanning loop
     const stopVideoStream = useCallback(() => {
         if (requestRef.current) {
             cancelAnimationFrame(requestRef.current);
@@ -85,11 +107,8 @@ const ScannerPage: React.FC = () => {
             streamRef.current = null;
             console.log("Video stream stopped.");
         }
-        // setIsCameraInitialized(false); // Keep true if camera was once initialized, for consistent UI
-        // We control video display via scanResult state now
     }, []);
 
-    // Function to start the video stream and scanning loop
     const startVideoStream = useCallback(async () => {
         if (streamRef.current || scanResult || isProcessingPunch) {
             console.log("Video stream start prevented. Current state:", {
@@ -111,11 +130,10 @@ const ScannerPage: React.FC = () => {
             streamRef.current = stream;
             if (videoRef.current) {
                 videoRef.current.srcObject = stream;
-                // Ensure video plays. Might need videoRef.current.play() for some browsers if autoplay doesn't work.
                 await videoRef.current.play().catch(e => console.error("Video play error:", e));
                 setIsCameraInitialized(true);
                 console.log("Video stream started. Starting scan loop.");
-                if (!scanResult) { // Start scan loop only if no result yet
+                if (!scanResult) {
                     requestRef.current = requestAnimationFrame(scanFrame);
                 }
             } else {
@@ -125,7 +143,7 @@ const ScannerPage: React.FC = () => {
             console.error("Error starting video stream:", err);
             setErrorMessage(`Camera error: ${err.name || err.message || err}`);
             setIsCameraInitialized(false);
-            if (streamRef.current) { // Cleanup if stream was partially acquired
+            if (streamRef.current) {
                 streamRef.current.getTracks().forEach(track => track.stop());
                 streamRef.current = null;
             }
@@ -133,101 +151,124 @@ const ScannerPage: React.FC = () => {
     }, [scanFrame, scanResult, isProcessingPunch]);
 
     useEffect(() => {
-        if (!scanResult) { // Only start video if no scan result exists
+        if (!scanResult) {
             startVideoStream();
         }
         return () => {
             console.log("ScannerPage unmounting, stopping video stream.");
             stopVideoStream();
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [scanResult, startVideoStream, stopVideoStream]);
 
     const handleResetScan = () => {
         setScanResult(null);
+        setParsedQRData(null);
         setPunchMessage(null);
         setErrorMessage(null);
-        // startVideoStream will be called by the useEffect dependency on scanResult changing to null
     };
 
     const handlePunchAndRestartScan = async () => {
-        if (!scanResult) return;
-
-        // TODO: Replace this with a proper way to get loyaltyProgramId
-        const loyaltyProgramId = "ca8a6765-e272-4aaa-b7a9-c25863ff1678"; // Placeholder
-
-        if (!loyaltyProgramId) {
-            setErrorMessage("Loyalty Program ID is not configured. Cannot punch.");
-            setIsProcessingPunch(false); // Make sure to reset this if we bail early
-            return;
-        }
+        if (!scanResult || !parsedQRData) return;
 
         setIsProcessingPunch(true);
         setPunchMessage(null);
         setErrorMessage(null);
 
         try {
-            console.log(`Attempting to punch for user: ${scanResult} on program: ${loyaltyProgramId}`);
-            const result = await apiClient.recordPunch(scanResult, loyaltyProgramId); // Use apiClient
-            setPunchMessage(result.rewardAchieved ? "Reward Achieved!" : "Great."); // Use message from PunchOperationResultDto
-            // You can use other fields from result too, e.g., result.rewardAchieved
+            if (parsedQRData.type === 'redemption_punch_card_id') {
+                console.log(`Attempting to redeem punch card: ${parsedQRData.punch_card_id}`);
+                const result = await apiClient.redeemPunchCard(parsedQRData.punch_card_id);
+                setPunchMessage(`Reward Redeemed! ${result.shopName}`);
+            } else if (parsedQRData.type === 'user_id') {
+                const loyaltyProgramId = "ca8a6765-e272-4aaa-b7a9-c25863ff1678";
+
+                if (!loyaltyProgramId) {
+                    setErrorMessage("Loyalty Program ID is not configured. Cannot punch.");
+                    setIsProcessingPunch(false);
+                    return;
+                }
+
+                console.log(`Attempting to punch for user: ${parsedQRData.user_id} on program: ${loyaltyProgramId}`);
+                const result = await apiClient.recordPunch(parsedQRData.user_id, loyaltyProgramId);
+                setPunchMessage(result.rewardAchieved ? "Reward Achieved!" : "Great.");
+            } else {
+                setErrorMessage("Invalid QR code type.");
+                return;
+            }
         } catch (error: any) {
-            console.error('Punch error:', error);
-            setErrorMessage(error.response?.data?.message || error.message || 'Failed to record punch.');
+            console.error('Operation error:', error);
+            setErrorMessage(error.response?.data?.message || error.message || 'Operation failed.');
             setPunchMessage(null);
         } finally {
-            // Delay the transition back to scanning state
             setTimeout(() => {
-                setScanResult(null); // This will trigger useEffect to restart scanning
+                setScanResult(null);
+                setParsedQRData(null);
                 setIsProcessingPunch(false);
-                // Clear messages once we are truly ready to scan again, or they might persist too long
-                // setPunchMessage(null); // User might want to see this until next scan actually starts
-                // setErrorMessage(null);
             }, 2000);
         }
+    };
+
+    const getDisplayMessage = () => {
+        if (!parsedQRData) return null;
+        
+        if (parsedQRData.type === 'user_id') {
+            return `User ID: ${parsedQRData.user_id.substring(0, 8)}...`;
+        } else if (parsedQRData.type === 'redemption_punch_card_id') {
+            return `Reward Redemption: ${parsedQRData.punch_card_id.substring(0, 8)}...`;
+        }
+        return null;
     };
 
     return (
         <>
             <AppHeader title="EPunch Merchant" />
             <div className={styles.pageContainer}>
+                <div className={styles.cameraViewWrapper}>
+                    <video
+                        ref={videoRef}
+                        className={styles.videoFeed}
+                        style={{ display: isCameraInitialized && !scanResult ? 'block' : 'none' }}
+                        playsInline
+                        muted
+                    />
+                    {scanResult && !isProcessingPunch && (
+                        <>
+                            <div style={{ 
+                                color: '#f5f5dc', 
+                                fontSize: '1.1em', 
+                                marginBottom: '15px',
+                                textAlign: 'center'
+                            }}>
+                                {getDisplayMessage()}
+                            </div>
+                            <div className={styles.buttonsContainer}>
+                                <button
+                                    onClick={handlePunchAndRestartScan}
+                                    className={styles.punchButton}
+                                    disabled={!scanResult || isProcessingPunch}
+                                >
+                                    {parsedQRData?.type === 'redemption_punch_card_id' ? 'REDEEM!' : 'PUNCH!'}
+                                </button>
+                                <button
+                                    onClick={handleResetScan}
+                                    className={styles.resetButton}
+                                    disabled={!scanResult || isProcessingPunch}
+                                >
+                                    Reset
+                                </button>
+                            </div>
+                        </>
+                    )}
 
-            <div className={styles.cameraViewWrapper}>
-                <video
-                    ref={videoRef}
-                    className={styles.videoFeed}
-                    style={{ display: isCameraInitialized && !scanResult ? 'block' : 'none' }}
-                    playsInline
-                    muted
-                />
-                {scanResult && !isProcessingPunch && (
-                    <div className={styles.buttonsContainer}>
-                        <button
-                            onClick={handlePunchAndRestartScan}
-                            className={styles.punchButton}
-                            disabled={!scanResult || isProcessingPunch}
-                        >
-                            PUNCH!
-                        </button>
-                        <button
-                            onClick={handleResetScan}
-                            className={styles.resetButton}
-                            disabled={!scanResult || isProcessingPunch}
-                        >
-                            Reset
-                        </button>
-                    </div>
-                )}
+                    {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
+                    {punchMessage && <p className={styles.punchSuccessMessage}>{punchMessage}</p>}
+                    {!scanResult && !isCameraInitialized && !errorMessage && (
+                        <p className={styles.initializingMessage}>Initializing Camera...</p>
+                    )}
+                </div>
 
-                {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
-                {punchMessage && <p className={styles.punchSuccessMessage}>{punchMessage}</p>}
-                {!scanResult && !isCameraInitialized && !errorMessage && (
-                    <p className={styles.initializingMessage}>Initializing Camera...</p>
-                )}
+                <canvas ref={canvasRef} style={{ display: 'none' }} />
             </div>
-
-            <canvas ref={canvasRef} style={{ display: 'none' }} />
-        </div>
         </>
     );
 };

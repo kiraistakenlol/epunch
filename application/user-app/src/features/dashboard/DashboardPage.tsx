@@ -10,6 +10,7 @@ import { selectPunchCards } from '../punchCards/punchCardsSlice';
 import { AppHeader, SignOutModal } from 'e-punch-common-ui';
 import { signOut } from 'aws-amplify/auth';
 import { useAppSelector } from '../../store/hooks';
+import type { QRValueDto } from 'e-punch-common-core';
 
 const DashboardPage: React.FC = () => {
   const isAuthLoading = useAppSelector(selectAuthLoading);
@@ -41,7 +42,25 @@ const DashboardPage: React.FC = () => {
 
   const selectedCard = punchCards?.find(card => card.id === selectedCardId);
   const isRewardMode = selectedCard?.status === 'REWARD_READY';
-  const qrValue = isRewardMode ? selectedCardId! : userId || '';
+  
+  const generateQRValue = (): string => {
+    if (isRewardMode && selectedCardId) {
+      const qrData: QRValueDto = {
+        type: 'redemption_punch_card_id',
+        punch_card_id: selectedCardId
+      };
+      return JSON.stringify(qrData);
+    } else if (userId) {
+      const qrData: QRValueDto = {
+        type: 'user_id',
+        user_id: userId
+      };
+      return JSON.stringify(qrData);
+    }
+    return '';
+  };
+
+  const qrValue = generateQRValue();
 
   return (
     <div className={styles.pageContainer}>
@@ -55,7 +74,7 @@ const DashboardPage: React.FC = () => {
       <main className={styles.mainContent}>
         <div className={styles.qrSection}>
           <div className={styles.qrCodeContainer}>
-            {(userId || selectedCardId) && (
+            {qrValue && (
               <QRCode 
                 value={qrValue} 
                 isRewardMode={isRewardMode}

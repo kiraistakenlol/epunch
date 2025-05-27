@@ -13,5 +13,10 @@ export interface PunchAddedEvent extends BaseEvent {
   newCard: PunchCardDto | null;
 }
 
+export interface RewardClaimedEvent extends BaseEvent {
+  type: 'REWARD_CLAIMED';
+  card: PunchCardDto;
+}
+
 // Union type for all events
-export type AppEvent = PunchAddedEvent; 
+export type AppEvent = PunchAddedEvent | RewardClaimedEvent; 

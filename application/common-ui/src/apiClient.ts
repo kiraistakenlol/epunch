@@ -108,6 +108,14 @@ export const apiClient = {
     return response.data;
   },
 
+  async redeemPunchCard(punchCardId: string): Promise<PunchCardDto> {
+    if (!punchCardId) {
+      return Promise.reject(new Error('Punch card ID is required.'));
+    }
+    const response = await instance.post<PunchCardDto>(`/punch-cards/${punchCardId}/redeem`);
+    return response.data;
+  },
+
   // Authentication method
   async authenticateUser(authToken: string, userId: string): Promise<AuthResponseDto> {
     if (!authToken || !userId) {

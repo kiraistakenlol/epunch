@@ -1,15 +1,15 @@
-import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { PunchCardDto } from 'e-punch-common-core';
 import { PunchCardsService } from './punch-cards.service';
 
-@Controller('users/:userId/punch-cards')
+@Controller('punch-cards')
 export class PunchCardsController {
   constructor(private readonly punchCardsService: PunchCardsService) {}
 
-  @Get()
-  async getUserPunchCards(
-    @Param('userId', ParseUUIDPipe) userId: string,
-  ): Promise<PunchCardDto[]> {
-    return this.punchCardsService.getUserPunchCards(userId);
+  @Post(':punchCardId/redeem')
+  async redeemPunchCard(
+    @Param('punchCardId', ParseUUIDPipe) punchCardId: string,
+  ): Promise<PunchCardDto> {
+    return this.punchCardsService.redeemPunchCard(punchCardId);
   }
 } 
