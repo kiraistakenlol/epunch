@@ -1,14 +1,14 @@
 import React from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
 
-interface UserQRCodeProps {
-  userId: string;
+interface QRCodeProps {
+  value: string;
 }
 
-const UserQRCode: React.FC<UserQRCodeProps> = ({ userId }) => {
+const QRCode: React.FC<QRCodeProps> = ({ value }) => {
   return (
     <QRCodeCanvas 
-      value={userId} 
+      value={value} 
       size={400} 
       level="H" 
       style={{ width: '100%', height: 'auto' }}
@@ -16,4 +16,4 @@ const UserQRCode: React.FC<UserQRCodeProps> = ({ userId }) => {
   );
 };
 
-export default UserQRCode; 
+export default QRCode; 

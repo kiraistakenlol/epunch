@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import UserQRCode from '../user/UserQRCode';
+import QRCode from '../qrCode/QRCode';
 import PunchCardsSection from './PunchCardsSection';
 import AuthContainer from '../auth/AuthContainer';
 import styles from './DashboardPage.module.css';
@@ -40,7 +40,7 @@ const DashboardPage: React.FC = () => {
       <main className={styles.mainContent}>
         <div className={styles.qrSection}>
           <div className={styles.qrCodeContainer}>
-            {userId && <UserQRCode userId={userId} />}
+            {userId && <QRCode value={userId} centerText={"Your QR Code"} />}
           </div>
         </div>
 
