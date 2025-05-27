@@ -1,63 +1,59 @@
 .pageContainer {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Horizontally center children */
-  justify-content: center; /* Vertically center children block */
-  /* Use modern viewport units with fallbacks for mobile Safari */
-  height: 100vh; /* Fallback for older browsers */
-  height: 100svh; /* Small viewport height - always visible */
-  background-color: #424242; /* Match Dashboard's qrSection background */
-  font-family: Arial, sans-serif; /* Placeholder font */
-  padding-top: 50px; /* Account for fixed header */
-  padding-bottom: 20px; /* Bottom padding for mobile */
-  box-sizing: border-box; /* Include padding in height calculation */
-  overflow: hidden; /* Prevent scrolling on scanner page */
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 120px);
+  background-color: #424242;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .cameraViewWrapper {
-  width: 90%; /* Use percentage for better mobile responsiveness */
+  width: 90%;
   max-width: 400px;
   position: relative;
-  overflow: hidden; /* To ensure video respects any styling */
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  /* Make it flexible to content but with reasonable bounds */
   min-height: 250px;
-  max-height: 60vh; /* Limit maximum height to prevent overflow */
+  max-height: 60vh;
 }
 
 .videoFeed {
   width: 100%;
   max-height: 100%;
-  object-fit: cover; /* Maintain aspect ratio while filling container */
-  display: block; /* Default, will be controlled by JS state */
+  object-fit: cover;
+  display: block;
 }
 
 .statusMessage, .initializingMessage {
-  color: #f5f5dc; /* Match Dashboard's text color */
+  color: #f5f5dc;
   font-size: 1.1em;
 }
 
 .recognitionSuccessContainer {
   margin-top: 20px;
   padding: 20px;
-  background-color: #8d6e63; /* Match Dashboard's punchCardItem background */
-  border-radius: 12px; /* Match Dashboard's border radius */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Match Dashboard's box shadow */
+  background-color: #8d6e63;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .successMessage {
-  color: #f5f5dc; /* Match Dashboard's text color */
+  color: #f5f5dc;
   font-size: 1.5em;
   font-weight: bold;
   margin-bottom: 20px;
 }
 
 .punchButton {
-  background-color: #5d4037; /* Dark Brown from Dashboard */
-  color: #f5f5dc; /* Light Beige/Cream text from Dashboard */
+  background-color: #5d4037;
+  color: #f5f5dc;
   border: none;
   border-radius: 8px;
   padding: 12px 25px;
@@ -65,46 +61,46 @@
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Match Dashboard's box shadow */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .punchButton:hover {
-  background-color: #6d4c41; /* Slightly lighter brown on hover */
+  background-color: #6d4c41;
 }
 
 .punchButton:disabled {
-  background-color: #757575; /* Grey out when disabled */
+  background-color: #757575;
   cursor: not-allowed;
 }
 
 .resetButton {
-  background-color: #8d6e63; /* Match Dashboard's punchCardItem background */
+  background-color: #8d6e63;
   color: #f5f5dc;
-  border-radius: 8px; /* Match Dashboard's border radius */
-  padding: 8px 18px; /* Smaller padding */
-  font-size: 1em; /* Smaller font size */
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-size: 1em;
   font-weight: normal;
   cursor: pointer;
-  margin-left: 10px; /* Space it from the PUNCH button */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Match Dashboard's box shadow */
+  margin-left: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .resetButton:hover {
-  background-color: #a1887f; /* Slightly lighter brown on hover */
+  background-color: #a1887f;
 }
 
 .buttonsContainer {
   margin-top: 15px;
   display: flex;
   justify-content: center;
-  gap: 15px; /* Adds space between buttons if there are multiple */
+  gap: 15px;
   width: 100%;
-  flex-wrap: wrap; /* Allow buttons to wrap on very small screens */
+  flex-wrap: wrap;
 }
 
 .testPunchButton {
-  background-color: #5d4037; /* Dark Brown from Dashboard */
-  color: #f5f5dc; /* Light Beige/Cream text from Dashboard */
+  background-color: #5d4037;
+  color: #f5f5dc;
   border: none;
   border-radius: 8px;
   padding: 10px 20px;
@@ -112,15 +108,15 @@
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  margin-top: 20px; /* Space it from other elements */
-  display: block; /* Make it a block to center easily if needed or take full width in a flex column */
+  margin-top: 20px;
+  display: block;
   margin-left: auto;
   margin-right: auto;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Match Dashboard's box shadow */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .testPunchButton:hover {
-  background-color: #6d4c41; /* Slightly lighter brown on hover */
+  background-color: #6d4c41;
 }
 
 .errorMessage, .punchSuccessMessage {
@@ -128,21 +124,21 @@
   font-size: 1.1em;
   padding: 10px;
   border-radius: 4px;
-  color: #f5f5dc; /* Match Dashboard's text color */
+  color: #f5f5dc;
 }
 
 .errorMessage {
-  background-color: rgba(211, 47, 47, 0.5); /* More visible red background */
+  background-color: rgba(211, 47, 47, 0.5);
 }
 
 .punchSuccessMessage {
-  background-color: rgba(76, 175, 80, 0.5); /* More visible green background */
+  background-color: rgba(76, 175, 80, 0.5);
 }
 
 .testPunchSection {
   margin-top: 30px;
   padding: 20px;
-  background-color: #8d6e63; /* Match Dashboard's punchCardItem background */
+  background-color: #8d6e63;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   max-width: 400px;
@@ -193,9 +189,9 @@
 }
 
 .testPunchSuccess {
-  background-color: rgba(76, 175, 80, 0.5); /* Green for success */
+  background-color: rgba(76, 175, 80, 0.5);
 }
 
 .testPunchError {
-  background-color: rgba(211, 47, 47, 0.5); /* Red for error */
+  background-color: rgba(211, 47, 47, 0.5);
 } 

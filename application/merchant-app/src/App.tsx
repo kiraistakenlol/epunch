@@ -1,6 +1,11 @@
 import './styles/global.css';
-import ScannerPage from './features/scanner/ScannerPage';
+import { Admin, Resource } from 'react-admin';
 import { configureApiClient } from 'e-punch-common-ui';
+import { dataProvider } from './dataProvider';
+import { LoyaltyProgramList, LoyaltyProgramShow, LoyaltyProgramEdit, LoyaltyProgramCreate } from './resources/loyaltyPrograms';
+import { Scanner } from './resources/scanner';
+import { Dashboard } from './components/Dashboard';
+import { Layout } from './components/Layout';
 
 // Configure API client once when the app module loads
 const API_BASE_URL = import.meta.env.VITE_API_URL;
@@ -14,7 +19,26 @@ if (API_BASE_URL) {
 
 function App() {
   return (
-    <ScannerPage />
+    <Admin 
+      dataProvider={dataProvider} 
+      title="E-PUNCH Merchant"
+      dashboard={Dashboard}
+      layout={Layout}
+    >
+      <Resource
+        name="loyalty-programs"
+        list={LoyaltyProgramList}
+        show={LoyaltyProgramShow}
+        edit={LoyaltyProgramEdit}
+        create={LoyaltyProgramCreate}
+        options={{ label: 'Loyalty Programs' }}
+      />
+      <Resource
+        name="scanner"
+        list={Scanner}
+        options={{ label: 'QR Scanner' }}
+      />
+    </Admin>
   );
 }
 

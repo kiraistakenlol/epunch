@@ -10,6 +10,10 @@ export default defineConfig({
       insertTypesEntry: true,
     }),
   ],
+  define: {
+    'global': 'globalThis',
+    'browser': 'undefined',
+  },
   build: {
     sourcemap: true,
     lib: {
