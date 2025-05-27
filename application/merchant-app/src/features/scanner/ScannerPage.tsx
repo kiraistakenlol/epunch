@@ -6,7 +6,6 @@ import { useAppSelector } from '../../store/hooks';
 import { 
     Box, 
     Typography,
-    SelectChangeEvent,
     Button
 } from '@mui/material';
 
@@ -292,11 +291,7 @@ const ScannerPage: React.FC = () => {
     const renderLoyaltyProgramSelector = () => {
         if (parsedQRData?.type !== 'user_id' || loyaltyPrograms.length === 0) return null;
 
-        const handleSelectChange = (event: SelectChangeEvent) => {
-            setSelectedLoyaltyProgramId(event.target.value);
-        };
 
-        const selectedProgram = loyaltyPrograms.find(p => p.id === selectedLoyaltyProgramId);
 
         return (
             <Box sx={{ 
@@ -371,27 +366,6 @@ const ScannerPage: React.FC = () => {
         );
     };
 
-    const renderPunchCardDetails = () => {
-        if (parsedQRData?.type !== 'redemption_punch_card_id' || !punchCardDetails) return null;
-
-        return (
-            <div style={{ 
-                color: '#f5f5dc', 
-                fontSize: '0.9em', 
-                marginBottom: '15px',
-                backgroundColor: 'rgba(0,0,0,0.3)',
-                padding: '10px',
-                borderRadius: '8px'
-            }}>
-                <h4 style={{ margin: '0 0 8px 0', color: '#fff' }}>Redemption Details:</h4>
-                <p style={{ margin: '4px 0' }}><strong>Shop:</strong> {punchCardDetails.shopName}</p>
-                <p style={{ margin: '4px 0' }}><strong>Address:</strong> {punchCardDetails.shopAddress}</p>
-                <p style={{ margin: '4px 0' }}><strong>Punches:</strong> {punchCardDetails.currentPunches}/{punchCardDetails.totalPunches}</p>
-                <p style={{ margin: '4px 0' }}><strong>Status:</strong> {punchCardDetails.status}</p>
-                <p style={{ margin: '4px 0' }}><strong>Card ID:</strong> {punchCardDetails.id.substring(0, 8)}...</p>
-            </div>
-        );
-    };
 
     return (
         <Box sx={{ 
