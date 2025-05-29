@@ -25,20 +25,6 @@
   padding: min(20px, 5vw);
 }
 
-.qrCodeContainer {
-  width: min(250px, 80vw);
-  height: min(250px, 80vw);
-  min-width: 150px;
-  min-height: 150px;
-  background-color: #f5f5dc;
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .cardsSection {
   height: 250px;
   background-color: #795548;
@@ -473,14 +459,6 @@
 
 /* Responsive adjustments for very small screens */
 @media (max-height: 700px) {
-  .qrCodeContainer {
-    width: min(200px, 70vw);
-    height: min(200px, 70vw);
-    min-width: 140px;
-    min-height: 140px;
-    padding: 10px;
-  }
-  
   .cardsSection {
     height: 200px;
   }
@@ -523,14 +501,6 @@
 }
 
 @media (max-height: 600px) {
-  .qrCodeContainer {
-    width: min(150px, 60vw);
-    height: min(150px, 60vw);
-    min-width: 120px;
-    min-height: 120px;
-    padding: 8px;
-  }
-  
   .cardsSection {
     height: 150px;
   }
@@ -587,14 +557,6 @@
 }
 
 @media (max-height: 550px) {
-  .qrCodeContainer {
-    width: min(140px, 55vw);
-    height: min(140px, 55vw);
-    min-width: 110px;
-    min-height: 110px;
-    padding: 6px;
-  }
-  
   .cardsSection {
     height: 130px;
   }
@@ -651,14 +613,6 @@
 }
 
 @media (max-height: 500px) {
-  .qrCodeContainer {
-    width: min(120px, 50vw);
-    height: min(120px, 50vw);
-    min-width: 100px;
-    min-height: 100px;
-    padding: 5px;
-  }
-  
   .cardsSection {
     height: 110px;
   }
