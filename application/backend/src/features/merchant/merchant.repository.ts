@@ -29,6 +29,23 @@ export class MerchantRepository {
     private pool: Pool
   ) {}
 
+  async findAllMerchants(): Promise<MerchantDto[]> {
+    const query = `
+      SELECT * FROM merchant 
+      ORDER BY name ASC
+    `;
+    
+    const result = await this.pool.query(query);
+    
+    return result.rows.map((row) => ({
+      id: row.id,
+      name: row.name,
+      address: row.address,
+      email: row.login || '',
+      createdAt: row.created_at.toISOString(),
+    }));
+  }
+
   async findMerchantById(merchantId: string): Promise<Merchant | null> {
     const query = `
       SELECT * FROM merchant 

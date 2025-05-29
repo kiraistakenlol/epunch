@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PunchCardItem from './PunchCardItem';
 import styles from './DashboardPage.module.css';
@@ -33,6 +33,7 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
   const [localHighlightedCardId, setLocalHighlightedCardId] = useState<string | null>(null);
   const [localAnimatedPunch, setLocalAnimatedPunch] = useState<{ cardId: string; punchIndex: number } | null>(null);
   const [alert, setAlert] = useState<string | null>(null);
+  const cardRefs = useRef<{ [cardId: string]: HTMLDivElement | null }>({});
 
   useEffect(() => {
     if (userId === null) {
@@ -140,6 +141,19 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
     });
   }, [punchCards, waitingCards, dispatch, localAnimatedPunch]);
 
+  useEffect(() => {
+    if (localAnimatedPunch && cardRefs.current[localAnimatedPunch.cardId]) {
+      const cardElement = cardRefs.current[localAnimatedPunch.cardId];
+      if (cardElement) {
+        cardElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'center'
+        });
+      }
+    }
+  }, [localAnimatedPunch]);
+
   // Handle reward claimed animation
   useEffect(() => {
     if (!punchCards) return;
@@ -192,21 +206,27 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
     return (
       <div className={styles.punchCardsList}>
         {cardsToRender.map((card) => (
-          <PunchCardItem
+          <div
             key={card.id}
-            {...card}
-            isHighlighted={localHighlightedCardId === card.id}
-            animatedPunchIndex={
-              localAnimatedPunch && localAnimatedPunch.cardId === card.id
-                ? localAnimatedPunch.punchIndex
-                : undefined
-            }
-            shouldSlideIn={slideInCards.has(card.id)}
-            shouldSlideRight={slideRightCards.has(card.id)}
-            isSelected={selectedCardId === card.id}
-            onCardClick={onCardClick}
-            animateRewardClaimed={card.animateRewardClaimed}
-          />
+            ref={(el) => {
+              cardRefs.current[card.id] = el;
+            }}
+          >
+            <PunchCardItem
+              {...card}
+              isHighlighted={localHighlightedCardId === card.id}
+              animatedPunchIndex={
+                localAnimatedPunch && localAnimatedPunch.cardId === card.id
+                  ? localAnimatedPunch.punchIndex
+                  : undefined
+              }
+              shouldSlideIn={slideInCards.has(card.id)}
+              shouldSlideRight={slideRightCards.has(card.id)}
+              isSelected={selectedCardId === card.id}
+              onCardClick={onCardClick}
+              animateRewardClaimed={card.animateRewardClaimed}
+            />
+          </div>
         ))}
       </div>
     );

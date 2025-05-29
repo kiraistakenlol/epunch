@@ -1,10 +1,15 @@
 import { Controller, Get, Param, ParseUUIDPipe, Post, Body, HttpException, HttpStatus, Put, Delete } from '@nestjs/common';
-import { LoyaltyProgramDto, MerchantLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto } from 'e-punch-common-core';
+import { LoyaltyProgramDto, MerchantLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto } from 'e-punch-common-core';
 import { MerchantService } from './merchant.service';
 
 @Controller('merchants')
 export class MerchantController {
   constructor(private readonly merchantService: MerchantService) {}
+
+  @Get()
+  async getAllMerchants(): Promise<MerchantDto[]> {
+    return this.merchantService.getAllMerchants();
+  }
 
   @Post('auth')
   async login(@Body() loginDto: MerchantLoginDto): Promise<MerchantLoginResponse> {

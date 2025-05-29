@@ -7,6 +7,7 @@ import { apiClient } from 'e-punch-common-ui';
 import { useWebSocket } from '../../hooks/useWebSocket';
 import { webSocketClient } from '../../api/websocketClient';
 import { useConsoleCapture, ConsoleMessage } from '../../hooks/useConsoleCapture';
+import type { MerchantDto, LoyaltyProgramDto } from 'e-punch-common-core';
 
 
 // Reusable collapsible section component
@@ -134,18 +135,48 @@ const DevPage: React.FC = () => {
   const [apiStatus, setApiStatus] = useState<string>('No API calls made yet');
   const [loading, setLoading] = useState<boolean>(false);
   const [customUserId, setCustomUserId] = useState<string>('412dbe6d-e933-464e-87e2-31fe9c9ee6ac');
-  const [testPunchUserId, setTestPunchUserId] = useState<string>(userId || '');
   const [testPunchStatus, setTestPunchStatus] = useState<string>('');
+  const [merchants, setMerchants] = useState<MerchantDto[]>([]);
+  const [selectedMerchantId, setSelectedMerchantId] = useState<string>('');
+  const [loyaltyPrograms, setLoyaltyPrograms] = useState<LoyaltyProgramDto[]>([]);
+  const [selectedLoyaltyProgramId, setSelectedLoyaltyProgramId] = useState<string>('');
   
   const { connected, error: wsError, events, clearEvents } = useWebSocket();
   const { messages: consoleMessages, clearMessages: clearConsoleMessages } = useConsoleCapture();
 
-  // Update test punch user ID when current user ID changes
   useEffect(() => {
-    if (userId && !testPunchUserId) {
-      setTestPunchUserId(userId);
+    fetchMerchants();
+  }, []);
+
+  useEffect(() => {
+    if (selectedMerchantId) {
+      fetchLoyaltyPrograms(selectedMerchantId);
+    } else {
+      setLoyaltyPrograms([]);
+      setSelectedLoyaltyProgramId('');
     }
-  }, [userId, testPunchUserId]);
+  }, [selectedMerchantId]);
+
+  const fetchMerchants = async () => {
+    try {
+      const merchantData = await apiClient.getAllMerchants();
+      setMerchants(merchantData);
+    } catch (error: any) {
+      console.error('Failed to fetch merchants:', error);
+      setTestPunchStatus(`Error loading merchants: ${error.message}`);
+    }
+  };
+
+  const fetchLoyaltyPrograms = async (merchantId: string) => {
+    try {
+      const programs = await apiClient.getMerchantLoyaltyPrograms(merchantId);
+      setLoyaltyPrograms(programs);
+      setSelectedLoyaltyProgramId('');
+    } catch (error: any) {
+      console.error('Failed to fetch loyalty programs:', error);
+      setTestPunchStatus(`Error loading loyalty programs: ${error.message}`);
+    }
+  };
 
   const checkBackendConnection = async () => {
     setLoading(true);
@@ -222,29 +253,27 @@ const DevPage: React.FC = () => {
     }
   };
 
-  const handleTestPunch = async () => {
-    const loyaltyProgramId = "ca8a6765-e272-4aaa-b7a9-c25863ff1678"; // Placeholder
-
-    if (!testPunchUserId.trim()) {
-      setTestPunchStatus("Test Punch Error: Please enter a User ID.");
+  const handlePunch = async () => {
+    if (!userId) {
+      setTestPunchStatus("Punch Error: No user ID available. Please set a user ID first.");
       return;
     }
 
-    if (!loyaltyProgramId) {
-      setTestPunchStatus("Test Punch Error: Placeholder Loyalty Program ID is not configured.");
+    if (!selectedLoyaltyProgramId) {
+      setTestPunchStatus("Punch Error: Please select a loyalty program.");
       return;
     }
 
     setLoading(true);
-    setTestPunchStatus("Processing test punch...");
+    setTestPunchStatus("Processing punch...");
 
     try {
-      console.log(`Attempting TEST punch for user: ${testPunchUserId} on program: ${loyaltyProgramId}`);
-      const result = await apiClient.recordPunch(testPunchUserId, loyaltyProgramId);
-      setTestPunchStatus(`Test Punch Success: Reward achieved: ${result.rewardAchieved}. Current punches: ${result.current_punches}/${result.required_punches}`);
+      console.log(`Attempting punch for user: ${userId} on program: ${selectedLoyaltyProgramId}`);
+      const result = await apiClient.recordPunch(userId, selectedLoyaltyProgramId);
+      setTestPunchStatus(`Punch Success: Reward achieved: ${result.rewardAchieved}. Current punches: ${result.current_punches}/${result.required_punches}`);
     } catch (error: any) {
-      console.error('Test Punch error:', error);
-      setTestPunchStatus(`Test Punch Error: ${error.response?.data?.message || error.message || 'Failed to record test punch.'}`);
+      console.error('Punch error:', error);
+      setTestPunchStatus(`Punch Error: ${error.response?.data?.message || error.message || 'Failed to record punch.'}`);
     } finally {
       setLoading(false);
     }
@@ -264,6 +293,65 @@ const DevPage: React.FC = () => {
           >
             Go to Dashboard
           </button>
+        </div>
+      </DevSection>
+
+      <DevSection title="Merchant Testing" defaultExpanded={true}>
+        <div style={styles.userInfo}>
+          <p><strong>Current User ID:</strong> {userId || 'Not set'}</p>
+          <p style={{ fontSize: '12px', color: '#666', margin: '5px 0' }}>
+            Punches will be recorded for the current user. Set a user ID above if needed.
+          </p>
+        </div>
+        <div>
+          <h3>Select Merchant and Loyalty Program</h3>
+          <div style={{ marginBottom: '10px' }}>
+            <select 
+              style={{ ...styles.inputField, width: '200px' }}
+              value={selectedMerchantId}
+              onChange={(e) => setSelectedMerchantId(e.target.value)}
+              disabled={loading}
+            >
+              <option value="">Select a merchant...</option>
+              {merchants.map((merchant) => (
+                <option key={merchant.id} value={merchant.id}>
+                  {merchant.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div style={{ marginBottom: '10px' }}>
+            <select 
+              style={{ ...styles.inputField, width: '300px' }}
+              value={selectedLoyaltyProgramId}
+              onChange={(e) => setSelectedLoyaltyProgramId(e.target.value)}
+              disabled={loading || !selectedMerchantId}
+            >
+              <option value="">Select a loyalty program...</option>
+              {loyaltyPrograms.map((program) => (
+                <option key={program.id} value={program.id}>
+                  {program.name} ({program.requiredPunches} punches)
+                </option>
+              ))}
+            </select>
+          </div>
+          <button 
+            style={styles.button} 
+            onClick={handlePunch}
+            disabled={loading || !userId || !selectedLoyaltyProgramId}
+          >
+            Punch
+          </button>
+        </div>
+        <div>
+          <h4>Punch Result:</h4>
+          <pre style={{
+            ...styles.statusBox,
+            color: testPunchStatus.startsWith('Punch Error:') ? 'red' : 
+                   testPunchStatus.startsWith('Punch Success:') ? 'green' : 'black'
+          }}>
+            {testPunchStatus || 'No punch performed yet'}
+          </pre>
         </div>
       </DevSection>
 
@@ -678,38 +766,6 @@ const DevPage: React.FC = () => {
                 );
               })
             )}
-          </div>
-        </div>
-      </DevSection>
-
-      <DevSection title="Merchant Testing">
-        <div>
-          <h3>Test Punch Recording</h3>
-          <div style={{ marginBottom: '10px' }}>
-            <input 
-              type="text"
-              style={styles.inputField}
-              value={testPunchUserId}
-              onChange={(e) => setTestPunchUserId(e.target.value)}
-              placeholder="Enter User ID for test punch"
-            />
-            <button 
-              style={styles.button} 
-              onClick={handleTestPunch}
-              disabled={loading}
-            >
-              Test Punch
-            </button>
-          </div>
-          <div>
-            <h4>Test Punch Result:</h4>
-            <pre style={{
-              ...styles.statusBox,
-              color: testPunchStatus.startsWith('Test Punch Error:') ? 'red' : 
-                     testPunchStatus.startsWith('Test Punch Success:') ? 'green' : 'black'
-            }}>
-              {testPunchStatus || 'No test punch performed yet'}
-            </pre>
           </div>
         </div>
       </DevSection>

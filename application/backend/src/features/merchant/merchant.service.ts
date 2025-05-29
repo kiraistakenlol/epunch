@@ -1,5 +1,5 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { LoyaltyProgramDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto } from 'e-punch-common-core';
+import { LoyaltyProgramDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto } from 'e-punch-common-core';
 import { MerchantRepository } from './merchant.repository';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -12,6 +12,19 @@ export class MerchantService {
     private readonly merchantRepository: MerchantRepository,
     private readonly jwtService: JwtService
   ) {}
+
+  async getAllMerchants(): Promise<MerchantDto[]> {
+    this.logger.log('Fetching all merchants');
+    
+    try {
+      const merchants = await this.merchantRepository.findAllMerchants();
+      this.logger.log(`Found ${merchants.length} merchants`);
+      return merchants;
+    } catch (error: any) {
+      this.logger.error(`Error fetching all merchants: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
 
   async validateMerchant(login: string, password: string): Promise<MerchantLoginResponse | null> {
     this.logger.log(`Validating merchant with login: ${login}`);
