@@ -109,6 +109,9 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
         {loyaltyProgram && (
           <div className={styles.loyaltyProgramName}>{loyaltyProgram.name}</div>
         )}
+        <div className={styles.rewardReadyLabel}>
+          {status === 'REWARD_READY' ? 'Tap to redeem reward!' : ''}
+        </div>
       </div>
       <div className={styles.punchCardFooter}>
       </div>
