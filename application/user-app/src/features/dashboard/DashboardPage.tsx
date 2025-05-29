@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import QRCode from '../qrCode/QRCode';
-import PunchCardsSection from './PunchCardsSection';
+import PunchCards from './PunchCards';
 import AuthContainer from '../auth/AuthContainer';
 import AppHeader from '../../components/AppHeader';
 import styles from './DashboardPage.module.css';
@@ -32,7 +32,7 @@ const DashboardPage: React.FC = () => {
           <QRCode />
         </section>
         <section className={styles.cardsSection}>
-          {!isAuthLoading && <PunchCardsSection />}
+          <PunchCards />
         </section>
       </main>
     </div>
