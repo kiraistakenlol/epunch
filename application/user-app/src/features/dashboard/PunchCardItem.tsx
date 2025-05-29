@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { PunchCardDto, LoyaltyProgramDto } from 'e-punch-common-core';
-import { apiClient } from 'e-punch-common-ui';
+import React from 'react';
+import { PunchCardDto } from 'e-punch-common-core';
+import { useAppSelector } from '../../store/hooks';
+import { selectLoyaltyProgramById } from '../loyaltyPrograms/loyaltyProgramsSlice';
 import styles from './DashboardPage.module.css';
 
 interface PunchCardItemProps extends PunchCardDto {
@@ -35,22 +36,7 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
   onCardClick,
   animateRewardClaimed
 }) => {
-  const [loyaltyProgram, setLoyaltyProgram] = useState<LoyaltyProgramDto | null>(null);
-
-  useEffect(() => {
-    const fetchLoyaltyProgram = async () => {
-      if (!loyaltyProgramId) return;
-      
-      try {
-        const program = await apiClient.getLoyaltyProgram(loyaltyProgramId);
-        setLoyaltyProgram(program);
-      } catch (error) {
-        console.error('Failed to fetch loyalty program:', error);
-      }
-    };
-
-    fetchLoyaltyProgram();
-  }, [loyaltyProgramId]);
+  const loyaltyProgram = useAppSelector(state => selectLoyaltyProgramById(state, loyaltyProgramId));
 
   const punchCircles = [];
   for (let i = 0; i < totalPunches; i++) {

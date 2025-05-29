@@ -5,6 +5,7 @@ import animationReducer from '../features/animations/animationSlice';
 import signOutReducer from '../features/signOut/signOutSlice';
 import completionOverlayReducer from '../features/dashboard/completionOverlaySlice';
 import alertReducer from '../features/alert/alertSlice';
+import loyaltyProgramsReducer from '../features/loyaltyPrograms/loyaltyProgramsSlice';
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     signOut: signOutReducer,
     completionOverlay: completionOverlayReducer,
     alert: alertReducer,
+    loyaltyPrograms: loyaltyProgramsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

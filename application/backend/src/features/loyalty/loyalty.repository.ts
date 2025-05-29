@@ -65,4 +65,42 @@ export class LoyaltyRepository {
       return null;
     }
   }
+
+  async findLoyaltyProgramsByIds(ids: string[]): Promise<LoyaltyProgram[]> {
+    if (ids.length === 0) return [];
+    
+    this.logger.log(`Attempting to find loyalty programs with ids: ${ids.join(', ')}`);
+    
+    const placeholders = ids.map((_, index) => `$${index + 1}`).join(', ');
+    const query = `SELECT * FROM loyalty_program WHERE id IN (${placeholders})`;
+    
+    try {
+      const result = await this.pool.query(query, ids);
+      
+      this.logger.log(`Successfully found ${result.rows.length} loyalty programs`);
+      return result.rows;
+    } catch (error: any) {
+      this.logger.error(`Error fetching loyalty programs with ids ${ids.join(', ')}:`, error.message);
+      return [];
+    }
+  }
+
+  async findMerchantsByIds(ids: string[]): Promise<Merchant[]> {
+    if (ids.length === 0) return [];
+    
+    this.logger.log(`Attempting to find merchants with ids: ${ids.join(', ')}`);
+    
+    const placeholders = ids.map((_, index) => `$${index + 1}`).join(', ');
+    const query = `SELECT * FROM merchant WHERE id IN (${placeholders})`;
+    
+    try {
+      const result = await this.pool.query(query, ids);
+      
+      this.logger.log(`Successfully found ${result.rows.length} merchants`);
+      return result.rows;
+    } catch (error: any) {
+      this.logger.error(`Error fetching merchants with ids ${ids.join(', ')}:`, error.message);
+      return [];
+    }
+  }
 } 

@@ -179,6 +179,15 @@ export const apiClient = {
     return response.data;
   },
 
+  async getLoyaltyPrograms(loyaltyProgramIds: string[]): Promise<LoyaltyProgramDto[]> {
+    if (!loyaltyProgramIds || loyaltyProgramIds.length === 0) {
+      return Promise.resolve([]);
+    }
+    const idsParam = loyaltyProgramIds.join(',');
+    const response = await instance.get<LoyaltyProgramDto[]>(`/loyalty-programs?ids=${idsParam}`);
+    return response.data;
+  },
+
   // Authentication method
   async authenticateUser(authToken: string, userId: string): Promise<AuthResponseDto> {
     if (!authToken || !userId) {

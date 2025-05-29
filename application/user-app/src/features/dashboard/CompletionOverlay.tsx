@@ -1,40 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { LoyaltyProgramDto } from 'e-punch-common-core';
+import React from 'react';
 import styles from './CompletionOverlay.module.css';
 import { handleEvent } from '../animations/animationSlice';
 import { hideOverlay, selectCompletionOverlay } from './completionOverlaySlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
 import { selectPunchCards } from '../punchCards/punchCardsSlice';
-import { apiClient } from 'e-punch-common-ui';
+import { selectLoyaltyProgramById } from '../loyaltyPrograms/loyaltyProgramsSlice';
+import { useAppSelector } from '../../store/hooks';
 
 const CompletionOverlay: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const completionOverlay = useSelector((state: RootState) => selectCompletionOverlay(state));
-  const punchCards = useSelector((state: RootState) => selectPunchCards(state));
-  const [loyaltyProgram, setLoyaltyProgram] = useState<LoyaltyProgramDto | null>(null);
+  const completionOverlay = useAppSelector(selectCompletionOverlay);
+  const punchCards = useAppSelector(selectPunchCards);
 
   // Find the completed card from punch cards slice
   const completedCard = punchCards?.find(card => card.id === completionOverlay.cardId) || null;
-
-  // Fetch loyalty program data when card changes
-  useEffect(() => {
-    if (completedCard?.loyaltyProgramId) {
-      const fetchLoyaltyProgram = async () => {
-        try {
-          const program = await apiClient.getLoyaltyProgram(completedCard.loyaltyProgramId);
-          setLoyaltyProgram(program);
-        } catch (error) {
-          console.error('Failed to fetch loyalty program:', error);
-          setLoyaltyProgram({ name: 'Loyalty Program' } as any);
-        }
-      };
-      
-      fetchLoyaltyProgram();
-    } else {
-      setLoyaltyProgram(null);
-    }
-  }, [completedCard?.loyaltyProgramId]);
+  
+  // Get loyalty program from the loyalty programs slice
+  const loyaltyProgram = useAppSelector((state: RootState) => 
+    completedCard?.loyaltyProgramId 
+      ? selectLoyaltyProgramById(state, completedCard.loyaltyProgramId)
+      : null
+  );
 
   if (!completionOverlay.isVisible || !completedCard) return null;
 

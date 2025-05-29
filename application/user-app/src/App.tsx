@@ -14,6 +14,7 @@ import type { AppDispatch } from './store/store';
 import './styles/global.css';
 import { useWebSocketEventHandler } from './hooks/useWebSocketEventHandler';
 import { useAnimationExecutor } from './features/animations/useAnimationExecutor';
+import { useLoyaltyProgramsSync } from './features/loyaltyPrograms/useLoyaltyProgramsSync';
 import { fetchPunchCards } from './features/punchCards/punchCardsSlice';
 import { useAppSelector } from './store/hooks';
 
@@ -26,6 +27,7 @@ function App() {
   
   useWebSocketEventHandler();
   useAnimationExecutor();
+  useLoyaltyProgramsSync();
 
   useEffect(() => {
     configureAmplify();

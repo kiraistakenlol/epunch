@@ -8,6 +8,55 @@ export class LoyaltyService {
 
   constructor(private readonly loyaltyRepository: LoyaltyRepository) {}
 
+  async getLoyaltyPrograms(ids: string[]): Promise<LoyaltyProgramDto[]> {
+    this.logger.log(`Fetching loyalty programs: ${ids.join(', ')}`);
+    
+    try {
+      const loyaltyPrograms = await this.loyaltyRepository.findLoyaltyProgramsByIds(ids);
+      
+      // Get unique merchant IDs
+      const merchantIds = [...new Set(loyaltyPrograms.map(lp => lp.merchant_id))];
+      const merchants = await this.loyaltyRepository.findMerchantsByIds(merchantIds);
+      
+      // Create a map for quick merchant lookup
+      const merchantMap = new Map(merchants.map(m => [m.id, m]));
+      
+      const loyaltyProgramDtos: LoyaltyProgramDto[] = [];
+      
+      for (const loyaltyProgram of loyaltyPrograms) {
+        const merchant = merchantMap.get(loyaltyProgram.merchant_id);
+        
+        if (!merchant) {
+          this.logger.warn(`Merchant not found for loyalty program ${loyaltyProgram.id}`);
+          continue;
+        }
+
+        loyaltyProgramDtos.push({
+          id: loyaltyProgram.id,
+          name: loyaltyProgram.name,
+          description: loyaltyProgram.description,
+          requiredPunches: loyaltyProgram.required_punches,
+          rewardDescription: loyaltyProgram.reward_description,
+          isActive: true,
+          merchant: {
+            id: merchant.id,
+            name: merchant.name,
+            address: merchant.address || '',
+            email: '',
+            createdAt: merchant.created_at.toISOString(),
+          },
+          createdAt: loyaltyProgram.created_at.toISOString(),
+        });
+      }
+
+      this.logger.log(`Found ${loyaltyProgramDtos.length} loyalty programs`);
+      return loyaltyProgramDtos;
+    } catch (error: any) {
+      this.logger.error(`Error fetching loyalty programs ${ids.join(', ')}: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
   async getLoyaltyProgram(id: string): Promise<LoyaltyProgramDto> {
     this.logger.log(`Fetching loyalty program: ${id}`);
     
