@@ -1,0 +1,14 @@
+.alert {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #4caf50;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  z-index: 1000;
+  font-weight: bold;
+  max-width: calc(100vw - 40px);
+  text-align: center;
+} 

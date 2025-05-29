@@ -6,6 +6,13 @@ export interface PunchCardState extends PunchCardDto {
   animateNewPunch?: boolean;
   animateNewCard?: boolean;
   animateRewardClaimed?: boolean;
+  visible?: boolean;
+  animationFlags?: {
+    punchAnimation?: { punchIndex: number };
+    highlighted?: boolean;
+    slideAnimation?: boolean;
+    rewardClaimedAnimation?: boolean;
+  };
 }
 
 export interface PunchCardsState {
