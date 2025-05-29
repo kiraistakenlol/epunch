@@ -78,13 +78,29 @@ export const apiClient = {
     return response.data;
   },
 
-  async generateTestData(): Promise<DevResponse> {
-    const response = await instance.post<DevResponse>('/dev/generate-data');
+  // Data removal endpoints
+  async removeAllPunchCards(): Promise<DevResponse> {
+    const response = await instance.delete<DevResponse>('/dev/punch-cards');
     return response.data;
   },
 
-  async resetTestData(): Promise<DevResponse> {
-    const response = await instance.post<DevResponse>('/dev/reset-data');
+  async removeAllUsers(): Promise<DevResponse> {
+    const response = await instance.delete<DevResponse>('/dev/users');
+    return response.data;
+  },
+
+  async removeAllLoyaltyPrograms(): Promise<DevResponse> {
+    const response = await instance.delete<DevResponse>('/dev/loyalty-programs');
+    return response.data;
+  },
+
+  async removeAllMerchants(): Promise<DevResponse> {
+    const response = await instance.delete<DevResponse>('/dev/merchants');
+    return response.data;
+  },
+
+  async removeAllData(): Promise<DevResponse> {
+    const response = await instance.delete<DevResponse>('/dev/all');
     return response.data;
   },
 

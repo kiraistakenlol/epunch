@@ -160,24 +160,34 @@ const DevPage: React.FC = () => {
     }
   };
 
-  const generateTestData = async () => {
-    setLoading(true);
-    setApiStatus('Generating test data...');
-    try {
-      const response = await apiClient.generateTestData();
-      setApiStatus(JSON.stringify(response, null, 2));
-    } catch (error: any) {
-      setApiStatus(`Error: ${error.message || 'Unknown error'}`);
-    } finally {
-      setLoading(false);
+  const handleDataOperation = async (operation: string, confirmMessage: string) => {
+    if (!window.confirm(confirmMessage)) {
+      return;
     }
-  };
 
-  const resetTestData = async () => {
     setLoading(true);
-    setApiStatus('Resetting test data...');
+    setApiStatus(`Performing ${operation}...`);
     try {
-      const response = await apiClient.resetTestData();
+      let response;
+      switch (operation) {
+        case 'remove-punch-cards':
+          response = await apiClient.removeAllPunchCards();
+          break;
+        case 'remove-users':
+          response = await apiClient.removeAllUsers();
+          break;
+        case 'remove-loyalty-programs':
+          response = await apiClient.removeAllLoyaltyPrograms();
+          break;
+        case 'remove-merchants':
+          response = await apiClient.removeAllMerchants();
+          break;
+        case 'remove-all':
+          response = await apiClient.removeAllData();
+          break;
+        default:
+          throw new Error('Unknown operation');
+      }
       setApiStatus(JSON.stringify(response, null, 2));
     } catch (error: any) {
       setApiStatus(`Error: ${error.message || 'Unknown error'}`);
@@ -423,23 +433,60 @@ const DevPage: React.FC = () => {
           >
             Check Backend Connection
           </button>
-          <button 
-            style={styles.button} 
-            onClick={generateTestData}
-            disabled={loading}
-          >
-            Generate Test Data
-          </button>
-          <button 
-            style={styles.button} 
-            onClick={resetTestData}
-            disabled={loading}
-          >
-            Reset Test Data
-          </button>
         </div>
         <div>
           <h3>Response:</h3>
+          <pre style={styles.statusBox}>
+            {apiStatus}
+          </pre>
+        </div>
+      </DevSection>
+
+      <DevSection title="Data">
+        <div style={styles.userInfo}>
+          <p style={{ fontSize: '12px', color: '#d32f2f', margin: '5px 0' }}>
+            ⚠️ Warning: These operations will permanently delete data and cannot be undone.
+          </p>
+        </div>
+        <div>
+          <button 
+            style={{ ...styles.button, backgroundColor: '#d32f2f' }}
+            onClick={() => handleDataOperation('remove-punch-cards', 'Are you sure you want to remove ALL punch cards? This action cannot be undone.')}
+            disabled={loading}
+          >
+            Remove All Punch Cards
+          </button>
+          <button 
+            style={{ ...styles.button, backgroundColor: '#d32f2f' }}
+            onClick={() => handleDataOperation('remove-users', 'Are you sure you want to remove ALL users? This action cannot be undone.')}
+            disabled={loading}
+          >
+            Remove All Users
+          </button>
+          <button 
+            style={{ ...styles.button, backgroundColor: '#d32f2f' }}
+            onClick={() => handleDataOperation('remove-loyalty-programs', 'Are you sure you want to remove ALL loyalty programs? This action cannot be undone.')}
+            disabled={loading}
+          >
+            Remove All Loyalty Programs
+          </button>
+          <button 
+            style={{ ...styles.button, backgroundColor: '#d32f2f' }}
+            onClick={() => handleDataOperation('remove-merchants', 'Are you sure you want to remove ALL merchants? This action cannot be undone.')}
+            disabled={loading}
+          >
+            Remove All Merchants
+          </button>
+          <button 
+            style={{ ...styles.button, backgroundColor: '#8e0000' }}
+            onClick={() => handleDataOperation('remove-all', 'Are you sure you want to remove ALL DATA from the database? This will delete everything and cannot be undone.')}
+            disabled={loading}
+          >
+            Remove All Data
+          </button>
+        </div>
+        <div>
+          <h3>Operation Result:</h3>
           <pre style={styles.statusBox}>
             {apiStatus}
           </pre>

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, HttpStatus, Delete } from '@nestjs/common';
 import { DevService } from './dev.service';
 
 @Controller('dev')
@@ -10,13 +10,28 @@ export class DevController {
     return this.devService.getStatus();
   }
 
-  @Post('generate-data')
-  async generateTestData() {
-    return this.devService.generateTestData();
+  @Delete('punch-cards')
+  async removeAllPunchCards() {
+    return this.devService.removeAllPunchCards();
   }
 
-  @Post('reset-data')
-  async resetTestData() {
-    return this.devService.resetTestData();
+  @Delete('users')
+  async removeAllUsers() {
+    return this.devService.removeAllUsers();
+  }
+
+  @Delete('loyalty-programs')
+  async removeAllLoyaltyPrograms() {
+    return this.devService.removeAllLoyaltyPrograms();
+  }
+
+  @Delete('merchants')
+  async removeAllMerchants() {
+    return this.devService.removeAllMerchants();
+  }
+
+  @Delete('all')
+  async removeAllData() {
+    return this.devService.removeAllData();
   }
 } 
