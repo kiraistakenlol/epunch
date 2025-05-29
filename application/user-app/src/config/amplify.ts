@@ -5,6 +5,7 @@ import { config } from './env';
 import type { AppDispatch } from '../store/store';
 import { getOrInitializeUserIdFromLocalStorage, setAuthenticated, setCognitoUser, setUserId } from '../features/auth/authSlice';
 import { apiClient } from 'e-punch-common-ui';
+import { v4 as uuidv4 } from 'uuid';
 
 export const configureAmplify = () => {
   if (!config.cognito.userPoolId || !config.cognito.userPoolClientId) {
@@ -78,6 +79,7 @@ export const setupAuthListener = (dispatch: AppDispatch) => {
         console.log('User signed out');
         dispatch(setAuthenticated(false));
         dispatch(setCognitoUser(null));
+        dispatch(setUserId(uuidv4()));
         break;
 
       case 'signInWithRedirect_failure':
