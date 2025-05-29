@@ -22,6 +22,7 @@ export interface CreateLoyaltyProgramDto {
 export interface UpdateLoyaltyProgramDto {
   name?: string;
   description?: string;
+  requiredPunches?: number;
   rewardDescription?: string;
   isActive?: boolean;
 } 

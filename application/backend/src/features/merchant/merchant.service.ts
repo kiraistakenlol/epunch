@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, HttpException, HttpStatus } from '@nestjs/common';
 import { LoyaltyProgramDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto } from 'e-punch-common-core';
 import { MerchantRepository } from './merchant.repository';
 import { JwtService } from '@nestjs/jwt';
@@ -94,6 +94,14 @@ export class MerchantService {
         throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
       }
 
+      if (data.requiredPunches > 10) {
+        throw new HttpException('Required punches cannot exceed 10', HttpStatus.BAD_REQUEST);
+      }
+
+      if (data.requiredPunches < 1) {
+        throw new HttpException('Required punches must be at least 1', HttpStatus.BAD_REQUEST);
+      }
+
       const loyaltyProgram = await this.merchantRepository.createLoyaltyProgram(merchantId, data);
       this.logger.log(`Created loyalty program ${loyaltyProgram.id} for merchant: ${merchantId}`);
       return loyaltyProgram;
@@ -111,6 +119,16 @@ export class MerchantService {
       
       if (!merchant) {
         throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
+      }
+
+      if (data.requiredPunches !== undefined) {
+        if (data.requiredPunches > 10) {
+          throw new HttpException('Required punches cannot exceed 10', HttpStatus.BAD_REQUEST);
+        }
+
+        if (data.requiredPunches < 1) {
+          throw new HttpException('Required punches must be at least 1', HttpStatus.BAD_REQUEST);
+        }
       }
 
       const loyaltyProgram = await this.merchantRepository.updateLoyaltyProgram(merchantId, programId, data);

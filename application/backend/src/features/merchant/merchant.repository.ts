@@ -151,6 +151,10 @@ export class MerchantRepository {
       setParts.push(`description = $${paramIndex++}`);
       values.push(data.description);
     }
+    if (data.requiredPunches !== undefined) {
+      setParts.push(`required_punches = $${paramIndex++}`);
+      values.push(data.requiredPunches);
+    }
     if (data.rewardDescription !== undefined) {
       setParts.push(`reward_description = $${paramIndex++}`);
       values.push(data.rewardDescription);

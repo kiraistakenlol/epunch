@@ -13,8 +13,12 @@ import {
   CircularProgress,
   useMediaQuery,
   useTheme,
+  FormControl,
+  FormLabel,
+  FormHelperText,
 } from '@mui/material';
 import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
+import { NumericFormat } from 'react-number-format';
 import { apiClient } from 'e-punch-common-ui';
 import { UpdateLoyaltyProgramDto } from 'e-punch-common-core';
 import { useAppSelector } from '../store/hooks';
@@ -92,6 +96,10 @@ export const LoyaltyProgramEdit: React.FC = () => {
       newErrors.requiredPunches = 'Required punches must be at least 1';
     }
 
+    if (formData.requiredPunches > 10) {
+      newErrors.requiredPunches = 'Required punches cannot exceed 10';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -108,6 +116,7 @@ export const LoyaltyProgramEdit: React.FC = () => {
       const updateData: UpdateLoyaltyProgramDto = {
         name: formData.name.trim(),
         description: formData.description.trim() || undefined,
+        requiredPunches: formData.requiredPunches,
         rewardDescription: formData.rewardDescription.trim(),
         isActive: formData.isActive,
       };
@@ -123,12 +132,24 @@ export const LoyaltyProgramEdit: React.FC = () => {
   };
 
   const handleInputChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = field === 'requiredPunches' ? parseInt(e.target.value) || 0 : e.target.value;
-    setFormData(prev => ({ ...prev, [field]: value }));
+    let value: any = e.target.value;
+    
+    if (field !== 'requiredPunches') {
+      setFormData(prev => ({ ...prev, [field]: value }));
+    }
 
-    // Clear error when user starts typing
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
+    }
+  };
+
+  const handlePunchesChange = (values: any) => {
+    const { floatValue } = values;
+    const value = floatValue || '';
+    setFormData(prev => ({ ...prev, requiredPunches: value }));
+    
+    if (errors.requiredPunches) {
+      setErrors(prev => ({ ...prev, requiredPunches: '' }));
     }
   };
 
@@ -278,30 +299,53 @@ export const LoyaltyProgramEdit: React.FC = () => {
               }}
             />
 
-            <TextField
-              fullWidth
-              label="Required Punches"
-              type="number"
-              value={formData.requiredPunches}
-              onChange={handleInputChange('requiredPunches')}
+            <FormControl 
+              fullWidth 
+              margin="normal" 
               error={!!errors.requiredPunches}
-              helperText={errors.requiredPunches || 'Note: Changing this won\'t affect existing punch cards'}
-              margin="normal"
               required
-              disabled={true} // Disable editing required punches for existing programs
-              inputProps={{ min: 1 }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  backgroundColor: '#f5f5f5',
-                  '& fieldset': {
-                    borderColor: '#8d6e63',
-                  },
-                },
-                '& .MuiInputLabel-root': {
+            >
+              <FormLabel 
+                sx={{ 
                   color: '#5d4037',
-                },
-              }}
-            />
+                  '&.Mui-focused': { color: '#5d4037' },
+                  mb: 1,
+                  fontSize: '0.875rem'
+                }}
+              >
+                Required Punches *
+              </FormLabel>
+              <NumericFormat
+                value={formData.requiredPunches}
+                onValueChange={handlePunchesChange}
+                customInput={TextField}
+                allowNegative={false}
+                decimalScale={0}
+                isAllowed={(values) => {
+                  const { floatValue } = values;
+                  return floatValue === undefined || (floatValue >= 1 && floatValue <= 10);
+                }}
+                disabled={isSubmitting}
+                placeholder="Enter 1-10"
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    backgroundColor: '#fff',
+                    '& fieldset': {
+                      borderColor: !!errors.requiredPunches ? '#d32f2f' : '#8d6e63',
+                    },
+                    '&:hover fieldset': {
+                      borderColor: !!errors.requiredPunches ? '#d32f2f' : '#5d4037',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: !!errors.requiredPunches ? '#d32f2f' : '#5d4037',
+                    },
+                  },
+                }}
+              />
+              <FormHelperText sx={{ color: !!errors.requiredPunches ? '#d32f2f' : '#666' }}>
+                {errors.requiredPunches || 'Maximum 10 punches allowed'}
+              </FormHelperText>
+            </FormControl>
 
             <TextField
               fullWidth
