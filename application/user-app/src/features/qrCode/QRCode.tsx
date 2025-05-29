@@ -1,12 +1,41 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { QRCodeCanvas } from 'qrcode.react';
+import type { QRValueDto } from 'e-punch-common-core';
+import type { RootState } from '../../store/store';
+import { selectUserId } from '../auth/authSlice';
+import { selectSelectedCard } from '../punchCards/punchCardsSlice';
 
-interface QRCodeProps {
-  value: string;
-  isRewardMode?: boolean;
-}
+const QRCode: React.FC = () => {
+  const userId = useSelector((state: RootState) => selectUserId(state));
+  const selectedCard = useSelector((state: RootState) => selectSelectedCard(state));
 
-const QRCode: React.FC<QRCodeProps> = ({ value, isRewardMode = false }) => {
+  const generateQRValue = (): string => {
+    const isRewardMode = selectedCard?.status === 'REWARD_READY';
+    
+    if (isRewardMode && selectedCard) {
+      const qrData: QRValueDto = {
+        type: 'redemption_punch_card_id',
+        punch_card_id: selectedCard.id
+      };
+      return JSON.stringify(qrData);
+    } else if (userId) {
+      const qrData: QRValueDto = {
+        type: 'user_id',
+        user_id: userId
+      };
+      return JSON.stringify(qrData);
+    }
+    return '';
+  };
+
+  const qrValue = generateQRValue();
+  const isRewardMode = selectedCard?.status === 'REWARD_READY';
+
+  if (!qrValue) {
+    return null;
+  }
+
   return (
     <div style={{ 
       position: 'relative',
@@ -21,7 +50,7 @@ const QRCode: React.FC<QRCodeProps> = ({ value, isRewardMode = false }) => {
       willChange: isRewardMode ? 'box-shadow' : 'auto'
     }}>
       <QRCodeCanvas 
-        value={value} 
+        value={qrValue} 
         size={400} 
         level="H" 
         style={{ 

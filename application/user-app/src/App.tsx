@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { configureApiClient } from 'e-punch-common-ui';
 import DashboardPage from './features/dashboard/DashboardPage';
 import DevPage from './features/dev/DevPage';
+import SignOutModal from './components/SignOutModal';
 import { initializeUser as initializeUser, selectUserId } from './features/auth/authSlice';
 import { configureAmplify, setupAuthListener } from './config/amplify';
 import { config } from './config/env';
@@ -47,6 +48,7 @@ function App() {
         <Route path="/dev" element={<DevPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      <SignOutModal />
     </BrowserRouter>
   );
 }

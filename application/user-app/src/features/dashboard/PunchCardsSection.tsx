@@ -11,25 +11,23 @@ import {
   selectPunchCardsLoading,
   selectPunchCardsError,
   clearPunchCards,
-  updatePunchCardById
+  updatePunchCardById,
+  selectSelectedCardId,
+  setSelectedCardId,
+  clearSelectedCard
 } from '../punchCards/punchCardsSlice';
 import { apiClient } from 'e-punch-common-ui';
 import { LoyaltyProgramDto } from 'e-punch-common-core';
 
 const NEW_CARD_ANIMATION_DELAY = 1500;
 
-interface PunchCardsSectionProps {
-  selectedCardId?: string | null;
-  onCardClick?: (cardId: string) => void;
-}
+interface PunchCardsSectionProps {}
 
-const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({ 
-  selectedCardId, 
-  onCardClick 
-}) => {
+const PunchCardsSection: React.FC<PunchCardsSectionProps> = () => {
   const dispatch = useDispatch<AppDispatch>();
   const userId = useSelector((state: RootState) => selectUserId(state));
   const punchCards = useSelector((state: RootState) => selectPunchCards(state));
+  const selectedCardId = useSelector((state: RootState) => selectSelectedCardId(state));
   const isLoading = useSelector((state: RootState) => selectPunchCardsLoading(state));
   const error = useSelector((state: RootState) => selectPunchCardsError(state));
   const [showEmptyState, setShowEmptyState] = useState(false);
@@ -100,7 +98,6 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
 
   const { slideInCards, slideRightCards } = getCardAnimations();
   const hasActivePunchAnimation = punchCards ? punchCards.some(card => card.animateNewPunch) : false;
-  const rewardClaimedCards = punchCards ? punchCards.filter(card => card.animateRewardClaimed) : [];
   const visibleCards = punchCards ? punchCards.filter(card => 
     !card.animateNewCard && 
     !card.animateRewardClaimed && 
@@ -220,20 +217,30 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
 
   // Handle reward claimed animation
   useEffect(() => {
-    if (!punchCards) return;
+    if (punchCards) {
+      const cardWithRewardClaimed = punchCards.find(card => card.animateRewardClaimed);
+      if (cardWithRewardClaimed) {
+        dispatch(clearSelectedCard());
+        setAlert("🎉 Reward redeemed! Enjoy your treat!");
+        
+        setTimeout(() => {
+          setAlert(null);
+          dispatch(updatePunchCardById({
+            id: cardWithRewardClaimed.id,
+            updates: { animateRewardClaimed: false }
+          }));
+        }, 1200);
+      }
+    }
+  }, [punchCards, dispatch]);
 
-    rewardClaimedCards.forEach(card => {
-      setAlert("🎉 Reward redeemed! Enjoy your treat!");
-      
-      setTimeout(() => {
-        setAlert(null);
-        dispatch(updatePunchCardById({ 
-          id: card.id, 
-          updates: { animateRewardClaimed: false } 
-        }));
-      }, 1200);
-    });
-  }, [rewardClaimedCards, dispatch]);
+  const handleCardClick = (cardId: string) => {
+    if (selectedCardId === cardId) {
+      dispatch(clearSelectedCard());
+    } else {
+      dispatch(setSelectedCardId(cardId));
+    }
+  };
 
   const renderContent = () => {
     if (isLoading || punchCards === undefined) {
@@ -287,7 +294,7 @@ const PunchCardsSection: React.FC<PunchCardsSectionProps> = ({
               shouldSlideIn={slideInCards.has(card.id)}
               shouldSlideRight={slideRightCards.has(card.id)}
               isSelected={selectedCardId === card.id}
-              onCardClick={onCardClick}
+              onCardClick={handleCardClick}
               animateRewardClaimed={card.animateRewardClaimed}
             />
           </div>

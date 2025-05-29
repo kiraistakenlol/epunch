@@ -1,11 +1,9 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import EPunchModal from './EPunchModal';
-
-interface SignOutModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-}
+import type { RootState } from '../store/store';
+import { selectSignOutModalOpen, closeSignOutModal } from '../features/signOut/signOutSlice';
+import { signOut } from 'aws-amplify/auth';
 
 const buttonStyle: React.CSSProperties = {
   width: '100%',
@@ -40,16 +38,28 @@ const messageStyle: React.CSSProperties = {
   lineHeight: '1.5',
 };
 
-const SignOutModal: React.FC<SignOutModalProps> = ({ isOpen, onClose, onConfirm }) => {
-  const handleConfirm = () => {
-    onConfirm();
-    onClose();
+const SignOutModal: React.FC = () => {
+  const dispatch = useDispatch();
+  const isOpen = useSelector((state: RootState) => selectSignOutModalOpen(state));
+
+  const handleClose = () => {
+    dispatch(closeSignOutModal());
+  };
+
+  const handleConfirm = async () => {
+    try {
+      await signOut();
+      dispatch(closeSignOutModal());
+    } catch (error) {
+      console.error('Error signing out:', error);
+      dispatch(closeSignOutModal());
+    }
   };
 
   return (
     <EPunchModal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       title="Confirm Sign Out"
       maxWidth="350px"
     >
@@ -72,7 +82,7 @@ const SignOutModal: React.FC<SignOutModalProps> = ({ isOpen, onClose, onConfirm 
       
       <button
         style={cancelButtonStyle}
-        onClick={onClose}
+        onClick={handleClose}
         onMouseOver={(e) => {
           e.currentTarget.style.backgroundColor = '#e0e0e0';
         }}

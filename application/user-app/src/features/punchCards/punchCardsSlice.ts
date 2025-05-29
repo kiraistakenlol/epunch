@@ -10,6 +10,7 @@ export interface PunchCardState extends PunchCardDto {
 
 export interface PunchCardsState {
   cards: PunchCardState[] | undefined;
+  selectedCardId: string | null;
   isLoading: boolean;
   error: string | null;
   lastFetched: number | null;
@@ -17,6 +18,7 @@ export interface PunchCardsState {
 
 const initialState: PunchCardsState = {
   cards: undefined,
+  selectedCardId: null,
   isLoading: false,
   error: null,
   lastFetched: null,
@@ -111,6 +113,12 @@ const punchCardsSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
+    setSelectedCardId: (state, action: PayloadAction<string | null>) => {
+      state.selectedCardId = action.payload;
+    },
+    clearSelectedCard: (state) => {
+      state.selectedCardId = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -138,11 +146,19 @@ export const {
   incrementPunch,
   incrementPunchById,
   clearError,
+  setSelectedCardId,
+  clearSelectedCard,
 } = punchCardsSlice.actions;
 
 export const selectPunchCards = (state: { punchCards: PunchCardsState }) => state.punchCards.cards;
 export const selectPunchCardsLoading = (state: { punchCards: PunchCardsState }) => state.punchCards.isLoading;
 export const selectPunchCardsError = (state: { punchCards: PunchCardsState }) => state.punchCards.error;
 export const selectLastFetched = (state: { punchCards: PunchCardsState }) => state.punchCards.lastFetched;
+export const selectSelectedCardId = (state: { punchCards: PunchCardsState }) => state.punchCards.selectedCardId;
+export const selectSelectedCard = (state: { punchCards: PunchCardsState }) => {
+  const cards = state.punchCards.cards;
+  const selectedId = state.punchCards.selectedCardId;
+  return cards?.find(card => card.id === selectedId) || null;
+};
 
 export default punchCardsSlice.reducer; 
