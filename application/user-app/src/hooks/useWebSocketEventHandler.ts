@@ -48,7 +48,7 @@ export const useWebSocketEventHandler = () => {
             new ShowCompletionOverlay(punchCard.id),
             new WaitForEvent('COMPLETION_OVERLAY_CLOSED'),
             new HighlightCard(punchCard.id),
-            new Delay(500),
+            new Delay(1500),
             new ShowNewCardAnimation(newCard.id)
           ];
 
