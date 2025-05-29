@@ -1,8 +1,9 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Dropdown } from 'react-bootstrap';
 import { RootState } from '../store/store';
 import { selectIsAuthenticated, selectSuperAdmin } from '../features/auth/authSlice';
+import { openSignOutModal } from '../features/signOut/signOutSlice';
 
 interface AppHeaderProps {
   onSignOut?: () => void;
@@ -60,13 +61,18 @@ const devLinkStyle: React.CSSProperties = {
   transform: "translateY(-50%)"
 };
 
-const AppHeader: React.FC<AppHeaderProps> = ({ onSignOut }) => {
+const AppHeader: React.FC<AppHeaderProps> = () => {
+  const dispatch = useDispatch();
   const isAuthenticated = useSelector((state: RootState) => selectIsAuthenticated(state));
   const isSuperAdmin = useSelector((state: RootState) => selectSuperAdmin(state));
 
   const title = "EPunch";
   const showProfileMenu = isAuthenticated;
   const showDevLink = isSuperAdmin;
+
+  const handleSignOut = () => {
+    dispatch(openSignOutModal());
+  };
 
   return (
     <header style={headerStyle}>
@@ -104,7 +110,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({ onSignOut }) => {
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
-            <Dropdown.Item onClick={onSignOut}>
+            <Dropdown.Item onClick={handleSignOut}>
               Sign Out
             </Dropdown.Item>
           </Dropdown.Menu>
