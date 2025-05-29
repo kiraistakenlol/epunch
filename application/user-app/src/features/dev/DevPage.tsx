@@ -241,24 +241,27 @@ const DevPage: React.FC = () => {
     }
 
     setLoading(true);
-    setApiStatus(`Performing ${operation}...`);
+    const merchantToUse = selectedMerchantId || scenarioMerchantId;
+    const merchantText = merchantToUse ? ` for merchant ${merchants.find(m => m.id === merchantToUse)?.name || merchantToUse}` : ' (all merchants)';
+    setApiStatus(`Performing ${operation}${merchantText}...`);
+    
     try {
       let response;
       switch (operation) {
         case 'remove-punch-cards':
-          response = await apiClient.removeAllPunchCards();
+          response = await apiClient.removeAllPunchCards(merchantToUse);
           break;
         case 'remove-users':
-          response = await apiClient.removeAllUsers();
+          response = await apiClient.removeAllUsers(merchantToUse);
           break;
         case 'remove-loyalty-programs':
-          response = await apiClient.removeAllLoyaltyPrograms();
+          response = await apiClient.removeAllLoyaltyPrograms(merchantToUse);
           break;
         case 'remove-merchants':
-          response = await apiClient.removeAllMerchants();
+          response = await apiClient.removeAllMerchants(merchantToUse);
           break;
         case 'remove-all':
-          response = await apiClient.removeAllData();
+          response = await apiClient.removeAllData(merchantToUse);
           break;
         default:
           throw new Error('Unknown operation');
@@ -393,7 +396,7 @@ const DevPage: React.FC = () => {
     try {
       // Step 1: Remove all punch cards
       setScenarioStatus("Step 1: Removing all punch cards...");
-      await apiClient.removeAllPunchCards();
+      await apiClient.removeAllPunchCards(scenarioMerchantId);
       setScenarioStatus("✅ All punch cards removed successfully.");
 
       // Step 2: Get loyalty programs for the selected merchant
@@ -706,6 +709,27 @@ const DevPage: React.FC = () => {
           <p style={{ fontSize: '12px', color: '#d32f2f', margin: '5px 0' }}>
             ⚠️ Warning: These operations will permanently delete data and cannot be undone.
           </p>
+          <p style={{ fontSize: '12px', color: '#666', margin: '5px 0' }}>
+            Selected merchant: {selectedMerchantId ? merchants.find(m => m.id === selectedMerchantId)?.name || 'Unknown' : 'All merchants (global operation)'}
+          </p>
+        </div>
+        <div>
+          <h3>Select Merchant (Optional)</h3>
+          <div style={{ marginBottom: '15px' }}>
+            <select 
+              style={{ ...styles.inputField, width: '200px' }}
+              value={selectedMerchantId}
+              onChange={(e) => setSelectedMerchantId(e.target.value)}
+              disabled={loading}
+            >
+              <option value="">All merchants (global operation)</option>
+              {merchants.map((merchant) => (
+                <option key={merchant.id} value={merchant.id}>
+                  {merchant.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
         <div>
           <button 

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, HttpStatus, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, HttpStatus, Delete, Query } from '@nestjs/common';
 import { DevService } from './dev.service';
 
 @Controller('dev')
@@ -11,27 +11,27 @@ export class DevController {
   }
 
   @Delete('punch-cards')
-  async removeAllPunchCards() {
-    return this.devService.removeAllPunchCards();
+  async removeAllPunchCards(@Query('merchantId') merchantId?: string) {
+    return this.devService.removeAllPunchCards(merchantId);
   }
 
   @Delete('users')
-  async removeAllUsers() {
-    return this.devService.removeAllUsers();
+  async removeAllUsers(@Query('merchantId') merchantId?: string) {
+    return this.devService.removeAllUsers(merchantId);
   }
 
   @Delete('loyalty-programs')
-  async removeAllLoyaltyPrograms() {
-    return this.devService.removeAllLoyaltyPrograms();
+  async removeAllLoyaltyPrograms(@Query('merchantId') merchantId?: string) {
+    return this.devService.removeAllLoyaltyPrograms(merchantId);
   }
 
   @Delete('merchants')
-  async removeAllMerchants() {
-    return this.devService.removeAllMerchants();
+  async removeAllMerchants(@Query('merchantId') merchantId?: string) {
+    return this.devService.removeAllMerchants(merchantId);
   }
 
   @Delete('all')
-  async removeAllData() {
-    return this.devService.removeAllData();
+  async removeAllData(@Query('merchantId') merchantId?: string) {
+    return this.devService.removeAllData(merchantId);
   }
 } 

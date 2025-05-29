@@ -79,28 +79,33 @@ export const apiClient = {
   },
 
   // Data removal endpoints
-  async removeAllPunchCards(): Promise<DevResponse> {
-    const response = await instance.delete<DevResponse>('/dev/punch-cards');
+  async removeAllPunchCards(merchantId?: string): Promise<DevResponse> {
+    const url = merchantId ? `/dev/punch-cards?merchantId=${merchantId}` : '/dev/punch-cards';
+    const response = await instance.delete<DevResponse>(url);
     return response.data;
   },
 
-  async removeAllUsers(): Promise<DevResponse> {
-    const response = await instance.delete<DevResponse>('/dev/users');
+  async removeAllUsers(merchantId?: string): Promise<DevResponse> {
+    const url = merchantId ? `/dev/users?merchantId=${merchantId}` : '/dev/users';
+    const response = await instance.delete<DevResponse>(url);
     return response.data;
   },
 
-  async removeAllLoyaltyPrograms(): Promise<DevResponse> {
-    const response = await instance.delete<DevResponse>('/dev/loyalty-programs');
+  async removeAllLoyaltyPrograms(merchantId?: string): Promise<DevResponse> {
+    const url = merchantId ? `/dev/loyalty-programs?merchantId=${merchantId}` : '/dev/loyalty-programs';
+    const response = await instance.delete<DevResponse>(url);
     return response.data;
   },
 
-  async removeAllMerchants(): Promise<DevResponse> {
-    const response = await instance.delete<DevResponse>('/dev/merchants');
+  async removeAllMerchants(merchantId?: string): Promise<DevResponse> {
+    const url = merchantId ? `/dev/merchants?merchantId=${merchantId}` : '/dev/merchants';
+    const response = await instance.delete<DevResponse>(url);
     return response.data;
   },
 
-  async removeAllData(): Promise<DevResponse> {
-    const response = await instance.delete<DevResponse>('/dev/all');
+  async removeAllData(merchantId?: string): Promise<DevResponse> {
+    const url = merchantId ? `/dev/all?merchantId=${merchantId}` : '/dev/all';
+    const response = await instance.delete<DevResponse>(url);
     return response.data;
   },
 
