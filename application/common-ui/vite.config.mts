@@ -12,7 +12,6 @@ export default defineConfig({
   ],
   define: {
     'global': 'globalThis',
-    'browser': 'undefined',
   },
   build: {
     sourcemap: true,

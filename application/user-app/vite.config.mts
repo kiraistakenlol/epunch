@@ -15,7 +15,6 @@ export default defineConfig(({mode}) => {
         define: {
             'process.env.NODE_ENV': JSON.stringify(mode),
             'global': 'globalThis',
-            'browser': 'undefined',
         },
         server: {
             port: parseInt(env.VITE_PORT || '5173', 10),
