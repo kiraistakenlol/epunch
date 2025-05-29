@@ -96,8 +96,7 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
     >
       <div className={styles.punchCardHeader}>
         <div className={styles.headerLeft}>
-          <LocationPinIcon />
-          {shopAddress}
+          <span className={styles.shopName}>{shopName}</span>
         </div>
         <div className={styles.headerRight}>
           {status === 'REWARD_READY' && <CheckCircleIcon />}
@@ -107,12 +106,11 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
         <div className={styles.punchCirclesContainer}>
           {punchCircles}
         </div>
-      </div>
-      <div className={styles.punchCardFooter}>
-        <span className={styles.shopName}>{shopName}</span>
         {loyaltyProgram && (
           <div className={styles.loyaltyProgramName}>{loyaltyProgram.name}</div>
         )}
+      </div>
+      <div className={styles.punchCardFooter}>
       </div>
       {isSelected && (
         <div className={styles.redemptionOverlay}>
