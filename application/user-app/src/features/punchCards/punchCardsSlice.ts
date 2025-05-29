@@ -2,14 +2,14 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { PunchCardDto, PunchCardStatusDto } from 'e-punch-common-core';
 import { apiClient } from 'e-punch-common-ui';
 
-export interface PunchCardWithAnimations extends PunchCardDto {
+export interface PunchCardState extends PunchCardDto {
   animateNewPunch?: boolean;
   animateNewCard?: boolean;
   animateRewardClaimed?: boolean;
 }
 
 export interface PunchCardsState {
-  cards: PunchCardWithAnimations[] | undefined;
+  cards: PunchCardState[] | undefined;
   isLoading: boolean;
   error: string | null;
   lastFetched: number | null;
@@ -65,7 +65,7 @@ const punchCardsSlice = createSlice({
         state.cards.push(action.payload);
       }
     },
-    updatePunchCardById: (state, action: PayloadAction<{ id: string; updates: Partial<PunchCardWithAnimations> }>) => {
+    updatePunchCardById: (state, action: PayloadAction<{ id: string; updates: Partial<PunchCardState> }>) => {
       if (!state.cards) return;
       const index = state.cards.findIndex(
         card => card.id === action.payload.id

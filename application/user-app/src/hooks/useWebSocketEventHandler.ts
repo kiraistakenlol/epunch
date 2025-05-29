@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useWebSocket } from './useWebSocket';
 import { selectUserId } from '../features/auth/authSlice';
-import { updatePunchCard, addPunchCard, type PunchCardWithAnimations } from '../features/punchCards/punchCardsSlice';
+import { updatePunchCard, addPunchCard, type PunchCardState } from '../features/punchCards/punchCardsSlice';
 import { AppEvent } from 'e-punch-common-core';
 import type { AppDispatch } from '../store/store';
 
@@ -23,18 +23,18 @@ export const useWebSocketEventHandler = () => {
 
       if (appEvent.type === 'PUNCH_ADDED') {
         const { punchCard, newCard } = appEvent;
-        const cardWithAnimation: PunchCardWithAnimations = { ...punchCard, animateNewPunch: true };
+        const cardWithAnimation: PunchCardState = { ...punchCard, animateNewPunch: true };
         dispatch(updatePunchCard(cardWithAnimation));
 
         if (newCard) {
-          const newCardWithAnimation: PunchCardWithAnimations = { ...newCard, animateNewCard: true };
+          const newCardWithAnimation: PunchCardState = { ...newCard, animateNewCard: true };
           dispatch(addPunchCard(newCardWithAnimation));
         }
       }
 
       if (appEvent.type === 'REWARD_CLAIMED') {
         const { card } = appEvent;
-        const cardWithAnimation: PunchCardWithAnimations = { ...card, animateRewardClaimed: true };
+        const cardWithAnimation: PunchCardState = { ...card, animateRewardClaimed: true };
         dispatch(updatePunchCard(cardWithAnimation));
       }
     }
