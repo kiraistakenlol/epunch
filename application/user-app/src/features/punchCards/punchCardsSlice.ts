@@ -71,7 +71,7 @@ const punchCardsSlice = createSlice({
       if (index !== -1) {
         state.cards[index] = action.payload;
       } else {
-        state.cards.push(action.payload);
+        state.cards.unshift(action.payload);
       }
     },
     updatePunchCardById: (state, action: PayloadAction<{ id: string; updates: Partial<PunchCardState> }>) => {
