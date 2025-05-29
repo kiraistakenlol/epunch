@@ -141,8 +141,27 @@ const DevPage: React.FC = () => {
   const [loyaltyPrograms, setLoyaltyPrograms] = useState<LoyaltyProgramDto[]>([]);
   const [selectedLoyaltyProgramId, setSelectedLoyaltyProgramId] = useState<string>('');
   
+  // Scenario Testing States
+  const [scenarioMerchantId, setScenarioMerchantId] = useState<string>('');
+  const [scenarioLoyaltyPrograms, setScenarioLoyaltyPrograms] = useState<LoyaltyProgramDto[]>([]);
+  const [scenarioLoyaltyProgramId, setScenarioLoyaltyProgramId] = useState<string>('');
+  const [selectedScenario, setSelectedScenario] = useState<string>('');
+  const [scenarioStatus, setScenarioStatus] = useState<string>('');
+  const [scenarioExecuting, setScenarioExecuting] = useState<boolean>(false);
+  
   const { connected, error: wsError, events, clearEvents } = useWebSocket();
   const { messages: consoleMessages, clearMessages: clearConsoleMessages } = useConsoleCapture();
+
+  // Available scenarios
+  const scenarios = {
+    'complete-card': {
+      name: 'Complete Card',
+      description: 'Sequentially send punches until the card is completed (rewardAchieved=true)',
+      requiresLoyaltyProgram: true,
+    },
+  } as const;
+
+  type ScenarioKey = keyof typeof scenarios;
 
   useEffect(() => {
     fetchMerchants();
@@ -156,6 +175,15 @@ const DevPage: React.FC = () => {
       setSelectedLoyaltyProgramId('');
     }
   }, [selectedMerchantId]);
+
+  useEffect(() => {
+    if (scenarioMerchantId) {
+      fetchScenarioLoyaltyPrograms(scenarioMerchantId);
+    } else {
+      setScenarioLoyaltyPrograms([]);
+      setScenarioLoyaltyProgramId('');
+    }
+  }, [scenarioMerchantId]);
 
   const fetchMerchants = async () => {
     try {
@@ -175,6 +203,17 @@ const DevPage: React.FC = () => {
     } catch (error: any) {
       console.error('Failed to fetch loyalty programs:', error);
       setTestPunchStatus(`Error loading loyalty programs: ${error.message}`);
+    }
+  };
+
+  const fetchScenarioLoyaltyPrograms = async (merchantId: string) => {
+    try {
+      const programs = await apiClient.getMerchantLoyaltyPrograms(merchantId);
+      setScenarioLoyaltyPrograms(programs);
+      setScenarioLoyaltyProgramId('');
+    } catch (error: any) {
+      console.error('Failed to fetch scenario loyalty programs:', error);
+      setScenarioStatus(`Error loading loyalty programs: ${error.message}`);
     }
   };
 
@@ -276,6 +315,74 @@ const DevPage: React.FC = () => {
       setTestPunchStatus(`Punch Error: ${error.response?.data?.message || error.message || 'Failed to record punch.'}`);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const executeCompleteCardScenario = async () => {
+    if (!userId) {
+      setScenarioStatus("Error: No user ID available. Please set a user ID first.");
+      return;
+    }
+
+    if (!scenarioLoyaltyProgramId) {
+      setScenarioStatus("Error: Please select a loyalty program.");
+      return;
+    }
+
+    setScenarioExecuting(true);
+    setScenarioStatus("Starting Complete Card scenario...");
+
+    try {
+      let punchCount = 0;
+      let rewardAchieved = false;
+      let maxPunches = 50; // Safety limit to prevent infinite loops
+
+      while (!rewardAchieved && punchCount < maxPunches) {
+        punchCount++;
+        setScenarioStatus(`Sending punch ${punchCount}...`);
+
+        try {
+          const result = await apiClient.recordPunch(userId, scenarioLoyaltyProgramId);
+          rewardAchieved = result.rewardAchieved;
+          
+          setScenarioStatus(`Punch ${punchCount}: ${result.current_punches}/${result.required_punches} punches. Reward achieved: ${rewardAchieved}`);
+          
+          if (rewardAchieved) {
+            setScenarioStatus(`✅ Scenario completed! Card completed after ${punchCount} punches. Final status: ${result.current_punches}/${result.required_punches}, Reward achieved: ${result.rewardAchieved}`);
+            break;
+          }
+
+          // Wait 500ms before next punch
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        } catch (error: any) {
+          setScenarioStatus(`❌ Error on punch ${punchCount}: ${error.response?.data?.message || error.message}`);
+          break;
+        }
+      }
+
+      if (punchCount >= maxPunches && !rewardAchieved) {
+        setScenarioStatus(`⚠️ Scenario stopped: Reached maximum punch limit (${maxPunches}) without completing card.`);
+      }
+
+    } catch (error: any) {
+      setScenarioStatus(`❌ Scenario failed: ${error.message}`);
+    } finally {
+      setScenarioExecuting(false);
+    }
+  };
+
+  const executeScenario = async () => {
+    if (!selectedScenario) {
+      setScenarioStatus("Error: Please select a scenario.");
+      return;
+    }
+
+    switch (selectedScenario) {
+      case 'complete-card':
+        await executeCompleteCardScenario();
+        break;
+      default:
+        setScenarioStatus(`Error: Unknown scenario "${selectedScenario}".`);
     }
   };
 
@@ -767,6 +874,84 @@ const DevPage: React.FC = () => {
               })
             )}
           </div>
+        </div>
+      </DevSection>
+
+      <DevSection title="Scenario Testing">
+        <div style={styles.userInfo}>
+          <p><strong>Current User ID:</strong> {userId || 'Not set'}</p>
+          <p><strong>Current Scenario:</strong> {selectedScenario ? scenarios[selectedScenario as ScenarioKey].name : 'Not selected'}</p>
+          <p style={{ fontSize: '12px', color: '#666', margin: '5px 0' }}>
+            {selectedScenario ? scenarios[selectedScenario as ScenarioKey].description : 'Select a scenario to execute'}
+          </p>
+        </div>
+        <div>
+          <h3>Select Merchant and Loyalty Program</h3>
+          <div style={{ marginBottom: '10px' }}>
+            <select 
+              style={{ ...styles.inputField, width: '200px' }}
+              value={scenarioMerchantId}
+              onChange={(e) => setScenarioMerchantId(e.target.value)}
+              disabled={scenarioExecuting}
+            >
+              <option value="">Select a merchant...</option>
+              {merchants.map((merchant) => (
+                <option key={merchant.id} value={merchant.id}>
+                  {merchant.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div style={{ marginBottom: '10px' }}>
+            <select 
+              style={{ ...styles.inputField, width: '300px' }}
+              value={scenarioLoyaltyProgramId}
+              onChange={(e) => setScenarioLoyaltyProgramId(e.target.value)}
+              disabled={scenarioExecuting || !scenarioMerchantId}
+            >
+              <option value="">Select a loyalty program...</option>
+              {scenarioLoyaltyPrograms.map((program) => (
+                <option key={program.id} value={program.id}>
+                  {program.name} ({program.requiredPunches} punches)
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+        <div>
+          <h3>Select Scenario</h3>
+          <div style={{ marginBottom: '10px' }}>
+            <select 
+              style={{ ...styles.inputField, width: '300px' }}
+              value={selectedScenario}
+              onChange={(e) => setSelectedScenario(e.target.value)}
+              disabled={scenarioExecuting}
+            >
+              <option value="">Select a scenario...</option>
+              {Object.entries(scenarios).map(([key, scenario]) => (
+                <option key={key} value={key}>
+                  {scenario.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button 
+            style={styles.button} 
+            onClick={executeScenario}
+            disabled={scenarioExecuting || !selectedScenario || !userId || !scenarioLoyaltyProgramId}
+          >
+            {scenarioExecuting ? 'Executing...' : 'Execute Scenario'}
+          </button>
+        </div>
+        <div>
+          <h4>Scenario Result:</h4>
+          <pre style={{
+            ...styles.statusBox,
+            color: scenarioStatus.startsWith('Error:') || scenarioStatus.startsWith('❌') ? 'red' : 
+                   scenarioStatus.startsWith('✅') ? 'green' : 'black'
+          }}>
+            {scenarioStatus || 'No scenario executed yet'}
+          </pre>
         </div>
       </DevSection>
     </div>
