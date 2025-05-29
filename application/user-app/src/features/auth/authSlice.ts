@@ -8,6 +8,7 @@ export const LOCAL_STORAGE_USER_ID_KEY = 'epunch_user_id';
 export interface AuthState {
   userId: string | null;
   isAuthenticated: boolean;
+  superAdmin: boolean;
   isLoading: boolean;
   error: string | null;
   cognitoUser: GetCurrentUserOutput | null;
@@ -16,6 +17,7 @@ export interface AuthState {
 const initialState: AuthState = {
   userId: null,
   isAuthenticated: false,
+  superAdmin: false,
   isLoading: true,
   error: null,
   cognitoUser: null,
@@ -52,7 +54,8 @@ export const initializeUser = createAsyncThunk<void, void, {}>(
       const backendUser = await apiClient.getCurrentUser(idToken);
       console.log('Got backend user data:', {
         id: backendUser.id,
-        email: backendUser.email
+        email: backendUser.email,
+        superAdmin: backendUser.superAdmin
       });
       
       // Update state with authenticated user data
@@ -60,6 +63,7 @@ export const initializeUser = createAsyncThunk<void, void, {}>(
       dispatch(setUserId(backendUser.id));
       dispatch(setCognitoUser(cognitoUser));
       dispatch(setAuthenticated(true));
+      dispatch(setSuperAdmin(backendUser.superAdmin));
       console.log('Successfully initialized authenticated user');
       
     } catch (error) {
@@ -81,6 +85,9 @@ const authSlice = createSlice({
     },
     setAuthenticated: (state, action: PayloadAction<boolean>) => {
       state.isAuthenticated = action.payload;
+    },
+    setSuperAdmin: (state, action: PayloadAction<boolean>) => {
+      state.superAdmin = action.payload;
     },
     setCognitoUser: (state, action: PayloadAction<GetCurrentUserOutput | null>) => {
       state.cognitoUser = action.payload;
@@ -105,6 +112,7 @@ const authSlice = createSlice({
 export const {
   setUserId,
   setAuthenticated,
+  setSuperAdmin,
   setCognitoUser,
 } = authSlice.actions;
 
@@ -119,6 +127,7 @@ export const getOrInitializeUserIdFromLocalStorage = (): string => {
 
 export const selectUserId = (state: { auth: AuthState }) => state.auth.userId;
 export const selectIsAuthenticated = (state: { auth: AuthState }) => state.auth.isAuthenticated;
+export const selectSuperAdmin = (state: { auth: AuthState }) => state.auth.superAdmin;
 export const selectAuthLoading = (state: { auth: AuthState }) => state.auth.isLoading;
 export const selectAuthError = (state: { auth: AuthState }) => state.auth.error;
 

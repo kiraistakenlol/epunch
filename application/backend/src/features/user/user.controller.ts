@@ -12,7 +12,8 @@ export class UserController {
   async getCurrentUser(@User(true) user: CurrentUser): Promise<UserDto> {
     return {
       id: user.id,
-      email: user.email
+      email: user.email,
+      superAdmin: user.superAdmin
     };
   }
 

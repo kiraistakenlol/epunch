@@ -6,6 +6,7 @@ export interface User {
   email?: string;
   external_id?: string;
   external_provider?: string;
+  super_admin?: boolean;
   created_at: Date;
 }
 

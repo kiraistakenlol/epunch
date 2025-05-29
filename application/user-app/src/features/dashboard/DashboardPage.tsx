@@ -3,11 +3,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import QRCode from '../qrCode/QRCode';
 import PunchCardsSection from './PunchCardsSection';
 import AuthContainer from '../auth/AuthContainer';
+import AppHeader from '../../components/AppHeader';
+import SignOutModal from '../../components/SignOutModal';
 import styles from './DashboardPage.module.css';
 import type { RootState } from '../../store/store';
-import { selectUserId, selectIsAuthenticated, selectAuthLoading } from '../auth/authSlice';
+import { selectUserId, selectAuthLoading } from '../auth/authSlice';
 import { selectPunchCards, updatePunchCardById } from '../punchCards/punchCardsSlice';
-import { AppHeader, SignOutModal } from 'e-punch-common-ui';
 import { signOut } from 'aws-amplify/auth';
 import { useAppSelector } from '../../store/hooks';
 import type { QRValueDto } from 'e-punch-common-core';
@@ -16,7 +17,6 @@ const DashboardPage: React.FC = () => {
   const dispatch = useDispatch();
   const isAuthLoading = useAppSelector(selectAuthLoading);
   const userId = useSelector((state: RootState) => selectUserId(state));
-  const isAuthenticated = useSelector((state: RootState) => selectIsAuthenticated(state));
   const punchCards = useSelector((state: RootState) => selectPunchCards(state));
   const [isSignOutModalOpen, setIsSignOutModalOpen] = useState(false);
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
@@ -89,12 +89,7 @@ const DashboardPage: React.FC = () => {
 
   return (
     <div className={styles.pageContainer}>
-      <AppHeader 
-        title="EPunch" 
-        showProfileMenu={isAuthenticated}
-        onSignOut={handleSignOut}
-        showDevLink={true}
-      />
+      <AppHeader onSignOut={handleSignOut} />
       {!isAuthLoading && <AuthContainer />}
 
       <main className={styles.mainContent} onClick={handleMainContentClick}>

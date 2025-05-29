@@ -3,7 +3,7 @@ import { Hub } from 'aws-amplify/utils';
 import { getCurrentUser, fetchAuthSession, signOut } from 'aws-amplify/auth';
 import { config } from './env';
 import type { AppDispatch } from '../store/store';
-import { getOrInitializeUserIdFromLocalStorage, setAuthenticated, setCognitoUser, setUserId } from '../features/auth/authSlice';
+import { getOrInitializeUserIdFromLocalStorage, setAuthenticated, setCognitoUser, setUserId, setSuperAdmin } from '../features/auth/authSlice';
 import { apiClient } from 'e-punch-common-ui';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -69,6 +69,7 @@ export const setupAuthListener = (dispatch: AppDispatch) => {
           dispatch(setUserId(authResponse.user.id));
           dispatch(setCognitoUser(user));
           dispatch(setAuthenticated(true));
+          dispatch(setSuperAdmin(authResponse.user.superAdmin));
         } catch (error) {
           console.error('Error getting current user after sign in. Signing out.', error);
           signOut();
@@ -78,6 +79,7 @@ export const setupAuthListener = (dispatch: AppDispatch) => {
       case 'signedOut':
         console.log('User signed out');
         dispatch(setAuthenticated(false));
+        dispatch(setSuperAdmin(false));
         dispatch(setCognitoUser(null));
         dispatch(setUserId(uuidv4()));
         break;

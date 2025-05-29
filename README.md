@@ -13,7 +13,7 @@ Users have a personal QR code and digital punch cards for various businesses. Bu
 * Personal QR code for quick punch collection
 * Track punch progress across different loyalty programs
 * Automatic reward notifications when punch cards are complete
-* Development mode for testing and debugging (`/dev` route and `/api/v1/dev` endpoint)
+* Development mode for testing and debugging (`/dev` route and `/api/v1/dev` endpoint) - **restricted to super admin users only**
 
 ## Planning
 
@@ -36,7 +36,7 @@ The development scripts (`run-user-app.sh`, `run-merchant-app.sh`, and `build-co
 
 1. When running `./build-common.sh`, the script will:
    - Build the common-core package (TypeScript compilation)
-   - Build the common-ui package (Vite build with React components)
+   - Build the common-ui package (Vite build with API client and styles)
    - Clean the `.vite` cache directories in both user-app and merchant-app
 
 2. When running `./run-user-app.sh` or `./run-merchant-app.sh`, each script will:
@@ -75,7 +75,7 @@ This approach ensures that changes to the common packages are always visible wit
 
 ## Core Entities
 
-1.  **User:** The customer.
+1.  **User:** The customer. Can optionally be a super admin with access to development tools.
 2.  **Merchant:** The business offering loyalty programs.
 3.  **Loyalty Program:** Defines the rules and reward for a specific merchant offer (e.g., "10 punches for a free coffee").
 4.  **Punch Card:** Tracks a specific user's progress in a loyalty program.
@@ -114,9 +114,28 @@ The application includes a development mode accessible at `/dev` route and `/api
 * Viewing system state
 * Debugging features
 
+**Access Control:** Development mode is restricted to authenticated users with super admin privileges. The dev link only appears in the app header for super admin users.
+
 Development application is available at: https://narrow-ai-epunch.vercel.app/dev
 
 This mode is disabled in production environments through environment configuration.
+
+### Super Admin System
+
+The application includes a super admin role for privileged users:
+
+**Database Schema:**
+- `super_admin` boolean column in the user table (default: false)
+
+**Features:**
+- Access to development mode (`/dev` route)
+- Enhanced debugging capabilities
+- Admin-only features in the user interface
+
+**Implementation:**
+- Backend tracks super admin status in user entity
+- Frontend Redux state manages super admin flag
+- UI components conditionally render based on super admin status
 
 ### Deployment Scripts
 
@@ -191,7 +210,7 @@ application/
 ├── user-app/      # React user-app code
 ├── merchant-app/  # React merchant-app code
 ├── common-core/   # Shared core types, DTOs, constants (no React dependencies)
-└── common-ui/     # Shared UI components and API client (React-based)
+└── common-ui/     # Shared API client and styles (no UI components)
 
 infra/
 ├── backend/              # Backend infrastructure
@@ -217,17 +236,18 @@ terraform/
         └── README.md     # Deployment instructions
 ```
 * `common-core/` contains shared TypeScript types, DTOs, and constants used by all applications.
-* `common-ui/` contains shared React UI components, API client, and bundled CSS (Bootstrap + Bootstrap Icons + mobile-first base styles).
+* `common-ui/` contains shared API client and bundled CSS (Bootstrap + Bootstrap Icons + mobile-first base styles). UI components have been moved to app-specific locations.
 * `backend/` imports from `common-core/` for DTOs and types.
 * `user-app/` and `merchant-app/` import from both `common-core/` and `common-ui/`.
 * `infra/` contains all infrastructure and deployment configurations.
 
 #### Common-UI Package Structure
 The `common-ui` package is built as a Vite library and includes:
-* **React Components:** Shared UI components using React Bootstrap
 * **Bundled CSS:** Single CSS file containing Bootstrap, Bootstrap Icons, and mobile-first base styles
 * **API Client:** Configured Axios client for backend communication
-* **TypeScript Types:** Component prop types and interfaces
+* **TypeScript Types:** API-related types and interfaces
+
+**Note:** UI components (AppHeader, EPunchModal, SignOutModal) have been moved from `common-ui` to `user-app/src/components/` for better separation of concerns.
 
 **CSS Import Pattern:**
 ```css
@@ -248,15 +268,17 @@ src/
 │   └── images/
 │   └── fonts/
 │
-├── components/           # Reusable UI components
-│   ├── common/           # Very general components (Button, Input, Modal, Icon etc.)
-│   └── layout/           # Layout components (Header, Footer, PageWrapper etc.)
+├── components/           # Reusable UI components (moved from common-ui)
+│   ├── AppHeader.tsx     # Application header with auth-aware nav
+│   ├── EPunchModal.tsx   # Base modal component
+│   └── SignOutModal.tsx  # Sign out confirmation modal
 │
 ├── features/             # Feature-specific components, hooks, and Redux slices
-│   ├── auth/             # Example: Authentication feature
+│   ├── auth/             # Authentication feature
 │   │   ├── LoginPage.tsx
-│   │   └── authSlice.ts
-│   └── punchCards/       # Example: Punch card management feature
+│   │   ├── authSlice.ts  # Includes superAdmin state management
+│   │   └── AuthModal.tsx
+│   └── punchCards/       # Punch card management feature
 │       ├── PunchCardListPage.tsx
 │       └── punchCardSlice.ts
 │
@@ -278,7 +300,7 @@ src/
 
 **Key Principles for Frontend Structure:**
 *   **Features First:** Code is primarily organized by user-facing features to promote modularity and co-location of related logic (UI, state, specific hooks).
-*   **Common Components:** Truly generic and reusable UI elements reside in `components/common/`.
+*   **App-Specific Components:** UI components that are only used in one app are kept within that app rather than in common-ui.
 *   **Minimalism:** Start with essential folders and expand as needed. Avoid premature abstraction.
 
 #### Merchant App Directory Structure (`application/merchant-app/src/`)
@@ -302,16 +324,20 @@ src/
 ├── core/                # Core application code
 │   ├── interceptors/    # Global interceptors
 │   ├── filters/         # Global exception filters
-│   └── types/          # Common types and interfaces
+│   ├── types/          # Common types and interfaces (includes CurrentUser with superAdmin)
+│   └── middleware/     # JWT auth middleware (includes superAdmin handling)
 │
 ├── database/            # Database connection and configuration
 │   └── database.module.ts # PostgreSQL connection pool setup
 │
 ├── features/           # Feature modules
-│   ├── auth/          # Authentication feature
+│   ├── auth/          # Authentication feature (includes superAdmin logic)
 │   │   ├── auth.module.ts
 │   │   ├── auth.controller.ts
 │   │   └── auth.service.ts
+│   ├── user/          # User management (includes superAdmin field)
+│   │   ├── user.repository.ts
+│   │   └── user.controller.ts
 │   └── punch-cards/   # Punch card management feature
 │       ├── punch-cards.module.ts
 │       ├── punch-cards.controller.ts
@@ -332,6 +358,7 @@ src/
 ### Database Schema Management
 * Database schema managed directly through [Supabase Dashboard](https://supabase.com/dashboard/project/tdkfpgplsbjcblhfzurc)
 * SQL migrations can be created and tracked in version control
+* **Super Admin Field:** `super_admin` boolean column in user table (default: false)
 
 ### Implementation Guidelines
 
@@ -343,12 +370,14 @@ src/
 
 **Common-UI Package**
 - Built as a Vite library with bundled CSS containing Bootstrap, Bootstrap Icons, and mobile-first base styles.
-- Components use React Bootstrap for consistent UI patterns.
+- No longer contains UI components - focuses on API client and shared styles.
 - CSS is imported once per app in `global.css` files, not in individual components.
-- Package exports both JavaScript components and CSS bundle via separate entry points.
+- Package exports API client and CSS bundle via separate entry points.
 
 **User App (Frontend)**
 - For real-time updates, implement polling or server-sent events from backend API
+- UI components are now app-specific and located in `src/components/`
+- Super admin functionality integrated into auth state management
 
 **Merchant App (Frontend)**
 - For QR code scanning and punch operations.
@@ -361,3 +390,4 @@ src/
 - Consistent error handling.
 - Direct PostgreSQL access through repositories with SQL queries.
 - Use connection pooling for database performance.
+- Super admin field included in user entities and authentication flow.

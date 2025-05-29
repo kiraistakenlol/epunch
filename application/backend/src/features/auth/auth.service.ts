@@ -35,7 +35,8 @@ export class AuthService {
     return {
       user: {
         id: user.id,
-        email: user.email!
+        email: user.email!,
+        superAdmin: user.super_admin || false
       } as UserDto,
     };
   }

@@ -1,11 +1,11 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Dropdown } from 'react-bootstrap';
+import { RootState } from '../store/store';
+import { selectIsAuthenticated, selectSuperAdmin } from '../features/auth/authSlice';
 
 interface AppHeaderProps {
-  title?: string;
-  showProfileMenu?: boolean;
   onSignOut?: () => void;
-  showDevLink?: boolean;
 }
 
 const headerStyle: React.CSSProperties = {
@@ -60,12 +60,14 @@ const devLinkStyle: React.CSSProperties = {
   transform: "translateY(-50%)"
 };
 
-const AppHeader: React.FC<AppHeaderProps> = ({ 
-  title = "E PUNCH.IO", 
-  showProfileMenu = false, 
-  onSignOut,
-  showDevLink = false
-}) => {
+const AppHeader: React.FC<AppHeaderProps> = ({ onSignOut }) => {
+  const isAuthenticated = useSelector((state: RootState) => selectIsAuthenticated(state));
+  const isSuperAdmin = useSelector((state: RootState) => selectSuperAdmin(state));
+
+  const title = "EPunch";
+  const showProfileMenu = isAuthenticated;
+  const showDevLink = isSuperAdmin;
+
   return (
     <header style={headerStyle}>
       {showDevLink && (

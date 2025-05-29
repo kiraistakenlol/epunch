@@ -4,6 +4,7 @@ CREATE TABLE "user" (
     email TEXT UNIQUE NOT NULL,
     external_id TEXT UNIQUE,
     external_provider TEXT,
+    super_admin BOOLEAN NOT NULL DEFAULT false,
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 

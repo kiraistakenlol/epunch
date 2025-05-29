@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { EPunchModal } from 'e-punch-common-ui';
+import EPunchModal from '../../components/EPunchModal';
 import EmailAuthForm from './EmailAuthForm';
 import { signInWithRedirect } from 'aws-amplify/auth';
 

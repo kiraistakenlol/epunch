@@ -2,4 +2,5 @@ export interface CurrentUser {
   id: string;
   email: string;
   externalId: string;
+  superAdmin: boolean;
 } 

@@ -43,8 +43,9 @@ export class JwtAuthMiddleware implements NestMiddleware {
         req.currentUser = {
           id: user.id,
           email: user.email!,
-          externalId: user.external_id!
-        };
+          externalId: user.external_id!,
+          superAdmin: user.super_admin || false
+        } as CurrentUser;
       }
     } catch (error) {
       this.logger.warn('Failed to decode JWT token:', error);
