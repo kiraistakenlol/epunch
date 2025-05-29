@@ -10,24 +10,30 @@ export const useLoyaltyProgramsSync = () => {
   const loyaltyPrograms = useSelector((state: RootState) => selectLoyaltyPrograms(state));
 
   useEffect(() => {
+    console.log('useLoyaltyProgramsSync effect triggered');
+    console.log('punchCards:', punchCards);
+    console.log('loyaltyPrograms state:', loyaltyPrograms);
+    
     if (!punchCards || punchCards.length === 0) {
+      console.log('No punch cards, returning early');
       return;
     }
 
-    // Get unique loyalty program IDs from punch cards
     const requiredLoyaltyProgramIds = [...new Set(
       punchCards.map(card => card.loyaltyProgramId)
     )];
+    console.log('Required loyalty program IDs:', requiredLoyaltyProgramIds);
 
-    // Find missing loyalty programs (not yet loaded)
     const missingLoyaltyProgramIds = requiredLoyaltyProgramIds.filter(
       id => !loyaltyPrograms[id]
     );
+    console.log('Missing loyalty program IDs:', missingLoyaltyProgramIds);
 
-    // Fetch missing loyalty programs
     if (missingLoyaltyProgramIds.length > 0) {
       console.log('Fetching missing loyalty programs:', missingLoyaltyProgramIds);
       dispatch(fetchLoyaltyPrograms(missingLoyaltyProgramIds));
+    } else {
+      console.log('All loyalty programs already loaded');
     }
   }, [punchCards, loyaltyPrograms, dispatch]);
 }; 

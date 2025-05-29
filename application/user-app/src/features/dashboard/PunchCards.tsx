@@ -15,6 +15,7 @@ import {
   clearSelectedCard
 } from '../punchCards/punchCardsSlice';
 import { useAppSelector } from '../../store/hooks';
+import { useLoyaltyProgramsSync } from '../loyaltyPrograms/useLoyaltyProgramsSync';
 
 interface PunchCardsProps {}
 
@@ -29,6 +30,8 @@ const PunchCards: React.FC<PunchCardsProps> = () => {
   
   const [showEmptyState, setShowEmptyState] = useState(false);
   const cardRefs = useRef<{ [cardId: string]: HTMLDivElement | null }>({});
+
+  useLoyaltyProgramsSync();
 
   useEffect(() => {
     if (userId) {
