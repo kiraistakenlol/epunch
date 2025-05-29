@@ -159,6 +159,11 @@ const DevPage: React.FC = () => {
       description: 'Sequentially send punches until the card is completed (rewardAchieved=true)',
       requiresLoyaltyProgram: true,
     },
+    'multi-program-test': {
+      name: 'Multi-Program Test',
+      description: 'Remove all cards, then add punches to two different loyalty programs with 2s delay',
+      requiresLoyaltyProgram: false,
+    },
   } as const;
 
   type ScenarioKey = keyof typeof scenarios;
@@ -371,6 +376,62 @@ const DevPage: React.FC = () => {
     }
   };
 
+  const executeMultiProgramTestScenario = async () => {
+    if (!userId) {
+      setScenarioStatus("Error: No user ID available. Please set a user ID first.");
+      return;
+    }
+
+    if (!scenarioMerchantId) {
+      setScenarioStatus("Error: Please select a merchant.");
+      return;
+    }
+
+    setScenarioExecuting(true);
+    setScenarioStatus("Starting Multi-Program Test scenario...");
+
+    try {
+      // Step 1: Remove all punch cards
+      setScenarioStatus("Step 1: Removing all punch cards...");
+      await apiClient.removeAllPunchCards();
+      setScenarioStatus("✅ All punch cards removed successfully.");
+
+      // Step 2: Get loyalty programs for the selected merchant
+      setScenarioStatus("Step 2: Fetching loyalty programs for selected merchant...");
+      const programs = await apiClient.getMerchantLoyaltyPrograms(scenarioMerchantId);
+      
+      if (programs.length < 2) {
+        setScenarioStatus(`❌ Error: Selected merchant has only ${programs.length} loyalty program(s). Need at least 2 programs for this scenario.`);
+        return;
+      }
+
+      const program1 = programs[0];
+      const program2 = programs[1];
+      setScenarioStatus(`Found programs: "${program1.name}" and "${program2.name}"`);
+
+      // Step 3: Send punch to first loyalty program
+      setScenarioStatus(`Step 3: Sending punch to "${program1.name}"...`);
+      const result1 = await apiClient.recordPunch(userId, program1.id);
+      setScenarioStatus(`✅ Punch recorded for "${program1.name}": ${result1.current_punches}/${result1.required_punches} punches`);
+
+      // Step 4: Wait 2 seconds
+      setScenarioStatus("Waiting 2 seconds...");
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Step 5: Send punch to second loyalty program
+      setScenarioStatus(`Step 4: Sending punch to "${program2.name}"...`);
+      const result2 = await apiClient.recordPunch(userId, program2.id);
+      setScenarioStatus(`✅ Punch recorded for "${program2.name}": ${result2.current_punches}/${result2.required_punches} punches`);
+
+      setScenarioStatus(`✅ Scenario completed! Successfully punched both programs:\n- ${program1.name}: ${result1.current_punches}/${result1.required_punches}\n- ${program2.name}: ${result2.current_punches}/${result2.required_punches}`);
+
+    } catch (error: any) {
+      setScenarioStatus(`❌ Scenario failed: ${error.response?.data?.message || error.message}`);
+    } finally {
+      setScenarioExecuting(false);
+    }
+  };
+
   const executeScenario = async () => {
     if (!selectedScenario) {
       setScenarioStatus("Error: Please select a scenario.");
@@ -380,6 +441,9 @@ const DevPage: React.FC = () => {
     switch (selectedScenario) {
       case 'complete-card':
         await executeCompleteCardScenario();
+        break;
+      case 'multi-program-test':
+        await executeMultiProgramTestScenario();
         break;
       default:
         setScenarioStatus(`Error: Unknown scenario "${selectedScenario}".`);
@@ -907,9 +971,17 @@ const DevPage: React.FC = () => {
               style={{ ...styles.inputField, width: '300px' }}
               value={scenarioLoyaltyProgramId}
               onChange={(e) => setScenarioLoyaltyProgramId(e.target.value)}
-              disabled={scenarioExecuting || !scenarioMerchantId}
+              disabled={
+                scenarioExecuting || 
+                !scenarioMerchantId || 
+                (selectedScenario ? !scenarios[selectedScenario as ScenarioKey].requiresLoyaltyProgram : false)
+              }
             >
-              <option value="">Select a loyalty program...</option>
+              <option value="">
+                {selectedScenario && !scenarios[selectedScenario as ScenarioKey].requiresLoyaltyProgram 
+                  ? 'Not required for this scenario' 
+                  : 'Select a loyalty program...'}
+              </option>
               {scenarioLoyaltyPrograms.map((program) => (
                 <option key={program.id} value={program.id}>
                   {program.name} ({program.requiredPunches} punches)
@@ -938,7 +1010,13 @@ const DevPage: React.FC = () => {
           <button 
             style={styles.button} 
             onClick={executeScenario}
-            disabled={scenarioExecuting || !selectedScenario || !userId || !scenarioLoyaltyProgramId}
+            disabled={
+              scenarioExecuting || 
+              !selectedScenario || 
+              !userId || 
+              !scenarioMerchantId ||
+              (selectedScenario ? scenarios[selectedScenario as ScenarioKey].requiresLoyaltyProgram && !scenarioLoyaltyProgramId : false)
+            }
           >
             {scenarioExecuting ? 'Executing...' : 'Execute Scenario'}
           </button>
