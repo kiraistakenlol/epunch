@@ -48,6 +48,22 @@ const linkStyle: React.CSSProperties = {
   textDecoration: 'underline',
 };
 
+const backLinkStyle: React.CSSProperties = {
+  color: '#666',
+  cursor: 'pointer',
+  fontSize: '14px',
+  marginBottom: '15px',
+  display: 'block',
+};
+
+const backButtonStyle: React.CSSProperties = {
+  ...buttonStyle,
+  backgroundColor: '#f8f9fa',
+  color: '#6c757d',
+  border: '1px solid #dee2e6',
+  marginBottom: '15px',
+};
+
 
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode }) => {
@@ -60,6 +76,13 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode }) =
     setShowEmailForm(false);
     setError(null);
   }, [initialMode]);
+
+  useEffect(() => {
+    if (isOpen) {
+      setShowEmailForm(false);
+      setError(null);
+    }
+  }, [isOpen]);
 
   const handleGoogleAuth = async () => {
     try {
@@ -91,6 +114,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode }) =
     setError(null);
   };
 
+  const handleBackToOptions = () => {
+    setShowEmailForm(false);
+    setError(null);
+  };
+
   return (
     <EPunchModal
       isOpen={isOpen}
@@ -111,11 +139,16 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode }) =
       )}
 
       {showEmailForm ? (
-        <EmailAuthForm
-          mode={mode}
-          onSuccess={handleEmailSuccess}
-          onError={handleEmailError}
-        />
+        <>
+          <div style={backLinkStyle} onClick={handleBackToOptions}>
+            ← Back
+          </div>
+          <EmailAuthForm
+            mode={mode}
+            onSuccess={handleEmailSuccess}
+            onError={handleEmailError}
+          />
+        </>
       ) : (
         <>
           <button
