@@ -59,6 +59,12 @@ const DashboardPage: React.FC = () => {
     }
   };
 
+  const handleMainContentClick = (event: React.MouseEvent) => {
+    if (selectedCardId) {
+        setSelectedCardId(null);
+    }
+  };
+
   const selectedCard = punchCards?.find(card => card.id === selectedCardId);
   const isRewardMode = selectedCard?.status === 'REWARD_READY';
   
@@ -91,7 +97,7 @@ const DashboardPage: React.FC = () => {
       />
       {!isAuthLoading && <AuthContainer />}
 
-      <main className={styles.mainContent}>
+      <main className={styles.mainContent} onClick={handleMainContentClick}>
         <div className={styles.qrSection}>
           <div className={styles.qrCodeContainer}>
             {qrValue && (
