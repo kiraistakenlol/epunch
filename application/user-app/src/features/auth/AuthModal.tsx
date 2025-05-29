@@ -56,16 +56,6 @@ const backLinkStyle: React.CSSProperties = {
   display: 'block',
 };
 
-const backButtonStyle: React.CSSProperties = {
-  ...buttonStyle,
-  backgroundColor: '#f8f9fa',
-  color: '#6c757d',
-  border: '1px solid #dee2e6',
-  marginBottom: '15px',
-};
-
-
-
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode }) => {
   const [mode, setMode] = useState<'signin' | 'signup'>(initialMode);
   const [showEmailForm, setShowEmailForm] = useState(false);
