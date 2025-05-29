@@ -59,7 +59,7 @@ const DashboardPage: React.FC = () => {
     }
   };
 
-  const handleMainContentClick = (event: React.MouseEvent) => {
+  const handleMainContentClick = () => {
     if (selectedCardId) {
         setSelectedCardId(null);
     }

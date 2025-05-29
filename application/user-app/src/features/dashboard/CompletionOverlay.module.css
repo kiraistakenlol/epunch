@@ -1,0 +1,250 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  padding: 40px 20px;
+  max-width: 90vw;
+}
+
+.completeText {
+  color: #f5f5dc;
+  font-size: 3em;
+  font-weight: 900;
+  text-align: center;
+  margin: 0;
+  text-shadow: 
+    0 0 10px rgba(245, 245, 220, 0.8),
+    0 0 20px rgba(245, 245, 220, 0.6),
+    0 0 30px rgba(245, 245, 220, 0.4);
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+.cardContainer {
+  perspective: 1000px;
+}
+
+.card {
+  background-color: #8d6e63;
+  border-radius: 12px;
+  width: 320px;
+  height: 240px;
+  box-shadow: 
+    0 8px 20px rgba(76, 175, 80, 1),
+    0 4px 12px rgba(76, 175, 80, 0.8),
+    0 0 30px rgba(76, 175, 80, 0.6);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: cardCelebration 2s ease-out;
+}
+
+.cardHeader {
+  background-color: #5d4037;
+  color: #f5f5dc;
+  padding: 15px 20px;
+  border-radius: 12px 12px 0 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.shopName {
+  color: #f5f5dc;
+  font-size: 1.4em;
+  font-weight: bold;
+  text-align: center;
+}
+
+.cardBody {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.punchCirclesContainer {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  width: 100%;
+  justify-items: center;
+  max-width: 250px;
+}
+
+.punchCircle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #5d4037;
+  animation: punchPop 0.3s ease-out;
+  animation-fill-mode: both;
+}
+
+.punchCircle:nth-child(1) { animation-delay: 0.1s; }
+.punchCircle:nth-child(2) { animation-delay: 0.2s; }
+.punchCircle:nth-child(3) { animation-delay: 0.3s; }
+.punchCircle:nth-child(4) { animation-delay: 0.4s; }
+.punchCircle:nth-child(5) { animation-delay: 0.5s; }
+.punchCircle:nth-child(6) { animation-delay: 0.6s; }
+.punchCircle:nth-child(7) { animation-delay: 0.7s; }
+.punchCircle:nth-child(8) { animation-delay: 0.8s; }
+.punchCircle:nth-child(9) { animation-delay: 0.9s; }
+.punchCircle:nth-child(10) { animation-delay: 1.0s; }
+
+.loyaltyProgramName {
+  color: #2e1501;
+  font-size: 1em;
+  font-weight: 900;
+  font-style: italic;
+  text-align: center;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+.okButton {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 15px 40px;
+  font-size: 1.8em;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 
+    0 4px 12px rgba(76, 175, 80, 0.6),
+    0 0 20px rgba(76, 175, 80, 0.4);
+  transition: all 0.3s ease;
+  animation: buttonPulse 2s ease-in-out infinite;
+}
+
+.okButton:hover {
+  background-color: #45a049;
+  transform: scale(1.05);
+  box-shadow: 
+    0 6px 16px rgba(76, 175, 80, 0.8),
+    0 0 30px rgba(76, 175, 80, 0.6);
+}
+
+.okButton:active {
+  transform: scale(0.98);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes glow {
+  0% {
+    text-shadow: 
+      0 0 10px rgba(245, 245, 220, 0.8),
+      0 0 20px rgba(245, 245, 220, 0.6),
+      0 0 30px rgba(245, 245, 220, 0.4);
+  }
+  100% {
+    text-shadow: 
+      0 0 15px rgba(245, 245, 220, 1),
+      0 0 30px rgba(245, 245, 220, 0.8),
+      0 0 45px rgba(245, 245, 220, 0.6);
+  }
+}
+
+@keyframes cardCelebration {
+  0% {
+    transform: scale(0.3) rotateY(-180deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1) rotateY(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes punchPop {
+  0% {
+    transform: scale(0);
+    background-color: #ffd700;
+  }
+  70% {
+    transform: scale(1.3);
+    background-color: #ff9800;
+  }
+  100% {
+    transform: scale(1);
+    background-color: #5d4037;
+  }
+}
+
+@keyframes buttonPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 400px) {
+  .completeText {
+    font-size: 2.5em;
+  }
+  
+  .card {
+    width: 280px;
+    height: 200px;
+  }
+  
+  .punchCircle {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .okButton {
+    font-size: 1.5em;
+    padding: 12px 30px;
+  }
+}
+
+@media (max-height: 600px) {
+  .content {
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .completeText {
+    font-size: 2em;
+  }
+  
+  .card {
+    width: 260px;
+    height: 180px;
+  }
+} 
