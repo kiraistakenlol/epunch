@@ -12,7 +12,10 @@ import {
   clearPunchCards,
   selectSelectedCardId,
   setSelectedCardId,
-  clearSelectedCard
+  clearSelectedCard,
+  selectScrollTargetCardId,
+  clearScrollTarget,
+  scrollToCard
 } from '../punchCards/punchCardsSlice';
 import { useAppSelector } from '../../store/hooks';
 import { useLoyaltyProgramsSync } from '../loyaltyPrograms/useLoyaltyProgramsSync';
@@ -25,6 +28,7 @@ const PunchCards: React.FC<PunchCardsProps> = () => {
   const isAuthLoading = useAppSelector(selectAuthLoading);
   const punchCards = useSelector((state: RootState) => selectPunchCards(state));
   const selectedCardId = useSelector((state: RootState) => selectSelectedCardId(state));
+  const scrollTargetCardId = useSelector((state: RootState) => selectScrollTargetCardId(state));
   const isLoading = useSelector((state: RootState) => selectPunchCardsLoading(state));
   const error = useSelector((state: RootState) => selectPunchCardsError(state));
   
@@ -53,6 +57,20 @@ const PunchCards: React.FC<PunchCardsProps> = () => {
       setShowEmptyState(false);
     }
   }, [isLoading, error, punchCards]);
+
+  // Handle scrolling to target card
+  useEffect(() => {
+    if (scrollTargetCardId && cardRefs.current[scrollTargetCardId]) {
+      const cardElement = cardRefs.current[scrollTargetCardId];
+      cardElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center'
+      });
+      // Clear the scroll target after scrolling
+      dispatch(clearScrollTarget());
+    }
+  }, [scrollTargetCardId, dispatch]);
 
   const getCardAnimations = () => {
     const slideInCards = new Set<string>();
@@ -88,11 +106,25 @@ const PunchCards: React.FC<PunchCardsProps> = () => {
   ) || [];
 
   const handleCardClick = (cardId: string) => {
-    if (selectedCardId === cardId) {
-      dispatch(clearSelectedCard());
+    // Handle selection logic for reward-ready cards first
+    const clickedCard = cardsToRender.find(card => card.id === cardId);
+    if (clickedCard?.status === 'REWARD_READY') {
+      if (selectedCardId === cardId) {
+        // If clicking the currently selected card, deselect it
+        dispatch(clearSelectedCard());
+      } else {
+        // If clicking a different card (or no card selected), select the new one
+        dispatch(setSelectedCardId(cardId));
+      }
     } else {
-      dispatch(setSelectedCardId(cardId));
+      // If clicking a non-REWARD_READY card, clear any existing selection
+      if (selectedCardId) {
+        dispatch(clearSelectedCard());
+      }
     }
+    
+    // Then scroll to the clicked card to ensure it's fully visible
+    dispatch(scrollToCard(cardId));
   };
 
   const renderContent = () => {

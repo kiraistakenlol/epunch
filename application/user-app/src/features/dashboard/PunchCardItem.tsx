@@ -50,8 +50,11 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
     );
   }
 
-  const handleClick = () => {
-    if (status === 'REWARD_READY' && onCardClick) {
+  const handleClick = (event: React.MouseEvent) => {
+    // Prevent event bubbling to avoid triggering main content click handler
+    event.stopPropagation();
+    
+    if (onCardClick) {
       onCardClick(id);
     }
   };
@@ -71,7 +74,7 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
     <div 
       className={cardClasses}
       onClick={handleClick}
-      style={{ cursor: status === 'REWARD_READY' ? 'pointer' : 'default', position: 'relative' }}
+      style={{ cursor: 'pointer', position: 'relative' }}
     >
       <div className={styles.punchCardHeader}>
         <div className={styles.headerLeft}>

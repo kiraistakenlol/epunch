@@ -1,7 +1,7 @@
 import { AnimationStep, advanceToNextStep } from './animationSlice';
 import { showAlert, hideAlert } from '../alert/alertSlice';
 import { showOverlay } from '../dashboard/completionOverlaySlice';
-import { updatePunchCardById } from '../punchCards/punchCardsSlice';
+import { updatePunchCardById, scrollToCard } from '../punchCards/punchCardsSlice';
 import type { AppDispatch } from '../../store/store';
 
 export class ShowPunchAnimation extends AnimationStep {
@@ -135,6 +135,22 @@ export class ShowNewCardAnimation extends AnimationStep {
       
       dispatch(advanceToNextStep());
     }, 600);
+  }
+}
+
+export class ScrollToCard extends AnimationStep {
+  constructor(private cardId: string) {
+    super();
+  }
+
+  execute(dispatch: AppDispatch) {
+    // Trigger scroll to card
+    dispatch(scrollToCard(this.cardId));
+    
+    // Auto-advance immediately since scrolling doesn't need to block
+    setTimeout(() => {
+      dispatch(advanceToNextStep());
+    }, 100);
   }
 }
 

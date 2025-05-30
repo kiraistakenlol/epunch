@@ -4,7 +4,7 @@ import { useWebSocket } from './useWebSocket';
 import { selectUserId } from '../features/auth/authSlice';
 import { updatePunchCard, addPunchCard, type PunchCardState } from '../features/punchCards/punchCardsSlice';
 import { startSequence } from '../features/animations/animationSlice';
-import { ShowPunchAnimation, ShowCompletionOverlay, HighlightCard, ShowNewCardAnimation, ShowRewardClaimedAnimation } from '../features/animations/animationSteps';
+import { ShowPunchAnimation, ShowCompletionOverlay, HighlightCard, ShowNewCardAnimation, ShowRewardClaimedAnimation, ScrollToCard } from '../features/animations/animationSteps';
 import { Delay, WaitForEvent } from '../features/animations/animationSlice';
 import { AppEvent } from 'e-punch-common-core';
 import type { AppDispatch } from '../store/store';
@@ -44,6 +44,7 @@ export const useWebSocketEventHandler = () => {
 
           // Start complex animation sequence
           const animationSequence = [
+            new ScrollToCard(punchCard.id),
             new ShowPunchAnimation(punchCard.id, punchCard.currentPunches - 1),
             new ShowCompletionOverlay(punchCard.id),
             new WaitForEvent('COMPLETION_OVERLAY_CLOSED'),
@@ -59,6 +60,7 @@ export const useWebSocketEventHandler = () => {
           
           // Start simple animation sequence
           const animationSequence = [
+            new ScrollToCard(punchCard.id),
             new ShowPunchAnimation(punchCard.id, punchCard.currentPunches - 1)
           ];
 
