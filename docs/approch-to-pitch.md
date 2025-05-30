@@ -1,0 +1,5 @@
+- alwasy ask for negative feedback and what is the main concern about starting usin the app
+- how do you feel when using the user's flow
+- what stops them from trying this app out?
+- what has to be changed/added?
+- ...
