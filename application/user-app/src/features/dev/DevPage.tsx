@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from '../../store/store';
 import { LOCAL_STORAGE_USER_ID_KEY, selectUserId, setUserId } from '../auth/authSlice';
-import { selectSelectedCard, selectPunchCards } from '../punchCards/punchCardsSlice';
 import { apiClient } from 'e-punch-common-ui';
 import { useWebSocket } from '../../hooks/useWebSocket';
 import { webSocketClient } from '../../api/websocketClient';
@@ -131,8 +130,6 @@ const styles = {
 
 const DevPage: React.FC = () => {
   const userId = useSelector((state: RootState) => selectUserId(state));
-  const selectedCard = useSelector((state: RootState) => selectSelectedCard(state));
-  const punchCards = useSelector((state: RootState) => selectPunchCards(state));
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [apiStatus, setApiStatus] = useState<string>('No API calls made yet');
@@ -1219,7 +1216,7 @@ const DevPage: React.FC = () => {
               maxHeight: '200px',
               fontSize: '11px'
             }}>
-              {userPunchCards.map((card, index) => (
+              {userPunchCards.map((card) => (
                 <div key={card.id} style={{
                   marginBottom: '8px',
                   padding: '6px',
