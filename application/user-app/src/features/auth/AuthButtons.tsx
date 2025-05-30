@@ -5,16 +5,6 @@ interface AuthButtonsProps {
   onSignUpClick: () => void;
 }
 
-const containerStyle: React.CSSProperties = {
-  backgroundColor: '#f5f5dc',
-  padding: '12px 20px',
-  display: 'flex',
-  justifyContent: 'center',
-  gap: '12px',
-  borderBottom: '1px solid #e0e0e0',
-  marginTop: '70px',
-};
-
 const buttonBaseStyle: React.CSSProperties = {
   padding: '8px 16px',
   border: 'none',
@@ -39,9 +29,15 @@ const signUpButtonStyle: React.CSSProperties = {
   border: '1px solid #ff9500',
 };
 
+const buttonContainerStyle: React.CSSProperties = {
+  display: 'flex',
+  justifyContent: 'center',
+  gap: '12px',
+};
+
 const AuthButtons: React.FC<AuthButtonsProps> = ({ onSignInClick, onSignUpClick }) => {
   return (
-    <div style={containerStyle}>
+    <div style={buttonContainerStyle}>
       <button 
         style={signInButtonStyle}
         onClick={onSignInClick}
