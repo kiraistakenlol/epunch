@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from '../../store/store';
 import { LOCAL_STORAGE_USER_ID_KEY, selectUserId, setUserId } from '../auth/authSlice';
-import { selectSelectedCard, selectPunchCards, updatePunchCard, clearSelectedCard } from '../punchCards/punchCardsSlice';
+import { selectSelectedCard, selectPunchCards } from '../punchCards/punchCardsSlice';
 import { apiClient } from 'e-punch-common-ui';
 import { useWebSocket } from '../../hooks/useWebSocket';
 import { webSocketClient } from '../../api/websocketClient';

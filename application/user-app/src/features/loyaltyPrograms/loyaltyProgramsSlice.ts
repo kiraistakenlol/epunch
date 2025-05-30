@@ -21,14 +21,10 @@ export const fetchLoyaltyPrograms = createAsyncThunk<
 >(
   'loyaltyPrograms/fetchLoyaltyPrograms',
   async (programIds, { rejectWithValue }) => {
-    console.log('fetchLoyaltyPrograms thunk started with IDs:', programIds);
     try {
-      console.log('About to call apiClient.getLoyaltyPrograms with IDs:', programIds);
       const result = await apiClient.getLoyaltyPrograms(programIds);
-      console.log('apiClient.getLoyaltyPrograms returned:', result);
       return result;
     } catch (error: any) {
-      console.error('fetchLoyaltyPrograms thunk error:', error);
       return rejectWithValue(error.message || 'Failed to fetch loyalty programs');
     }
   }

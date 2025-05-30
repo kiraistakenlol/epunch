@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { PunchCardDto } from 'e-punch-common-core';
-import { useAppSelector } from '../../store/hooks';
+import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { selectLoyaltyProgramById } from '../loyaltyPrograms/loyaltyProgramsSlice';
+import { handleEvent } from '../animations/animationSlice';
 import styles from './DashboardPage.module.css';
 
 interface PunchCardItemProps extends PunchCardDto {
@@ -37,6 +38,43 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
   animateRewardClaimed
 }) => {
   const loyaltyProgram = useAppSelector(state => selectLoyaltyProgramById(state, loyaltyProgramId));
+  const dispatch = useAppDispatch();
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Listen for CSS animation events
+  useEffect(() => {
+    const cardElement = cardRef.current;
+    if (!cardElement) return;
+
+    const handleAnimationEnd = (e: AnimationEvent) => {
+      console.log('Animation ended:', e.animationName, 'on card:', id, 'target:', e.target);
+      
+      // Map CSS animation names to our event names
+      // Note: CSS modules may hash animation names, so we check for contains instead of exact match
+      if (e.animationName.includes('newPunchAnimation')) {
+        console.log('→ Dispatching PUNCH_ANIMATION_COMPLETE');
+        dispatch(handleEvent('PUNCH_ANIMATION_COMPLETE'));
+      } else if (e.animationName.includes('highlightReward')) {
+        console.log('→ Dispatching HIGHLIGHT_ANIMATION_COMPLETE');
+        dispatch(handleEvent('HIGHLIGHT_ANIMATION_COMPLETE'));
+      } else if (e.animationName.includes('slideInFromLeft')) {
+        console.log('→ Dispatching SLIDE_IN_ANIMATION_COMPLETE');
+        dispatch(handleEvent('SLIDE_IN_ANIMATION_COMPLETE'));
+      } else if (e.animationName.includes('slideOutAndFade')) {
+        console.log('→ Dispatching SLIDE_OUT_ANIMATION_COMPLETE for reward claimed');
+        dispatch(handleEvent('SLIDE_OUT_ANIMATION_COMPLETE'));
+      } else {
+        console.log('→ Unhandled animation name:', e.animationName);
+      }
+    };
+
+    // Listen for animation events from any child element (including punch circles)
+    cardElement.addEventListener('animationend', handleAnimationEnd, true);
+    
+    return () => {
+      cardElement.removeEventListener('animationend', handleAnimationEnd, true);
+    };
+  }, [id, dispatch]);
 
   const punchCircles = [];
   for (let i = 0; i < totalPunches; i++) {
@@ -72,6 +110,7 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
 
   return (
     <div 
+      ref={cardRef}
       className={cardClasses}
       onClick={handleClick}
       style={{ cursor: 'pointer', position: 'relative' }}

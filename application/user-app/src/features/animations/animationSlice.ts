@@ -2,9 +2,19 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export abstract class AnimationStep {
   abstract execute(dispatch: any): void;
+  
+  // Return event name to wait for after execution, or null for immediate advancement
+  getWaitForEvent(): string | null {
+    return null;
+  }
+  
+  // Called automatically when the waited-for event is received
+  cleanup(_dispatch: any): void {
+    // Override in subclasses that need cleanup
+  }
 }
 
-export class Delay {
+export class Wait {
   constructor(private ms: number) { }
   getDuration() { return this.ms; }
 }
@@ -14,12 +24,15 @@ export class WaitForEvent {
   getEventName() { return this.eventName; }
 }
 
-export type SequenceItem = AnimationStep | Delay | WaitForEvent;
+export type SequenceItem = AnimationStep | Wait | WaitForEvent;
 
 export interface AnimationState {
   sequence: SequenceItem[];
   currentStepIndex: number;
   isRunning: boolean;
+  waitingForEvent?: string;
+  pendingCleanupStep?: AnimationStep;
+  receivedEvent?: string; // Store the last received event
 }
 
 const initialState: AnimationState = {
@@ -36,6 +49,9 @@ const animationSlice = createSlice({
       state.sequence = action.payload;
       state.currentStepIndex = 0;
       state.isRunning = true;
+      state.waitingForEvent = undefined;
+      state.pendingCleanupStep = undefined;
+      state.receivedEvent = undefined;
     },
 
     advanceToNextStep: (state) => {
@@ -43,42 +59,38 @@ const animationSlice = createSlice({
         state.sequence = [];
         state.currentStepIndex = 0;
         state.isRunning = false;
+        state.waitingForEvent = undefined;
+        state.pendingCleanupStep = undefined;
+        state.receivedEvent = undefined;
         return;
       }
       state.currentStepIndex += 1;
+      state.waitingForEvent = undefined;
+      state.pendingCleanupStep = undefined;
+      state.receivedEvent = undefined;
     },
 
     stopSequence: (state) => {
       state.sequence = [];
       state.currentStepIndex = 0;
       state.isRunning = false;
+      state.waitingForEvent = undefined;
+      state.pendingCleanupStep = undefined;
+      state.receivedEvent = undefined;
+    },
+
+    setWaitingForEvent: (state, action: PayloadAction<{ eventName: string, step: AnimationStep }>) => {
+      state.waitingForEvent = action.payload.eventName;
+      state.pendingCleanupStep = action.payload.step;
     },
 
     handleEvent: (state, action: PayloadAction<string>) => {
-      console.log('handleEvent called with:', action.payload, 'current state:', { isRunning: state.isRunning, currentStepIndex: state.currentStepIndex });
+      console.log('handleEvent: received event', action.payload);
+      state.receivedEvent = action.payload;
+    },
 
-      if (!state.isRunning) return;
-
-      const currentItem = state.sequence[state.currentStepIndex];
-      console.log('Current item:', currentItem);
-
-      if (currentItem instanceof WaitForEvent &&
-        currentItem.getEventName() === action.payload) {
-        console.log('Event matches current WaitForEvent, advancing to next step');
-
-        // Advance to next step
-        if (state.currentStepIndex >= state.sequence.length - 1) {
-          console.log('Sequence completed');
-          state.sequence = [];
-          state.currentStepIndex = 0;
-          state.isRunning = false;
-        } else {
-          console.log('Advancing to step:', state.currentStepIndex + 1);
-          state.currentStepIndex += 1;
-        }
-      } else {
-        console.log('Event does not match current item or not waiting for event');
-      }
+    clearReceivedEvent: (state) => {
+      state.receivedEvent = undefined;
     }
   }
 });
@@ -87,7 +99,9 @@ export const {
   startSequence,
   advanceToNextStep,
   stopSequence,
-  handleEvent
+  setWaitingForEvent,
+  handleEvent,
+  clearReceivedEvent
 } = animationSlice.actions;
 
 export const selectAnimationState = (state: { animations: AnimationState }) => state.animations;

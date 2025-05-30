@@ -27,49 +27,28 @@ export const initializeUser = createAsyncThunk<void, void, {}>(
   'auth/initializeUser',
   async (_, { dispatch }) => {
     const userId = getOrInitializeUserIdFromLocalStorage();
-    console.log('Setting initial userId:', userId);
     dispatch(setUserId(userId));
 
     try {
-      console.log('Starting user authentication check...');
-      
-      console.log('Fetching auth session...');
       const session = await fetchAuthSession();
       const idToken = session.tokens?.idToken?.toString();
       
       if (!idToken) {
-        console.log('No authentication token found in session:', session);
         return;
       }
 
-      console.log('Found ID token, fetching Cognito user details...');
       const cognitoUser = await getCurrentUser();
-      console.log('Got Cognito user details:', {
-        username: cognitoUser.username,
-        userId: cognitoUser.userId,
-        signInDetails: cognitoUser.signInDetails
-      });
       
-      console.log('Fetching user data from backend with ID token...');
       const backendUser = await apiClient.getCurrentUser(idToken);
-      console.log('Got backend user data:', {
-        id: backendUser.id,
-        email: backendUser.email,
-        superAdmin: backendUser.superAdmin
-      });
       
       // Update state with authenticated user data
-      console.log('Updating Redux state with authenticated user data...');
       dispatch(setUserId(backendUser.id));
       dispatch(setCognitoUser(cognitoUser));
       dispatch(setAuthenticated(true));
       dispatch(setSuperAdmin(backendUser.superAdmin));
-      console.log('Successfully initialized authenticated user');
       
     } catch (error) {
       console.error('Error during user initialization:', error);
-      console.log('Keeping fallback user ID:', userId);
-      console.log('User will remain in unauthenticated state');
     }
   }
 );

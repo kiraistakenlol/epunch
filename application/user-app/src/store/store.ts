@@ -20,8 +20,8 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ['animations/startSequence'],
-        ignoredPaths: ['animations.sequence'],
+        ignoredActions: ['animations/startSequence', 'animations/setWaitingForEvent'],
+        ignoredPaths: ['animations.sequence', 'animations.pendingCleanupStep'],
       },
     }),
 });
