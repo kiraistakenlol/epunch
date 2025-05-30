@@ -170,16 +170,25 @@ export class ShowRewardClaimedAnimation extends AnimationStep {
     // Auto-cleanup after animation duration (1s for slideOutAndFade)
     setTimeout(() => {
       this.cleanup(dispatch);
-    }, 1200); // Slightly longer than animation duration for safety
+    }, 3000); // Slightly longer than animation duration for safety
   }
 
   cleanup(dispatch: AppDispatch) {
+    // First clear the animation flag
     dispatch(updatePunchCardById({
       id: this.cardId,
       updates: { 
         animationFlags: { 
           rewardClaimedAnimation: false
         }
+      }
+    }));
+    
+    // Then update the card status to REWARD_REDEEMED so it gets filtered out
+    dispatch(updatePunchCardById({
+      id: this.cardId,
+      updates: { 
+        status: 'REWARD_REDEEMED'
       }
     }));
     

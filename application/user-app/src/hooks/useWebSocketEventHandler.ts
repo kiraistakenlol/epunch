@@ -79,8 +79,6 @@ export const useWebSocketEventHandler = () => {
         
         console.log('REWARD_CLAIMED event received:', card);
         
-        dispatch(updatePunchCard(card));
-
         const animationSequence = [
           new ShowRewardClaimedAnimation(card.id)
         ];
