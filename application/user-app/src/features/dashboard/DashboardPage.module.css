@@ -218,16 +218,28 @@
 }
 
 .statusREWARD_READY {
-  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.4);
-  animation: rewardGlow 2s ease-in-out infinite alternate;
+  box-shadow: 
+    0 4px 8px rgba(76, 175, 80, 0.6),
+    0 0 20px rgba(76, 175, 80, 0.8),
+    0 0 40px rgba(76, 175, 80, 0.4);
+  animation: rewardGlow 1.5s ease-in-out infinite alternate;
 }
 
 @keyframes rewardGlow {
   0% {
-    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.4);
+    box-shadow: 
+      0 4px 8px rgba(76, 175, 80, 0.6),
+      0 0 20px rgba(76, 175, 80, 0.8),
+      0 0 40px rgba(76, 175, 80, 0.4);
+    transform: scale(1);
   }
   100% {
-    box-shadow: 0 6px 12px rgba(76, 175, 80, 0.6);
+    box-shadow: 
+      0 6px 15px rgba(76, 175, 80, 0.8),
+      0 0 35px rgba(76, 175, 80, 1),
+      0 0 70px rgba(76, 175, 80, 0.6),
+      0 0 100px rgba(76, 175, 80, 0.3);
+    transform: scale(1.02);
   }
 }
 
