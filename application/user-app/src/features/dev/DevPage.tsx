@@ -3,11 +3,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from '../../store/store';
 import { LOCAL_STORAGE_USER_ID_KEY, selectUserId, setUserId } from '../auth/authSlice';
+import { selectSelectedCard, selectPunchCards, updatePunchCard, clearSelectedCard } from '../punchCards/punchCardsSlice';
 import { apiClient } from 'e-punch-common-ui';
 import { useWebSocket } from '../../hooks/useWebSocket';
 import { webSocketClient } from '../../api/websocketClient';
 import { useConsoleCapture, ConsoleMessage } from '../../hooks/useConsoleCapture';
-import type { MerchantDto, LoyaltyProgramDto } from 'e-punch-common-core';
+import type { MerchantDto, LoyaltyProgramDto, PunchCardDto } from 'e-punch-common-core';
 
 
 // Reusable collapsible section component
@@ -130,16 +131,24 @@ const styles = {
 
 const DevPage: React.FC = () => {
   const userId = useSelector((state: RootState) => selectUserId(state));
+  const selectedCard = useSelector((state: RootState) => selectSelectedCard(state));
+  const punchCards = useSelector((state: RootState) => selectPunchCards(state));
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [apiStatus, setApiStatus] = useState<string>('No API calls made yet');
   const [loading, setLoading] = useState<boolean>(false);
   const [customUserId, setCustomUserId] = useState<string>('412dbe6d-e933-464e-87e2-31fe9c9ee6ac');
   const [testPunchStatus, setTestPunchStatus] = useState<string>('');
+  const [redeemStatus, setRedeemStatus] = useState<string>('');
   const [merchants, setMerchants] = useState<MerchantDto[]>([]);
   const [selectedMerchantId, setSelectedMerchantId] = useState<string>('');
   const [loyaltyPrograms, setLoyaltyPrograms] = useState<LoyaltyProgramDto[]>([]);
   const [selectedLoyaltyProgramId, setSelectedLoyaltyProgramId] = useState<string>('');
+  
+  // Card Redemption States
+  const [userPunchCards, setUserPunchCards] = useState<PunchCardDto[]>([]);
+  const [selectedCardId, setSelectedCardId] = useState<string>('');
+  const [loadingCards, setLoadingCards] = useState<boolean>(false);
   
   // Scenario Testing States
   const [scenarioMerchantId, setScenarioMerchantId] = useState<string>('');
@@ -452,6 +461,77 @@ const DevPage: React.FC = () => {
         setScenarioStatus(`Error: Unknown scenario "${selectedScenario}".`);
     }
   };
+
+  const fetchUserPunchCards = async () => {
+    if (!userId) {
+      setRedeemStatus("Error: No user ID available. Please set a user ID first.");
+      return;
+    }
+
+    setLoadingCards(true);
+    setRedeemStatus("Fetching punch cards...");
+
+    try {
+      const cards = await apiClient.getUserPunchCards(userId);
+      setUserPunchCards(cards);
+      setSelectedCardId('');
+      setRedeemStatus(`Fetched ${cards.length} punch cards successfully.`);
+    } catch (error: any) {
+      console.error('Failed to fetch punch cards:', error);
+      setRedeemStatus(`Error fetching cards: ${error.message || 'Unknown error'}`);
+      setUserPunchCards([]);
+    } finally {
+      setLoadingCards(false);
+    }
+  };
+
+  const handleRedeemSelectedCard = async () => {
+    if (!selectedCardId) {
+      setRedeemStatus("Redeem Error: No card selected. Please select a punch card first.");
+      return;
+    }
+
+    const selectedCard = userPunchCards.find(card => card.id === selectedCardId);
+    if (!selectedCard) {
+      setRedeemStatus("Redeem Error: Selected card not found.");
+      return;
+    }
+
+    if (selectedCard.status !== 'REWARD_READY') {
+      setRedeemStatus(`Redeem Error: Card is not ready for redemption. Current status: ${selectedCard.status}`);
+      return;
+    }
+
+    setLoading(true);
+    setRedeemStatus("Processing redemption...");
+
+    try {
+      console.log(`Attempting to redeem punch card: ${selectedCard.id}`);
+      const redeemedCard = await apiClient.redeemPunchCard(selectedCard.id);
+      
+      // Update the local cards list
+      setUserPunchCards(prev => 
+        prev.map(card => card.id === redeemedCard.id ? redeemedCard : card)
+      );
+      
+      setRedeemStatus(`Redeem Success: Card for ${redeemedCard.shopName} redeemed successfully! Status: ${redeemedCard.status}`);
+    } catch (error: any) {
+      console.error('Redeem error:', error);
+      setRedeemStatus(`Redeem Error: ${error.response?.data?.message || error.message || 'Failed to redeem punch card.'}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Auto-fetch cards when userId changes
+  useEffect(() => {
+    if (userId) {
+      fetchUserPunchCards();
+    } else {
+      setUserPunchCards([]);
+      setSelectedCardId('');
+    }
+  }, [userId]);
 
   return (
     <div style={styles.container}>
@@ -1055,6 +1135,108 @@ const DevPage: React.FC = () => {
             {scenarioStatus || 'No scenario executed yet'}
           </pre>
         </div>
+      </DevSection>
+
+      <DevSection title="Card Redemption Testing" defaultExpanded={true}>
+        <div style={styles.userInfo}>
+          <p><strong>Current User ID:</strong> {userId || 'Not set'}</p>
+          <p><strong>Total Punch Cards:</strong> {userPunchCards.length}</p>
+          <p><strong>Reward Ready Cards:</strong> {userPunchCards.filter(card => card.status === 'REWARD_READY').length}</p>
+          <p style={{ fontSize: '12px', color: '#666', margin: '5px 0' }}>
+            Cards are automatically fetched when user ID changes. Select a REWARD_READY card to redeem it.
+          </p>
+        </div>
+        <div>
+          <button 
+            style={styles.button} 
+            onClick={fetchUserPunchCards}
+            disabled={loading || loadingCards || !userId}
+          >
+            {loadingCards ? 'Loading...' : 'Refresh Punch Cards'}
+          </button>
+        </div>
+        <div style={{ marginTop: '10px' }}>
+          <h4>Select Card to Redeem:</h4>
+          <select 
+            style={{ ...styles.inputField, width: '400px' }}
+            value={selectedCardId}
+            onChange={(e) => setSelectedCardId(e.target.value)}
+            disabled={loading || loadingCards || userPunchCards.length === 0}
+          >
+            <option value="">Select a punch card...</option>
+            {userPunchCards.map((card) => (
+              <option key={card.id} value={card.id}>
+                {card.shopName} - {card.currentPunches}/{card.totalPunches} punches - {card.status}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div style={{ marginTop: '10px' }}>
+          <button 
+            style={{
+              ...styles.button,
+              backgroundColor: selectedCardId && userPunchCards.find(c => c.id === selectedCardId)?.status === 'REWARD_READY' ? '#4caf50' : '#9e9e9e',
+              cursor: selectedCardId && userPunchCards.find(c => c.id === selectedCardId)?.status === 'REWARD_READY' ? 'pointer' : 'not-allowed'
+            }}
+            onClick={handleRedeemSelectedCard}
+            disabled={loading || !selectedCardId || userPunchCards.find(c => c.id === selectedCardId)?.status !== 'REWARD_READY'}
+          >
+            {selectedCardId && userPunchCards.find(c => c.id === selectedCardId)?.status === 'REWARD_READY' ? 'Redeem Selected Card' : 'Select a Reward Ready Card'}
+          </button>
+          {selectedCardId && (
+            <button 
+              style={styles.button} 
+              onClick={() => setSelectedCardId('')}
+              disabled={loading}
+            >
+              Clear Selection
+            </button>
+          )}
+        </div>
+        <div>
+          <h4>Redemption Status:</h4>
+          <pre style={{
+            ...styles.statusBox,
+            color: redeemStatus.startsWith('Redeem Error:') || redeemStatus.startsWith('Error') ? 'red' : 
+                   redeemStatus.startsWith('Redeem Success:') ? 'green' : 'black'
+          }}>
+            {redeemStatus || 'No operations performed yet'}
+          </pre>
+        </div>
+        {selectedCardId && userPunchCards.find(c => c.id === selectedCardId) && (
+          <div>
+            <h4>Selected Card Details:</h4>
+            <pre style={styles.statusBox}>
+              {JSON.stringify(userPunchCards.find(c => c.id === selectedCardId), null, 2)}
+            </pre>
+          </div>
+        )}
+        {userPunchCards.length > 0 && (
+          <div>
+            <h4>All User Punch Cards:</h4>
+            <div style={{ 
+              ...styles.statusBox, 
+              maxHeight: '200px',
+              fontSize: '11px'
+            }}>
+              {userPunchCards.map((card, index) => (
+                <div key={card.id} style={{
+                  marginBottom: '8px',
+                  padding: '6px',
+                  backgroundColor: card.status === 'REWARD_READY' ? '#e8f5e8' : '#f5f5f5',
+                  borderRadius: '3px',
+                  borderLeft: `3px solid ${card.status === 'REWARD_READY' ? '#4caf50' : card.status === 'REWARD_REDEEMED' ? '#ff9800' : '#2196f3'}`
+                }}>
+                  <strong>{card.shopName}</strong> - {card.currentPunches}/{card.totalPunches} punches
+                  <br />
+                  <span style={{ fontSize: '10px', color: '#666' }}>
+                    Status: {card.status} | ID: {card.id.substring(0, 8)}...
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </DevSection>
     </div>
   );
