@@ -62,11 +62,13 @@ const PunchCards: React.FC<PunchCardsProps> = () => {
   useEffect(() => {
     if (scrollTargetCardId && cardRefs.current[scrollTargetCardId]) {
       const cardElement = cardRefs.current[scrollTargetCardId];
-      cardElement.scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-        inline: 'center'
-      });
+      if (cardElement) {
+        cardElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'center'
+        });
+      }
       // Clear the scroll target after scrolling
       dispatch(clearScrollTarget());
     }
