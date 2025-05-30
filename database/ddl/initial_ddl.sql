@@ -13,6 +13,7 @@ CREATE TABLE merchant (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name TEXT NOT NULL,
     address TEXT,
+    slug TEXT UNIQUE NOT NULL,
     login TEXT UNIQUE,
     password_hash TEXT,
     created_at TIMESTAMP NOT NULL DEFAULT NOW()

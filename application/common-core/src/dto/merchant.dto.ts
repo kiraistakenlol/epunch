@@ -2,7 +2,8 @@ export interface MerchantDto {
   id: string;
   name: string;
   address: string | null;
-  email: string;
+  slug: string;
+  email: string; // todo remove this once merchantUser concept is implemented
   createdAt: string;
 }
 

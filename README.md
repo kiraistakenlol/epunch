@@ -62,6 +62,17 @@ The project includes several convenience scripts for development:
 2.  After buying something and the manager scans my QR code for the first time:
     *   I see a new "Cafe B Punch Card" appear in my list on `epunch.io`, starting with 1 punch (or 0).
 
+### QR Code Onboarding
+
+Merchants can generate QR codes linking to `https://app.com/?merchantSlug=merchant-name`. When users scan these codes:
+
+1. The app automatically fetches the merchant's active loyalty programs
+2. Creates punch cards for all programs the user doesn't already have
+3. Adds new cards to the user's dashboard immediately
+4. Cleans the URL to show just the main app
+
+This enables seamless onboarding without requiring users to manually search for or enroll in loyalty programs.
+
 ## Merchant Journey
 
 TODO

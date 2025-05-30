@@ -6,6 +6,7 @@ export interface Merchant {
   id: string;
   name: string;
   address: string | null;
+  slug: string;
   login?: string;
   password_hash?: string;
   created_at: Date;
@@ -41,6 +42,7 @@ export class MerchantRepository {
       id: row.id,
       name: row.name,
       address: row.address,
+      slug: row.slug,
       email: row.login || '',
       createdAt: row.created_at.toISOString(),
     }));
@@ -53,6 +55,16 @@ export class MerchantRepository {
     `;
     
     const result = await this.pool.query(query, [merchantId]);
+    return result.rows[0] || null;
+  }
+
+  async findMerchantBySlug(slug: string): Promise<Merchant | null> {
+    const query = `
+      SELECT * FROM merchant 
+      WHERE slug = $1
+    `;
+    
+    const result = await this.pool.query(query, [slug]);
     return result.rows[0] || null;
   }
 
@@ -72,6 +84,7 @@ export class MerchantRepository {
         lp.*,
         m.name as merchant_name,
         m.address as merchant_address,
+        m.slug as merchant_slug,
         m.created_at as merchant_created_at
       FROM loyalty_program lp
       JOIN merchant m ON lp.merchant_id = m.id
@@ -92,6 +105,7 @@ export class MerchantRepository {
         id: row.merchant_id,
         name: row.merchant_name,
         address: row.merchant_address,
+        slug: row.merchant_slug,
         email: '',
         createdAt: row.merchant_created_at.toISOString(),
       },
@@ -131,6 +145,7 @@ export class MerchantRepository {
         id: merchant!.id,
         name: merchant!.name,
         address: merchant!.address,
+        slug: merchant!.slug,
         email: merchant!.login || '',
         createdAt: merchant!.created_at.toISOString(),
       },
@@ -198,6 +213,7 @@ export class MerchantRepository {
         id: merchant!.id,
         name: merchant!.name,
         address: merchant!.address,
+        slug: merchant!.slug,
         email: merchant!.login || '',
         createdAt: merchant!.created_at.toISOString(),
       },

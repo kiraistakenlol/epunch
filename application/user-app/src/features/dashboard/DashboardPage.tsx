@@ -5,14 +5,13 @@ import PunchCards from './PunchCards';
 import AuthContainer from '../auth/AuthContainer';
 import AppHeader from '../../components/AppHeader';
 import styles from './DashboardPage.module.css';
-import type { RootState } from '../../store/store';
+import type { RootState, AppDispatch } from '../../store/store';
 import { selectAuthLoading } from '../auth/authSlice';
 import { selectSelectedCard, clearSelectedCard } from '../punchCards/punchCardsSlice';
 import { useAppSelector } from '../../store/hooks';
 
 const DashboardPage: React.FC = () => {
-  const dispatch = useDispatch();
-  
+  const dispatch: AppDispatch = useDispatch();
   const isAuthLoading = useAppSelector(selectAuthLoading);
   const selectedCard = useSelector((state: RootState) => selectSelectedCard(state));
 

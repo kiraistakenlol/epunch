@@ -2,6 +2,7 @@ import { Injectable, Logger, NotFoundException, BadRequestException } from '@nes
 import { PunchCardsRepository } from './punch-cards.repository';
 import { PunchCardDto } from 'e-punch-common-core';
 import { EventService } from '../../events/event.service';
+import { UserRepository } from '../user/user.repository';
 
 @Injectable()
 export class PunchCardsService {
@@ -9,7 +10,8 @@ export class PunchCardsService {
 
   constructor(
     private readonly punchCardsRepository: PunchCardsRepository,
-    private readonly eventService: EventService
+    private readonly eventService: EventService,
+    private readonly userRepository: UserRepository
   ) {}
 
   async getUserPunchCards(userId: string): Promise<PunchCardDto[]> {
@@ -76,6 +78,45 @@ export class PunchCardsService {
       return punchCard;
     } catch (error: any) {
       this.logger.error(`Error fetching punch card ${punchCardId}: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  async createPunchCard(userId: string, loyaltyProgramId: string): Promise<PunchCardDto> {
+    this.logger.log(`Creating punch card for user ${userId} and loyalty program ${loyaltyProgramId}`);
+    
+    try {
+      let user = await this.userRepository.findUserById(userId);
+      if (!user) {
+        user = await this.userRepository.createAnonymousUser(userId);
+      }
+
+      const existingCard = await this.punchCardsRepository.findTop1PunchCardByUserIdAndLoyaltyProgramIdAndStatusOrderByCreatedAtDesc(
+        userId,
+        loyaltyProgramId,
+        'ACTIVE'
+      );
+      
+      if (existingCard) {
+        this.logger.log(`Active punch card already exists for user ${userId} and loyalty program ${loyaltyProgramId}: ${existingCard.id}`);
+        const existingPunchCard = await this.punchCardsRepository.findPunchCardById(existingCard.id);
+        if (!existingPunchCard) {
+          throw new NotFoundException(`Punch card with ID ${existingCard.id} not found`);
+        }
+        return existingPunchCard;
+      }
+
+      const createdCard = await this.punchCardsRepository.createPunchCard(userId, loyaltyProgramId);
+      const punchCard = await this.punchCardsRepository.findPunchCardById(createdCard.id);
+      
+      if (!punchCard) {
+        throw new NotFoundException(`Created punch card with ID ${createdCard.id} not found`);
+      }
+      
+      this.logger.log(`Successfully created punch card: ${createdCard.id}`);
+      return punchCard;
+    } catch (error: any) {
+      this.logger.error(`Error creating punch card for user ${userId}, loyalty program ${loyaltyProgramId}: ${error.message}`, error.stack);
       throw error;
     }
   }

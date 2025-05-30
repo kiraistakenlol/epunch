@@ -15,6 +15,7 @@ export interface Merchant {
   id: string;
   name: string;
   address: string | null;
+  slug: string;
   created_at: Date;
 }
 

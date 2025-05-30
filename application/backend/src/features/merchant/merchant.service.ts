@@ -26,6 +26,60 @@ export class MerchantService {
     }
   }
 
+  async getMerchantById(merchantId: string): Promise<MerchantDto> {
+    this.logger.log(`Fetching merchant by ID: ${merchantId}`);
+    
+    try {
+      const merchant = await this.merchantRepository.findMerchantById(merchantId);
+      
+      if (!merchant) {
+        throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
+      }
+
+      const merchantDto: MerchantDto = {
+        id: merchant.id,
+        name: merchant.name,
+        address: merchant.address || '',
+        slug: merchant.slug,
+        email: merchant.login || '',
+        createdAt: merchant.created_at.toISOString(),
+      };
+
+      this.logger.log(`Found merchant: ${merchantId}`);
+      return merchantDto;
+    } catch (error: any) {
+      this.logger.error(`Error fetching merchant ${merchantId}: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  async getMerchantBySlug(slug: string): Promise<MerchantDto> {
+    this.logger.log(`Fetching merchant by slug: ${slug}`);
+    
+    try {
+      const merchant = await this.merchantRepository.findMerchantBySlug(slug);
+      
+      if (!merchant) {
+        throw new NotFoundException(`Merchant with slug ${slug} not found`);
+      }
+
+      const merchantDto: MerchantDto = {
+        id: merchant.id,
+        name: merchant.name,
+        address: merchant.address || '',
+        slug: merchant.slug,
+        email: merchant.login || '',
+        createdAt: merchant.created_at.toISOString(),
+      };
+
+      this.logger.log(`Found merchant: ${slug}`);
+      return merchantDto;
+    } catch (error: any) {
+      this.logger.error(`Error fetching merchant ${slug}: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
   async validateMerchant(login: string, password: string): Promise<MerchantLoginResponse | null> {
     this.logger.log(`Validating merchant with login: ${login}`);
     
@@ -55,6 +109,7 @@ export class MerchantService {
           id: merchant.id,
           name: merchant.name,
           address: merchant.address,
+          slug: merchant.slug,
           email: merchant.login,
           createdAt: merchant.created_at.toISOString(),
         },

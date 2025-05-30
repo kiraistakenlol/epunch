@@ -9,4 +9,9 @@ export interface PunchCardDto {
   totalPunches: number;
   status: PunchCardStatusDto;
   createdAt: string; // ISO string format
+}
+
+export interface CreatePunchCardDto {
+  userId: string;
+  loyaltyProgramId: string;
 } 

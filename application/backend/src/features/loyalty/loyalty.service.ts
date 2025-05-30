@@ -42,6 +42,7 @@ export class LoyaltyService {
             id: merchant.id,
             name: merchant.name,
             address: merchant.address || '',
+            slug: merchant.slug,
             email: '',
             createdAt: merchant.created_at.toISOString(),
           },
@@ -79,12 +80,13 @@ export class LoyaltyService {
         description: loyaltyProgram.description,
         requiredPunches: loyaltyProgram.required_punches,
         rewardDescription: loyaltyProgram.reward_description,
-        isActive: true, // Default to true since the repository doesn't have this field
+        isActive: true,
         merchant: {
           id: merchant.id,
           name: merchant.name,
           address: merchant.address || '',
-          email: '', // Not available in current schema
+          slug: merchant.slug,
+          email: '',
           createdAt: merchant.created_at.toISOString(),
         },
         createdAt: loyaltyProgram.created_at.toISOString(),
