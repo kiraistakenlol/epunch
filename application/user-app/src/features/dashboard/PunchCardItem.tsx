@@ -97,7 +97,7 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
       {isSelected && (
         <div className={styles.redemptionOverlay}>
           <span className={styles.redemptionLabel}>
-            Selected for Redemption
+            Selected
           </span>
         </div>
       )}

@@ -5,10 +5,14 @@ import type { QRValueDto } from 'e-punch-common-core';
 import type { RootState } from '../../store/store';
 import { selectUserId } from '../auth/authSlice';
 import { selectSelectedCard } from '../punchCards/punchCardsSlice';
+import { selectLoyaltyProgramById } from '../loyaltyPrograms/loyaltyProgramsSlice';
 
 const QRCode: React.FC = () => {
   const userId = useSelector((state: RootState) => selectUserId(state));
   const selectedCard = useSelector((state: RootState) => selectSelectedCard(state));
+  const loyaltyProgram = useSelector((state: RootState) => 
+    selectedCard ? selectLoyaltyProgramById(state, selectedCard.loyaltyProgramId) : undefined
+  );
   const [containerSize, setContainerSize] = useState({
     width: 'min(250px, 80vw)',
     height: 'min(250px, 80vw)',
@@ -101,37 +105,57 @@ const QRCode: React.FC = () => {
     return null;
   }
 
+  const getQRModeText = () => {
+    if (isRewardMode && loyaltyProgram) {
+      return (
+        <>
+          Show to get{' '}
+          <span className="fs-6 fw-bold text-decoration-underline">{loyaltyProgram.rewardDescription}</span>
+        </>
+      );
+    }
+    return 'Your QR Code';
+  };
+
   return (
-    <div style={{ 
-      width: containerSize.width,
-      height: containerSize.height,
-      minWidth: containerSize.minWidth,
-      minHeight: containerSize.minHeight,
-      backgroundColor: '#f5f5dc',
-      borderRadius: '8px',
-      padding: containerSize.padding,
-      boxShadow: isRewardMode 
-        ? '0 4px 8px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 215, 0, 0.9), 0 0 60px rgba(255, 215, 0, 0.6)' 
-        : '0 4px 8px rgba(0, 0, 0, 0.3)',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      transition: 'box-shadow 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-      willChange: isRewardMode ? 'box-shadow' : 'auto'
-    }}>
-      <QRCodeCanvas 
-        value={qrValue} 
-        size={400} 
-        level="H" 
-        style={{ 
-          width: '100%', 
-          height: 'auto', 
-          maxWidth: '200px', 
-          maxHeight: '200px',
-          minWidth: '120px',
-          minHeight: '120px'
-        }}
-      />
+    <div className="text-center">
+      <div style={{ 
+        width: containerSize.width,
+        height: containerSize.height,
+        minWidth: containerSize.minWidth,
+        minHeight: containerSize.minHeight,
+        backgroundColor: '#f5f5dc',
+        borderRadius: '8px',
+        padding: containerSize.padding,
+        boxShadow: isRewardMode 
+          ? '0 4px 8px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 215, 0, 0.9), 0 0 60px rgba(255, 215, 0, 0.6)' 
+          : '0 4px 8px rgba(0, 0, 0, 0.3)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        transition: 'box-shadow 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+        willChange: isRewardMode ? 'box-shadow' : 'auto',
+        margin: '0 auto'
+      }}>
+        <QRCodeCanvas 
+          value={qrValue} 
+          size={400} 
+          level="H" 
+          style={{ 
+            width: '100%', 
+            height: 'auto', 
+            maxWidth: '200px', 
+            maxHeight: '200px',
+            minWidth: '120px',
+            minHeight: '120px'
+          }}
+        />
+      </div>
+      <div className="mt-3">
+        <small className={`fw-medium ${isRewardMode ? 'text-warning' : 'text-white'}`}>
+          {getQRModeText()}
+        </small>
+      </div>
     </div>
   );
 };
