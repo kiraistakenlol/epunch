@@ -34,7 +34,8 @@ See the detailed project planning document: [Planning Doc](https://docs.google.c
 The project includes several convenience scripts for development:
 
 * `./run-user-app.sh` - Builds common packages and starts user app development server
-* `./run-merchant-app.sh` - Builds common packages and starts merchant app development server  
+* `./run-merchant-app.sh` - Builds common packages and starts merchant app development server
+* `./run-admin-app.sh` - Builds common packages and starts admin app development server
 * `./run-backend.sh` - Starts backend development server
 * `./build-common.sh` - Builds common-core and common-ui packages
 * `./build-all.sh` - Builds all packages in the workspace
@@ -79,23 +80,30 @@ Merchants can generate QR codes linking to `https://app.com/?merchant=merchantSl
 
 This enables seamless onboarding without requiring users to manually search for or enroll in loyalty programs.
 
-## Merchant Journey
+## Admin Journey
 
-TODO
+Administrators can access the admin app to manage the entire system:
+
+1. **Super Admin Access:** Full system administration capabilities including merchant creation and global settings
+2. **Merchant Management:** Create, edit, and manage merchant accounts and their loyalty programs
+3. **System Oversight:** Monitor system health, analytics, and global configuration
+4. **User Management:** Manage admin user permissions and access levels
 
 ## Core Entities
 
 1.  **User:** The customer. Can optionally be a super admin with access to development tools.
-2.  **Merchant:** The business offering loyalty programs.
-3.  **Loyalty Program:** Defines the rules and reward for a specific merchant offer (e.g., "10 punches for a free coffee").
-4.  **Punch Card:** Tracks a specific user's progress in a loyalty program.
-5.  **Punch:** A single punch event.
+2.  **Admin User:** System administrators with varying permission levels (staff, manager, super admin).
+3.  **Merchant:** The business offering loyalty programs.
+4.  **Loyalty Program:** Defines the rules and reward for a specific merchant offer (e.g., "10 punches for a free coffee").
+5.  **Punch Card:** Tracks a specific user's progress in a loyalty program.
+6.  **Punch:** A single punch event.
 
 ## Technical Implementation
 
 ### Tech Stack
 * **User App (Frontend):** React, TypeScript, Vite, Redux (for state management)
 * **Merchant App (Frontend):** React, TypeScript, Vite, Redux (for state management), Material UI (for components)
+* **Admin App (Frontend):** React, TypeScript, Vite, Redux (for state management), Material UI (for components)
 * **Backend:** NestJS (Node.js framework), TypeScript, PostgreSQL client (pg)
 * **Database:** PostgreSQL (via Supabase as database host)
 * **Real-time Communication:** WebSocket (Socket.io) for live updates
@@ -105,7 +113,7 @@ TODO
 **Note:** This project uses Yarn as the package manager, not npm. Always use `yarn add` instead of `npm install` when adding dependencies.
 
 ### Infrastructure & Deployment
-* **Frontend Hosting:** Vercel (for both User and Merchant apps)
+* **Frontend Hosting:** Vercel (for User, Merchant, and Admin apps)
 * **Backend Hosting:** Fly.io (Dockerized NestJS app)
 * **Database:** Supabase (PostgreSQL hosting only)
 * **Authentication:** AWS Cognito User Pool (deployed via Terraform)
@@ -151,22 +159,28 @@ Development application is available at: https://narrow-ai-epunch.vercel.app/dev
 
 This mode is disabled in production environments through environment configuration.
 
-### Super Admin System
+### Admin System
 
-The application includes a super admin role for privileged users:
+The application includes a comprehensive admin system for system administration:
+
+**Admin User Types:**
+- **Super Admin:** Full system access including merchant creation and global administration
+- **Admin User:** Permission-based access to specific administrative functions
+
+**Admin App Features:**
+- Merchant creation and management
+- System configuration and monitoring
+- Global analytics and reporting
+- User permission management
 
 **Database Schema:**
-- `super_admin` boolean column in the user table (default: false)
-
-**Features:**
-- Access to development mode (`/dev` route)
-- Enhanced debugging capabilities
-- Admin-only features in the user interface
+- `super_admin` boolean column in the user table (default: false) for customer app super admins
+- Separate admin user system with role-based permissions for admin app access
 
 **Implementation:**
-- Backend tracks super admin status in user entity
-- Frontend Redux state manages super admin flag
-- UI components conditionally render based on super admin status
+- Dedicated admin app with separate authentication
+- Permission-based UI rendering
+- Role-based access control for administrative functions
 
 ### Deployment Scripts
 
@@ -245,6 +259,7 @@ The application code resides within the `application/` directory and is structur
 ├── progress-log.md          # Development progress tracking
 ├── run-user-app.sh          # User app development script
 ├── run-merchant-app.sh      # Merchant app development script
+├── run-admin-app.sh         # Admin app development script
 ├── run-backend.sh           # Backend development script
 ├── build-common.sh          # Common packages build script
 ├── build-all.sh             # Build all packages script
@@ -256,6 +271,7 @@ application/
 ├── backend/                 # NestJS backend code
 ├── user-app/               # React user-app code
 ├── merchant-app/           # React merchant-app code
+├── admin-app/              # React admin-app code
 ├── common-core/            # Shared core types, DTOs, constants (no React dependencies)
 └── common-ui/              # Shared API client and styles (no UI components)
 
