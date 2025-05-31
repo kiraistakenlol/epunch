@@ -49,6 +49,23 @@ export interface DevResponse {
   [key: string]: any; // For additional properties
 }
 
+export interface SystemStatistics {
+  merchants: { 
+    total: number; 
+    list: Array<{ 
+      id: string; 
+      name: string; 
+      punchCardCount: number; 
+      userCount: number; 
+      loyaltyProgramCount: number; 
+    }> 
+  };
+  users: { total: number };
+  punchCards: { total: number; active: number; rewardReady: number; redeemed: number };
+  punches: { total: number };
+  loyaltyPrograms: { total: number; active: number };
+}
+
 // Initialize with an empty baseURL that will be set later
 let instance = createInstance('');
 
@@ -271,5 +288,10 @@ export const apiClient = {
       return Promise.reject(new Error('Merchant ID is required.'));
     }
     await instance.delete(`/merchants/${merchantId}`);
+  },
+
+  async getSystemStatistics(): Promise<SystemStatistics> {
+    const response = await instance.get<SystemStatistics>('/dev/statistics');
+    return response.data;
   }
 }; 

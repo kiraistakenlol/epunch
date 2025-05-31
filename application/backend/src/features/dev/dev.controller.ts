@@ -10,6 +10,11 @@ export class DevController {
     return this.devService.getStatus();
   }
 
+  @Get('statistics')
+  async getSystemStatistics() {
+    return this.devService.getSystemStatistics();
+  }
+
   @Delete('punch-cards')
   async removeAllPunchCards(@Query('merchantId') merchantId?: string) {
     return this.devService.removeAllPunchCards(merchantId);

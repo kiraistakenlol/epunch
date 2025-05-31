@@ -452,4 +452,91 @@ export class DevService {
       };
     }
   }
+
+  async getSystemStatistics(): Promise<{
+    merchants: { total: number; list: Array<{ id: string; name: string; punchCardCount: number; userCount: number; loyaltyProgramCount: number }> };
+    users: { total: number };
+    punchCards: { total: number; active: number; rewardReady: number; redeemed: number };
+    punches: { total: number };
+    loyaltyPrograms: { total: number; active: number };
+  }> {
+    try {
+      const client = await this.pool.connect();
+      
+      try {
+        const merchantsQuery = await client.query(`
+          SELECT 
+            m.id,
+            m.name,
+            COUNT(DISTINCT pc.id) as punch_card_count,
+            COUNT(DISTINCT pc.user_id) as user_count,
+            COUNT(DISTINCT lp.id) as loyalty_program_count
+          FROM merchant m
+          LEFT JOIN loyalty_program lp ON m.id = lp.merchant_id
+          LEFT JOIN punch_card pc ON lp.id = pc.loyalty_program_id
+          GROUP BY m.id, m.name
+          ORDER BY m.name
+        `);
+
+        const totalUsersQuery = await client.query('SELECT COUNT(*) as count FROM "user"');
+        
+        const punchCardsQuery = await client.query(`
+          SELECT 
+            COUNT(*) as total,
+            COUNT(CASE WHEN status = 'ACTIVE' THEN 1 END) as active,
+            COUNT(CASE WHEN status = 'REWARD_READY' THEN 1 END) as reward_ready,
+            COUNT(CASE WHEN status = 'REWARD_REDEEMED' THEN 1 END) as redeemed
+          FROM punch_card
+        `);
+
+        const punchesQuery = await client.query('SELECT COUNT(*) as count FROM punch');
+        
+        const loyaltyProgramsQuery = await client.query(`
+          SELECT 
+            COUNT(*) as total,
+            COUNT(CASE WHEN is_active = true THEN 1 END) as active
+          FROM loyalty_program
+        `);
+
+        const merchantsList = merchantsQuery.rows.map(row => ({
+          id: row.id,
+          name: row.name,
+          punchCardCount: parseInt(row.punch_card_count) || 0,
+          userCount: parseInt(row.user_count) || 0,
+          loyaltyProgramCount: parseInt(row.loyalty_program_count) || 0,
+        }));
+
+        const punchCardStats = punchCardsQuery.rows[0];
+        const loyaltyProgramStats = loyaltyProgramsQuery.rows[0];
+
+        return {
+          merchants: {
+            total: merchantsList.length,
+            list: merchantsList,
+          },
+          users: {
+            total: parseInt(totalUsersQuery.rows[0].count) || 0,
+          },
+          punchCards: {
+            total: parseInt(punchCardStats.total) || 0,
+            active: parseInt(punchCardStats.active) || 0,
+            rewardReady: parseInt(punchCardStats.reward_ready) || 0,
+            redeemed: parseInt(punchCardStats.redeemed) || 0,
+          },
+          punches: {
+            total: parseInt(punchesQuery.rows[0].count) || 0,
+          },
+          loyaltyPrograms: {
+            total: parseInt(loyaltyProgramStats.total) || 0,
+            active: parseInt(loyaltyProgramStats.active) || 0,
+          },
+        };
+      } finally {
+        client.release();
+      }
+    } catch (err) {
+      const error = err as Error;
+      throw new Error(`Failed to get system statistics: ${error.message}`);
+    }
+  }
 } 

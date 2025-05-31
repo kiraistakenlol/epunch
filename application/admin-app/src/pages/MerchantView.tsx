@@ -11,6 +11,7 @@ import {
   Alert,
   Chip,
   Divider,
+  Grid,
 } from '@mui/material';
 import {
   ArrowBack as ArrowBackIcon,
@@ -20,16 +21,23 @@ import {
   LocationOn as LocationIcon,
   Link as LinkIcon,
   CalendarToday as CalendarIcon,
+  People as UsersIcon,
+  CreditCard as PunchCardIcon,
+  Loyalty as LoyaltyIcon,
+  Analytics as AnalyticsIcon,
 } from '@mui/icons-material';
-import { apiClient } from 'e-punch-common-ui';
-import { MerchantDto } from 'e-punch-common-core';
+import { apiClient, SystemStatistics } from 'e-punch-common-ui';
+import { MerchantDto, LoyaltyProgramDto } from 'e-punch-common-core';
 
 export const MerchantView: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   
   const [merchant, setMerchant] = useState<MerchantDto | null>(null);
+  const [loyaltyPrograms, setLoyaltyPrograms] = useState<LoyaltyProgramDto[]>([]);
+  const [merchantStats, setMerchantStats] = useState<SystemStatistics['merchants']['list'][0] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [statsLoading, setStatsLoading] = useState(true);
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
     message: string;
@@ -43,6 +51,8 @@ export const MerchantView: React.FC = () => {
   useEffect(() => {
     if (id) {
       fetchMerchant();
+      fetchLoyaltyPrograms();
+      fetchMerchantStats();
     }
   }, [id]);
 
@@ -73,6 +83,34 @@ export const MerchantView: React.FC = () => {
     }
   };
 
+  const fetchLoyaltyPrograms = async () => {
+    if (!id) return;
+    
+    try {
+      const programs = await apiClient.getMerchantLoyaltyPrograms(id);
+      setLoyaltyPrograms(programs);
+    } catch (err: any) {
+      console.error('Failed to fetch loyalty programs:', err);
+      showSnackbar(err.message || 'Failed to load loyalty programs', 'error');
+    }
+  };
+
+  const fetchMerchantStats = async () => {
+    if (!id) return;
+    
+    try {
+      setStatsLoading(true);
+      const systemStats = await apiClient.getSystemStatistics();
+      const merchantStat = systemStats.merchants.list.find(m => m.id === id);
+      setMerchantStats(merchantStat || null);
+    } catch (err: any) {
+      console.error('Failed to fetch merchant statistics:', err);
+      showSnackbar(err.message || 'Failed to load merchant statistics', 'error');
+    } finally {
+      setStatsLoading(false);
+    }
+  };
+
   const handleBack = () => {
     navigate('/merchants');
   };
@@ -80,6 +118,22 @@ export const MerchantView: React.FC = () => {
   const handleEdit = () => {
     navigate(`/merchants/${id}/edit`);
   };
+
+  const getStatCard = (title: string, value: number | string, icon: React.ReactNode, color: string) => (
+    <Card sx={{ backgroundColor: '#f5f5dc', height: '100%' }}>
+      <CardContent>
+        <Box display="flex" alignItems="center" gap={2} mb={1}>
+          {React.cloneElement(icon as React.ReactElement, { sx: { color, fontSize: 28 } })}
+          <Typography variant="h6" component="h3" sx={{ color: '#3e2723', fontWeight: 'bold' }}>
+            {title}
+          </Typography>
+        </Box>
+        <Typography variant="h4" sx={{ color: '#5d4037', fontWeight: 'bold' }}>
+          {value}
+        </Typography>
+      </CardContent>
+    </Card>
+  );
 
   if (isLoading) {
     return (
@@ -157,7 +211,8 @@ export const MerchantView: React.FC = () => {
         </Box>
       </Box>
 
-      <Card sx={{ backgroundColor: '#f5f5dc', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)' }}>
+      {/* Merchant Information */}
+      <Card sx={{ backgroundColor: '#f5f5dc', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)', mb: 4 }}>
         <CardContent sx={{ p: 4 }}>
           <Box display="flex" alignItems="center" mb={3}>
             <BusinessIcon sx={{ fontSize: 40, color: '#5d4037', mr: 2 }} />
@@ -233,6 +288,76 @@ export const MerchantView: React.FC = () => {
           </Box>
         </CardContent>
       </Card>
+
+      {/* Merchant Statistics */}
+      <Typography variant="h5" sx={{ color: '#f5f5dc', mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+        <AnalyticsIcon /> Merchant Analytics
+      </Typography>
+      
+      {statsLoading ? (
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="150px" mb={4}>
+          <CircularProgress sx={{ color: '#f5f5dc' }} />
+        </Box>
+      ) : (
+        <Grid container spacing={3} mb={4}>
+          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+            {getStatCard('Punch Cards', merchantStats?.punchCardCount || 0, <PunchCardIcon />, '#1976d2')}
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+            {getStatCard('Active Users', merchantStats?.userCount || 0, <UsersIcon />, '#2e7d32')}
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+            {getStatCard('Loyalty Programs', merchantStats?.loyaltyProgramCount || 0, <LoyaltyIcon />, '#7b1fa2')}
+          </Grid>
+        </Grid>
+      )}
+
+      {/* Loyalty Programs */}
+      {loyaltyPrograms.length > 0 && (
+        <>
+          <Typography variant="h5" sx={{ color: '#f5f5dc', mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+            <LoyaltyIcon /> Loyalty Programs
+          </Typography>
+          
+          <Card sx={{ backgroundColor: '#f5f5dc', mb: 4 }}>
+            <CardContent>
+              {loyaltyPrograms.map((program) => (
+                <Box key={program.id} mb={2}>
+                  <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                    <Typography variant="h6" sx={{ color: '#3e2723', fontWeight: 'bold' }}>
+                      {program.name}
+                    </Typography>
+                    <Box display="flex" gap={1}>
+                      <Chip
+                        size="small"
+                        label={`${program.requiredPunches} punches`}
+                        sx={{ backgroundColor: '#e3f2fd', color: '#1976d2' }}
+                      />
+                      <Chip
+                        size="small"
+                        label={program.isActive ? 'Active' : 'Inactive'}
+                        sx={{
+                          backgroundColor: program.isActive ? '#e8f5e8' : '#ffebee',
+                          color: program.isActive ? '#2e7d32' : '#d32f2f',
+                        }}
+                      />
+                    </Box>
+                  </Box>
+                  {program.description && (
+                    <Typography variant="body2" color="text.secondary" mb={1}>
+                      {program.description}
+                    </Typography>
+                  )}
+                  <Typography variant="body2" sx={{ color: '#5d4037', fontWeight: 'medium' }}>
+                    Reward: {program.rewardDescription}
+                  </Typography>
+                  <Divider sx={{ mt: 2 }} />
+                </Box>
+              ))}
+            </CardContent>
+          </Card>
+        </>
+      )}
 
       <Snackbar
         open={snackbar.open}
