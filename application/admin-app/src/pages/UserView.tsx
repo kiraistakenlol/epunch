@@ -35,9 +35,15 @@ interface GroupedPunchCard extends PunchCardDto {
   loyaltyProgram?: LoyaltyProgramDto;
 }
 
+interface LoyaltyProgramGroup {
+  loyaltyProgram: LoyaltyProgramDto;
+  punchCards: GroupedPunchCard[];
+}
+
 interface MerchantGroup {
   merchant: MerchantDto;
-  punchCards: GroupedPunchCard[];
+  loyaltyProgramGroups: LoyaltyProgramGroup[];
+  totalCards: number;
 }
 
 export const UserView: React.FC = () => {
@@ -135,22 +141,41 @@ export const UserView: React.FC = () => {
           : undefined,
       }));
       
-      const grouped = groupedCards.reduce((acc, card) => {
-        if (!card.merchant) return acc;
+      const merchantGroups = groupedCards.reduce((acc, card) => {
+        if (!card.merchant || !card.loyaltyProgram) return acc;
         
-        const existing = acc.find(group => group.merchant.id === card.merchant!.id);
-        if (existing) {
-          existing.punchCards.push(card);
-        } else {
-          acc.push({
+        let merchantGroup = acc.find(group => group.merchant.id === card.merchant!.id);
+        if (!merchantGroup) {
+          merchantGroup = {
             merchant: card.merchant,
-            punchCards: [card],
-          });
+            loyaltyProgramGroups: [],
+            totalCards: 0,
+          };
+          acc.push(merchantGroup);
         }
+        
+        let loyaltyProgramGroup = merchantGroup.loyaltyProgramGroups.find(
+          group => group.loyaltyProgram.id === card.loyaltyProgram!.id
+        );
+        if (!loyaltyProgramGroup) {
+          loyaltyProgramGroup = {
+            loyaltyProgram: card.loyaltyProgram,
+            punchCards: [],
+          };
+          merchantGroup.loyaltyProgramGroups.push(loyaltyProgramGroup);
+        }
+        
+        loyaltyProgramGroup.punchCards.push(card);
+        merchantGroup.totalCards++;
+        
         return acc;
       }, [] as MerchantGroup[]);
       
-      setMerchantGroups(grouped.sort((a, b) => a.merchant.name.localeCompare(b.merchant.name)));
+      merchantGroups.forEach(group => {
+        group.loyaltyProgramGroups.sort((a, b) => a.loyaltyProgram.name.localeCompare(b.loyaltyProgram.name));
+      });
+      
+      setMerchantGroups(merchantGroups.sort((a, b) => a.merchant.name.localeCompare(b.merchant.name)));
     } catch (err: any) {
       console.error('Failed to group punch cards:', err);
       showSnackbar('Failed to group punch cards by merchant', 'error');
@@ -443,7 +468,7 @@ export const UserView: React.FC = () => {
                     </Typography>
                   </Box>
                   <Chip
-                    label={`${group.punchCards.length} cards`}
+                    label={`${group.totalCards} cards`}
                     size="small"
                     sx={{ backgroundColor: '#e3f2fd', color: '#1976d2', mr: 1 }}
                   />
@@ -451,44 +476,82 @@ export const UserView: React.FC = () => {
               </AccordionSummary>
               <AccordionDetails>
                 <Box display="flex" flexDirection="column" gap={2}>
-                  {group.punchCards.map((card) => (
-                    <Card key={card.id} sx={{ backgroundColor: '#fff', border: '1px solid rgba(93, 64, 55, 0.1)' }}>
-                      <CardContent sx={{ p: 2 }}>
-                        <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-                          <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#3e2723' }}>
-                            {card.loyaltyProgram?.name || 'Unknown Program'}
-                          </Typography>
-                          <Chip
-                            label={getStatusLabel(card.status)}
-                            size="small"
-                            sx={getStatusColor(card.status)}
-                          />
+                  {group.loyaltyProgramGroups.map((loyaltyGroup) => (
+                    <Accordion 
+                      key={loyaltyGroup.loyaltyProgram.id}
+                      sx={{ 
+                        backgroundColor: 'rgba(93, 64, 55, 0.02)', 
+                        boxShadow: 'none',
+                        border: '1px solid rgba(93, 64, 55, 0.1)',
+                        '&:before': { display: 'none' },
+                      }}
+                    >
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        sx={{ 
+                          backgroundColor: 'rgba(93, 64, 55, 0.05)',
+                          minHeight: '48px',
+                          '& .MuiAccordionSummary-content': { my: 1 }
+                        }}
+                      >
+                        <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
+                          <Box display="flex" alignItems="center" gap={2}>
+                            <PunchCardIcon sx={{ color: '#5d4037', fontSize: 20 }} />
+                            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#3e2723' }}>
+                              {loyaltyGroup.loyaltyProgram.name}
+                            </Typography>
+                          </Box>
+                          <Box display="flex" alignItems="center" gap={1}>
+                            <Chip
+                              label={`${loyaltyGroup.punchCards.length} ${loyaltyGroup.punchCards.length === 1 ? 'card' : 'cards'}`}
+                              size="small"
+                              sx={{ backgroundColor: '#fff3e0', color: '#f57c00' }}
+                            />
+                            <Typography variant="body2" sx={{ color: '#5d4037', fontWeight: 'medium', mr: 1 }}>
+                              Reward: {loyaltyGroup.loyaltyProgram.rewardDescription}
+                            </Typography>
+                          </Box>
                         </Box>
-                        
-                        <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-                          <Typography variant="body2" color="text.secondary">
-                            Progress
-                          </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
-                            {card.currentPunches} / {card.loyaltyProgram?.requiredPunches || 0} punches
-                          </Typography>
-                        </Box>
-                        
-                        {card.loyaltyProgram?.description && (
-                          <Typography variant="body2" color="text.secondary" mb={1}>
-                            {card.loyaltyProgram.description}
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        {loyaltyGroup.loyaltyProgram.description && (
+                          <Typography variant="body2" color="text.secondary" mb={2} sx={{ fontStyle: 'italic' }}>
+                            {loyaltyGroup.loyaltyProgram.description}
                           </Typography>
                         )}
-                        
-                        <Typography variant="body2" sx={{ color: '#5d4037', fontWeight: 'medium' }}>
-                          Reward: {card.loyaltyProgram?.rewardDescription || 'Unknown'}
-                        </Typography>
-                        
-                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
-                          Created: {new Date(card.createdAt).toLocaleDateString()}
-                        </Typography>
-                      </CardContent>
-                    </Card>
+                        <Box display="flex" flexDirection="column" gap={2}>
+                          {loyaltyGroup.punchCards.map((card) => (
+                            <Card key={card.id} sx={{ backgroundColor: '#fff', border: '1px solid rgba(93, 64, 55, 0.1)' }}>
+                              <CardContent sx={{ p: 2 }}>
+                                <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                                  <Typography variant="body2" sx={{ fontWeight: 'medium', color: '#3e2723' }}>
+                                    {loyaltyGroup.punchCards.length > 1 ? `Card #${card.id.slice(-8)}` : 'Punch Card'}
+                                  </Typography>
+                                  <Chip
+                                    label={getStatusLabel(card.status)}
+                                    size="small"
+                                    sx={getStatusColor(card.status)}
+                                  />
+                                </Box>
+                                
+                                <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                                  <Typography variant="body2" color="text.secondary">
+                                    Progress
+                                  </Typography>
+                                  <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
+                                    {card.currentPunches} / {loyaltyGroup.loyaltyProgram.requiredPunches} punches
+                                  </Typography>
+                                </Box>
+                                
+                                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
+                                  Created: {new Date(card.createdAt).toLocaleDateString()}
+                                </Typography>
+                              </CardContent>
+                            </Card>
+                          ))}
+                        </Box>
+                      </AccordionDetails>
+                    </Accordion>
                   ))}
                 </Box>
               </AccordionDetails>
