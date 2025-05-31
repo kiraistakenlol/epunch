@@ -7,7 +7,7 @@ import { useWebSocketEventHandler } from '../hooks/useWebSocketEventHandler';
 import { useAnimationExecutor } from '../features/animations/useAnimationExecutor';
 import { useLoyaltyProgramsSync } from '../features/loyaltyPrograms/useLoyaltyProgramsSync';
 import { useMerchantOnboarding } from '../hooks/useMerchantOnboarding';
-import { fetchPunchCards } from '../features/punchCards/punchCardsSlice';
+import { clearPunchCards, fetchPunchCards } from '../features/punchCards/punchCardsSlice';
 import type { AppDispatch } from '../store/store';
 
 const AppLayout: React.FC = () => {
@@ -22,6 +22,8 @@ const AppLayout: React.FC = () => {
   useEffect(() => {
     if (userId) {
       dispatch(fetchPunchCards(userId));
+    } else {
+      dispatch(clearPunchCards());
     }
   }, [userId, dispatch]);
 

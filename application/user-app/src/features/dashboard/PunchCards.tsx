@@ -3,13 +3,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import PunchCardItem from './PunchCardItem';
 import styles from './DashboardPage.module.css';
 import type { RootState, AppDispatch } from '../../store/store';
-import { selectUserId, selectAuthLoading } from '../auth/authSlice';
+import { selectAuthLoading } from '../auth/authSlice';
 import {
-  fetchPunchCards,
   selectPunchCards,
   selectPunchCardsLoading,
   selectPunchCardsError,
-  clearPunchCards,
   selectSelectedCardId,
   setSelectedCardId,
   clearSelectedCard,
@@ -18,13 +16,11 @@ import {
   scrollToCard
 } from '../punchCards/punchCardsSlice';
 import { useAppSelector } from '../../store/hooks';
-import { useLoyaltyProgramsSync } from '../loyaltyPrograms/useLoyaltyProgramsSync';
 
 interface PunchCardsProps {}
 
 const PunchCards: React.FC<PunchCardsProps> = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const userId = useSelector((state: RootState) => selectUserId(state));
   const isAuthLoading = useAppSelector(selectAuthLoading);
   const punchCards = useSelector((state: RootState) => selectPunchCards(state));
   const selectedCardId = useSelector((state: RootState) => selectSelectedCardId(state));
@@ -34,16 +30,6 @@ const PunchCards: React.FC<PunchCardsProps> = () => {
   
   const [showEmptyState, setShowEmptyState] = useState(false);
   const cardRefs = useRef<{ [cardId: string]: HTMLDivElement | null }>({});
-
-  useLoyaltyProgramsSync();
-
-  useEffect(() => {
-    if (userId) {
-      dispatch(fetchPunchCards(userId));
-    } else {
-      dispatch(clearPunchCards());
-    }
-  }, [userId, dispatch]);
 
   useEffect(() => {
     if (isLoading || punchCards === undefined) {

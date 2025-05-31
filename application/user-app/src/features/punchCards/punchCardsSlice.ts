@@ -3,9 +3,6 @@ import { PunchCardDto, PunchCardStatusDto } from 'e-punch-common-core';
 import { apiClient } from 'e-punch-common-ui';
 
 export interface PunchCardState extends PunchCardDto {
-  animateNewPunch?: boolean;
-  animateNewCard?: boolean;
-  animateRewardClaimed?: boolean;
   visible?: boolean;
   animationFlags?: {
     punchAnimation?: { punchIndex: number };
@@ -22,6 +19,7 @@ export interface PunchCardsState {
   isLoading: boolean;
   error: string | null;
   lastFetched: number | null;
+  initialized: boolean;
 }
 
 const initialState: PunchCardsState = {
@@ -31,6 +29,7 @@ const initialState: PunchCardsState = {
   isLoading: false,
   error: null,
   lastFetched: null,
+  initialized: false,
 };
 
 export const fetchPunchCards = createAsyncThunk<
@@ -61,8 +60,9 @@ const punchCardsSlice = createSlice({
       state.cards = undefined;
       state.error = null;
       state.lastFetched = null;
+      state.initialized = false;
     },
-    updatePunchCard: (state, action: PayloadAction<PunchCardDto>) => {
+    updatePunchCard: (state, action: PayloadAction<PunchCardState>) => {
       if (!state.cards) {
         state.cards = [action.payload];
         return;
@@ -85,7 +85,7 @@ const punchCardsSlice = createSlice({
         state.cards[index] = { ...state.cards[index], ...action.payload.updates };
       }
     },
-    addPunchCard: (state, action: PayloadAction<PunchCardDto>) => {
+    addPunchCard: (state, action: PayloadAction<PunchCardState>) => {
       if (!state.cards) {
         state.cards = [action.payload];
         return;
@@ -145,10 +145,12 @@ const punchCardsSlice = createSlice({
         state.isLoading = false;
         state.cards = action.payload;
         state.lastFetched = Date.now();
+        state.initialized = true;
       })
       .addCase(fetchPunchCards.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || 'Failed to fetch punch cards';
+        state.initialized = true;
       });
   },
 });
@@ -178,5 +180,7 @@ export const selectSelectedCard = (state: { punchCards: PunchCardsState }) => {
   const selectedId = state.punchCards.selectedCardId;
   return cards?.find(card => card.id === selectedId) || null;
 };
+
+export const selectPunchCardsInitialized = (state: { punchCards: PunchCardsState }) => state.punchCards.initialized;
 
 export default punchCardsSlice.reducer; 
