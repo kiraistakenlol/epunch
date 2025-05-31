@@ -25,7 +25,9 @@ import {
   CreditCard as PunchCardIcon,
   Loyalty as LoyaltyIcon,
   Analytics as AnalyticsIcon,
+  QrCode as QrCodeIcon,
 } from '@mui/icons-material';
+import { QRCodeSVG } from 'qrcode.react';
 import { apiClient, SystemStatistics } from 'e-punch-common-ui';
 import { MerchantDto, LoyaltyProgramDto } from 'e-punch-common-core';
 
@@ -282,6 +284,80 @@ export const MerchantView: React.FC = () => {
                     hour: '2-digit',
                     minute: '2-digit',
                   })}
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
+        </CardContent>
+      </Card>
+
+      {/* Welcome QR Code */}
+      <Card sx={{ backgroundColor: '#f5f5dc', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)', mb: 4 }}>
+        <CardContent sx={{ p: 4 }}>
+          <Box display="flex" alignItems="center" mb={3}>
+            <QrCodeIcon sx={{ fontSize: 40, color: '#5d4037', mr: 2 }} />
+            <Box>
+              <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#3e2723' }}>
+                Welcome QR Code
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Customers can scan this code to instantly get punch cards for all your loyalty programs
+              </Typography>
+            </Box>
+          </Box>
+
+          <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} gap={4} alignItems="center">
+            <Box display="flex" justifyContent="center">
+              <Box
+                sx={{
+                  p: 3,
+                  backgroundColor: '#fff',
+                  borderRadius: '12px',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                  border: '2px solid #e0e0e0',
+                }}
+              >
+                <QRCodeSVG 
+                  value={`https://narrow-ai-epunch.vercel.app?merchant=${merchant.slug}`}
+                  size={200}
+                  level="M"
+                  includeMargin={true}
+                  fgColor="#3e2723"
+                  bgColor="#ffffff"
+                />
+              </Box>
+            </Box>
+            
+            <Box flex={1}>
+              <Typography variant="h6" sx={{ color: '#3e2723', fontWeight: 'bold', mb: 2 }}>
+                How it works:
+              </Typography>
+              <Box component="ol" sx={{ pl: 2, '& li': { mb: 1, color: '#5d4037' } }}>
+                <li>
+                  <Typography variant="body2">
+                    Customer scans this QR code with their phone camera
+                  </Typography>
+                </li>
+                <li>
+                  <Typography variant="body2">
+                    They are automatically redirected to the E-PUNCH app
+                  </Typography>
+                </li>
+                <li>
+                  <Typography variant="body2">
+                    Punch cards for all your active loyalty programs are created instantly
+                  </Typography>
+                </li>
+                <li>
+                  <Typography variant="body2">
+                    Customer can start collecting punches immediately
+                  </Typography>
+                </li>
+              </Box>
+              
+              <Box mt={3} p={2} sx={{ backgroundColor: 'rgba(93, 64, 55, 0.1)', borderRadius: '8px' }}>
+                <Typography variant="body2" sx={{ fontFamily: 'monospace', wordBreak: 'break-all', color: '#5d4037' }}>
+                  https://narrow-ai-epunch.vercel.app?merchant={merchant.slug}
                 </Typography>
               </Box>
             </Box>
