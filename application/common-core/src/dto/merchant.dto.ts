@@ -7,6 +7,22 @@ export interface MerchantDto {
   createdAt: string;
 }
 
+export interface CreateMerchantDto {
+  name: string;
+  address?: string;
+  slug: string;
+  login: string;
+  password: string;
+}
+
+export interface UpdateMerchantDto {
+  name?: string;
+  address?: string;
+  slug?: string;
+  login?: string;
+  password?: string;
+}
+
 export interface MerchantLoginDto {
   login: string;
   password: string;

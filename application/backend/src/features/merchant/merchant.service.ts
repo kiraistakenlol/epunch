@@ -1,5 +1,5 @@
 import { Injectable, Logger, NotFoundException, HttpException, HttpStatus } from '@nestjs/common';
-import { LoyaltyProgramDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto } from 'e-punch-common-core';
+import { LoyaltyProgramDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreateMerchantDto, UpdateMerchantDto } from 'e-punch-common-core';
 import { MerchantRepository } from './merchant.repository';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -219,6 +219,66 @@ export class MerchantService {
       this.logger.log(`Deleted loyalty program ${programId} for merchant: ${merchantId}`);
     } catch (error: any) {
       this.logger.error(`Error deleting loyalty program ${programId} for merchant ${merchantId}: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  async createMerchant(data: CreateMerchantDto): Promise<MerchantDto> {
+    this.logger.log(`Creating merchant: ${data.name}`);
+    
+    try {
+      const hashedPassword = await bcrypt.hash(data.password, 10);
+      
+      const merchant = await this.merchantRepository.createMerchant({
+        ...data,
+        password: hashedPassword
+      });
+      
+      this.logger.log(`Created merchant: ${merchant.id}`);
+      return merchant;
+    } catch (error: any) {
+      this.logger.error(`Error creating merchant ${data.name}: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  async updateMerchant(merchantId: string, data: UpdateMerchantDto): Promise<MerchantDto> {
+    this.logger.log(`Updating merchant: ${merchantId}`);
+    
+    try {
+      const updateData = { ...data };
+      
+      if (data.password) {
+        updateData.password = await bcrypt.hash(data.password, 10);
+      }
+      
+      const merchant = await this.merchantRepository.updateMerchant(merchantId, updateData);
+      
+      if (!merchant) {
+        throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
+      }
+      
+      this.logger.log(`Updated merchant: ${merchantId}`);
+      return merchant;
+    } catch (error: any) {
+      this.logger.error(`Error updating merchant ${merchantId}: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  async deleteMerchant(merchantId: string): Promise<void> {
+    this.logger.log(`Deleting merchant: ${merchantId}`);
+    
+    try {
+      const deleted = await this.merchantRepository.deleteMerchant(merchantId);
+      
+      if (!deleted) {
+        throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
+      }
+      
+      this.logger.log(`Deleted merchant: ${merchantId}`);
+    } catch (error: any) {
+      this.logger.error(`Error deleting merchant ${merchantId}: ${error.message}`, error.stack);
       throw error;
     }
   }

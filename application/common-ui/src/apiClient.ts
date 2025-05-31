@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, AuthResponseDto, UserDto, LoyaltyProgramDto, MerchantLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreatePunchCardDto } from 'e-punch-common-core';
+import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, AuthResponseDto, UserDto, LoyaltyProgramDto, MerchantLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreatePunchCardDto, CreateMerchantDto, UpdateMerchantDto } from 'e-punch-common-core';
 
 // The API URL will be set by the app using this client
 let API_BASE_URL: string;
@@ -251,5 +251,25 @@ export const apiClient = {
     };
     const response = await instance.post<PunchCardDto>('/punch-cards', requestBody);
     return response.data;
+  },
+
+  async createMerchant(merchantDto: CreateMerchantDto): Promise<MerchantDto> {
+    const response = await instance.post<MerchantDto>('/merchants', merchantDto);
+    return response.data;
+  },
+
+  async updateMerchant(merchantId: string, merchantDto: UpdateMerchantDto): Promise<MerchantDto> {
+    if (!merchantId) {
+      return Promise.reject(new Error('Merchant ID is required.'));
+    }
+    const response = await instance.put<MerchantDto>(`/merchants/${merchantId}`, merchantDto);
+    return response.data;
+  },
+
+  async deleteMerchant(merchantId: string): Promise<void> {
+    if (!merchantId) {
+      return Promise.reject(new Error('Merchant ID is required.'));
+    }
+    await instance.delete(`/merchants/${merchantId}`);
   }
 }; 

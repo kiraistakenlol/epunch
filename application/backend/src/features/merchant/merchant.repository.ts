@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { LoyaltyProgramDto, MerchantDto, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto } from 'e-punch-common-core';
+import { LoyaltyProgramDto, MerchantDto, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, CreateMerchantDto, UpdateMerchantDto } from 'e-punch-common-core';
 import { Pool } from 'pg';
 
 export interface Merchant {
@@ -230,6 +230,112 @@ export class MerchantRepository {
     `;
     
     const result = await this.pool.query(query, [programId, merchantId]);
+    return result.rows.length > 0;
+  }
+
+  async createMerchant(data: CreateMerchantDto & { password: string }): Promise<MerchantDto> {
+    const query = `
+      INSERT INTO merchant (name, address, slug, login, password_hash)
+      VALUES ($1, $2, $3, $4, $5)
+      RETURNING *
+    `;
+    
+    const values = [
+      data.name,
+      data.address || null,
+      data.slug,
+      data.login,
+      data.password
+    ];
+    
+    const result = await this.pool.query(query, values);
+    const row = result.rows[0];
+    
+    return {
+      id: row.id,
+      name: row.name,
+      address: row.address,
+      slug: row.slug,
+      email: row.login || '',
+      createdAt: row.created_at.toISOString(),
+    };
+  }
+
+  async updateMerchant(merchantId: string, data: UpdateMerchantDto & { password?: string }): Promise<MerchantDto | null> {
+    const setParts: string[] = [];
+    const values: any[] = [];
+    let paramIndex = 1;
+
+    if (data.name !== undefined) {
+      setParts.push(`name = $${paramIndex++}`);
+      values.push(data.name);
+    }
+    if (data.address !== undefined) {
+      setParts.push(`address = $${paramIndex++}`);
+      values.push(data.address);
+    }
+    if (data.slug !== undefined) {
+      setParts.push(`slug = $${paramIndex++}`);
+      values.push(data.slug);
+    }
+    if (data.login !== undefined) {
+      setParts.push(`login = $${paramIndex++}`);
+      values.push(data.login);
+    }
+    if (data.password !== undefined) {
+      setParts.push(`password_hash = $${paramIndex++}`);
+      values.push(data.password);
+    }
+
+    if (setParts.length === 0) {
+      const merchant = await this.findMerchantById(merchantId);
+      if (!merchant) return null;
+      
+      return {
+        id: merchant.id,
+        name: merchant.name,
+        address: merchant.address,
+        slug: merchant.slug,
+        email: merchant.login || '',
+        createdAt: merchant.created_at.toISOString(),
+      };
+    }
+
+    const query = `
+      UPDATE merchant 
+      SET ${setParts.join(', ')}
+      WHERE id = $${paramIndex++}
+      RETURNING *
+    `;
+    
+    values.push(merchantId);
+    
+    const result = await this.pool.query(query, values);
+    
+    if (result.rows.length === 0) {
+      return null;
+    }
+    
+    const row = result.rows[0];
+    
+    return {
+      id: row.id,
+      name: row.name,
+      address: row.address,
+      slug: row.slug,
+      email: row.login || '',
+      createdAt: row.created_at.toISOString(),
+    };
+  }
+
+  async deleteMerchant(merchantId: string): Promise<boolean> {
+    const query = `
+      DELETE FROM merchant 
+      WHERE id = $1
+      RETURNING id
+    `;
+    
+    const result = await this.pool.query(query, [merchantId]);
     return result.rows.length > 0;
   }
 } 

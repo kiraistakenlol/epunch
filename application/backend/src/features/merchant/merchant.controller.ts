@@ -1,5 +1,5 @@
 import { Controller, Get, Param, ParseUUIDPipe, Post, Body, HttpException, HttpStatus, Put, Delete, Query } from '@nestjs/common';
-import { LoyaltyProgramDto, MerchantLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto } from 'e-punch-common-core';
+import { LoyaltyProgramDto, MerchantLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreateMerchantDto, UpdateMerchantDto } from 'e-punch-common-core';
 import { MerchantService } from './merchant.service';
 
 @Controller('merchants')
@@ -20,6 +20,24 @@ export class MerchantController {
     @Param('id', ParseUUIDPipe) merchantId: string,
   ): Promise<MerchantDto> {
     return this.merchantService.getMerchantById(merchantId);
+  }
+
+  @Post()
+  async createMerchant(@Body() createDto: CreateMerchantDto): Promise<MerchantDto> {
+    return this.merchantService.createMerchant(createDto);
+  }
+
+  @Put(':id')
+  async updateMerchant(
+    @Param('id', ParseUUIDPipe) merchantId: string,
+    @Body() updateDto: UpdateMerchantDto,
+  ): Promise<MerchantDto> {
+    return this.merchantService.updateMerchant(merchantId, updateDto);
+  }
+
+  @Delete(':id')
+  async deleteMerchant(@Param('id', ParseUUIDPipe) merchantId: string): Promise<void> {
+    return this.merchantService.deleteMerchant(merchantId);
   }
 
   @Post('auth')
