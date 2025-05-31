@@ -36,12 +36,21 @@
       "runtimeExecutable": "bash",
       "runtimeArgs": ["-c", "./run-merchant-app.sh"],
       "console": "integratedTerminal"
+    },
+    {
+      "name": "✅ Admin App",
+      "type": "pwa-node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "./run-admin-app.sh"],
+      "console": "integratedTerminal"
     }
   ],
   "compounds": [
     {
       "name": "Fullstack",
-      "configurations": ["✅ User App", "✅ Backend", "✅ Merchant App"]
+      "configurations": ["✅ User App", "✅ Backend", "✅ Merchant App", "✅ Admin App"]
     }
   ]
 } 

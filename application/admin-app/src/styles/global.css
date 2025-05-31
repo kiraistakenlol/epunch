@@ -1,0 +1,6 @@
+/* application/admin-app/src/styles/global.css */
+
+/* Import shared styles from common-ui */
+@import 'e-punch-common-ui/dist/style.css';
+
+/* Admin-specific global styles go here */ 
