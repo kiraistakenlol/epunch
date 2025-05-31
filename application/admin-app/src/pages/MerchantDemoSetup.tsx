@@ -291,7 +291,7 @@ export const MerchantDemoSetup: React.FC = () => {
       showSnackbar('Demo merchant setup completed successfully!', 'success');
       
       setTimeout(() => {
-        navigate('/merchants');
+        navigate(`/merchants/${newMerchant.id}`);
       }, 2000);
       
     } catch (err: any) {
