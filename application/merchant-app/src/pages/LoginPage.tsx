@@ -111,6 +111,10 @@ export const LoginPage: React.FC = () => {
                 required
                 autoFocus
                 disabled={isLoading}
+                inputProps={{
+                  autoCapitalize: 'none',
+                  autoCorrect: 'off',
+                }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     backgroundColor: '#fff',
@@ -142,6 +146,10 @@ export const LoginPage: React.FC = () => {
                 margin="normal"
                 required
                 disabled={isLoading}
+                inputProps={{
+                  autoCapitalize: 'none',
+                  autoCorrect: 'off',
+                }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     backgroundColor: '#fff',
