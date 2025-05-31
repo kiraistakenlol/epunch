@@ -12,6 +12,7 @@ import {
   Chip,
   Divider,
   Grid,
+  Dialog,
 } from '@mui/material';
 import {
   ArrowBack as ArrowBackIcon,
@@ -26,10 +27,12 @@ import {
   Loyalty as LoyaltyIcon,
   Analytics as AnalyticsIcon,
   QrCode as QrCodeIcon,
+  Visibility as ViewIcon,
 } from '@mui/icons-material';
 import { QRCodeSVG } from 'qrcode.react';
 import { apiClient, SystemStatistics } from 'e-punch-common-ui';
 import { MerchantDto, LoyaltyProgramDto } from 'e-punch-common-core';
+import { PrintableQRCode } from '../components/PrintableQRCode';
 
 export const MerchantView: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -40,6 +43,7 @@ export const MerchantView: React.FC = () => {
   const [merchantStats, setMerchantStats] = useState<SystemStatistics['merchants']['list'][0] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [statsLoading, setStatsLoading] = useState(true);
+  const [showPrintableQR, setShowPrintableQR] = useState(false);
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
     message: string;
@@ -119,6 +123,14 @@ export const MerchantView: React.FC = () => {
 
   const handleEdit = () => {
     navigate(`/merchants/${id}/edit`);
+  };
+
+  const handleViewPrintableQR = () => {
+    setShowPrintableQR(true);
+  };
+
+  const handleClosePrintableQR = () => {
+    setShowPrintableQR(false);
   };
 
   const getStatCard = (title: string, value: number | string, icon: React.ReactNode, color: string) => (
@@ -294,16 +306,30 @@ export const MerchantView: React.FC = () => {
       {/* Welcome QR Code */}
       <Card sx={{ backgroundColor: '#f5f5dc', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)', mb: 4 }}>
         <CardContent sx={{ p: 4 }}>
-          <Box display="flex" alignItems="center" mb={3}>
-            <QrCodeIcon sx={{ fontSize: 40, color: '#5d4037', mr: 2 }} />
-            <Box>
-              <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#3e2723' }}>
-                Welcome QR Code
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Customers can scan this code to instantly get punch cards for all your loyalty programs
-              </Typography>
+          <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={3}>
+            <Box display="flex" alignItems="center">
+              <QrCodeIcon sx={{ fontSize: 40, color: '#5d4037', mr: 2 }} />
+              <Box>
+                <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#3e2723' }}>
+                  Welcome QR Code
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Customers can scan this code to instantly get punch cards for all your loyalty programs
+                </Typography>
+              </Box>
             </Box>
+            <Button
+              variant="outlined"
+              startIcon={<ViewIcon />}
+              onClick={handleViewPrintableQR}
+              sx={{
+                backgroundColor: '#5d4037',
+                color: '#f5f5dc',
+                '&:hover': { backgroundColor: '#6d4c41' },
+              }}
+            >
+              Show QR Code
+            </Button>
           </Box>
 
           <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} gap={4} alignItems="center">
@@ -453,6 +479,27 @@ export const MerchantView: React.FC = () => {
           {snackbar.message}
         </Alert>
       </Snackbar>
+
+      {/* QR Code Modal */}
+      <Dialog
+        open={showPrintableQR}
+        onClose={handleClosePrintableQR}
+        maxWidth={false}
+        sx={{
+          '& .MuiDialog-paper': {
+            width: '100vw',
+            height: '100vh',
+            maxWidth: 'none',
+            maxHeight: 'none',
+            margin: 0,
+            borderRadius: 0,
+          },
+        }}
+      >
+        {merchant && (
+          <PrintableQRCode merchant={merchant} onClose={handleClosePrintableQR} />
+        )}
+      </Dialog>
     </Box>
   );
 }; 
