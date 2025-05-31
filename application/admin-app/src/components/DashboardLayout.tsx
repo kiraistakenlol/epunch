@@ -23,6 +23,7 @@ import {
   Dashboard as DashboardIcon,
   Store as StoreIcon,
   RocketLaunch as RocketIcon,
+  People as PeopleIcon,
   AccountCircle,
 } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -34,6 +35,7 @@ const menuItems = [
   { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
   { text: 'Demo Setup', icon: <RocketIcon />, path: '/merchant-demo-setup' },
   { text: 'Merchants', icon: <StoreIcon />, path: '/merchants' },
+  { text: 'Users', icon: <PeopleIcon />, path: '/users' },
 ];
 
 export const DashboardLayout: React.FC = () => {

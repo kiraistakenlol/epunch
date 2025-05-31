@@ -158,12 +158,11 @@ export function Table<T extends { id: string }>({
           {!isMobile && (
             <Box
               sx={{
-                backgroundColor: '#f5f5dc',
-                borderRadius: '6px',
+                backgroundColor: '#ffffff',
+                borderRadius: '6px 6px 0 0',
                 padding: '12px 14px',
-                border: '2px solid rgba(93, 64, 55, 0.5)',
-                boxShadow: '0 2px 6px rgba(0, 0, 0, 0.15)',
-                borderBottom: '3px solid rgba(93, 64, 55, 0.7)',
+                border: '1px solid rgba(0, 0, 0, 0.08)',
+                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
               }}
             >
               <Box display="flex" alignItems="center">
@@ -184,9 +183,9 @@ export function Table<T extends { id: string }>({
                     <Typography
                       variant="subtitle2"
                       sx={{
-                        color: '#3e2723',
+                        color: '#424242',
                         fontWeight: 700,
-                        fontSize: '0.9rem',
+                        fontSize: '0.85rem',
                         textTransform: 'uppercase',
                         letterSpacing: '0.5px',
                       }}
@@ -199,26 +198,36 @@ export function Table<T extends { id: string }>({
             </Box>
           )}
 
-          {/* Data Rows */}
-          {data.map((item, index) => (
-            <Box key={item.id}>
-              {isMobile && renderMobileCard ? (
-                renderMobileCard(item, index)
-              ) : (
-                <Card
-                  sx={{
-                    backgroundColor: '#f5f5dc',
-                    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-                    cursor: onRowClick ? 'pointer' : 'default',
-                    '&:hover': {
-                      boxShadow: onRowClick ? '0 4px 12px rgba(0, 0, 0, 0.2)' : '0 2px 6px rgba(0, 0, 0, 0.15)',
-                      transform: onRowClick ? 'translateY(-2px)' : 'translateY(-1px)',
-                    },
-                    transition: 'all 0.2s ease-in-out',
-                  }}
-                  onClick={() => onRowClick?.(item)}
-                >
-                  <CardContent sx={{ padding: '12px 14px !important' }}>
+          {/* Data Rows Container */}
+          <Card
+            sx={{
+              backgroundColor: '#ffffff',
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+              border: '1px solid rgba(0, 0, 0, 0.08)',
+              borderRadius: !isMobile ? '0 0 6px 6px' : '6px',
+              borderTop: !isMobile ? 'none' : '1px solid rgba(0, 0, 0, 0.08)',
+              overflow: 'hidden',
+            }}
+          >
+            {data.map((item, index) => (
+              <Box key={item.id}>
+                {isMobile && renderMobileCard ? (
+                  <Box sx={{ p: 2, borderBottom: index < data.length - 1 ? '1px solid rgba(0, 0, 0, 0.06)' : 'none' }}>
+                    {renderMobileCard(item, index)}
+                  </Box>
+                ) : (
+                  <Box
+                    sx={{
+                      padding: '12px 14px',
+                      borderBottom: index < data.length - 1 ? '1px solid rgba(0, 0, 0, 0.06)' : 'none',
+                      cursor: onRowClick ? 'pointer' : 'default',
+                      '&:hover': {
+                        backgroundColor: onRowClick ? '#f8f9fa' : 'transparent',
+                      },
+                      transition: 'background-color 0.2s ease-in-out',
+                    }}
+                    onClick={() => onRowClick?.(item)}
+                  >
                     {isMobile ? (
                       <Box display="flex" flexDirection="column" gap={1}>
                         {columns
@@ -227,10 +236,10 @@ export function Table<T extends { id: string }>({
                             const value = getValue(item, column.accessor);
                             return (
                               <Box key={column.key} display="flex" justifyContent="space-between">
-                                <Typography variant="caption" color="text.secondary" fontWeight="bold">
+                                <Typography variant="caption" color="text.secondary" fontWeight="600">
                                   {column.label}:
                                 </Typography>
-                                <Typography variant="body2" component="div">
+                                <Typography variant="body2" component="div" sx={{ fontWeight: 600 }}>
                                   {column.render ? column.render(value, item) : value}
                                 </Typography>
                               </Box>
@@ -311,6 +320,8 @@ export function Table<T extends { id: string }>({
                                     overflow: 'hidden',
                                     textOverflow: 'ellipsis',
                                     whiteSpace: 'nowrap',
+                                    fontWeight: 600,
+                                    color: '#2c2c2c',
                                   }}
                                 >
                                   {column.render ? column.render(value, item) : (value || '—')}
@@ -321,11 +332,11 @@ export function Table<T extends { id: string }>({
                         })}
                       </Box>
                     )}
-                  </CardContent>
-                </Card>
-              )}
-            </Box>
-          ))}
+                  </Box>
+                )}
+              </Box>
+            ))}
+          </Card>
         </Box>
       )}
     </Box>

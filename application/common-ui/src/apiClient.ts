@@ -233,6 +233,21 @@ export const apiClient = {
     return response.data;
   },
 
+  // Get all users (admin endpoint)
+  async getAllUsers(): Promise<UserDto[]> {
+    const response = await instance.get<UserDto[]>('/users');
+    return response.data;
+  },
+
+  // Get user by ID (admin endpoint)
+  async getUserById(userId: string): Promise<UserDto> {
+    if (!userId) {
+      return Promise.reject(new Error('User ID is required.'));
+    }
+    const response = await instance.get<UserDto>(`/users/${userId}`);
+    return response.data;
+  },
+
   // Merchant authentication
   async authenticateMerchant(login: string, password: string): Promise<MerchantLoginResponse> {
     if (!login || !password) {

@@ -11,12 +11,10 @@ import {
   Alert,
   CircularProgress,
   Chip,
-  Divider,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  TextField,
   Select,
   MenuItem,
   FormControl,
@@ -25,7 +23,6 @@ import {
 import {
   RocketLaunch as RocketIcon,
   Business as BusinessIcon,
-  AdminPanelSettings as AdminIcon,
   People as UsersIcon,
   CreditCard as PunchCardIcon,
   Loyalty as LoyaltyIcon,
@@ -94,6 +91,10 @@ export const Dashboard: React.FC = () => {
 
   const handleMerchantManagement = () => {
     navigate('/merchants');
+  };
+
+  const handleUserManagement = () => {
+    navigate('/users');
   };
 
   const handleOpenAdminDialog = (operation: string) => {
@@ -331,6 +332,48 @@ export const Dashboard: React.FC = () => {
                     </Typography>
                     <Typography variant="body2" sx={{ color: '#5d4037' }}>
                       View, create, and edit merchants
+                    </Typography>
+                  </Box>
+                </Box>
+                <Button
+                  variant="contained"
+                  sx={{
+                    backgroundColor: '#5d4037',
+                    color: '#f5f5dc',
+                    '&:hover': { backgroundColor: '#6d4c41' },
+                  }}
+                >
+                  Manage
+                </Button>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Card 
+            sx={{ 
+              backgroundColor: '#f5f5dc',
+              border: '2px solid #5d4037',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease-in-out',
+              '&:hover': {
+                transform: 'translateY(-2px)',
+                boxShadow: '0 6px 16px rgba(0, 0, 0, 0.2)',
+              },
+            }}
+            onClick={handleUserManagement}
+          >
+            <CardContent sx={{ p: 3 }}>
+              <Box display="flex" alignItems="center" justifyContent="space-between">
+                <Box display="flex" alignItems="center" gap={2}>
+                  <UsersIcon sx={{ fontSize: 32, color: '#5d4037' }} />
+                  <Box>
+                    <Typography variant="h6" component="h2" sx={{ color: '#3e2723', fontWeight: 'bold' }}>
+                      Manage Users
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: '#5d4037' }}>
+                      View, create, and edit users
                     </Typography>
                   </Box>
                 </Box>

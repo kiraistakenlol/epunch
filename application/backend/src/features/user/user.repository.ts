@@ -97,4 +97,19 @@ export class UserRepository {
     }
   }
 
+  async findAllUsers(): Promise<User[]> {
+    this.logger.log('Fetching all users');
+    
+    const query = 'SELECT * FROM "user" ORDER BY created_at DESC';
+    
+    try {
+      const result = await this.pool.query(query);
+      this.logger.log(`Found ${result.rows.length} users`);
+      return result.rows;
+    } catch (error: any) {
+      this.logger.error(`Error fetching all users: ${error.message}`);
+      throw error;
+    }
+  }
+
 } 

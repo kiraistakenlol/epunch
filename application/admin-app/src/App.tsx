@@ -12,6 +12,8 @@ import { MerchantView } from './pages/MerchantView';
 import { MerchantCreate } from './pages/MerchantCreate';
 import { MerchantEdit } from './pages/MerchantEdit';
 import { MerchantDemoSetup } from './pages/MerchantDemoSetup';
+import { Users } from './pages/Users';
+import { UserView } from './pages/UserView';
 import './styles/global.css';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
@@ -97,6 +99,8 @@ function App() {
             <Route path="merchants/:id" element={<MerchantView />} />
             <Route path="merchants/:id/edit" element={<MerchantEdit />} />
             <Route path="merchant-demo-setup" element={<MerchantDemoSetup />} />
+            <Route path="users" element={<Users />} />
+            <Route path="users/:id" element={<UserView />} />
           </Route>
         </Routes>
       </Router>
