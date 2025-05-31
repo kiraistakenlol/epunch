@@ -23,12 +23,10 @@ import {
 } from '@mui/icons-material';
 import { apiClient } from 'e-punch-common-ui';
 import { MerchantDto } from 'e-punch-common-core';
-import { useAppSelector } from '../store/hooks';
 
 export const MerchantView: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const adminUser = useAppSelector(state => state.auth.adminUser);
   
   const [merchant, setMerchant] = useState<MerchantDto | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -144,20 +142,18 @@ export const MerchantView: React.FC = () => {
             Back
           </Button>
           
-          {adminUser?.isSuperAdmin && (
-            <Button
-              variant="contained"
-              startIcon={<EditIcon />}
-              onClick={handleEdit}
-              sx={{
-                backgroundColor: '#5d4037',
-                color: '#f5f5dc',
-                '&:hover': { backgroundColor: '#6d4c41' },
-              }}
-            >
-              Edit Merchant
-            </Button>
-          )}
+          <Button
+            variant="contained"
+            startIcon={<EditIcon />}
+            onClick={handleEdit}
+            sx={{
+              backgroundColor: '#5d4037',
+              color: '#f5f5dc',
+              '&:hover': { backgroundColor: '#6d4c41' },
+            }}
+          >
+            Edit Merchant
+          </Button>
         </Box>
       </Box>
 

@@ -11,12 +11,10 @@ import {
 } from '@mui/icons-material';
 import { apiClient } from 'e-punch-common-ui';
 import { MerchantDto } from 'e-punch-common-core';
-import { useAppSelector } from '../store/hooks';
 import { Table, TableColumn, TableAction } from '../components/Table';
 
 export const Merchants: React.FC = () => {
   const navigate = useNavigate();
-  const adminUser = useAppSelector(state => state.auth.adminUser);
   
   const [merchants, setMerchants] = useState<MerchantDto[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -140,14 +138,12 @@ export const Merchants: React.FC = () => {
       onClick: (merchant) => handleEdit(merchant.id),
       variant: 'edit',
       icon: <EditIcon />,
-      show: () => adminUser?.isSuperAdmin || false,
     },
     {
       label: 'Delete',
       onClick: (merchant) => handleDelete(merchant.id, merchant.name),
       variant: 'delete',
       icon: <DeleteIcon />,
-      show: () => adminUser?.isSuperAdmin || false,
     },
   ];
 
@@ -163,7 +159,7 @@ export const Merchants: React.FC = () => {
         createButton={{
           label: 'Add Merchant',
           onClick: handleCreate,
-          show: adminUser?.isSuperAdmin || false,
+          show: true,
         }}
         emptyState={{
           title: 'No merchants yet',

@@ -5,7 +5,6 @@ interface AdminUser {
   email: string;
   firstName?: string;
   lastName?: string;
-  isSuperAdmin: boolean;
 }
 
 interface AuthState {

@@ -22,6 +22,7 @@ import {
   Menu as MenuIcon,
   Dashboard as DashboardIcon,
   Store as StoreIcon,
+  RocketLaunch as RocketIcon,
   AccountCircle,
 } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -31,6 +32,7 @@ const drawerWidth = 280;
 
 const menuItems = [
   { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
+  { text: 'Demo Setup', icon: <RocketIcon />, path: '/merchant-demo-setup' },
   { text: 'Merchants', icon: <StoreIcon />, path: '/merchants' },
 ];
 
@@ -163,7 +165,7 @@ export const DashboardLayout: React.FC = () => {
                   mt: isMobile ? 0.5 : 0.2,
                 }}
               >
-                {adminUser.email} {adminUser.isSuperAdmin && '(Super Admin)'}
+                {adminUser.email}
               </Typography>
             )}
           </Typography>

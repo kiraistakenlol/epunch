@@ -35,10 +35,9 @@ export const LoginPage: React.FC = () => {
     if (email === 'admin' && password === '0000') {
       const adminUser = {
         id: '1',
-        email: 'admin',
+        email: email,
         firstName: 'Admin',
         lastName: 'User',
-        isSuperAdmin: true,
       };
       dispatch(loginSuccess(adminUser));
       navigate('/');
