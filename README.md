@@ -64,7 +64,7 @@ The project includes several convenience scripts for development:
 
 ### QR Code Onboarding
 
-Merchants can generate QR codes linking to `https://app.com/?merchantSlug=merchant-name`. When users scan these codes:
+Merchants can generate QR codes linking to `https://app.com/?merchant=merchantSlug`. When users scan these codes:
 
 1. The app automatically fetches the merchant's active loyalty programs
 2. Creates punch cards for all programs the user doesn't already have
