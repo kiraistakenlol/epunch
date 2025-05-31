@@ -8,6 +8,9 @@ import { LoginPage } from './pages/LoginPage';
 import { DashboardLayout } from './components/DashboardLayout';
 import { Dashboard } from './pages/Dashboard';
 import { Merchants } from './pages/Merchants';
+import { MerchantView } from './pages/MerchantView';
+import { MerchantCreate } from './pages/MerchantCreate';
+import { MerchantEdit } from './pages/MerchantEdit';
 import './styles/global.css';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
@@ -89,6 +92,9 @@ function App() {
           }>
             <Route index element={<Dashboard />} />
             <Route path="merchants" element={<Merchants />} />
+            <Route path="merchants/create" element={<MerchantCreate />} />
+            <Route path="merchants/:id" element={<MerchantView />} />
+            <Route path="merchants/:id/edit" element={<MerchantEdit />} />
           </Route>
         </Routes>
       </Router>

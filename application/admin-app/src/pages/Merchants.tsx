@@ -63,6 +63,10 @@ export const Merchants: React.FC = () => {
     navigate('/merchants/create');
   };
 
+  const handleView = (merchant: MerchantDto) => {
+    navigate(`/merchants/${merchant.id}`);
+  };
+
   const handleEdit = (id: string) => {
     navigate(`/merchants/${id}/edit`);
   };
@@ -155,6 +159,7 @@ export const Merchants: React.FC = () => {
         actions={actions}
         isLoading={isLoading}
         title="Merchants"
+        onRowClick={handleView}
         createButton={{
           label: 'Add Merchant',
           onClick: handleCreate,

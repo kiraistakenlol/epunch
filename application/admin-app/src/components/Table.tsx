@@ -46,6 +46,7 @@ export interface TableProps<T> {
     description: string;
   };
   renderMobileCard?: (item: T, index: number) => React.ReactNode;
+  onRowClick?: (item: T) => void;
 }
 
 export function Table<T extends { id: string }>({
@@ -57,6 +58,7 @@ export function Table<T extends { id: string }>({
   createButton,
   emptyState,
   renderMobileCard,
+  onRowClick,
 }: TableProps<T>) {
   const theme = useTheme();
   const isMobile = useMediaQuery((theme as any).breakpoints.down('sm'));
@@ -207,12 +209,14 @@ export function Table<T extends { id: string }>({
                   sx={{
                     backgroundColor: '#f5f5dc',
                     boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+                    cursor: onRowClick ? 'pointer' : 'default',
                     '&:hover': {
-                      boxShadow: '0 2px 6px rgba(0, 0, 0, 0.15)',
-                      transform: 'translateY(-1px)',
+                      boxShadow: onRowClick ? '0 4px 12px rgba(0, 0, 0, 0.2)' : '0 2px 6px rgba(0, 0, 0, 0.15)',
+                      transform: onRowClick ? 'translateY(-2px)' : 'translateY(-1px)',
                     },
                     transition: 'all 0.2s ease-in-out',
                   }}
+                  onClick={() => onRowClick?.(item)}
                 >
                   <CardContent sx={{ padding: '12px 14px !important' }}>
                     {isMobile ? (
@@ -226,7 +230,7 @@ export function Table<T extends { id: string }>({
                                 <Typography variant="caption" color="text.secondary" fontWeight="bold">
                                   {column.label}:
                                 </Typography>
-                                <Typography variant="body2">
+                                <Typography variant="body2" component="div">
                                   {column.render ? column.render(value, item) : value}
                                 </Typography>
                               </Box>
@@ -242,7 +246,10 @@ export function Table<T extends { id: string }>({
                                   size="small"
                                   variant={action.variant === 'delete' ? 'outlined' : 'contained'}
                                   color={action.variant === 'delete' ? 'error' : 'primary'}
-                                  onClick={() => action.onClick(item)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    action.onClick(item);
+                                  }}
                                   startIcon={action.icon}
                                   sx={{
                                     fontSize: '0.75rem',
@@ -283,7 +290,10 @@ export function Table<T extends { id: string }>({
                                       size="small"
                                       variant={action.variant === 'delete' ? 'outlined' : 'contained'}
                                       color={action.variant === 'delete' ? 'error' : 'primary'}
-                                      onClick={() => action.onClick(item)}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        action.onClick(item);
+                                      }}
                                       startIcon={action.icon}
                                       sx={{
                                         fontSize: '0.75rem',
@@ -296,6 +306,7 @@ export function Table<T extends { id: string }>({
                               ) : (
                                 <Typography
                                   variant="body2"
+                                  component="div"
                                   sx={{
                                     overflow: 'hidden',
                                     textOverflow: 'ellipsis',
