@@ -31,22 +31,19 @@ export const LoginPage: React.FC = () => {
 
     dispatch(loginStart());
 
-    try {
-      // TODO: Replace with actual API call when backend admin auth is implemented
-      // For now, simulate admin login
-      setTimeout(() => {
-        const mockAdminUser = {
-          id: '1',
-          email: email,
-          firstName: 'Admin',
-          lastName: 'User',
-          isSuperAdmin: email.includes('admin'),
-        };
-        dispatch(loginSuccess(mockAdminUser));
-        navigate('/');
-      }, 1000);
-    } catch (error) {
-      dispatch(loginFailure('Invalid credentials'));
+    // Hardcoded credentials - admin/0000
+    if (email === 'admin' && password === '0000') {
+      const adminUser = {
+        id: '1',
+        email: 'admin',
+        firstName: 'Admin',
+        lastName: 'User',
+        isSuperAdmin: true,
+      };
+      dispatch(loginSuccess(adminUser));
+      navigate('/');
+    } else {
+      dispatch(loginFailure('Invalid credentials. Use admin/0000'));
     }
   };
 
@@ -86,13 +83,14 @@ export const LoginPage: React.FC = () => {
           <Box component="form" onSubmit={handleSubmit}>
             <TextField
               fullWidth
-              label="Email"
-              type="email"
+              label="Username"
+              type="text"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               margin="normal"
               required
               disabled={isLoading}
+              placeholder="admin"
               sx={{
                 '& .MuiOutlinedInput-root': {
                   backgroundColor: 'white',
@@ -109,6 +107,7 @@ export const LoginPage: React.FC = () => {
               margin="normal"
               required
               disabled={isLoading}
+              placeholder="0000"
               sx={{
                 '& .MuiOutlinedInput-root': {
                   backgroundColor: 'white',
