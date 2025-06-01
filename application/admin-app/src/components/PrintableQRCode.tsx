@@ -11,6 +11,7 @@ import {
   Print as PrintIcon,
   Close as CloseIcon,
   ArrowForward as ArrowForwardIcon,
+  LocalCafe as CoffeeIcon,
 } from '@mui/icons-material';
 import { QRCodeSVG } from 'qrcode.react';
 import { MerchantDto } from 'e-punch-common-core';
@@ -109,14 +110,11 @@ export const PrintableQRCode: React.FC<PrintableQRCodeProps> = ({ merchant, onCl
           }}
         >
           {[...Array(10)].map((_, index) => (
-            <Box
+            <CoffeeIcon
               key={index}
               sx={{
-                width: '28px',
-                height: '28px',
-                borderRadius: '50%',
-                border: '2px solid #5d4037',
-                backgroundColor: index < 3 ? '#5d4037' : 'transparent',
+                fontSize: '28px',
+                color: index < 3 ? '#3e2723' : 'rgba(250, 250, 232, 0.78)',
               }}
             />
           ))}
