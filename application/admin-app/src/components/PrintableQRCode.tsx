@@ -11,8 +11,8 @@ import {
   Print as PrintIcon,
   Close as CloseIcon,
   ArrowForward as ArrowForwardIcon,
-  LocalCafe as CoffeeIcon,
 } from '@mui/icons-material';
+import { CupHot, CupHotFill } from 'react-bootstrap-icons';
 import { QRCodeSVG } from 'qrcode.react';
 import { MerchantDto } from 'e-punch-common-core';
 
@@ -109,15 +109,17 @@ export const PrintableQRCode: React.FC<PrintableQRCodeProps> = ({ merchant, onCl
             justifyItems: 'center',
           }}
         >
-          {[...Array(10)].map((_, index) => (
-            <CoffeeIcon
-              key={index}
-              sx={{
-                fontSize: '28px',
-                color: index < 3 ? '#3e2723' : 'rgba(250, 250, 232, 0.78)',
-              }}
-            />
-          ))}
+          {[...Array(10)].map((_, index) => {
+            const isFilled = index < 3;
+            const IconComponent = isFilled ? CupHotFill : CupHot;
+            return (
+              <IconComponent
+                key={index}
+                size={28}
+                color={isFilled ? '#3e2723' : 'rgba(250, 250, 232, 0.78)'}
+              />
+            );
+          })}
         </Box>
 
         {/* Program name */}
