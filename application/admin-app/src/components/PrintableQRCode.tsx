@@ -5,14 +5,11 @@ import {
   Typography,
   Paper,
   Button,
-  IconButton,
   Fab,
 } from '@mui/material';
 import {
   Print as PrintIcon,
   Close as CloseIcon,
-  WhatsApp as WhatsAppIcon,
-  Email as EmailIcon,
   Star as StarIcon,
   LocalOffer as GiftIcon,
 } from '@mui/icons-material';
@@ -53,19 +50,6 @@ export const PrintableQRCode: React.FC<PrintableQRCodeProps> = ({ merchant, onCl
     } else {
       navigate(`/merchants/${merchant.id}`);
     }
-  };
-
-  const handleWhatsAppShare = () => {
-    const message = `🎉 Hey! Check out ${merchant.name}! \n\nScan this QR code to get FREE loyalty cards and earn rewards! 🎁\n\n${window.location.origin}/merchants/${merchant.id}/qr`;
-    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
-  };
-
-  const handleEmailShare = () => {
-    const subject = `Free Loyalty Cards at ${merchant.name}!`;
-    const body = `Hi!\n\nI thought you'd love this - ${merchant.name} has a super easy way to get loyalty cards and earn FREE rewards!\n\nJust scan the QR code on this page: ${window.location.origin}/merchants/${merchant.id}/qr\n\nEnjoy the freebies! 🎁`;
-    const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailtoUrl;
   };
 
   const qrCodeUrl = `https://narrow-ai-epunch.vercel.app?merchant=${merchant.slug}`;
@@ -179,28 +163,6 @@ export const PrintableQRCode: React.FC<PrintableQRCodeProps> = ({ merchant, onCl
         >
           Print
         </Button>
-        <IconButton
-          onClick={handleWhatsAppShare}
-          sx={{
-            backgroundColor: '#25D366',
-            color: '#fff',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-            '&:hover': { backgroundColor: '#20b358' },
-          }}
-        >
-          <WhatsAppIcon />
-        </IconButton>
-        <IconButton
-          onClick={handleEmailShare}
-          sx={{
-            backgroundColor: '#EA4335',
-            color: '#fff',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-            '&:hover': { backgroundColor: '#d33b2c' },
-          }}
-        >
-          <EmailIcon />
-        </IconButton>
       </Box>
 
       {/* Printable Content */}
