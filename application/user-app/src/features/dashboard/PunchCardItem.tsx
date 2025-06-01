@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { PunchCardDto } from 'e-punch-common-core';
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { selectLoyaltyProgramById } from '../loyaltyPrograms/loyaltyProgramsSlice';
@@ -26,6 +26,7 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
   id,
   loyaltyProgramId,
   shopName,
+  shopAddress,
   currentPunches,
   totalPunches,
   status,
@@ -40,6 +41,21 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
   const loyaltyProgram = useAppSelector(state => selectLoyaltyProgramById(state, loyaltyProgramId));
   const dispatch = useAppDispatch();
   const cardRef = useRef<HTMLDivElement>(null);
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  // Create punch circles
+  const punchCircles: JSX.Element[] = [];
+  for (let i = 0; i < totalPunches; i++) {
+    const isFilled = i < currentPunches;
+    const isAnimated = animatedPunchIndex === i;
+    punchCircles.push(
+      <div
+        key={i}
+        className={`${styles.punchCircle} ${isFilled ? styles.punchCircleFilled : ''} ${isAnimated ? styles.punchCircleAnimated : ''}`}
+      ></div>
+    );
+  }
 
   // Listen for CSS animation events
   useEffect(() => {
@@ -49,8 +65,6 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
     const handleAnimationEnd = (e: AnimationEvent) => {
       console.log('Animation ended:', e.animationName, 'on card:', id, 'target:', e.target);
       
-      // Map CSS animation names to our event names
-      // Note: CSS modules may hash animation names, so we check for contains instead of exact match
       if (e.animationName.includes('newPunchAnimation')) {
         console.log('→ Dispatching PUNCH_ANIMATION_COMPLETE');
         dispatch(handleEvent('PUNCH_ANIMATION_COMPLETE'));
@@ -63,12 +77,14 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
       } else if (e.animationName.includes('slideOutAndFade')) {
         console.log('→ Dispatching SLIDE_OUT_ANIMATION_COMPLETE for reward claimed');
         dispatch(handleEvent('SLIDE_OUT_ANIMATION_COMPLETE'));
+      } else if (e.animationName.includes('cardFlip')) {
+        console.log('→ Flip animation complete');
+        setIsAnimating(false);
       } else {
         console.log('→ Unhandled animation name:', e.animationName);
       }
     };
 
-    // Listen for animation events from any child element (including punch circles)
     cardElement.addEventListener('animationend', handleAnimationEnd, true);
     
     return () => {
@@ -76,24 +92,22 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
     };
   }, [id, dispatch]);
 
-  const punchCircles = [];
-  for (let i = 0; i < totalPunches; i++) {
-    const isFilled = i < currentPunches;
-    const isAnimated = animatedPunchIndex === i;
-    punchCircles.push(
-      <div
-        key={i}
-        className={`${styles.punchCircle} ${isFilled ? styles.punchCircleFilled : ''} ${isAnimated ? styles.punchCircleAnimated : ''}`}
-      ></div>
-    );
-  }
-
   const handleClick = (event: React.MouseEvent) => {
-    // Prevent event bubbling to avoid triggering main content click handler
     event.stopPropagation();
     
     if (onCardClick) {
       onCardClick(id);
+    }
+
+    if (status !== 'REWARD_READY' && !isAnimating) {
+      const newFlippedState = !isFlipped;
+      
+      setIsAnimating(true);
+      
+      // Switch content at 50% of animation (300ms)
+      setTimeout(() => {
+        setIsFlipped(newFlippedState);
+      }, 300);
     }
   };
 
@@ -104,17 +118,13 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
     shouldSlideIn ? styles.punchCardSlideIn : '',
     shouldSlideRight ? styles.punchCardSlideRight : '',
     isSelected ? styles.selectedForRedemption : '',
-    status === 'REWARD_READY' ? styles.clickableCard : '',
-    animateRewardClaimed ? styles.punchCardSlideOut : ''
+    status === 'REWARD_READY' ? styles.clickableCard : styles.flippableCard,
+    animateRewardClaimed ? styles.punchCardSlideOut : '',
+    isAnimating ? styles.flipping : ''
   ].filter(Boolean).join(' ');
 
-  return (
-    <div 
-      ref={cardRef}
-      className={cardClasses}
-      onClick={handleClick}
-      style={{ cursor: 'pointer', position: 'relative' }}
-    >
+  const renderFrontSide = () => (
+    <div className={styles.cardFront}>
       <div className={styles.punchCardHeader}>
         <div className={styles.headerLeft}>
           <span className={styles.shopName}>{shopName}</span>
@@ -135,6 +145,69 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
         </div>
       </div>
       <div className={styles.punchCardFooter}>
+      </div>
+    </div>
+  );
+
+  const renderBackSide = () => (
+    <div className={styles.cardBack}>
+      <div className={styles.backHeader}>
+        <span className={styles.backHeaderTitle}>Details</span>
+      </div>
+      <div className={styles.backContent}>
+        <div className={styles.infoSection}>
+          <div className={styles.infoLabel}>Merchant</div>
+          <div className={styles.infoValue}>{shopName}</div>
+        </div>
+        
+        {shopAddress && (
+          <div className={styles.infoSection}>
+            <div className={styles.infoLabel}>Address</div>
+            <div className={styles.infoValue}>{shopAddress}</div>
+          </div>
+        )}
+        
+        {loyaltyProgram && (
+          <>
+            <div className={styles.infoSection}>
+              <div className={styles.infoLabel}>Program</div>
+              <div className={styles.infoValue}>{loyaltyProgram.name}</div>
+            </div>
+            
+            {loyaltyProgram.description && (
+              <div className={styles.infoSection}>
+                <div className={styles.infoLabel}>Description</div>
+                <div className={styles.infoValue}>{loyaltyProgram.description}</div>
+              </div>
+            )}
+            
+            <div className={styles.infoSection}>
+              <div className={styles.infoLabel}>Reward</div>
+              <div className={styles.infoValue}>{loyaltyProgram.rewardDescription}</div>
+            </div>
+          </>
+        )}
+        
+        <div className={styles.infoSection}>
+          <div className={styles.infoLabel}>Progress</div>
+          <div className={styles.infoValue}>{currentPunches} / {totalPunches} punches</div>
+        </div>
+      </div>
+      <div className={styles.backFooter}>
+        <span className={styles.tapToFlipHint}>Tap to flip back</span>
+      </div>
+    </div>
+  );
+
+  return (
+    <div 
+      ref={cardRef}
+      className={cardClasses}
+      onClick={handleClick}
+      style={{ cursor: 'pointer', position: 'relative' }}
+    >
+      <div className={styles.cardInner}>
+        {!isFlipped ? renderFrontSide() : renderBackSide()}
       </div>
       {isSelected && (
         <div className={styles.redemptionOverlay}>
