@@ -10,8 +10,7 @@ import {
 import {
   Print as PrintIcon,
   Close as CloseIcon,
-  Star as StarIcon,
-  LocalOffer as GiftIcon,
+  ArrowForward as ArrowForwardIcon,
 } from '@mui/icons-material';
 import { QRCodeSVG } from 'qrcode.react';
 import { MerchantDto } from 'e-punch-common-core';
@@ -53,6 +52,91 @@ export const PrintableQRCode: React.FC<PrintableQRCodeProps> = ({ merchant, onCl
   };
 
   const qrCodeUrl = `https://narrow-ai-epunch.vercel.app?merchant=${merchant.slug}`;
+
+  // Mock punch card component
+  const MockPunchCard = () => (
+    <Box
+      sx={{
+        width: '280px',
+        height: '180px',
+        backgroundColor: '#8d6e63',
+        borderRadius: '12px',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+        boxShadow: '0 4px 8px rgba(93, 64, 55, 0.3)',
+        '@media print': {
+          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+        }
+      }}
+    >
+      {/* Header */}
+      <Box
+        sx={{
+          backgroundColor: '#5d4037',
+          color: '#f5f5dc',
+          padding: '12px 18px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        <Typography variant="body1" sx={{ fontWeight: 'bold', fontSize: '1.1rem' }}>
+          {merchant.name}
+        </Typography>
+      </Box>
+
+      {/* Body */}
+      <Box
+        sx={{
+          padding: '15px',
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '10px',
+        }}
+      >
+        {/* Punch circles */}
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(5, 1fr)',
+            gap: '6px',
+            width: '100%',
+            justifyItems: 'center',
+          }}
+        >
+          {[...Array(10)].map((_, index) => (
+            <Box
+              key={index}
+              sx={{
+                width: '28px',
+                height: '28px',
+                borderRadius: '50%',
+                border: '2px solid #5d4037',
+                backgroundColor: index < 3 ? '#5d4037' : 'transparent',
+              }}
+            />
+          ))}
+        </Box>
+
+        {/* Program name */}
+        <Typography
+          variant="body2"
+          sx={{
+            color: '#f5f5dc',
+            fontSize: '0.9rem',
+            fontWeight: 'medium',
+            textAlign: 'center',
+          }}
+        >
+          Buy 10, Get 1 Free
+        </Typography>
+      </Box>
+    </Box>
+  );
 
   return (
     <Box>
@@ -109,7 +193,7 @@ export const PrintableQRCode: React.FC<PrintableQRCodeProps> = ({ merchant, onCl
             .print-container {
               min-height: 100vh;
               width: 100%;
-              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+              background: #424242;
               margin: 0;
               box-shadow: none;
             }
@@ -117,19 +201,18 @@ export const PrintableQRCode: React.FC<PrintableQRCodeProps> = ({ merchant, onCl
         `
       }} />
 
-      {/* Mobile Close Button */}
+      {/* Close Button */}
       <Fab
         className="no-print"
         sx={{
           position: 'fixed',
           top: 20,
           right: 20,
-          backgroundColor: '#fff',
-          color: '#333',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+          backgroundColor: '#8d6e63',
+          color: '#f5f5dc',
           zIndex: 1000,
           '&:hover': {
-            backgroundColor: '#f5f5f5',
+            backgroundColor: '#795548',
           },
         }}
         onClick={handleClose}
@@ -137,17 +220,14 @@ export const PrintableQRCode: React.FC<PrintableQRCodeProps> = ({ merchant, onCl
         <CloseIcon />
       </Fab>
 
-      {/* Screen Controls */}
+      {/* Print Button */}
       <Box 
         className="no-print"
         sx={{ 
           position: 'fixed',
           top: 20,
           left: 20,
-          display: 'flex',
-          gap: 1,
           zIndex: 1000,
-          '@media print': { display: 'none' }
         }}
       >
         <Button
@@ -155,10 +235,11 @@ export const PrintableQRCode: React.FC<PrintableQRCodeProps> = ({ merchant, onCl
           startIcon={<PrintIcon />}
           onClick={handlePrint}
           sx={{
-            backgroundColor: '#fff',
-            color: '#333',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-            '&:hover': { backgroundColor: '#f5f5f5' },
+            backgroundColor: '#8d6e63',
+            color: '#f5f5dc',
+            '&:hover': { 
+              backgroundColor: '#795548',
+            },
           }}
         >
           Print
@@ -169,135 +250,75 @@ export const PrintableQRCode: React.FC<PrintableQRCodeProps> = ({ merchant, onCl
       <Box id="printable-qr-content">
         <Paper className="print-container" sx={{ p: 4, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
           
-          {/* Fun Header */}
+          {/* Header */}
           <Box mb={4} textAlign="center">
             <Typography 
               variant="h2" 
               sx={{ 
                 fontWeight: 'bold', 
-                color: '#fff',
-                mb: 1,
-                fontSize: { xs: '2.5rem', md: '3.5rem' },
-                textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
-                '@media print': { color: '#2c2c2c', textShadow: 'none' }
+                color: '#f5f5dc',
+                mb: 2,
+                fontSize: { xs: '2.5rem', md: '4rem' },
+                '@media print': { color: '#424242' }
               }}
             >
-              🎉 FREE REWARDS! 🎉
-            </Typography>
-            <Typography 
-              variant="h4" 
-              sx={{ 
-                color: '#fff',
-                fontWeight: 600,
-                fontSize: { xs: '1.5rem', md: '2rem' },
-                '@media print': { color: '#666' }
-              }}
-            >
-              at {merchant.name}
+              {merchant.name}
             </Typography>
           </Box>
 
-          {/* Benefits Section */}
-          <Box mb={4} textAlign="center">
-            <Box display="flex" justifyContent="center" alignItems="center" gap={2} mb={3}>
-              <GiftIcon sx={{ fontSize: 40, color: '#FFD700' }} />
-              <Typography 
-                variant="h4" 
-                sx={{ 
-                  color: '#fff',
-                  fontWeight: 'bold',
-                  fontSize: { xs: '1.8rem', md: '2.2rem' },
-                  '@media print': { color: '#2c2c2c' }
-                }}
-              >
-                Get FREE Stuff!
-              </Typography>
-              <GiftIcon sx={{ fontSize: 40, color: '#FFD700' }} />
-            </Box>
-            
-            <Typography 
-              variant="h6" 
-              sx={{ 
-                color: '#fff',
-                mb: 3,
-                fontSize: { xs: '1.1rem', md: '1.3rem' },
-                fontWeight: 500,
-                '@media print': { color: '#495057' }
-              }}
-            >
-              Scan once → Get loyalty cards → Earn rewards automatically! 
-            </Typography>
-          </Box>
-
-          {/* QR Code */}
+          {/* QR Code and Punch Card Side by Side */}
           <Box 
             sx={{ 
-              mb: 4,
-              p: 3,
-              backgroundColor: '#fff',
-              borderRadius: '24px',
-              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-              border: '4px solid #FFD700',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 4,
+              mb: 3,
+              flexDirection: { xs: 'column', md: 'row' },
             }}
           >
-            <QRCodeSVG 
-              value={qrCodeUrl}
-              size={220}
-              level="H"
-              includeMargin={true}
-              fgColor="#000000"
-              bgColor="#ffffff"
-            />
+            {/* QR Code */}
+            <Box 
+              sx={{ 
+                p: 3,
+                backgroundColor: '#f5f5dc',
+                borderRadius: '12px',
+                border: '3px solid #5d4037',
+              }}
+            >
+              <QRCodeSVG 
+                value={qrCodeUrl}
+                size={200}
+                level="H"
+                includeMargin={true}
+                fgColor="#000000"
+                bgColor="#ffffff"
+              />
+            </Box>
+
+            {/* Arrow */}
+            <Box 
+              sx={{ 
+                display: { xs: 'none', md: 'flex' },
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <ArrowForwardIcon 
+                sx={{ 
+                  fontSize: 48,
+                  color: '#f5f5dc',
+                  '@media print': { color: '#5d4037' }
+                }} 
+              />
+            </Box>
+
+            {/* Mock Punch Card */}
+            <Box>
+              <MockPunchCard />
+            </Box>
           </Box>
 
-          {/* Simple Instructions */}
-          <Box textAlign="center" mb={4}>
-            <Typography 
-              variant="h5" 
-              sx={{ 
-                color: '#fff',
-                fontWeight: 'bold',
-                mb: 2,
-                fontSize: { xs: '1.3rem', md: '1.5rem' },
-                '@media print': { color: '#2c2c2c' }
-              }}
-            >
-              📱 Just point your phone camera here!
-            </Typography>
-            <Typography 
-              variant="h6" 
-              sx={{ 
-                color: '#fff',
-                fontSize: { xs: '1rem', md: '1.2rem' },
-                fontStyle: 'italic',
-                '@media print': { color: '#666' }
-              }}
-            >
-              No app downloads. No sign-ups. Just instant rewards! ✨
-            </Typography>
-          </Box>
-
-          {/* Footer */}
-          <Box display="flex" alignItems="center" justifyContent="center" gap={1} flexWrap="wrap">
-            {[1,2,3].map((star) => (
-              <StarIcon key={star} sx={{ color: '#FFD700', fontSize: 30 }} />
-            ))}
-            <Typography 
-              variant="h6" 
-              sx={{ 
-                color: '#fff',
-                fontWeight: 'bold',
-                mx: 2,
-                fontSize: { xs: '1.1rem', md: '1.3rem' },
-                '@media print': { color: '#5d4037' }
-              }}
-            >
-              Start collecting today!
-            </Typography>
-            {[1,2,3].map((star) => (
-              <StarIcon key={star + 3} sx={{ color: '#FFD700', fontSize: 30 }} />
-            ))}
-          </Box>
         </Paper>
       </Box>
     </Box>
