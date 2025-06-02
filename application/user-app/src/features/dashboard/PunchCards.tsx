@@ -94,24 +94,41 @@ const PunchCards: React.FC<PunchCardsProps> = () => {
   ) || [];
 
   const handleCardClick = (cardId: string) => {
-    // Handle selection logic for reward-ready cards first
     const clickedCard = cardsToRender.find(card => card.id === cardId);
-    if (clickedCard?.status === 'REWARD_READY') {
-      if (selectedCardId === cardId) {
-        // If clicking the currently selected card, deselect it
+    
+    // If clicking a selected card, unselect it
+    if (selectedCardId === cardId) {
+      dispatch(clearSelectedCard());
+    } else if (clickedCard?.status === 'REWARD_READY') {
+      // For REWARD_READY cards, don't auto-select - selection only happens via "TAP TO REDEEM"
+      // Just clear any existing selection if clicking a different REWARD_READY card
+      if (selectedCardId) {
         dispatch(clearSelectedCard());
-      } else {
-        // If clicking a different card (or no card selected), select the new one
-        dispatch(setSelectedCardId(cardId));
       }
     } else {
-      // If clicking a non-REWARD_READY card, clear any existing selection
+      // If clicking a non-REWARD_READY card, always clear any existing selection
       if (selectedCardId) {
         dispatch(clearSelectedCard());
       }
     }
     
     // Then scroll to the clicked card to ensure it's fully visible
+    dispatch(scrollToCard(cardId));
+  };
+
+  const handleRedemptionClick = (cardId: string) => {
+    if (selectedCardId === cardId) {
+      // If clicking the currently selected card's redemption button, deselect it
+      dispatch(clearSelectedCard());
+    } else {
+      // If clicking a different card's redemption button, clear previous selection and select new one
+      if (selectedCardId) {
+        dispatch(clearSelectedCard());
+      }
+      dispatch(setSelectedCardId(cardId));
+    }
+    
+    // Also scroll to the card
     dispatch(scrollToCard(cardId));
   };
 
@@ -164,6 +181,7 @@ const PunchCards: React.FC<PunchCardsProps> = () => {
               shouldSlideRight={slideRightCards.has(card.id)}
               isSelected={selectedCardId === card.id}
               onCardClick={handleCardClick}
+              onRedemptionClick={handleRedemptionClick}
               animateRewardClaimed={card.animationFlags?.rewardClaimedAnimation || false}
             />
           </div>

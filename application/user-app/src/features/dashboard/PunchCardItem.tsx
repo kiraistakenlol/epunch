@@ -12,6 +12,7 @@ interface PunchCardItemProps extends PunchCardDto {
   shouldSlideRight?: boolean;
   isSelected?: boolean;
   onCardClick?: (cardId: string) => void;
+  onRedemptionClick?: (cardId: string) => void;
   animateRewardClaimed?: boolean;
 }
 
@@ -36,6 +37,7 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
   shouldSlideRight = false,
   isSelected = false,
   onCardClick,
+  onRedemptionClick,
   animateRewardClaimed
 }) => {
   const loyaltyProgram = useAppSelector(state => selectLoyaltyProgramById(state, loyaltyProgramId));
@@ -95,11 +97,22 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
   const handleClick = (event: React.MouseEvent) => {
     event.stopPropagation();
     
+    // If card is selected, clicking anywhere should unselect it
+    if (isSelected) {
+      if (onCardClick) {
+        onCardClick(id);
+      }
+      return;
+    }
+    
+    // For non-REWARD_READY cards or unselected REWARD_READY cards, just flip and scroll
+    // Always scroll to the clicked card
     if (onCardClick) {
       onCardClick(id);
     }
-
-    if (status !== 'REWARD_READY' && !isAnimating) {
+    
+    // Flip the card if not animating
+    if (!isAnimating) {
       const newFlippedState = !isFlipped;
       
       setIsAnimating(true);
@@ -108,6 +121,14 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
       setTimeout(() => {
         setIsFlipped(newFlippedState);
       }, 300);
+    }
+  };
+
+  const handleRedemptionClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    
+    if (onRedemptionClick) {
+      onRedemptionClick(id);
     }
   };
 
@@ -141,7 +162,14 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
           <div className={styles.loyaltyProgramName}>{loyaltyProgram.name}</div>
         )}
         <div className={styles.rewardReadyLabel}>
-          {status === 'REWARD_READY' && !isSelected ? 'Tap to redeem reward!' : ''}
+          {status === 'REWARD_READY' && !isSelected ? (
+            <span 
+              className={styles.redemptionClickableText}
+              onClick={handleRedemptionClick}
+            >
+              TAP TO REDEEM
+            </span>
+          ) : ''}
         </div>
       </div>
       <div className={styles.punchCardFooter}>
