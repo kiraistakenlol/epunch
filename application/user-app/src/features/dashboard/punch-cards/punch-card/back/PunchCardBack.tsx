@@ -4,64 +4,34 @@ import { useAppSelector } from '../../../../../store/hooks';
 import { selectLoyaltyProgramById } from '../../../../loyaltyPrograms/loyaltyProgramsSlice';
 import styles from './PunchCardBack.module.css';
 
-interface PunchCardBackProps extends Pick<PunchCardDto, 'loyaltyProgramId' | 'shopName' | 'shopAddress' | 'currentPunches' | 'totalPunches'> {
+interface PunchCardBackProps extends Pick<PunchCardDto, 'loyaltyProgramId' | 'shopName' | 'shopAddress' | 'totalPunches'> {
 }
 
 const PunchCardBack: React.FC<PunchCardBackProps> = ({
   loyaltyProgramId,
   shopName,
   shopAddress,
-  currentPunches,
   totalPunches
 }) => {
   const loyaltyProgram = useAppSelector(state => selectLoyaltyProgramById(state, loyaltyProgramId));
 
   return (
-    <div className={styles.cardBack}>
-      <div className={styles.backHeader}>
-        <span className={styles.backHeaderTitle}>Details</span>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <span className={styles.headerTitle}>Details</span>
       </div>
-      <div className={styles.backContent}>
-        <div className={styles.infoSection}>
-          <div className={styles.infoLabel}>Merchant</div>
-          <div className={styles.infoValue}>{shopName}</div>
-        </div>
-        
-        {shopAddress && (
-          <div className={styles.infoSection}>
-            <div className={styles.infoLabel}>Address</div>
-            <div className={styles.infoValue}>{shopAddress}</div>
-          </div>
-        )}
-        
+      <div className={styles.body}>
         {loyaltyProgram && (
-          <>
-            <div className={styles.infoSection}>
-              <div className={styles.infoLabel}>Program</div>
-              <div className={styles.infoValue}>{loyaltyProgram.name}</div>
+            <div className={`${styles.rewardMessage} ${styles.rewardText}`}>
+              <div>Collect {totalPunches} punches at <span className={styles.shopName}>{shopName}</span> and enjoy</div>
+              <div className={styles.rewardName}>🎁 {loyaltyProgram.rewardDescription}</div>
             </div>
-            
-            {loyaltyProgram.description && (
-              <div className={styles.infoSection}>
-                <div className={styles.infoLabel}>Description</div>
-                <div className={styles.infoValue}>{loyaltyProgram.description}</div>
-              </div>
-            )}
-            
-            <div className={styles.infoSection}>
-              <div className={styles.infoLabel}>Reward</div>
-              <div className={styles.infoValue}>{loyaltyProgram.rewardDescription}</div>
-            </div>
-          </>
         )}
-        
-        <div className={styles.infoSection}>
-          <div className={styles.infoLabel}>Progress</div>
-          <div className={styles.infoValue}>{currentPunches} / {totalPunches} punches</div>
-        </div>
       </div>
       <div className={styles.backFooter}>
-        <span className={styles.tapToFlipHint}>Tap to flip back</span>
+        {shopAddress && (
+          <span className={styles.addressText}>📍 {shopAddress}</span>
+        )}
       </div>
     </div>
   );

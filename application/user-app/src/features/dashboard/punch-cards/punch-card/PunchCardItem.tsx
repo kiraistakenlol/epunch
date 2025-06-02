@@ -143,7 +143,6 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
             loyaltyProgramId={loyaltyProgramId}
             shopName={shopName}
             shopAddress={shopAddress}
-            currentPunches={currentPunches}
             totalPunches={totalPunches}
           />
         )}
