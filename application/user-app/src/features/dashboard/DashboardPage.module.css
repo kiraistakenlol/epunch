@@ -39,12 +39,12 @@
 }
 
 .pageContainer {
-  height: 100vh; /* Fallback for older browsers */
-  height: 100svh; /* Small viewport height - always visible */
+  height: 100svh;
   background-color: #424242;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  padding-top: 70px; /* Account for fixed header */
 }
 
 .mainContent {
@@ -52,6 +52,7 @@
   display: flex;
   flex-direction: column;
   padding-top: 0;
+  min-height: 0; /* Allow flex shrinking */
 }
 
 .qrSection {
@@ -61,14 +62,18 @@
   align-items: center;
   background-color: #424242;
   padding: min(20px, 5vw);
+  min-height: 0; /* Allow flex shrinking */
 }
 
 .cardsSection {
   height: var(--cards-section-height);
+  min-height: var(--cards-section-height);
+  max-height: var(--cards-section-height);
   background-color: #795548;
   overflow-x: auto;
   overflow-y: hidden;
   padding: 15px 20px;
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
 /* Responsive adjustments for page layout */

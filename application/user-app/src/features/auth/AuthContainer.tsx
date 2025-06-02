@@ -32,7 +32,6 @@ const AuthContainer: React.FC = () => {
     const baseStyle = {
       backgroundColor: '#f5f5dc',
       borderBottom: '1px solid #e0e0e0',
-      marginTop: '70px', // Account for fixed header height
     };
 
     // Apply responsive adjustments based on screen size
