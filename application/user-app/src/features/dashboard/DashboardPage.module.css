@@ -1,5 +1,5 @@
 :root {
-  --cards-section-height: 250px;
+  --cards-section-height: 300px;
 }
 
 @media (max-height: 700px) {
@@ -34,37 +34,7 @@
 
 @media (max-height: 400px) {
   :root {
-    --cards-section-height: 105px;
-  }
-}
-
-@media (max-height: 350px) {
-  :root {
-    --cards-section-height: 100px;
-  }
-}
-
-@media (max-height: 300px) {
-  :root {
-    --cards-section-height: 98px;
-  }
-}
-
-@media (max-width: 400px) {
-  .cardsSection {
-    padding: 15px 15px;
-  }
-}
-
-@media (max-width: 375px) {
-  .cardsSection {
-    padding: 15px 12px;
-  }
-}
-
-@media (max-width: 350px) {
-  .cardsSection {
-    padding: 15px 10px;
+    --cards-section-height: 70px;
   }
 }
 

@@ -6,7 +6,7 @@ import DashboardPage from './features/dashboard/DashboardPage';
 import DevPage from './features/dev/DevPage';
 import AppLayout from './components/AppLayout';
 import SignOutModal from './components/SignOutModal';
-import CompletionOverlay from './features/dashboard/CompletionOverlay';
+import CompletionOverlay from './features/dashboard/overlay/CompletionOverlay';
 import Alert from './features/alert/Alert';
 import { initializeUser } from './features/auth/authSlice';
 import { configureAmplify, setupAuthListener } from './config/amplify';

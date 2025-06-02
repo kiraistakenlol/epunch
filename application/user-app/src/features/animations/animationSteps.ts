@@ -1,6 +1,6 @@
 import { AnimationStep } from './animationSlice';
 import { showAlert, hideAlert } from '../alert/alertSlice';
-import { showOverlay } from '../dashboard/completionOverlaySlice';
+import { showOverlay } from '../dashboard/overlay/completionOverlaySlice';
 import { updatePunchCardById, scrollToCard } from '../punchCards/punchCardsSlice';
 import type { AppDispatch } from '../../store/store';
 

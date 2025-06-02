@@ -1,0 +1,36 @@
+import React from 'react';
+import PunchCardFrontBodyPunchesSection from './PunchCardFrontBodyPunchesSection';
+import styles from './PunchCardFrontBody.module.css';
+
+interface PunchCardFrontBodyProps {
+  totalPunches: number;
+  currentPunches: number;
+  animatedPunchIndex?: number;
+  loyaltyProgram: any;
+}
+
+const PunchCardFrontBody: React.FC<PunchCardFrontBodyProps> = ({
+  totalPunches,
+  currentPunches,
+  animatedPunchIndex,
+  loyaltyProgram
+}) => {
+  return (
+    <>
+      <div className={styles.punchesSection}>
+        <PunchCardFrontBodyPunchesSection
+          totalPunches={totalPunches}
+          currentPunches={currentPunches}
+          animatedPunchIndex={animatedPunchIndex}
+        />
+      </div>
+      <div className={styles.loyaltyProgramSection}>
+        {loyaltyProgram && (
+          <div className={styles.loyaltyProgramName}>{loyaltyProgram.name}</div>
+        )}
+      </div>
+    </>
+  );
+};
+
+export default PunchCardFrontBody; 

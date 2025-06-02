@@ -1,0 +1,38 @@
+/* === PUNCH CARD FRONT FOOTER STYLES === */
+
+.punchCardFooter {
+  height: calc(var(--card-height) * (1 - var(--header-height-ratio)) * var(--footer-body-ratio));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border: 2px solid green;
+  flex-shrink: 0;
+}
+
+.rewardReadyLabel {
+  flex-shrink: 0;
+  text-align: center;
+  min-height: calc(var(--card-height) * var(--card-font-base-ratio) * 1.2);
+  color: #44e62f;
+  font-size: calc(var(--card-height) * var(--card-font-base-ratio) * 0.75);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: calc(var(--card-height) * var(--card-font-base-ratio) * 0.025);
+}
+
+.redemptionClickableText {
+  cursor: pointer;
+  padding: calc(var(--card-height) * var(--card-font-base-ratio) * 0.2) calc(var(--card-height) * var(--card-font-base-ratio) * 0.4);
+  border-radius: calc(var(--card-height) * var(--card-font-base-ratio) * 0.2);
+  background-color: rgba(68, 230, 47, 0.1);
+  border: 1px solid rgba(68, 230, 47, 0.3);
+  transition: all 0.2s ease;
+  display: inline-block;
+}
+
+.redemptionClickableText:hover {
+  background-color: rgba(68, 230, 47, 0.2);
+  border-color: rgba(68, 230, 47, 0.5);
+  transform: translateY(calc(var(--card-height) * var(--card-font-base-ratio) * -0.05));
+} 

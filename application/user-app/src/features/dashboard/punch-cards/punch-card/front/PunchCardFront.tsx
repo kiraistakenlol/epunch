@@ -1,0 +1,55 @@
+import React from 'react';
+import { PunchCardDto } from 'e-punch-common-core';
+import { useAppSelector } from '../../../../../store/hooks';
+import { selectLoyaltyProgramById } from '../../../../loyaltyPrograms/loyaltyProgramsSlice';
+import PunchCardFrontHeader from './header/PunchCardFrontHeader';
+import PunchCardFrontBody from './body/PunchCardFrontBody';
+import PunchCardFrontFooter from './footer/PunchCardFrontFooter';
+import styles from './PunchCardFront.module.css';
+
+interface PunchCardFrontProps extends Pick<PunchCardDto, 'loyaltyProgramId' | 'shopName' | 'currentPunches' | 'totalPunches' | 'status'> {
+  animatedPunchIndex?: number;
+  isSelected?: boolean;
+  onRedemptionClick?: (event: React.MouseEvent) => void;
+}
+
+const PunchCardFront: React.FC<PunchCardFrontProps> = ({
+  loyaltyProgramId,
+  shopName,
+  currentPunches,
+  totalPunches,
+  status,
+  animatedPunchIndex,
+  isSelected = false,
+  onRedemptionClick
+}) => {
+  const loyaltyProgram = useAppSelector(state => selectLoyaltyProgramById(state, loyaltyProgramId));
+
+  return (
+    <div className={styles.cardFront}>
+      <div className={`${styles.punchCardSection} ${styles.header}`}>
+        <PunchCardFrontHeader
+          shopName={shopName}
+          status={status}
+        />
+      </div>
+      <div className={`${styles.punchCardSection} ${styles.body}`}>
+        <PunchCardFrontBody
+          totalPunches={totalPunches}
+          currentPunches={currentPunches}
+          animatedPunchIndex={animatedPunchIndex}
+          loyaltyProgram={loyaltyProgram}
+        />
+      </div>
+      <div className={`${styles.punchCardSection} ${styles.footer}`}>
+        <PunchCardFrontFooter 
+          status={status}
+          isSelected={isSelected}
+          onRedemptionClick={onRedemptionClick}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default PunchCardFront; 

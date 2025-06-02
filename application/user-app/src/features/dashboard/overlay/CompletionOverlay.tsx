@@ -1,12 +1,12 @@
 import React from 'react';
 import styles from './CompletionOverlay.module.css';
-import { handleEvent } from '../animations/animationSlice';
+import { handleEvent } from '../../animations/animationSlice';
 import { hideOverlay, selectCompletionOverlay } from './completionOverlaySlice';
 import { useDispatch } from 'react-redux';
-import { AppDispatch, RootState } from '../../store/store';
-import { selectPunchCards } from '../punchCards/punchCardsSlice';
-import { selectLoyaltyProgramById } from '../loyaltyPrograms/loyaltyProgramsSlice';
-import { useAppSelector } from '../../store/hooks';
+import { AppDispatch, RootState } from '../../../store/store';
+import { selectPunchCards } from '../../punchCards/punchCardsSlice';
+import { selectLoyaltyProgramById } from '../../loyaltyPrograms/loyaltyProgramsSlice';
+import { useAppSelector } from '../../../store/hooks';
 
 const CompletionOverlay: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();

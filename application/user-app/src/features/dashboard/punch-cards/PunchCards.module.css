@@ -1,28 +1,12 @@
 .punchCardsList {
+  --container-height: var(--cards-section-height);
+  --card-gap: calc(var(--container-height) * var(--cards-gap-ratio));
+  
   display: flex;
-  gap: 20px;
+  gap: var(--card-gap);
   height: 100%;
   align-items: center;
-  padding: calc(var(--cards-section-height) * 0.05) 0;
-}
-
-/* Responsive adjustments for smaller screens */
-@media (max-width: 500px) {
-  .punchCardsList {
-    gap: 15px;
-  }
-}
-
-@media (max-width: 400px) {
-  .punchCardsList {
-    gap: 12px;
-  }
-}
-
-@media (max-width: 375px) {
-  .punchCardsList {
-    gap: 10px;
-  }
+  box-sizing: border-box;
 }
 
 .loadingContainer {
@@ -30,16 +14,17 @@
   justify-content: center;
   align-items: center;
   height: 100%;
+  box-sizing: border-box;
 }
 
 .loadingDots {
   display: flex;
-  gap: 8px;
+  gap: calc(var(--cards-section-height) * 0.02);
 }
 
 .dot {
-  width: 12px;
-  height: 12px;
+  width: calc(var(--cards-section-height) * 0.03);
+  height: calc(var(--cards-section-height) * 0.03);
   border-radius: 50%;
   background-color: #5d4037;
   animation: dotPulseOptimized 1.4s infinite ease-in-out;
@@ -70,24 +55,25 @@
   justify-content: center;
   align-items: center;
   height: 100%;
-  padding: 20px;
+  padding: calc(var(--cards-section-height) * 0.05);
+  box-sizing: border-box;
 }
 
 .emptyStateContent {
   text-align: center;
-  max-width: 300px;
+  max-width: calc(var(--cards-section-height) * 0.75);
 }
 
 .emptyStateHeadline {
-  margin: 0 0 15px 0;
+  margin: 0 0 calc(var(--cards-section-height) * 0.0375) 0;
   color: #f5f5dc;
-  font-size: 1.4em;
+  font-size: calc(var(--cards-section-height) * 0.035);
   font-weight: bold;
 }
 
 .emptyStateSubtext {
   margin: 0;
   color: rgba(245, 245, 220, 0.85);
-  font-size: 1em;
+  font-size: calc(var(--cards-section-height) * 0.025);
   line-height: 1.4;
 } 

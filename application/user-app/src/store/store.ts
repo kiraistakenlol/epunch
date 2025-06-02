@@ -3,7 +3,7 @@ import authReducer from '../features/auth/authSlice';
 import punchCardsReducer from '../features/punchCards/punchCardsSlice';
 import animationReducer from '../features/animations/animationSlice';
 import signOutReducer from '../features/signOut/signOutSlice';
-import completionOverlayReducer from '../features/dashboard/completionOverlaySlice';
+import completionOverlayReducer from '../features/dashboard/overlay/completionOverlaySlice';
 import alertReducer from '../features/alert/alertSlice';
 import loyaltyProgramsReducer from '../features/loyaltyPrograms/loyaltyProgramsSlice';
 

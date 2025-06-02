@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import PunchCardItem from './PunchCardItem';
+import PunchCardItem from './punch-card/PunchCardItem';
 import styles from './PunchCards.module.css';
-import type { RootState, AppDispatch } from '../../store/store';
-import { selectAuthLoading } from '../auth/authSlice';
+import type { RootState, AppDispatch } from '../../../store/store';
+import { selectAuthLoading } from '../../auth/authSlice';
 import {
   selectPunchCards,
   selectPunchCardsLoading,
@@ -14,8 +14,8 @@ import {
   selectScrollTargetCardId,
   clearScrollTarget,
   scrollToCard
-} from '../punchCards/punchCardsSlice';
-import { useAppSelector } from '../../store/hooks';
+} from '../../punchCards/punchCardsSlice';
+import { useAppSelector } from '../../../store/hooks';
 
 interface PunchCardsProps {}
 
