@@ -25,7 +25,7 @@ const AuthContainer: React.FC = () => {
 
   const shouldShowMessage = (): boolean => {
     // Hide message on very small screens to save space
-    return !(windowSize.height <= 600 || windowSize.width <= 400);
+    return !(windowSize.height <= 700 || windowSize.width <= 500);
   };
 
   const getContainerStyle = (): React.CSSProperties => {
