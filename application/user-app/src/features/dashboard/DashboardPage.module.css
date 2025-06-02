@@ -1,5 +1,5 @@
 :root {
-  --cards-section-height: clamp(150px, 30svh, 350px);
+  --cards-section-height: clamp(150px, 35svh, 350px);
 }
 
 .pageContainer {
