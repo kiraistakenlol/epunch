@@ -22,9 +22,7 @@
 }
 
 .checkIcon {
-  width: calc(var(--card-height) * var(--header-height-ratio) * 0.6);
-  height: calc(var(--card-height) * var(--header-height-ratio) * 0.6);
-  fill: #44e62f;
-  stroke: #44e62f;
-  stroke-width: 0.5;
+  font-size: calc(var(--card-height) * var(--header-height-ratio) * 0.5);
+  font-weight: bolder;
+  color: #44e62f;
 } 
