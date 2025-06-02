@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PunchCardItem from './PunchCardItem';
-import styles from './DashboardPage.module.css';
+import styles from './PunchCards.module.css';
 import type { RootState, AppDispatch } from '../../store/store';
 import { selectAuthLoading } from '../auth/authSlice';
 import {

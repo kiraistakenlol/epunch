@@ -3,7 +3,7 @@ import { PunchCardDto } from 'e-punch-common-core';
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { selectLoyaltyProgramById } from '../loyaltyPrograms/loyaltyProgramsSlice';
 import { handleEvent } from '../animations/animationSlice';
-import styles from './DashboardPage.module.css';
+import styles from './PunchCardItem.module.css';
 
 interface PunchCardItemProps extends PunchCardDto {
   isHighlighted?: boolean;
