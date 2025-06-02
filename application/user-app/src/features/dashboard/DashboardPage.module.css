@@ -1,3 +1,73 @@
+:root {
+  --cards-section-height: 250px;
+}
+
+@media (max-height: 700px) {
+  :root {
+    --cards-section-height: 220px;
+  }
+}
+
+@media (max-height: 600px) {
+  :root {
+    --cards-section-height: 200px;
+  }
+}
+
+@media (max-height: 550px) {
+  :root {
+    --cards-section-height: 180px;
+  }
+}
+
+@media (max-height: 500px) {
+  :root {
+    --cards-section-height: 150px;
+  }
+}
+
+@media (max-height: 450px) {
+  :root {
+    --cards-section-height: 110px;
+  }
+}
+
+@media (max-height: 400px) {
+  :root {
+    --cards-section-height: 105px;
+  }
+}
+
+@media (max-height: 350px) {
+  :root {
+    --cards-section-height: 100px;
+  }
+}
+
+@media (max-height: 300px) {
+  :root {
+    --cards-section-height: 98px;
+  }
+}
+
+@media (max-width: 400px) {
+  .cardsSection {
+    padding: 15px 15px;
+  }
+}
+
+@media (max-width: 375px) {
+  .cardsSection {
+    padding: 15px 12px;
+  }
+}
+
+@media (max-width: 350px) {
+  .cardsSection {
+    padding: 15px 10px;
+  }
+}
+
 .pageContainer {
   height: 100vh; /* Fallback for older browsers */
   height: 100svh; /* Small viewport height - always visible */
@@ -24,7 +94,7 @@
 }
 
 .cardsSection {
-  height: 250px;
+  height: var(--cards-section-height);
   background-color: #795548;
   overflow-x: auto;
   overflow-y: hidden;
@@ -33,59 +103,49 @@
 
 /* Responsive adjustments for page layout */
 @media (max-height: 700px) {
-  .cardsSection {
-    height: 220px;
-  }
-  
   .qrSection {
     padding: min(15px, 4vw);
   }
 }
 
 @media (max-height: 600px) {
-  .cardsSection {
-    height: 200px;
-  }
-  
   .qrSection {
     padding: min(15px, 4vw);
   }
 }
 
 @media (max-height: 550px) {
-  .cardsSection {
-    height: 130px;
-  }
-  
   .qrSection {
     padding: min(10px, 2vw);
   }
 }
 
 @media (max-height: 500px) {
-  .cardsSection {
-    height: 110px;
-  }
-  
   .qrSection {
     padding: min(8px, 2vw);
   }
 }
 
-@media (max-width: 400px) {
-  .cardsSection {
-    padding: 15px 15px;
+@media (max-height: 450px) {
+  .qrSection {
+    padding: min(5px, 1vw);
   }
 }
 
-@media (max-width: 375px) {
-  .cardsSection {
-    padding: 15px 12px;
+@media (max-height: 400px) {
+  .qrSection {
+    padding: min(5px, 1vw);
   }
 }
 
-@media (max-width: 350px) {
-  .cardsSection {
-    padding: 15px 10px;
+@media (max-height: 350px) {
+  .qrSection {
+    padding: min(3px, 1vw);
+  }
+}
+
+@media (max-height: 300px) {
+  .qrSection {
+    padding: min(3px, 1vw);
   }
 } 

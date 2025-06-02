@@ -2,7 +2,8 @@
   background-color: #8d6e63;
   border-radius: 12px;
   min-width: 280px;
-  height: 220px;
+  height: calc(var(--cards-section-height) * 0.9);
+  max-height: calc(var(--cards-section-height) * 0.9);
   box-shadow: 0 4px 8px rgba(93, 64, 55, 0.3);
   flex-shrink: 0;
   display: flex;
@@ -410,12 +411,14 @@
 }
 
 .backHeader {
-  background-color: #4a2c2a;
+  background-color: #5d4037;
   color: #f5f5dc;
   padding: 12px 18px;
   border-radius: 12px 12px 0 0;
-  text-align: center;
-  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.85em;
 }
 
 .backHeaderTitle {
@@ -470,11 +473,14 @@
 /* Responsive adjustments for punch cards */
 @media (max-height: 700px) {
   .punchCardItem {
-    height: 190px;
     min-width: 260px;
   }
   
   .punchCardHeader {
+    padding: 10px 16px;
+  }
+  
+  .backHeader {
     padding: 10px 16px;
   }
   
@@ -519,11 +525,14 @@
 
 @media (max-height: 600px) {
   .punchCardItem {
-    height: 170px;
     min-width: 240px;
   }
   
   .punchCardHeader {
+    padding: 8px 14px;
+  }
+  
+  .backHeader {
     padding: 8px 14px;
   }
   
@@ -581,11 +590,15 @@
 
 @media (max-height: 550px) {
   .punchCardItem {
-    height: 110px;
     min-width: 200px;
   }
   
   .punchCardHeader {
+    padding: 6px 10px;
+    font-size: 0.7em;
+  }
+  
+  .backHeader {
     padding: 6px 10px;
     font-size: 0.7em;
   }
@@ -624,11 +637,203 @@
 
 @media (max-height: 500px) {
   .punchCardItem {
-    height: 90px;
     min-width: 180px;
   }
   
   .punchCardHeader {
+    padding: 4px 8px;
+    font-size: 0.65em;
+  }
+  
+  .backHeader {
+    padding: 4px 8px;
+    font-size: 0.65em;
+  }
+  
+  .headerLeft .shopName {
+    font-size: 0.9em;
+  }
+  
+  .punchCardBody {
+    padding: 4px;
+    gap: 3px;
+  }
+  
+  .punchCircle {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .punchCirclesContainer {
+    gap: 2px;
+  }
+  
+  .loyaltyProgramName {
+    font-size: 0.65em;
+  }
+  
+  .rewardReadyLabel {
+    font-size: 0.55em;
+  }
+  
+  .checkIcon {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media (max-height: 450px) {
+  .punchCardItem {
+    min-width: 180px;
+  }
+  
+  .punchCardHeader {
+    padding: 4px 8px;
+    font-size: 0.65em;
+  }
+  
+  .backHeader {
+    padding: 4px 8px;
+    font-size: 0.65em;
+  }
+  
+  .headerLeft .shopName {
+    font-size: 0.9em;
+  }
+  
+  .punchCardBody {
+    padding: 4px;
+    gap: 3px;
+  }
+  
+  .punchCircle {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .punchCirclesContainer {
+    gap: 2px;
+  }
+  
+  .loyaltyProgramName {
+    font-size: 0.65em;
+  }
+  
+  .rewardReadyLabel {
+    font-size: 0.55em;
+  }
+  
+  .checkIcon {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media (max-height: 400px) {
+  .punchCardItem {
+    min-width: 180px;
+  }
+  
+  .punchCardHeader {
+    padding: 4px 8px;
+    font-size: 0.65em;
+  }
+  
+  .backHeader {
+    padding: 4px 8px;
+    font-size: 0.65em;
+  }
+  
+  .headerLeft .shopName {
+    font-size: 0.9em;
+  }
+  
+  .punchCardBody {
+    padding: 4px;
+    gap: 3px;
+  }
+  
+  .punchCircle {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .punchCirclesContainer {
+    gap: 2px;
+  }
+  
+  .loyaltyProgramName {
+    font-size: 0.65em;
+  }
+  
+  .rewardReadyLabel {
+    font-size: 0.55em;
+  }
+  
+  .checkIcon {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media (max-height: 350px) {
+  .punchCardItem {
+    min-width: 160px;
+  }
+  
+  .punchCardHeader {
+    padding: 4px 8px;
+    font-size: 0.65em;
+  }
+  
+  .backHeader {
+    padding: 4px 8px;
+    font-size: 0.65em;
+  }
+  
+  .headerLeft .shopName {
+    font-size: 0.9em;
+  }
+  
+  .punchCardBody {
+    padding: 4px;
+    gap: 3px;
+  }
+  
+  .punchCircle {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .punchCirclesContainer {
+    gap: 2px;
+  }
+  
+  .loyaltyProgramName {
+    font-size: 0.65em;
+  }
+  
+  .rewardReadyLabel {
+    font-size: 0.55em;
+  }
+  
+  .checkIcon {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media (max-height: 300px) {
+  .punchCardItem {
+    min-width: 160px;
+  }
+  
+  .punchCardHeader {
+    padding: 4px 8px;
+    font-size: 0.65em;
+  }
+  
+  .backHeader {
     padding: 4px 8px;
     font-size: 0.65em;
   }
@@ -666,12 +871,17 @@
 }
 
 /* Responsive adjustments for narrow screens like iPhone SE (375px width) */
-@media (max-width: 400px) {
+@media (max-width: 500px) {
   .punchCardItem {
-    min-width: 260px;
+    min-width: 220px;
   }
   
   .punchCardHeader {
+    padding: 10px 14px;
+    font-size: 0.8em;
+  }
+  
+  .backHeader {
     padding: 10px 14px;
     font-size: 0.8em;
   }
@@ -682,26 +892,45 @@
   }
   
   .punchCardBody {
-    padding: 10px 14px;
+    padding: 12px;
     gap: 8px;
   }
   
+  .punchCircle {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .punchCirclesContainer {
+    gap: 4px;
+  }
+  
   .loyaltyProgramName {
-    font-size: 0.8em;
+    font-size: 0.75em;
     line-height: 1.2;
   }
   
   .rewardReadyLabel {
     font-size: 0.7em;
   }
+  
+  .checkIcon {
+    width: 20px;
+    height: 20px;
+  }
 }
 
-@media (max-width: 375px) {
+@media (max-width: 400px) {
   .punchCardItem {
-    min-width: 240px;
+    min-width: 200px;
   }
   
   .punchCardHeader {
+    padding: 8px 12px;
+    font-size: 0.75em;
+  }
+  
+  .backHeader {
     padding: 8px 12px;
     font-size: 0.75em;
   }
@@ -712,26 +941,58 @@
   }
   
   .punchCardBody {
-    padding: 8px 12px;
+    padding: 10px;
     gap: 6px;
   }
   
+  .punchCircle {
+    width: 26px;
+    height: 26px;
+  }
+  
+  .punchCirclesContainer {
+    gap: 3px;
+  }
+  
   .loyaltyProgramName {
-    font-size: 0.75em;
+    font-size: 0.7em;
     line-height: 1.1;
   }
   
   .rewardReadyLabel {
     font-size: 0.65em;
   }
+  
+  .checkIcon {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .backContent {
+    padding: 10px;
+    gap: 8px;
+  }
+  
+  .infoLabel {
+    font-size: 0.7em;
+  }
+  
+  .infoValue {
+    font-size: 0.8em;
+  }
 }
 
-@media (max-width: 350px) {
+@media (max-width: 375px) {
   .punchCardItem {
-    min-width: 220px;
+    min-width: 180px;
   }
   
   .punchCardHeader {
+    padding: 8px 10px;
+    font-size: 0.7em;
+  }
+  
+  .backHeader {
     padding: 8px 10px;
     font-size: 0.7em;
   }
@@ -742,16 +1003,110 @@
   }
   
   .punchCardBody {
-    padding: 8px 10px;
+    padding: 8px;
     gap: 5px;
   }
   
+  .punchCircle {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .punchCirclesContainer {
+    gap: 3px;
+  }
+  
   .loyaltyProgramName {
-    font-size: 0.7em;
+    font-size: 0.65em;
     line-height: 1.1;
   }
   
   .rewardReadyLabel {
     font-size: 0.6em;
+  }
+  
+  .redemptionClickableText {
+    padding: 3px 6px;
+    font-size: 0.9em;
+  }
+  
+  .checkIcon {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .backContent {
+    padding: 8px;
+    gap: 6px;
+  }
+  
+  .infoLabel {
+    font-size: 0.65em;
+  }
+  
+  .infoValue {
+    font-size: 0.75em;
+  }
+  
+  .backHeaderTitle {
+    font-size: 0.95em;
+  }
+  
+  .tapToFlipHint {
+    font-size: 0.65em;
+  }
+}
+
+@media (max-width: 350px) {
+  .punchCardItem {
+    min-width: 160px;
+  }
+  
+  .punchCardHeader {
+    padding: 6px 8px;
+    font-size: 0.65em;
+  }
+  
+  .backHeader {
+    padding: 6px 8px;
+    font-size: 0.65em;
+  }
+  
+  .headerLeft .shopName {
+    font-size: 0.95em;
+    line-height: 1.1;
+  }
+  
+  .punchCardBody {
+    padding: 6px;
+    gap: 4px;
+  }
+  
+  .punchCircle {
+    width: 22px;
+    height: 22px;
+  }
+  
+  .punchCirclesContainer {
+    gap: 2px;
+  }
+  
+  .loyaltyProgramName {
+    font-size: 0.6em;
+    line-height: 1.1;
+  }
+  
+  .rewardReadyLabel {
+    font-size: 0.55em;
+  }
+  
+  .redemptionClickableText {
+    padding: 2px 4px;
+    font-size: 0.85em;
+  }
+  
+  .checkIcon {
+    width: 14px;
+    height: 14px;
   }
 } 

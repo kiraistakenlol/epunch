@@ -3,6 +3,26 @@
   gap: 20px;
   height: 100%;
   align-items: center;
+  padding: calc(var(--cards-section-height) * 0.05) 0;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 500px) {
+  .punchCardsList {
+    gap: 15px;
+  }
+}
+
+@media (max-width: 400px) {
+  .punchCardsList {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 375px) {
+  .punchCardsList {
+    gap: 10px;
+  }
 }
 
 .loadingContainer {
