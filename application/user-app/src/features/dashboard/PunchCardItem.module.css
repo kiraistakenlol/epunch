@@ -219,19 +219,17 @@
 .statusREWARD_READY {
   box-shadow: 
     0 4px 8px rgba(76, 175, 80, 0.6),
-    0 0 20px rgba(76, 175, 80, 0.8);
+    0 0 12px rgba(76, 175, 80, 0.6);
   animation: rewardGlowOptimized 2s ease-in-out infinite alternate;
-  will-change: opacity, transform;
+  will-change: opacity;
 }
 
 @keyframes rewardGlowOptimized {
   0% {
     opacity: 0.9;
-    transform: scale(1);
   }
   100% {
     opacity: 1;
-    transform: scale(1.01);
   }
 }
 
@@ -261,14 +259,13 @@
 }
 
 .selectedForRedemption {
-  transform: scale3d(1.03, 1.03, 1);
-  filter: brightness(1.1);
+  transform: scale3d(1.02, 1.02, 1);
   box-shadow: 
     0 4px 8px rgba(0, 0, 0, 0.3),
-    0 0 30px rgba(255, 215, 0, 0.9),
-    0 0 60px rgba(255, 215, 0, 0.6);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), filter 0.3s ease, box-shadow 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: transform, filter, box-shadow;
+    0 0 20px rgba(255, 215, 0, 0.9),
+    0 0 40px rgba(255, 215, 0, 0.6);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+  will-change: transform;
 }
 
 .clickableCard:hover {

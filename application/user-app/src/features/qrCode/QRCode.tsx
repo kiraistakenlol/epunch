@@ -128,12 +128,11 @@ const QRCode: React.FC = () => {
         borderRadius: '8px',
         padding: containerSize.padding,
         boxShadow: isRewardMode 
-          ? '0 4px 8px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 215, 0, 0.9), 0 0 60px rgba(255, 215, 0, 0.6)' 
+          ? '0 4px 8px rgba(0, 0, 0, 0.3), 0 0 40px rgba(255, 215, 0, 1), 0 0 80px rgba(255, 215, 0, 0.8)' 
           : '0 4px 8px rgba(0, 0, 0, 0.3)',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        transition: 'box-shadow 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
         willChange: isRewardMode ? 'box-shadow' : 'auto',
         margin: '0 auto'
       }}>
