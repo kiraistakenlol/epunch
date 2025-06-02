@@ -1,5 +1,8 @@
 .punchCardsList {
   --container-height: var(--cards-section-height);
+  
+  --cards-gap-ratio: 0.08;
+
   --card-gap: calc(var(--container-height) * var(--cards-gap-ratio));
   
   display: flex;
