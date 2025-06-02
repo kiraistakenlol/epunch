@@ -1,5 +1,5 @@
 :root {
-  --cards-section-height: 300px;
+  --cards-section-height: 30svh;
 }
 
 @media (max-height: 700px) {
