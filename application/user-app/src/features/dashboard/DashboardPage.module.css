@@ -1,41 +1,5 @@
 :root {
-  --cards-section-height: 30svh;
-}
-
-@media (max-height: 700px) {
-  :root {
-    --cards-section-height: 220px;
-  }
-}
-
-@media (max-height: 600px) {
-  :root {
-    --cards-section-height: 200px;
-  }
-}
-
-@media (max-height: 550px) {
-  :root {
-    --cards-section-height: 180px;
-  }
-}
-
-@media (max-height: 500px) {
-  :root {
-    --cards-section-height: 150px;
-  }
-}
-
-@media (max-height: 450px) {
-  :root {
-    --cards-section-height: 110px;
-  }
-}
-
-@media (max-height: 400px) {
-  :root {
-    --cards-section-height: 70px;
-  }
+  --cards-section-height: clamp(150px, 30svh, 350px);
 }
 
 .pageContainer {
@@ -61,14 +25,12 @@
   justify-content: center;
   align-items: center;
   background-color: #424242;
-  padding: min(20px, 5vw);
+  padding: clamp(5px, 3svh, 20px) clamp(10px, 5vw, 30px);
   min-height: 0; /* Allow flex shrinking */
 }
 
 .cardsSection {
   height: var(--cards-section-height);
-  min-height: var(--cards-section-height);
-  max-height: var(--cards-section-height);
   background-color: #795548;
   overflow-x: auto;
   overflow-y: hidden;
