@@ -22,7 +22,7 @@
 }
 
 .checkIcon {
-  font-size: calc(var(--card-height) * var(--header-height-ratio) * 0.5);
+  font-size: 2.8em;
   font-weight: bolder;
   color: #44e62f;
 } 
