@@ -9,6 +9,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.025em;
+  padding-bottom: 2em;
 }
 
 .redemptionClickableText {
@@ -18,10 +19,22 @@
   border: 1px solid rgba(68, 230, 47, 0.3);
   transition: all 0.2s ease;
   display: inline-block;
+  position: relative;
+  cursor: pointer;
+}
+
+.redemptionClickableText::before {
+  content: '';
+  position: absolute;
+  top: -2.2em;
+  left: -2.2em;
+  right: -2.2em;
+  bottom: -2.2em;
+  background: transparent;
 }
 
 .redemptionClickableText:hover {
   background-color: rgba(68, 230, 47, 0.2);
   border-color: rgba(68, 230, 47, 0.5);
-  transform: translateY(-0.05em);
+  transform: scale(1.02);
 } 
