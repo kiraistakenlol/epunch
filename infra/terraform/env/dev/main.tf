@@ -9,7 +9,8 @@ terraform {
 }
 
 provider "aws" {
-  region = var.aws_region
+  region  = var.aws_region
+  profile = "personal"
 }
 
 resource "aws_cognito_user_pool" "epunch_dev" {
@@ -71,4 +72,38 @@ resource "aws_cognito_user_pool_client" "epunch_dev_client" {
   allowed_oauth_scopes                 = ["email", "openid", "profile"]
 
   depends_on = [aws_cognito_identity_provider.google]
+}
+
+resource "aws_s3_bucket" "merchant_logos" {
+  bucket = var.s3_bucket_name
+}
+
+resource "aws_s3_bucket_public_access_block" "merchant_logos_pab" {
+  bucket = aws_s3_bucket.merchant_logos.id
+
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+}
+
+resource "aws_s3_bucket_policy" "merchant_logos_policy" {
+  bucket = aws_s3_bucket.merchant_logos.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect    = "Allow"
+        Principal = "*"
+        Action    = "s3:*"
+        Resource  = [
+          aws_s3_bucket.merchant_logos.arn,
+          "${aws_s3_bucket.merchant_logos.arn}/*"
+        ]
+      }
+    ]
+  })
+
+  depends_on = [aws_s3_bucket_public_access_block.merchant_logos_pab]
 } 

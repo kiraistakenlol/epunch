@@ -4,6 +4,11 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
+variable "s3_bucket_name" {
+  description = "S3 bucket name for merchant logos (must be globally unique)"
+  type        = string
+}
+
 variable "cognito_domain_prefix" {
   description = "Cognito domain prefix (must be globally unique)"
   type        = string

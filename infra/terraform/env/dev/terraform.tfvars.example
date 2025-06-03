@@ -1,6 +1,9 @@
 # AWS Configuration
 aws_region = "us-east-1"
 
+# S3 Configuration
+s3_bucket_name = "epunch-dev-merchant-logos-your-unique-suffix"
+
 # Cognito Configuration
 cognito_domain_prefix = "epunch-dev-your-unique-suffix"
 
