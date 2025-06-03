@@ -26,10 +26,10 @@
 .redemptionClickableText::before {
   content: '';
   position: absolute;
-  top: -2.2em;
-  left: -2.2em;
-  right: -2.2em;
-  bottom: -2.2em;
+  top: -4.5em;
+  left: -4.5em;
+  right: -4.5em;
+  bottom: -4.5em;
   background: transparent;
 }
 
