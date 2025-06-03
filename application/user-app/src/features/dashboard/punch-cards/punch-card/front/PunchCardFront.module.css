@@ -4,8 +4,11 @@
 .container {
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: 
+    calc(var(--card-height) * 0.22)
+    calc(var(--card-height) * 0.56)
+    calc(var(--card-height) * 0.22);
   background-color: #8d6e63;
 }
 
@@ -13,12 +16,10 @@
 .containerSection {
   box-sizing: border-box;
   display: flex;
-  flex-shrink: 0;
 }
 
 /* === HEADER STYLES === */
 .header {
-  height: calc(var(--card-height) * var(--header-height-ratio));
   padding: var(--header-padding) var(--body-padding);
   justify-content: space-between;
   align-items: center;
@@ -30,14 +31,12 @@
 
 /* === BODY STYLES === */
 .body {
-  height: calc(var(--card-height) * (1 - var(--header-height-ratio)) * (1 - var(--footer-body-ratio)));
   padding: var(--body-padding);
   flex-direction: column;
 }
 
 /* === FOOTER STYLES === */
 .footer {
-  height: calc(var(--card-height) * (1 - var(--header-height-ratio)) * var(--footer-body-ratio));
   align-items: center;
   justify-content: center;
 } 

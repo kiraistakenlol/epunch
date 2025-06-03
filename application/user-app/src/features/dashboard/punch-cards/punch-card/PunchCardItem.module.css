@@ -23,8 +23,7 @@
   /* Base font size for the entire card - all other sizes will be relative to this */
   font-size: calc(var(--card-height) * 0.04);
   
-  /* Calculate internal dimensions for content */
-  --header-height: calc(var(--card-height) * var(--card-header-height-ratio));
+  --header-height: calc(var(--card-height) * 0.25);
   --punch-circle-size: calc(var(--card-height) * var(--card-punch-circle-ratio));
   --punch-gap: calc(var(--card-height) * var(--card-punch-gap-ratio));
   
