@@ -1,33 +1,15 @@
-@import './punch-card-internal-layout.css';
-
 /* === PUNCH CARD MAIN CONTAINER === */
 .punchCardItem {
-  /* Calculate card dimensions from container */
-  --container-height: var(--cards-section-height, 250px);
-  
-  --card-height-ratio: 0.88;
-  
-  --card-height: calc(var(--container-height) * var(--card-height-ratio));
-  
-  --card-height-with-ratio: 1.3;
-  
-  --card-width: calc(var(--card-height) * var(--card-height-with-ratio));
+  --card-height: calc(var(--cards-section-height) * 0.88);
+  --card-width: calc(var(--card-height) * 1.3);
 
-  /* Simplified semantic custom properties */
   --card-border-radius: calc(var(--card-height) * 0.05);
   --card-shadow-blur: calc(var(--card-height) * 0.02);
   --header-padding: calc(var(--card-height) * 0.02);
   --body-padding: calc(var(--card-height) * 0.04);
-  --footer-padding: calc(var(--card-height) * 0.02);
   
-  /* Base font size for the entire card - all other sizes will be relative to this */
   font-size: calc(var(--card-height) * 0.04);
-  
-  --header-height: calc(var(--card-height) * 0.25);
-  --punch-circle-size: calc(var(--card-height) * var(--card-punch-circle-ratio));
-  --punch-gap: calc(var(--card-height) * var(--card-punch-gap-ratio));
-  
-  /* Card outer dimensions and positioning */
+
   background-color: #8d6e63;
   border-radius: var(--card-border-radius);
   width: var(--card-width);
@@ -157,10 +139,10 @@
 
 .redemptionLabel {
   color: #ffd700;
-  font-size: calc(var(--card-height) * var(--card-font-base-ratio) * 1.2);
+  font-size: calc(var(--card-height) * 0.05 * 1.2);
   font-weight: bold;
   text-transform: uppercase;
-  letter-spacing: calc(var(--card-height) * var(--card-font-base-ratio) * 0.05);
+  letter-spacing: calc(var(--card-height) * 0.05 * 0.05);
   text-shadow: 0 0 calc(var(--card-height) * 0.01) rgba(255, 215, 0, 0.5);
 }
 

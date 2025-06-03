@@ -1,29 +1,28 @@
-@import '../punch-card-internal-layout.css';
-
 /* === BACK CARD CONTAINER === */
 .container {
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: 
+    calc(var(--card-height) * 0.22)
+    calc(var(--card-height) * 0.56)
+    calc(var(--card-height) * 0.22);
   background-color: #6d4c41;
   color: #f5f5dc;
-  font-size: calc(var(--card-height) * var(--card-font-base-ratio));
-  --remaining-height: calc(var(--card-height) * (1 - var(--header-height-ratio)));
+  font-size: calc(var(--card-height) * 0.04);
 }
 
 /* === BACK HEADER === */
 .header {
-  height: calc(var(--card-height) * var(--header-height-ratio));
   background-color: #4a3e37;
   color: #f5f5dc;
-  padding: calc(var(--card-height) * 0.02) calc(var(--card-height) * 0.04);
+  padding: var(--header-padding) var(--body-padding);
   border-radius: var(--card-border-radius) var(--card-border-radius) 0 0;
   display: flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  flex-shrink: 0;
+  font-size: 0.85em;
 }
 
 .headerTitle {
@@ -33,13 +32,11 @@
 
 /* === BACK CONTENT === */
 .body {
-  height: calc(var(--remaining-height) * (1 - var(--footer-body-ratio)));
-  padding: calc(var(--card-height) * 0.04);
+  padding: var(--body-padding);
   display: flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  flex-shrink: 0;
 }
 
 .rewardMessage {
@@ -55,7 +52,7 @@
 .rewardName {
   font-weight: bold;
   text-align: center;
-  margin-top: calc(var(--card-height) * 0.01);
+  margin-top: 0.25em;
 }
 
 .shopName {
@@ -64,12 +61,10 @@
 
 /* === BACK FOOTER === */
 .backFooter {
-  height: calc(var(--remaining-height) * var(--footer-body-ratio));
   display: flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  flex-shrink: 0;
 }
 
 .addressText {
