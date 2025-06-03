@@ -16,7 +16,7 @@ const PunchCardFrontBody: React.FC<PunchCardFrontBodyProps> = ({
   loyaltyProgram
 }) => {
   return (
-    <>
+    <div className={styles.container}>
       <div className={styles.punchesSection}>
         <PunchCardFrontBodyPunchesSection
           totalPunches={totalPunches}
@@ -29,7 +29,7 @@ const PunchCardFrontBody: React.FC<PunchCardFrontBodyProps> = ({
           <div className={styles.loyaltyProgramName}>{loyaltyProgram.name}</div>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

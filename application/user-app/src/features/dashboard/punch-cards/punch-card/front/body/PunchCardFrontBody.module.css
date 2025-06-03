@@ -1,29 +1,34 @@
 /* === PUNCH CARD FRONT BODY STYLES === */
 
+/* === BODY CONTAINER === */
+.container {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 0.7fr 0.3fr;
+  gap: 1em;
+}
+
 /* === PUNCHES SECTION LAYOUT === */
 .punchesSection {
-  height: calc((var(--card-height) * (1 - var(--header-height-ratio)) * (1 - var(--footer-body-ratio)) - 2 * var(--body-padding)) * 0.7);
+  display: flex;
 }
 
 /* === PROGRAM SECTION LAYOUT === */
 .loyaltyProgramSection {
-  height: calc((var(--card-height) * (1 - var(--header-height-ratio)) * (1 - var(--footer-body-ratio)) - 2 * var(--body-padding)) * 0.3);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: calc(var(--body-padding) * 0.6);
   box-sizing: border-box;
-  flex-shrink: 0;
 }
 
 /* === PROGRAM SECTION VISUAL STYLES === */
 .loyaltyProgramName {
   max-width: 100%;
-  flex-shrink: 0;
   line-height: 1.1;
   color: #2e1501;
-  font-size: 1.6em;
+  font-size: 1.8em;
   font-weight: 900;
   font-style: italic;
   text-align: right;
