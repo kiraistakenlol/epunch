@@ -26,14 +26,14 @@ const PunchCardFront: React.FC<PunchCardFrontProps> = ({
   const loyaltyProgram = useAppSelector(state => selectLoyaltyProgramById(state, loyaltyProgramId));
 
   return (
-    <div className={styles.cardFront}>
-      <div className={`${styles.punchCardSection} ${styles.header}`}>
+    <div className={styles.container}>
+      <div className={`${styles.containerSection} ${styles.header}`}>
         <PunchCardFrontHeader
           shopName={shopName}
           status={status}
         />
       </div>
-      <div className={`${styles.punchCardSection} ${styles.body}`}>
+      <div className={`${styles.containerSection} ${styles.body}`}>
         <PunchCardFrontBody
           totalPunches={totalPunches}
           currentPunches={currentPunches}
@@ -41,7 +41,7 @@ const PunchCardFront: React.FC<PunchCardFrontProps> = ({
           loyaltyProgram={loyaltyProgram}
         />
       </div>
-      <div className={`${styles.punchCardSection} ${styles.footer}`}>
+      <div className={`${styles.containerSection} ${styles.footer}`}>
         <PunchCardFrontFooter 
           status={status}
           isSelected={isSelected}

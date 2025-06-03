@@ -2,17 +2,17 @@
 
 /* === PUNCHES SECTION LAYOUT === */
 .punchesSection {
-  height: calc((var(--card-height) * (1 - var(--header-height-ratio)) * (1 - var(--footer-body-ratio)) - 2 * var(--card-height) * 0.04) * 0.7);
+  height: calc((var(--card-height) * (1 - var(--header-height-ratio)) * (1 - var(--footer-body-ratio)) - 2 * var(--body-padding)) * 0.7);
 }
 
 /* === PROGRAM SECTION LAYOUT === */
 .loyaltyProgramSection {
-  height: calc((var(--card-height) * (1 - var(--header-height-ratio)) * (1 - var(--footer-body-ratio)) - 2 * var(--card-height) * 0.04) * 0.3);
+  height: calc((var(--card-height) * (1 - var(--header-height-ratio)) * (1 - var(--footer-body-ratio)) - 2 * var(--body-padding)) * 0.3);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: calc(var(--card-height) * 0.04 * 0.6);
+  gap: calc(var(--body-padding) * 0.6);
   box-sizing: border-box;
   flex-shrink: 0;
 }
@@ -23,7 +23,7 @@
   flex-shrink: 0;
   line-height: 1.1;
   color: #2e1501;
-  font-size: calc((var(--card-height) * (1 - var(--header-height-ratio)) * (1 - var(--footer-body-ratio)) - 2 * var(--card-height) * 0.04) * 0.3 * 0.4);
+  font-size: 1.6em;
   font-weight: 900;
   font-style: italic;
   text-align: right;

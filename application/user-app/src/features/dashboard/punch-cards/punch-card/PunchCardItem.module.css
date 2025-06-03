@@ -13,17 +13,20 @@
   
   --card-width: calc(var(--card-height) * var(--card-height-with-ratio));
 
-  --card-border-radius-ratio: 0.05;
-
-  --card-border-radius: calc(var(--card-height) * var(--card-border-radius-ratio));
+  /* Simplified semantic custom properties */
+  --card-border-radius: calc(var(--card-height) * 0.05);
   --card-shadow-blur: calc(var(--card-height) * 0.02);
+  --header-padding: calc(var(--card-height) * 0.02);
+  --body-padding: calc(var(--card-height) * 0.04);
+  --footer-padding: calc(var(--card-height) * 0.02);
+  
+  /* Base font size for the entire card - all other sizes will be relative to this */
+  font-size: calc(var(--card-height) * 0.04);
   
   /* Calculate internal dimensions for content */
   --header-height: calc(var(--card-height) * var(--card-header-height-ratio));
-  --body-padding: calc(var(--card-height) * 0.04);
   --punch-circle-size: calc(var(--card-height) * var(--card-punch-circle-ratio));
   --punch-gap: calc(var(--card-height) * var(--card-punch-gap-ratio));
-  --font-base: calc(var(--card-height) * var(--card-font-base-ratio));
   
   /* Card outer dimensions and positioning */
   background-color: #8d6e63;

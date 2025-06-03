@@ -3,17 +3,17 @@
 .container {
   flex-shrink: 0;
   text-align: center;
-  min-height: calc(var(--card-height) * var(--card-font-base-ratio) * 1.2);
+  min-height: 1.2em;
   color: #44e62f;
-  font-size: calc(var(--card-height) * var(--card-font-base-ratio) * 1.3);
+  font-size: 1.3em;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: calc(var(--card-height) * var(--card-font-base-ratio) * 0.025);
+  letter-spacing: 0.025em;
 }
 
 .redemptionClickableText {
-  padding: calc(var(--card-height) * var(--card-font-base-ratio) * 0.4) calc(var(--card-height) * var(--card-font-base-ratio) * 0.8);
-  border-radius: calc(var(--card-height) * var(--card-font-base-ratio) * 0.2);
+  padding: 0.4em 0.8em;
+  border-radius: 0.2em;
   background-color: rgba(68, 230, 47, 0.1);
   border: 1px solid rgba(68, 230, 47, 0.3);
   transition: all 0.2s ease;
@@ -23,5 +23,5 @@
 .redemptionClickableText:hover {
   background-color: rgba(68, 230, 47, 0.2);
   border-color: rgba(68, 230, 47, 0.5);
-  transform: translateY(calc(var(--card-height) * var(--card-font-base-ratio) * -0.05));
+  transform: translateY(-0.05em);
 } 
