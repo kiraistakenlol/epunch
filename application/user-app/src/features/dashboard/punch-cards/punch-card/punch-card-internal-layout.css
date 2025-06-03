@@ -6,7 +6,7 @@
   --header-height-ratio: 0.25;
   
   /* Footer height as % of (body + footer) space */
-  --footer-body-ratio: 0.20;
+  --footer-body-ratio: 0.25;
   
   /* Controls base font size as % of card height */
   --card-font-base-ratio: 0.05; 

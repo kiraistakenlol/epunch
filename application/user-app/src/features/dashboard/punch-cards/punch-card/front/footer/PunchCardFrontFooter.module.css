@@ -1,16 +1,6 @@
 /* === PUNCH CARD FRONT FOOTER STYLES === */
 
-.punchCardFooter {
-  height: calc(var(--card-height) * (1 - var(--header-height-ratio)) * var(--footer-body-ratio));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  border: 2px solid green;
-  flex-shrink: 0;
-}
-
-.rewardReadyLabel {
+.container {
   flex-shrink: 0;
   text-align: center;
   min-height: calc(var(--card-height) * var(--card-font-base-ratio) * 1.2);
@@ -22,8 +12,7 @@
 }
 
 .redemptionClickableText {
-  cursor: pointer;
-  padding: calc(var(--card-height) * var(--card-font-base-ratio) * 0.2) calc(var(--card-height) * var(--card-font-base-ratio) * 0.4);
+  padding: calc(var(--card-height) * var(--card-font-base-ratio) * 0.4) calc(var(--card-height) * var(--card-font-base-ratio) * 0.8);
   border-radius: calc(var(--card-height) * var(--card-font-base-ratio) * 0.2);
   background-color: rgba(68, 230, 47, 0.1);
   border: 1px solid rgba(68, 230, 47, 0.3);

@@ -12,7 +12,7 @@ const PunchCardFrontFooter: React.FC<PunchCardFrontFooterProps> = ({
   isSelected,
   onRedemptionClick
 }) => (
-  <div className={styles.rewardReadyLabel}>
+  <div className={styles.container}>
     {status === 'REWARD_READY' && !isSelected ? (
       <span 
         className={styles.redemptionClickableText}
