@@ -123,28 +123,6 @@
 }
 
 /* === SELECTION OVERLAY === */
-.redemptionOverlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(255, 215, 0, 0.08);
-  border-radius: var(--card-border-radius);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-}
-
-.redemptionLabel {
-  color: #ffd700;
-  font-size: calc(var(--card-height) * 0.05 * 1.2);
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: calc(var(--card-height) * 0.05 * 0.05);
-  text-shadow: 0 0 calc(var(--card-height) * 0.01) rgba(255, 215, 0, 0.5);
-}
 
 /* === ANIMATIONS === */
 @keyframes rewardGlowOptimized {

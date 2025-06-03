@@ -1,0 +1,49 @@
+/* === OVERLAY STYLES === */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.label {
+  padding: 0.4em 0.8em;
+  border-radius: 0.2em;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+  transition: all 0.2s ease;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.selected {
+  color: #ffd700;
+  background-color: rgba(255, 215, 0, 0.5);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.selected:hover {
+  background-color: rgba(255, 215, 0, 0.3);
+  border-color: rgba(255, 215, 0, 0.5);
+  transform: scale(1.02);
+}
+
+.redeemable {
+  color: #44e62f;
+  background-color: rgba(68, 230, 47, 0.2);
+  border: 1px solid rgba(68, 230, 47, 0.3);
+}
+
+.redeemable:hover {
+  background-color: rgba(68, 230, 47, 0.3);
+  border-color: rgba(68, 230, 47, 0.5);
+  transform: scale(1.02);
+} 

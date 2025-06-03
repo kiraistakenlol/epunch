@@ -9,8 +9,6 @@ import styles from './PunchCardFront.module.css';
 
 interface PunchCardFrontProps extends Pick<PunchCardDto, 'loyaltyProgramId' | 'shopName' | 'currentPunches' | 'totalPunches' | 'status'> {
   animatedPunchIndex?: number;
-  isSelected?: boolean;
-  onRedemptionClick?: (event: React.MouseEvent) => void;
 }
 
 const PunchCardFront: React.FC<PunchCardFrontProps> = ({
@@ -19,9 +17,7 @@ const PunchCardFront: React.FC<PunchCardFrontProps> = ({
   currentPunches,
   totalPunches,
   status,
-  animatedPunchIndex,
-  isSelected = false,
-  onRedemptionClick
+  animatedPunchIndex
 }) => {
   const loyaltyProgram = useAppSelector(state => selectLoyaltyProgramById(state, loyaltyProgramId));
 
@@ -42,11 +38,7 @@ const PunchCardFront: React.FC<PunchCardFrontProps> = ({
         />
       </div>
       <div className={`${styles.containerSection} ${styles.footer}`}>
-        <PunchCardFrontFooter 
-          status={status}
-          isSelected={isSelected}
-          onRedemptionClick={onRedemptionClick}
-        />
+        <PunchCardFrontFooter />
       </div>
     </div>
   );

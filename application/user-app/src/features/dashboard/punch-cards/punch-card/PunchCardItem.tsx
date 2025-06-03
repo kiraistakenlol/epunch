@@ -4,6 +4,7 @@ import { useAppDispatch } from '../../../../store/hooks';
 import { handleEvent } from '../../../animations/animationSlice';
 import PunchCardFront from './front/PunchCardFront';
 import PunchCardBack from './back/PunchCardBack';
+import PunchCardOverlay from './PunchCardOverlay';
 import styles from './PunchCardItem.module.css';
 
 interface PunchCardItemProps extends PunchCardDto {
@@ -135,8 +136,6 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
             totalPunches={totalPunches}
             status={status}
             animatedPunchIndex={animatedPunchIndex}
-            isSelected={isSelected}
-            onRedemptionClick={handleRedemptionClick}
           />
         ) : (
           <PunchCardBack
@@ -147,12 +146,11 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
           />
         )}
       </div>
-      {isSelected && (
-        <div className={styles.redemptionOverlay}>
-          <span className={styles.redemptionLabel}>
-            Selected
-          </span>
-        </div>
+      {!isFlipped && status === 'REWARD_READY' && (
+        <PunchCardOverlay 
+          isSelected={isSelected}
+          onClick={isSelected ? undefined : handleRedemptionClick}
+        />
       )}
     </div>
   );

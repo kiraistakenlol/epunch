@@ -11,30 +11,3 @@
   letter-spacing: 0.025em;
   padding-bottom: 2em;
 }
-
-.redemptionClickableText {
-  padding: 0.4em 0.8em;
-  border-radius: 0.2em;
-  background-color: rgba(68, 230, 47, 0.1);
-  border: 1px solid rgba(68, 230, 47, 0.3);
-  transition: all 0.2s ease;
-  display: inline-block;
-  position: relative;
-  cursor: pointer;
-}
-
-.redemptionClickableText::before {
-  content: '';
-  position: absolute;
-  top: -4.5em;
-  left: -4.5em;
-  right: -4.5em;
-  bottom: -4.5em;
-  background: transparent;
-}
-
-.redemptionClickableText:hover {
-  background-color: rgba(68, 230, 47, 0.2);
-  border-color: rgba(68, 230, 47, 0.5);
-  transform: scale(1.02);
-} 
