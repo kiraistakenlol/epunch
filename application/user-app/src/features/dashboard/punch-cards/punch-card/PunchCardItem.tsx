@@ -136,6 +136,7 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
             totalPunches={totalPunches}
             status={status}
             animatedPunchIndex={animatedPunchIndex}
+            isSelected={isSelected}
           />
         ) : (
           <PunchCardBack

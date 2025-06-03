@@ -25,4 +25,16 @@
   font-size: 4em;
   font-weight: bolder;
   color: #44e62f;
+  text-shadow: 
+    0 0 10px #44e62f,
+    0 0 20px #44e62f,
+    0 0 30px #44e62f;
+  transition: text-shadow 0.3s ease;
+}
+
+.checkIcon.selected {
+  text-shadow: 
+    0 0 10px #ffd700,
+    0 0 20px #ffd700,
+    0 0 30px #ffd700;
 } 
