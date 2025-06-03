@@ -23,7 +23,7 @@ const PunchCardBack: React.FC<PunchCardBackProps> = ({
       <div className={styles.body}>
         {loyaltyProgram && (
             <div className={`${styles.rewardMessage} ${styles.rewardText}`}>
-              <div>Collect {totalPunches} punches at <span className={styles.shopName}>{shopName}</span> and enjoy</div>
+              <div>Collect <span className={styles.totalPunches}>{totalPunches}</span> punches at <span className={styles.shopName}>{shopName}</span> and enjoy</div>
               <div className={styles.rewardName}>🎁 {loyaltyProgram.rewardDescription}</div>
             </div>
         )}
