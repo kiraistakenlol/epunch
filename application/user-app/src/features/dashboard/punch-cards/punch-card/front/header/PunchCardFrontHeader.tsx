@@ -15,7 +15,7 @@ const PunchCardFrontHeader: React.FC<PunchCardFrontHeaderProps> = ({
       <span className={styles.shopName}>{shopName}</span>
     </div>
     <div className={styles.headerRight}>
-      {status === 'REWARD_READY' && <i className={`bi bi-check-circle ${styles.checkIcon}`}></i>}
+      {status === 'REWARD_READY' && <span className={styles.checkIcon}>🎁</span>}
     </div>
   </>
 );
