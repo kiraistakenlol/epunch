@@ -1,4 +1,47 @@
+# Feature Ideas & Brainstorming
 
+## Core Functionality
+
+### Merchant Categorization
+- Add `type` field to merchants with predefined categories (CAFE, CAR_WASH, BARBER_SHOP, etc.)
+- Enable filtering by merchant type in user app
+
+### Location Integration
+- Clicking card address opens device's default maps app
+
+### Proactive Engagement
+- Notify users when punch cards are nearly complete
+- Send completion reminders via app notifications or email
+
+## Design & Customization
+
+### User App Design
+- Consider moving from brownish color scheme to neutral palette
+- Let merchant card customization provide visual variety
+
+### Punch Card Customization
+Enable merchants to customize cards with:
+- Custom punch icons
+- Brand colors (primary/secondary)
+- Logo upload and positioning
+- Typography options
+- Layout proportions (header/body/footer)
+
+**Implementation Phases:**
+1. **Phase 1**: Logo upload and positioning
+2. **Phase 2**: Primary/secondary color selection
+3. **Future**: Advanced card layout builder/constructor
+
+### Card Management & Discovery
+- Group cards by merchant/loyalty program
+- Implement filtering by merchant/program/status
+- Add text search functionality for users with many cards
+- Solve scalability issues for 100+ cards
+
+## Marketing & Communication
+- Newsletter/promotion system for merchants
+- Integration with email services (SendGrid consideration)
+- Merchant-to-customer communication tools
 
 # This doc outlines features and ideas that we might want to implement but all of them are open to discussion.
 
