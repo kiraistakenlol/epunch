@@ -10,4 +10,4 @@ Here's what has to be done before we launch with any client:
  * google auth. figure out if we use the same app or we need to create a new one in google cloud console. what is the best practice? also there was sth about app verification when going to prod... (a note in google cloud console - check it!!!)
   
 3. Localization (for Argentina):
-  * what is the best practice to do it give out tech stack? (Brainstorm)
+  * what is the best practice to do it given our tech stack? (Brainstorm)
