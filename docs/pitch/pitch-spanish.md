@@ -6,7 +6,7 @@
 
 Tus clientes tienen un código QR en su celular. Vos lo escaneás cuando compran algo, y así van acumulando “punches”. Después de cierta cantidad —por ejemplo, 10— reciben una recompensa, como un café gratis.
 
-Es como las clásicas tarjetas de cartón… pero sin papel, y que realmente funciona.
+Es como las clásicas tarjetas de cartón… pero sin papel, digitales
 
 ---
 
@@ -15,7 +15,7 @@ Es como las clásicas tarjetas de cartón… pero sin papel, y que realmente fun
 Así se usa en la vida real:
 
 1. **El cliente entra a tu local.**
-2. Escanea *tu* código QR o abre `epunch.io`.
+2. Escanea *tu* código QR o abre `epunch.app`.
 3. En su celular ve sus tarjetas — incluyendo la de tu negocio.
 4. Después de comprar, vos escaneás *su* código QR personal.
 5. Su tarjeta se actualiza con un nuevo “punch”.

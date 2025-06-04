@@ -15,7 +15,7 @@ It’s like the old punch cards… but without the paper. And it actually works.
 Here’s how it plays out in real life:
 
 1. **Customer walks into your shop.**
-2. They either scan *your* QR code or go to `epunch.io`.
+2. They either scan *your* QR code or go to `epunch.app`.
 3. On their phone, they see their punch cards—including yours.
 4. After they buy something, you scan *their* personal QR code.
 5. Their punch count goes up instantly.
