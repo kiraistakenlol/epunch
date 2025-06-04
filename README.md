@@ -147,6 +147,10 @@ The project includes several convenience scripts for development:
 * `./deploy-backend.sh` - Deploys backend to Fly.io
 * `./backend-logs.sh` - Views backend logs from Fly.io
 
+### Database Schema
+
+Database schema is managed via `initial_ddl.sql`. The project is currently in development stage and migrations are not used.
+
 ### Project Structure
 
 ```
