@@ -81,10 +81,21 @@ resource "aws_s3_bucket" "merchant_logos" {
 resource "aws_s3_bucket_public_access_block" "merchant_logos_pab" {
   bucket = aws_s3_bucket.merchant_logos.id
 
-  block_public_acls       = false
+  block_public_acls       = true
   block_public_policy     = false
-  ignore_public_acls      = false
+  ignore_public_acls      = true
   restrict_public_buckets = false
+}
+
+resource "aws_s3_bucket_cors_configuration" "merchant_logos_cors" {
+  bucket = aws_s3_bucket.merchant_logos.id
+
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["PUT", "GET"]
+    allowed_origins = ["*"]
+    max_age_seconds = 86400
+  }
 }
 
 resource "aws_s3_bucket_policy" "merchant_logos_policy" {
@@ -96,11 +107,8 @@ resource "aws_s3_bucket_policy" "merchant_logos_policy" {
       {
         Effect    = "Allow"
         Principal = "*"
-        Action    = "s3:*"
-        Resource  = [
-          aws_s3_bucket.merchant_logos.arn,
-          "${aws_s3_bucket.merchant_logos.arn}/*"
-        ]
+        Action    = "s3:GetObject"
+        Resource  = "${aws_s3_bucket.merchant_logos.arn}/*"
       }
     ]
   })
