@@ -9,6 +9,11 @@
 ### Location Integration
 - Clicking card address opens device's default maps app
 
+### Multi-Location Merchants
+- Challenge: Merchants with multiple locations (e.g., cafe chains) have different addresses per location
+- Address displays on back of card, but current merchant model doesn't support multiple locations
+- Potential solutions: sub-merchants, branches, or location-based merchant variants
+
 ### Proactive Engagement
 - Notify users when punch cards are nearly complete
 - Send completion reminders via app notifications or email
