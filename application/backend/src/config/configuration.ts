@@ -11,8 +11,15 @@ export default () => ({
     user: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
   },
-  cognito: {
-    userPoolId: process.env.AWS_COGNITO_USER_POOL_ID,
+  aws: {
     region: process.env.AWS_REGION,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    cognito: {
+      userPoolId: process.env.AWS_COGNITO_USER_POOL_ID,
+    },
+    s3: {
+      merchantFilesBucketName: process.env.S3_MERCHANT_FILES_BUCKET_NAME,
+    },
   }
 }); 

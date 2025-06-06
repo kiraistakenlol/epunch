@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, AuthResponseDto, UserDto, LoyaltyProgramDto, MerchantLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreatePunchCardDto, CreateMerchantDto, UpdateMerchantDto } from 'e-punch-common-core';
+import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, AuthResponseDto, UserDto, LoyaltyProgramDto, MerchantLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreatePunchCardDto, CreateMerchantDto, UpdateMerchantDto, PunchCardStyleDto } from 'e-punch-common-core';
 
 // The API URL will be set by the app using this client
 let API_BASE_URL: string;
@@ -308,5 +308,37 @@ export const apiClient = {
   async getSystemStatistics(): Promise<SystemStatistics> {
     const response = await instance.get<SystemStatistics>('/dev/statistics');
     return response.data;
-  }
+  },
+
+  async generateFileUploadUrl(merchantId: string, fileName: string): Promise<{ uploadUrl: string; publicUrl: string }> {
+    if (!merchantId || !fileName) {
+      return Promise.reject(new Error('Merchant ID and file name are required.'));
+    }
+    const response = await instance.post<{ uploadUrl: string; publicUrl: string }>(`/merchants/${merchantId}/file-upload-url`, { fileName });
+    return response.data;
+  },
+
+  async getMerchantDefaultPunchCardStyle(merchantId: string): Promise<PunchCardStyleDto> {
+    if (!merchantId) {
+      return Promise.reject(new Error('Merchant ID is required.'));
+    }
+    const response = await instance.get<PunchCardStyleDto>(`/punch-card-styles/merchants/${merchantId}/default`);
+    return response.data;
+  },
+
+  async createOrUpdateMerchantDefaultStyle(merchantId: string, data: { primaryColor?: string; secondaryColor?: string }): Promise<PunchCardStyleDto> {
+    if (!merchantId) {
+      return Promise.reject(new Error('Merchant ID is required.'));
+    }
+    const response = await instance.post<PunchCardStyleDto>(`/punch-card-styles/merchants/${merchantId}/default`, data);
+    return response.data;
+  },
+
+  async updateMerchantDefaultPunchCardLogo(merchantId: string, logoUrl: string): Promise<PunchCardStyleDto> {
+    if (!merchantId) {
+      return Promise.reject(new Error('Merchant ID is required.'));
+    }
+    const response = await instance.put<PunchCardStyleDto>(`/punch-card-styles/merchants/${merchantId}/default/logo`, { logoUrl });
+    return response.data;
+  },
 }; 

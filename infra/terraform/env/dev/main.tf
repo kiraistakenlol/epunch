@@ -74,12 +74,12 @@ resource "aws_cognito_user_pool_client" "epunch_dev_client" {
   depends_on = [aws_cognito_identity_provider.google]
 }
 
-resource "aws_s3_bucket" "merchant_logos" {
+resource "aws_s3_bucket" "merchant_files" {
   bucket = var.s3_bucket_name
 }
 
-resource "aws_s3_bucket_public_access_block" "merchant_logos_pab" {
-  bucket = aws_s3_bucket.merchant_logos.id
+resource "aws_s3_bucket_public_access_block" "merchant_files_pab" {
+  bucket = aws_s3_bucket.merchant_files.id
 
   block_public_acls       = true
   block_public_policy     = false
@@ -87,8 +87,8 @@ resource "aws_s3_bucket_public_access_block" "merchant_logos_pab" {
   restrict_public_buckets = false
 }
 
-resource "aws_s3_bucket_cors_configuration" "merchant_logos_cors" {
-  bucket = aws_s3_bucket.merchant_logos.id
+resource "aws_s3_bucket_cors_configuration" "merchant_files_cors" {
+  bucket = aws_s3_bucket.merchant_files.id
 
   cors_rule {
     allowed_headers = ["*"]
@@ -98,8 +98,8 @@ resource "aws_s3_bucket_cors_configuration" "merchant_logos_cors" {
   }
 }
 
-resource "aws_s3_bucket_policy" "merchant_logos_policy" {
-  bucket = aws_s3_bucket.merchant_logos.id
+resource "aws_s3_bucket_policy" "merchant_files_policy" {
+  bucket = aws_s3_bucket.merchant_files.id
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -108,10 +108,10 @@ resource "aws_s3_bucket_policy" "merchant_logos_policy" {
         Effect    = "Allow"
         Principal = "*"
         Action    = "s3:GetObject"
-        Resource  = "${aws_s3_bucket.merchant_logos.arn}/*"
+        Resource  = "${aws_s3_bucket.merchant_files.arn}/*"
       }
     ]
   })
 
-  depends_on = [aws_s3_bucket_public_access_block.merchant_logos_pab]
+  depends_on = [aws_s3_bucket_public_access_block.merchant_files_pab]
 } 

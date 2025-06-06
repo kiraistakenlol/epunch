@@ -4,6 +4,7 @@ import { PunchCardsRepository } from '../punch-cards/punch-cards.repository';
 import { LoyaltyRepository } from '../loyalty/loyalty.repository';
 import { UserRepository } from '../user/user.repository';
 import { EventService } from '../../events/event.service';
+import { MerchantRepository } from '../merchant/merchant.repository';
 
 @Injectable()
 export class PunchesService {
@@ -14,6 +15,7 @@ export class PunchesService {
     private readonly loyaltyRepository: LoyaltyRepository,
     private readonly userRepository: UserRepository,
     private readonly eventService: EventService,
+    private readonly merchantRepository: MerchantRepository
   ) { }
 
   /**
@@ -75,7 +77,7 @@ export class PunchesService {
     await this.punchCardsRepository.createPunchRecord(updatedPunchCard.id);
 
     // Get merchant info once for both events
-    const merchant = await this.loyaltyRepository.findMerchantById(loyaltyProgram.merchant_id);
+    const merchant = await this.merchantRepository.findMerchantById(loyaltyProgram.merchant_id);
     if (!merchant) {
       this.logger.error(`Merchant ${loyaltyProgram.merchant_id} not found for loyalty program ${loyaltyProgramId}.`);
       throw new BadRequestException(`Merchant details not found for loyalty program ${loyaltyProgramId}. Critical data missing.`);

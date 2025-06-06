@@ -11,14 +11,6 @@ export interface LoyaltyProgram {
   created_at: Date;
 }
 
-export interface Merchant {
-  id: string;
-  name: string;
-  address: string | null;
-  slug: string;
-  created_at: Date;
-}
-
 @Injectable()
 export class LoyaltyRepository {
   private readonly logger = new Logger(LoyaltyRepository.name);
@@ -46,27 +38,6 @@ export class LoyaltyRepository {
     }
   }
 
-  async findMerchantById(id: string): Promise<Merchant | null> {
-    this.logger.log(`Attempting to find merchant with id: ${id}`);
-    
-    const query = 'SELECT * FROM merchant WHERE id = $1';
-    
-    try {
-      const result = await this.pool.query(query, [id]);
-      
-      if (!result.rows[0]) {
-        this.logger.warn(`No merchant found with id: ${id}`);
-        return null;
-      }
-      
-      this.logger.log(`Successfully found merchant with id: ${id}`);
-      return result.rows[0];
-    } catch (error: any) {
-      this.logger.error(`Error fetching merchant with id ${id}:`, error.message);
-      return null;
-    }
-  }
-
   async findLoyaltyProgramsByIds(ids: string[]): Promise<LoyaltyProgram[]> {
     if (ids.length === 0) return [];
     
@@ -86,22 +57,4 @@ export class LoyaltyRepository {
     }
   }
 
-  async findMerchantsByIds(ids: string[]): Promise<Merchant[]> {
-    if (ids.length === 0) return [];
-    
-    this.logger.log(`Attempting to find merchants with ids: ${ids.join(', ')}`);
-    
-    const placeholders = ids.map((_, index) => `$${index + 1}`).join(', ');
-    const query = `SELECT * FROM merchant WHERE id IN (${placeholders})`;
-    
-    try {
-      const result = await this.pool.query(query, ids);
-      
-      this.logger.log(`Successfully found ${result.rows.length} merchants`);
-      return result.rows;
-    } catch (error: any) {
-      this.logger.error(`Error fetching merchants with ids ${ids.join(', ')}:`, error.message);
-      return [];
-    }
-  }
 } 

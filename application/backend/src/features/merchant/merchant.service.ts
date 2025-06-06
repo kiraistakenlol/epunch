@@ -1,6 +1,8 @@
 import { Injectable, Logger, NotFoundException, HttpException, HttpStatus } from '@nestjs/common';
-import { LoyaltyProgramDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreateMerchantDto, UpdateMerchantDto } from 'e-punch-common-core';
+import { ConfigService } from '@nestjs/config';
+import { LoyaltyProgramDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreateMerchantDto, UpdateMerchantDto, PunchCardStyleDto, UpdatePunchCardStyleDto, FileUploadUrlDto, FileUploadResponseDto } from 'e-punch-common-core';
 import { MerchantRepository } from './merchant.repository';
+import { FileUploadService } from './file-upload.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 
@@ -10,12 +12,14 @@ export class MerchantService {
 
   constructor(
     private readonly merchantRepository: MerchantRepository,
+    private readonly fileUploadService: FileUploadService,
+    private readonly configService: ConfigService,
     private readonly jwtService: JwtService
-  ) {}
+  ) { }
 
   async getAllMerchants(): Promise<MerchantDto[]> {
     this.logger.log('Fetching all merchants');
-    
+
     try {
       const merchants = await this.merchantRepository.findAllMerchants();
       this.logger.log(`Found ${merchants.length} merchants`);
@@ -28,10 +32,10 @@ export class MerchantService {
 
   async getMerchantById(merchantId: string): Promise<MerchantDto> {
     this.logger.log(`Fetching merchant by ID: ${merchantId}`);
-    
+
     try {
       const merchant = await this.merchantRepository.findMerchantById(merchantId);
-      
+
       if (!merchant) {
         throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
       }
@@ -42,6 +46,7 @@ export class MerchantService {
         address: merchant.address || '',
         slug: merchant.slug,
         email: merchant.login || '',
+        logoUrl: merchant.logo_url || '',
         createdAt: merchant.created_at.toISOString(),
       };
 
@@ -55,10 +60,10 @@ export class MerchantService {
 
   async getMerchantBySlug(slug: string): Promise<MerchantDto> {
     this.logger.log(`Fetching merchant by slug: ${slug}`);
-    
+
     try {
       const merchant = await this.merchantRepository.findMerchantBySlug(slug);
-      
+
       if (!merchant) {
         throw new NotFoundException(`Merchant with slug ${slug} not found`);
       }
@@ -69,6 +74,7 @@ export class MerchantService {
         address: merchant.address || '',
         slug: merchant.slug,
         email: merchant.login || '',
+        logoUrl: merchant.logo_url || '',
         createdAt: merchant.created_at.toISOString(),
       };
 
@@ -82,17 +88,17 @@ export class MerchantService {
 
   async validateMerchant(login: string, password: string): Promise<MerchantLoginResponse | null> {
     this.logger.log(`Validating merchant with login: ${login}`);
-    
+
     try {
       const merchant = await this.merchantRepository.findMerchantByLogin(login);
-      
+
       if (!merchant || !merchant.password_hash || !merchant.login) {
         this.logger.warn(`Merchant not found or missing auth fields with login: ${login}`);
         return null;
       }
 
       const isPasswordValid = await bcrypt.compare(password, merchant.password_hash);
-      
+
       if (!isPasswordValid) {
         this.logger.warn(`Invalid password for merchant: ${login}`);
         return null;
@@ -102,7 +108,7 @@ export class MerchantService {
       const token = this.jwtService.sign(payload);
 
       this.logger.log(`Merchant authenticated successfully: ${login}`);
-      
+
       return {
         token,
         merchant: {
@@ -111,6 +117,7 @@ export class MerchantService {
           address: merchant.address,
           slug: merchant.slug,
           email: merchant.login,
+          logoUrl: merchant.logo_url || '',
           createdAt: merchant.created_at.toISOString(),
         },
       };
@@ -122,10 +129,10 @@ export class MerchantService {
 
   async getMerchantLoyaltyPrograms(merchantId: string): Promise<LoyaltyProgramDto[]> {
     this.logger.log(`Fetching loyalty programs for merchant: ${merchantId}`);
-    
+
     try {
       const merchant = await this.merchantRepository.findMerchantById(merchantId);
-      
+
       if (!merchant) {
         throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
       }
@@ -141,10 +148,10 @@ export class MerchantService {
 
   async createLoyaltyProgram(merchantId: string, data: CreateLoyaltyProgramDto): Promise<LoyaltyProgramDto> {
     this.logger.log(`Creating loyalty program for merchant: ${merchantId}`);
-    
+
     try {
       const merchant = await this.merchantRepository.findMerchantById(merchantId);
-      
+
       if (!merchant) {
         throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
       }
@@ -168,10 +175,10 @@ export class MerchantService {
 
   async updateLoyaltyProgram(merchantId: string, programId: string, data: UpdateLoyaltyProgramDto): Promise<LoyaltyProgramDto> {
     this.logger.log(`Updating loyalty program ${programId} for merchant: ${merchantId}`);
-    
+
     try {
       const merchant = await this.merchantRepository.findMerchantById(merchantId);
-      
+
       if (!merchant) {
         throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
       }
@@ -187,7 +194,7 @@ export class MerchantService {
       }
 
       const loyaltyProgram = await this.merchantRepository.updateLoyaltyProgram(merchantId, programId, data);
-      
+
       if (!loyaltyProgram) {
         throw new NotFoundException(`Loyalty program with ID ${programId} not found for merchant ${merchantId}`);
       }
@@ -202,16 +209,16 @@ export class MerchantService {
 
   async deleteLoyaltyProgram(merchantId: string, programId: string): Promise<void> {
     this.logger.log(`Deleting loyalty program ${programId} for merchant: ${merchantId}`);
-    
+
     try {
       const merchant = await this.merchantRepository.findMerchantById(merchantId);
-      
+
       if (!merchant) {
         throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
       }
 
       const deleted = await this.merchantRepository.deleteLoyaltyProgram(merchantId, programId);
-      
+
       if (!deleted) {
         throw new NotFoundException(`Loyalty program with ID ${programId} not found for merchant ${merchantId} or already deleted`);
       }
@@ -225,15 +232,15 @@ export class MerchantService {
 
   async createMerchant(data: CreateMerchantDto): Promise<MerchantDto> {
     this.logger.log(`Creating merchant: ${data.name}`);
-    
+
     try {
       const hashedPassword = await bcrypt.hash(data.password, 10);
-      
+
       const merchant = await this.merchantRepository.createMerchant({
         ...data,
         password: hashedPassword
       });
-      
+
       this.logger.log(`Created merchant: ${merchant.id}`);
       return merchant;
     } catch (error: any) {
@@ -244,20 +251,20 @@ export class MerchantService {
 
   async updateMerchant(merchantId: string, data: UpdateMerchantDto): Promise<MerchantDto> {
     this.logger.log(`Updating merchant: ${merchantId}`);
-    
+
     try {
       const updateData = { ...data };
-      
+
       if (data.password) {
         updateData.password = await bcrypt.hash(data.password, 10);
       }
-      
+
       const merchant = await this.merchantRepository.updateMerchant(merchantId, updateData);
-      
+
       if (!merchant) {
         throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
       }
-      
+
       this.logger.log(`Updated merchant: ${merchantId}`);
       return merchant;
     } catch (error: any) {
@@ -268,18 +275,47 @@ export class MerchantService {
 
   async deleteMerchant(merchantId: string): Promise<void> {
     this.logger.log(`Deleting merchant: ${merchantId}`);
-    
+
     try {
       const deleted = await this.merchantRepository.deleteMerchant(merchantId);
-      
+
       if (!deleted) {
         throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
       }
-      
+
       this.logger.log(`Deleted merchant: ${merchantId}`);
     } catch (error: any) {
       this.logger.error(`Error deleting merchant ${merchantId}: ${error.message}`, error.stack);
       throw error;
     }
   }
+
+  async generateFileUploadUrl(merchantId: string, data: FileUploadUrlDto): Promise<FileUploadResponseDto> {
+    this.logger.log(`Generating file upload URL for merchant: ${merchantId}`);
+
+    try {
+      const merchant = await this.merchantRepository.findMerchantById(merchantId);
+
+      if (!merchant) {
+        throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
+      }
+
+      const bucketName = this.configService.getOrThrow<string>('aws.s3.merchantFilesBucketName');
+      const key = `merchant-files/${merchantId}/${data.fileName}`;
+
+      const result = await this.fileUploadService.generateFileUploadUrl({
+        bucketName,
+        key,
+        contentType: 'image/webp',
+        expiresIn: 3600,
+      });
+
+      this.logger.log(`Generated file upload URL for merchant: ${merchantId}`);
+      return result;
+    } catch (error: any) {
+      this.logger.error(`Error generating file upload URL for merchant ${merchantId}: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
 } 

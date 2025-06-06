@@ -1,5 +1,6 @@
 export * from './dto/auth.dto';
 export * from './dto/punch-card.dto';
+export * from './dto/punch-card-style.dto';
 export * from './dto/qr-value.dto';
 export * from './dto/events.dto';
 export * from './dto/user.dto';

@@ -6,6 +6,7 @@ interface MerchantUser {
   id: string;
   name: string;
   email: string;
+  logoUrl: string | null;
 }
 
 interface AuthState {
@@ -94,6 +95,16 @@ const authSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
+    updateMerchantLogo: (state, action: PayloadAction<{ logoUrl: string | null }>) => {
+      if (state.merchant) {
+        state.merchant.logoUrl = action.payload.logoUrl;
+        localStorage.setItem('merchant_data', JSON.stringify(state.merchant));
+      }
+    },
+    updateMerchant: (state, action: PayloadAction<MerchantUser>) => {
+      state.merchant = action.payload;
+      localStorage.setItem('merchant_data', JSON.stringify(action.payload));
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -122,5 +133,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { loginStart, loginSuccess, loginFailure, logout, clearError } = authSlice.actions;
+export const { loginStart, loginSuccess, loginFailure, logout, clearError, updateMerchantLogo, updateMerchant } = authSlice.actions;
 export default authSlice.reducer; 

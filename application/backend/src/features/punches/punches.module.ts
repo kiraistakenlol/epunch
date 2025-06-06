@@ -5,6 +5,7 @@ import { PunchCardsModule } from '../punch-cards/punch-cards.module';
 import { LoyaltyModule } from '../loyalty/loyalty.module';
 import { UserModule } from '../user/user.module';
 import { WebSocketModule } from '../../websocket/websocket.module';
+import { MerchantModule } from '../merchant/merchant.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { WebSocketModule } from '../../websocket/websocket.module';
     LoyaltyModule,
     UserModule,
     WebSocketModule,
+    MerchantModule,
   ],
   controllers: [PunchesController],
   providers: [PunchesService],

@@ -1,5 +1,5 @@
 import { Controller, Get, Param, ParseUUIDPipe, Post, Body, HttpException, HttpStatus, Put, Delete, Query } from '@nestjs/common';
-import { LoyaltyProgramDto, MerchantLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreateMerchantDto, UpdateMerchantDto } from 'e-punch-common-core';
+import { LoyaltyProgramDto, MerchantLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreateMerchantDto, UpdateMerchantDto, PunchCardStyleDto, FileUploadUrlDto, FileUploadResponseDto } from 'e-punch-common-core';
 import { MerchantService } from './merchant.service';
 
 @Controller('merchants')
@@ -15,9 +15,9 @@ export class MerchantController {
     return this.merchantService.getAllMerchants();
   }
 
-  @Get(':id')
+  @Get(':merchantId')
   async getMerchantById(
-    @Param('id', ParseUUIDPipe) merchantId: string,
+    @Param('merchantId', ParseUUIDPipe) merchantId: string,
   ): Promise<MerchantDto> {
     return this.merchantService.getMerchantById(merchantId);
   }
@@ -27,16 +27,16 @@ export class MerchantController {
     return this.merchantService.createMerchant(createDto);
   }
 
-  @Put(':id')
+  @Put(':merchantId')
   async updateMerchant(
-    @Param('id', ParseUUIDPipe) merchantId: string,
+    @Param('merchantId', ParseUUIDPipe) merchantId: string,
     @Body() updateDto: UpdateMerchantDto,
   ): Promise<MerchantDto> {
     return this.merchantService.updateMerchant(merchantId, updateDto);
   }
 
-  @Delete(':id')
-  async deleteMerchant(@Param('id', ParseUUIDPipe) merchantId: string): Promise<void> {
+  @Delete(':merchantId')
+  async deleteMerchant(@Param('merchantId', ParseUUIDPipe) merchantId: string): Promise<void> {
     return this.merchantService.deleteMerchant(merchantId);
   }
 
@@ -92,4 +92,13 @@ export class MerchantController {
   ): Promise<void> {
     return this.merchantService.deleteLoyaltyProgram(merchantId, programId);
   }
+
+  @Post(':merchantId/file-upload-url')
+  async generateFileUploadUrl(
+    @Param('merchantId', ParseUUIDPipe) merchantId: string,
+    @Body() fileUploadDto: FileUploadUrlDto,
+  ): Promise<FileUploadResponseDto> {
+    return this.merchantService.generateFileUploadUrl(merchantId, fileUploadDto);
+  }
+
 } 

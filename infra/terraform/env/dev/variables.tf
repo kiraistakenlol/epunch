@@ -5,7 +5,7 @@ variable "aws_region" {
 }
 
 variable "s3_bucket_name" {
-  description = "S3 bucket name for merchant logos (must be globally unique)"
+  description = "S3 bucket name for merchant files (must be globally unique)"
   type        = string
 }
 

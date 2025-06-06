@@ -16,6 +16,7 @@ CREATE TABLE merchant (
     slug TEXT UNIQUE NOT NULL,
     login TEXT UNIQUE,
     password_hash TEXT,
+    logo_url TEXT,
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
@@ -30,6 +31,22 @@ CREATE TABLE loyalty_program (
     is_active BOOLEAN NOT NULL DEFAULT true,
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
+
+-- Punch Card Style table
+CREATE TABLE punch_card_style (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    merchant_id UUID NOT NULL REFERENCES merchant(id) ON DELETE CASCADE,
+    loyalty_program_id UUID REFERENCES loyalty_program(id) ON DELETE CASCADE,
+    primary_color VARCHAR(7),
+    secondary_color VARCHAR(7),
+    logo_url TEXT,
+    background_image_url TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+-- Create unique index to handle NULL loyalty_program_id cases
+CREATE UNIQUE INDEX punch_card_style_merchant_program_unique 
+ON punch_card_style (merchant_id, COALESCE(loyalty_program_id, '00000000-0000-0000-0000-000000000000'));
 
 -- Punch Card table
 CREATE TYPE punch_card_status AS ENUM ('ACTIVE', 'REWARD_READY', 'REWARD_REDEEMED');

@@ -24,6 +24,8 @@ import {
   QrCodeScanner,
   Loyalty,
   AccountCircle,
+  Settings as SettingsIcon,
+  Palette,
 } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { logout } from '../store/authSlice';
@@ -34,6 +36,8 @@ const menuItems = [
   { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
   { text: 'QR Scanner', icon: <QrCodeScanner />, path: '/scanner' },
   { text: 'Loyalty Programs', icon: <Loyalty />, path: '/loyalty-programs' },
+  { text: 'Design', icon: <Palette />, path: '/design' },
+  { text: 'Settings', icon: <SettingsIcon />, path: '/settings' },
 ];
 
 export const DashboardLayout: React.FC = () => {

@@ -1,12 +1,16 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { LoyaltyRepository } from './loyalty.repository';
+import { MerchantRepository } from '../merchant/merchant.repository';
 import { LoyaltyProgramDto } from 'e-punch-common-core';
 
 @Injectable()
 export class LoyaltyService {
   private readonly logger = new Logger(LoyaltyService.name);
 
-  constructor(private readonly loyaltyRepository: LoyaltyRepository) {}
+  constructor(
+    private readonly loyaltyRepository: LoyaltyRepository,
+    private readonly merchantRepository: MerchantRepository
+  ) {}
 
   async getLoyaltyPrograms(ids: string[]): Promise<LoyaltyProgramDto[]> {
     this.logger.log(`Fetching loyalty programs: ${ids.join(', ')}`);
@@ -16,10 +20,13 @@ export class LoyaltyService {
       
       // Get unique merchant IDs
       const merchantIds = [...new Set(loyaltyPrograms.map(lp => lp.merchant_id))];
-      const merchants = await this.loyaltyRepository.findMerchantsByIds(merchantIds);
+      const merchants = await Promise.all(
+        merchantIds.map(id => this.merchantRepository.findMerchantById(id))
+      );
+      const validMerchants = merchants.filter(m => m !== null);
       
       // Create a map for quick merchant lookup
-      const merchantMap = new Map(merchants.map(m => [m.id, m]));
+      const merchantMap = new Map(validMerchants.map(m => [m!.id, m]));
       
       const loyaltyProgramDtos: LoyaltyProgramDto[] = [];
       
@@ -44,6 +51,7 @@ export class LoyaltyService {
             address: merchant.address || '',
             slug: merchant.slug,
             email: '',
+            logoUrl: merchant.logo_url || '',
             createdAt: merchant.created_at.toISOString(),
           },
           createdAt: loyaltyProgram.created_at.toISOString(),
@@ -68,7 +76,7 @@ export class LoyaltyService {
         throw new NotFoundException(`Loyalty program with ID ${id} not found`);
       }
 
-      const merchant = await this.loyaltyRepository.findMerchantById(loyaltyProgram.merchant_id);
+      const merchant = await this.merchantRepository.findMerchantById(loyaltyProgram.merchant_id);
       
       if (!merchant) {
         throw new NotFoundException(`Merchant not found for loyalty program ${id}`);
@@ -87,6 +95,7 @@ export class LoyaltyService {
           address: merchant.address || '',
           slug: merchant.slug,
           email: '',
+          logoUrl: merchant.logo_url || '',
           createdAt: merchant.created_at.toISOString(),
         },
         createdAt: loyaltyProgram.created_at.toISOString(),

@@ -10,6 +10,8 @@ import { Dashboard } from './pages/Dashboard';
 import { LoyaltyPrograms } from './pages/LoyaltyPrograms';
 import { LoyaltyProgramCreate } from './pages/LoyaltyProgramCreate';
 import { LoyaltyProgramEdit } from './pages/LoyaltyProgramEdit';
+import { Settings } from './pages/Settings';
+import { Design } from './pages/Design';
 import ScannerPage from './features/scanner/ScannerPage';
 import './styles/global.css';
 
@@ -96,6 +98,8 @@ function App() {
             <Route path="loyalty-programs" element={<LoyaltyPrograms />} />
             <Route path="loyalty-programs/create" element={<LoyaltyProgramCreate />} />
             <Route path="loyalty-programs/:id/edit" element={<LoyaltyProgramEdit />} />
+            <Route path="design" element={<Design />} />
+            <Route path="settings" element={<Settings />} />
             <Route path="scanner" element={<ScannerPage />} />
           </Route>
         </Routes>

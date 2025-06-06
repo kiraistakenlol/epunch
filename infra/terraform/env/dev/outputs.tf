@@ -19,14 +19,11 @@ output "aws_region" {
 }
 
 output "s3_bucket_name" {
-  description = "S3 bucket name for merchant logos"
-  value       = aws_s3_bucket.merchant_logos.bucket
+  description = "S3 bucket name for merchant files"
+  value       = aws_s3_bucket.merchant_files.bucket
 }
 
-output "s3_bucket_url" {
-  description = "S3 bucket URL for merchant logos"
-  value       = "https://${aws_s3_bucket.merchant_logos.bucket}.s3.${var.aws_region}.amazonaws.com"
-}
+
 
 output "environment_variables" {
   description = "Environment variables for frontend .env file"
@@ -35,7 +32,6 @@ output "environment_variables" {
     VITE_COGNITO_USER_POOL_CLIENT_ID = aws_cognito_user_pool_client.epunch_dev_client.id
     VITE_AWS_REGION                  = var.aws_region
     VITE_COGNITO_DOMAIN              = "${aws_cognito_user_pool_domain.epunch_dev_domain.domain}.auth.${var.aws_region}.amazoncognito.com"
-    VITE_S3_BUCKET_NAME              = aws_s3_bucket.merchant_logos.bucket
-    VITE_S3_BUCKET_URL               = "https://${aws_s3_bucket.merchant_logos.bucket}.s3.${var.aws_region}.amazonaws.com"
+    VITE_S3_BUCKET_NAME              = aws_s3_bucket.merchant_files.bucket
   }
 } 

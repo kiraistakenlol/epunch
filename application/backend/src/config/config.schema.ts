@@ -15,4 +15,5 @@ export const configSchema = Joi.object({
   AWS_REGION: Joi.string().required(),
   AWS_ACCESS_KEY_ID: secret(Joi.string().required()),
   AWS_SECRET_ACCESS_KEY: secret(Joi.string().required()),
+  S3_MERCHANT_FILES_BUCKET_NAME: Joi.string().required(),
 }); 

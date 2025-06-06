@@ -10,17 +10,7 @@ export interface Merchant {
   login?: string;
   password_hash?: string;
   created_at: Date;
-}
-
-export interface LoyaltyProgram {
-  id: string;
-  merchant_id: string;
-  name: string;
-  description: string | null;
-  required_punches: number;
-  reward_description: string;
-  is_active: boolean;
-  created_at: Date;
+  logo_url: string | null;
 }
 
 @Injectable()
@@ -44,6 +34,7 @@ export class MerchantRepository {
       address: row.address,
       slug: row.slug,
       email: row.login || '',
+      logoUrl: row.logo_url || '',
       createdAt: row.created_at.toISOString(),
     }));
   }
@@ -85,6 +76,7 @@ export class MerchantRepository {
         m.name as merchant_name,
         m.address as merchant_address,
         m.slug as merchant_slug,
+        m.logo_url as merchant_logo_url,
         m.created_at as merchant_created_at
       FROM loyalty_program lp
       JOIN merchant m ON lp.merchant_id = m.id
@@ -107,6 +99,7 @@ export class MerchantRepository {
         address: row.merchant_address,
         slug: row.merchant_slug,
         email: '',
+        logoUrl: row.merchant_logo_url || '',
         createdAt: row.merchant_created_at.toISOString(),
       },
       createdAt: row.created_at.toISOString(),
@@ -147,8 +140,9 @@ export class MerchantRepository {
         address: merchant!.address,
         slug: merchant!.slug,
         email: merchant!.login || '',
+        logoUrl: merchant!.logo_url || '',
         createdAt: merchant!.created_at.toISOString(),
-      },
+      } as MerchantDto,
       createdAt: row.created_at.toISOString(),
     };
   }
@@ -215,8 +209,9 @@ export class MerchantRepository {
         address: merchant!.address,
         slug: merchant!.slug,
         email: merchant!.login || '',
+        logoUrl: merchant!.logo_url || '',
         createdAt: merchant!.created_at.toISOString(),
-      },
+      } as MerchantDto,
       createdAt: row.created_at.toISOString(),
     };
   }
@@ -257,8 +252,9 @@ export class MerchantRepository {
       address: row.address,
       slug: row.slug,
       email: row.login || '',
+      logoUrl: row.logo_url || '',
       createdAt: row.created_at.toISOString(),
-    };
+    } as MerchantDto;
   }
 
   async updateMerchant(merchantId: string, data: UpdateMerchantDto & { password?: string }): Promise<MerchantDto | null> {
@@ -286,6 +282,10 @@ export class MerchantRepository {
       setParts.push(`password_hash = $${paramIndex++}`);
       values.push(data.password);
     }
+    if (data.logoUrl !== undefined) {
+      setParts.push(`logo_url = $${paramIndex++}`);
+      values.push(data.logoUrl);
+    }
 
     if (setParts.length === 0) {
       const merchant = await this.findMerchantById(merchantId);
@@ -297,8 +297,9 @@ export class MerchantRepository {
         address: merchant.address,
         slug: merchant.slug,
         email: merchant.login || '',
+        logoUrl: merchant.logo_url || '',
         createdAt: merchant.created_at.toISOString(),
-      };
+      } as MerchantDto;
     }
 
     const query = `
@@ -324,8 +325,9 @@ export class MerchantRepository {
       address: row.address,
       slug: row.slug,
       email: row.login || '',
+      logoUrl: row.logo_url || '',
       createdAt: row.created_at.toISOString(),
-    };
+    } as MerchantDto;
   }
 
   async deleteMerchant(merchantId: string): Promise<boolean> {

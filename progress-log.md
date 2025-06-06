@@ -1,3 +1,3 @@
 admin:
 
-printable qr code send via email
+centralize conversion db models to dtos
