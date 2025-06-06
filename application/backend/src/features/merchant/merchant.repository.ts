@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { LoyaltyProgramDto, MerchantDto, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, CreateMerchantDto, UpdateMerchantDto } from 'e-punch-common-core';
 import { Pool } from 'pg';
+import { MerchantMapper, LoyaltyProgramMapper } from '../../mappers';
 
 export interface Merchant {
   id: string;
@@ -28,15 +29,7 @@ export class MerchantRepository {
     
     const result = await this.pool.query(query);
     
-    return result.rows.map((row) => ({
-      id: row.id,
-      name: row.name,
-      address: row.address,
-      slug: row.slug,
-      email: row.login || '',
-      logoUrl: row.logo_url || '',
-      createdAt: row.created_at.toISOString(),
-    }));
+    return MerchantMapper.toDtoArray(result.rows);
   }
 
   async findMerchantById(merchantId: string): Promise<Merchant | null> {
@@ -86,24 +79,7 @@ export class MerchantRepository {
     
     const result = await this.pool.query(query, [merchantId]);
     
-    return result.rows.map((row) => ({
-      id: row.id,
-      name: row.name,
-      description: row.description,
-      requiredPunches: row.required_punches,
-      rewardDescription: row.reward_description,
-      isActive: row.is_active,
-      merchant: {
-        id: row.merchant_id,
-        name: row.merchant_name,
-        address: row.merchant_address,
-        slug: row.merchant_slug,
-        email: '',
-        logoUrl: row.merchant_logo_url || '',
-        createdAt: row.merchant_created_at.toISOString(),
-      },
-      createdAt: row.created_at.toISOString(),
-    }));
+    return LoyaltyProgramMapper.fromJoinedQueryArray(result.rows);
   }
 
   async createLoyaltyProgram(merchantId: string, data: CreateLoyaltyProgramDto): Promise<LoyaltyProgramDto> {
@@ -127,24 +103,7 @@ export class MerchantRepository {
     
     const merchant = await this.findMerchantById(merchantId);
     
-    return {
-      id: row.id,
-      name: row.name,
-      description: row.description,
-      requiredPunches: row.required_punches,
-      rewardDescription: row.reward_description,
-      isActive: row.is_active,
-      merchant: {
-        id: merchant!.id,
-        name: merchant!.name,
-        address: merchant!.address,
-        slug: merchant!.slug,
-        email: merchant!.login || '',
-        logoUrl: merchant!.logo_url || '',
-        createdAt: merchant!.created_at.toISOString(),
-      } as MerchantDto,
-      createdAt: row.created_at.toISOString(),
-    };
+    return LoyaltyProgramMapper.toDto(row, merchant!);
   }
 
   async updateLoyaltyProgram(merchantId: string, programId: string, data: UpdateLoyaltyProgramDto): Promise<LoyaltyProgramDto | null> {
@@ -196,24 +155,7 @@ export class MerchantRepository {
     const row = result.rows[0];
     const merchant = await this.findMerchantById(merchantId);
     
-    return {
-      id: row.id,
-      name: row.name,
-      description: row.description,
-      requiredPunches: row.required_punches,
-      rewardDescription: row.reward_description,
-      isActive: row.is_active,
-      merchant: {
-        id: merchant!.id,
-        name: merchant!.name,
-        address: merchant!.address,
-        slug: merchant!.slug,
-        email: merchant!.login || '',
-        logoUrl: merchant!.logo_url || '',
-        createdAt: merchant!.created_at.toISOString(),
-      } as MerchantDto,
-      createdAt: row.created_at.toISOString(),
-    };
+    return LoyaltyProgramMapper.toDto(row, merchant!);
   }
 
   async deleteLoyaltyProgram(merchantId: string, programId: string): Promise<boolean> {
@@ -246,15 +188,7 @@ export class MerchantRepository {
     const result = await this.pool.query(query, values);
     const row = result.rows[0];
     
-    return {
-      id: row.id,
-      name: row.name,
-      address: row.address,
-      slug: row.slug,
-      email: row.login || '',
-      logoUrl: row.logo_url || '',
-      createdAt: row.created_at.toISOString(),
-    } as MerchantDto;
+    return MerchantMapper.toDto(row);
   }
 
   async updateMerchant(merchantId: string, data: UpdateMerchantDto & { password?: string }): Promise<MerchantDto | null> {
@@ -291,15 +225,7 @@ export class MerchantRepository {
       const merchant = await this.findMerchantById(merchantId);
       if (!merchant) return null;
       
-      return {
-        id: merchant.id,
-        name: merchant.name,
-        address: merchant.address,
-        slug: merchant.slug,
-        email: merchant.login || '',
-        logoUrl: merchant.logo_url || '',
-        createdAt: merchant.created_at.toISOString(),
-      } as MerchantDto;
+      return MerchantMapper.toDto(merchant);
     }
 
     const query = `
@@ -319,15 +245,7 @@ export class MerchantRepository {
     
     const row = result.rows[0];
     
-    return {
-      id: row.id,
-      name: row.name,
-      address: row.address,
-      slug: row.slug,
-      email: row.login || '',
-      logoUrl: row.logo_url || '',
-      createdAt: row.created_at.toISOString(),
-    } as MerchantDto;
+    return MerchantMapper.toDto(row);
   }
 
   async deleteMerchant(merchantId: string): Promise<boolean> {

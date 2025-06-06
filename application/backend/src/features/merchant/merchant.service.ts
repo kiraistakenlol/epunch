@@ -5,6 +5,7 @@ import { MerchantRepository } from './merchant.repository';
 import { FileUploadService } from './file-upload.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { MerchantMapper } from '../../mappers';
 
 @Injectable()
 export class MerchantService {
@@ -40,15 +41,7 @@ export class MerchantService {
         throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
       }
 
-      const merchantDto: MerchantDto = {
-        id: merchant.id,
-        name: merchant.name,
-        address: merchant.address || '',
-        slug: merchant.slug,
-        email: merchant.login || '',
-        logoUrl: merchant.logo_url || '',
-        createdAt: merchant.created_at.toISOString(),
-      };
+      const merchantDto = MerchantMapper.toDto(merchant);
 
       this.logger.log(`Found merchant: ${merchantId}`);
       return merchantDto;
@@ -68,15 +61,7 @@ export class MerchantService {
         throw new NotFoundException(`Merchant with slug ${slug} not found`);
       }
 
-      const merchantDto: MerchantDto = {
-        id: merchant.id,
-        name: merchant.name,
-        address: merchant.address || '',
-        slug: merchant.slug,
-        email: merchant.login || '',
-        logoUrl: merchant.logo_url || '',
-        createdAt: merchant.created_at.toISOString(),
-      };
+      const merchantDto = MerchantMapper.toDto(merchant);
 
       this.logger.log(`Found merchant: ${slug}`);
       return merchantDto;
@@ -111,15 +96,7 @@ export class MerchantService {
 
       return {
         token,
-        merchant: {
-          id: merchant.id,
-          name: merchant.name,
-          address: merchant.address,
-          slug: merchant.slug,
-          email: merchant.login,
-          logoUrl: merchant.logo_url || '',
-          createdAt: merchant.created_at.toISOString(),
-        },
+        merchant: MerchantMapper.toDto(merchant),
       };
     } catch (error: any) {
       this.logger.error(`Error validating merchant ${login}: ${error.message}`, error.stack);

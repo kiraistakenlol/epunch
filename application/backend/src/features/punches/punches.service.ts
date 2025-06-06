@@ -5,6 +5,7 @@ import { LoyaltyRepository } from '../loyalty/loyalty.repository';
 import { UserRepository } from '../user/user.repository';
 import { EventService } from '../../events/event.service';
 import { MerchantRepository } from '../merchant/merchant.repository';
+import { PunchCardMapper } from '../../mappers';
 
 @Injectable()
 export class PunchesService {
@@ -96,16 +97,12 @@ export class PunchesService {
 
       this.logger.log(`New active card ${newActiveCardEntity.id} created for user ${userId}, program ${loyaltyProgramId}.`);
 
-      newPunchCardDto = {
-        id: newActiveCardEntity.id,
-        loyaltyProgramId: loyaltyProgramId,
-        shopName: merchant.name,
-        shopAddress: merchant.address || 'Address Unavailable',
-        currentPunches: newActiveCardEntity.current_punches,
-        totalPunches: loyaltyProgram.required_punches,
-        status: 'ACTIVE',
-        createdAt: newActiveCardEntity.created_at.toISOString(),
-      };
+      newPunchCardDto = PunchCardMapper.basicToDto(
+        newActiveCardEntity,
+        merchant.name,
+        merchant.address,
+        loyaltyProgram.required_punches
+      );
     }
 
     this.logger.log(
@@ -114,16 +111,12 @@ export class PunchesService {
       `New active card created: ${newPunchCardDto ? newPunchCardDto.id : 'No'}`
     );
     
-    const updatedPunchCardDto: PunchCardDto = {
-      id: updatedPunchCard.id,
-      loyaltyProgramId: loyaltyProgramId,
-      shopName: merchant.name,
-      shopAddress: merchant.address || 'Address Unavailable',
-      currentPunches: newPunchCount,
-      totalPunches: loyaltyProgram.required_punches,
-      status: newStatus as 'ACTIVE' | 'REWARD_READY',
-      createdAt: updatedPunchCard.created_at.toISOString(),
-    };
+    const updatedPunchCardDto = PunchCardMapper.basicToDto(
+      updatedPunchCard,
+      merchant.name,
+      merchant.address,
+      loyaltyProgram.required_punches
+    );
 
     this.logger.log(`Emitting PUNCH_ADDED event for user ${userId}, card ${updatedPunchCard.id}`);
     this.eventService.emitAppEvent({

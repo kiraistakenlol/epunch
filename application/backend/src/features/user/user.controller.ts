@@ -4,6 +4,7 @@ import { User } from '../../core/decorators/current-user.decorator';
 import { CurrentUser } from '../../core/types/current-user.interface';
 import { PunchCardsService } from '../punch-cards/punch-cards.service';
 import { UserRepository } from './user.repository';
+import { UserMapper } from '../../mappers';
 
 @Controller('users')
 export class UserController {
@@ -15,13 +16,7 @@ export class UserController {
   @Get()
   async getAllUsers(): Promise<UserDto[]> {
     const users = await this.userRepository.findAllUsers();
-    return users.map(user => ({
-      id: user.id,
-      email: user.email || '',
-      superAdmin: user.super_admin || false,
-      externalId: user.external_id,
-      createdAt: user.created_at.toISOString(),
-    }));
+    return UserMapper.toDtoArray(users);
   }
 
   @Get('me')
@@ -40,13 +35,7 @@ export class UserController {
       throw new Error(`User with ID ${userId} not found`);
     }
     
-    return {
-      id: user.id,
-      email: user.email || '',
-      superAdmin: user.super_admin || false,
-      externalId: user.external_id,
-      createdAt: user.created_at.toISOString(),
-    };
+    return UserMapper.toDto(user);
   }
 
   @Get(':userId/punch-cards')

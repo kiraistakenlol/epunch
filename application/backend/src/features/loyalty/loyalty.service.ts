@@ -2,6 +2,7 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { LoyaltyRepository } from './loyalty.repository';
 import { MerchantRepository } from '../merchant/merchant.repository';
 import { LoyaltyProgramDto } from 'e-punch-common-core';
+import { LoyaltyProgramMapper } from '../../mappers';
 
 @Injectable()
 export class LoyaltyService {
@@ -38,24 +39,7 @@ export class LoyaltyService {
           continue;
         }
 
-        loyaltyProgramDtos.push({
-          id: loyaltyProgram.id,
-          name: loyaltyProgram.name,
-          description: loyaltyProgram.description,
-          requiredPunches: loyaltyProgram.required_punches,
-          rewardDescription: loyaltyProgram.reward_description,
-          isActive: true,
-          merchant: {
-            id: merchant.id,
-            name: merchant.name,
-            address: merchant.address || '',
-            slug: merchant.slug,
-            email: '',
-            logoUrl: merchant.logo_url || '',
-            createdAt: merchant.created_at.toISOString(),
-          },
-          createdAt: loyaltyProgram.created_at.toISOString(),
-        });
+        loyaltyProgramDtos.push(LoyaltyProgramMapper.toDto(loyaltyProgram, merchant));
       }
 
       this.logger.log(`Found ${loyaltyProgramDtos.length} loyalty programs`);
@@ -82,24 +66,7 @@ export class LoyaltyService {
         throw new NotFoundException(`Merchant not found for loyalty program ${id}`);
       }
 
-      const loyaltyProgramDto: LoyaltyProgramDto = {
-        id: loyaltyProgram.id,
-        name: loyaltyProgram.name,
-        description: loyaltyProgram.description,
-        requiredPunches: loyaltyProgram.required_punches,
-        rewardDescription: loyaltyProgram.reward_description,
-        isActive: true,
-        merchant: {
-          id: merchant.id,
-          name: merchant.name,
-          address: merchant.address || '',
-          slug: merchant.slug,
-          email: '',
-          logoUrl: merchant.logo_url || '',
-          createdAt: merchant.created_at.toISOString(),
-        },
-        createdAt: loyaltyProgram.created_at.toISOString(),
-      };
+      const loyaltyProgramDto = LoyaltyProgramMapper.toDto(loyaltyProgram, merchant);
 
       this.logger.log(`Found loyalty program: ${id}`);
       return loyaltyProgramDto;

@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { PunchCardDto, PunchCardStatusDto as PunchCardStatus } from 'e-punch-common-core';
 import { Pool, PoolClient } from 'pg';
+import { PunchCardMapper, PunchCardWithDetails } from '../../mappers';
 
 export interface PunchCard {
   id: string;
@@ -157,18 +158,7 @@ export class PunchCardsRepository {
     
     const result = await this.pool.query(query, [userId]);
     
-    return result.rows.map((row) => {
-      return {
-        id: row.id,
-        loyaltyProgramId: row.loyalty_program_id,
-        shopName: row.merchant_name,
-        shopAddress: row.merchant_address || '',
-        currentPunches: row.current_punches,
-        totalPunches: row.required_punches,
-        status: row.status,
-        createdAt: row.created_at.toISOString(),
-      };
-    });
+    return PunchCardMapper.toDtoArray(result.rows);
   }
 
   async findPunchCardById(punchCardId: string): Promise<PunchCardDto | null> {
@@ -193,16 +183,7 @@ export class PunchCardsRepository {
 
     const row = result.rows[0];
    
-    return {
-      id: row.id,
-      loyaltyProgramId: row.loyalty_program_id,
-      shopName: row.merchant_name,
-      shopAddress: row.merchant_address || '',
-      currentPunches: row.current_punches,
-      totalPunches: row.required_punches,
-      status: row.status,
-      createdAt: row.created_at.toISOString(),
-    };
+    return PunchCardMapper.toDto(row);
   }
 
   async updatePunchCardStatus(punchCardId: string, status: PunchCardStatus): Promise<PunchCardDto> {
