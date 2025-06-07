@@ -84,36 +84,16 @@ export const Design: React.FC = () => {
     setHasChanges(true);
   };
 
-  const handleImageReady = async (imageBlob: Blob, _imageDataUrl: string) => {
-    if (!merchant) return;
+  const handleImageUploadCompleted = (publicImageUrl: string) => {
+    setPunchCardStyle(prev => ({
+      ...prev,
+      logoUrl: publicImageUrl
+    }));
     
-    try {
-      // Upload to S3
-      const { uploadUrl, publicUrl } = await apiClient.generateFileUploadUrl(merchant.id, 'punch-card-default-logo.webp');
-      
-      const response = await fetch(uploadUrl, {
-        method: 'PUT',
-        body: imageBlob,
-        headers: { 'Content-Type': 'image/webp' },
-      });
-
-      if (!response.ok) throw new Error('Upload failed');
-
-      // Update punch card style with logo URL
-      await apiClient.updateMerchantDefaultPunchCardLogo(merchant.id, publicUrl);
-      
-      // Update local state
-      setPunchCardStyle(prev => ({
-        ...prev,
-        logoUrl: publicUrl
-      }));
-      
-      setSuccess('Logo uploaded successfully!');
-      setError(null);
-      setTimeout(() => setSuccess(null), 5000);
-    } catch (error) {
-      setError('Failed to upload logo');
-    }
+    // Handle success message here instead of separate callback
+    setSuccess('Logo uploaded successfully!');
+    setError(null);
+    setTimeout(() => setSuccess(null), 5000);
   };
 
   const handleImageRemove = async () => {
@@ -249,13 +229,20 @@ export const Design: React.FC = () => {
               }}
             >
               <ImagePicker
-                currentImageUrl={punchCardStyle.logoUrl}
-                onImageReady={handleImageReady}
-                onImageRemove={handleImageRemove}
-                onError={handleImageError}
-                uploadButtonText="Upload Logo"
-                changeButtonText="Change Logo"
-                helperText="This logo will appear on punch cards (optional, max 5MB)"
+                currentlyDisplayedImageUrl={punchCardStyle.logoUrl}
+                onImageUploadCompleted={handleImageUploadCompleted}
+                onCurrentImageDeleted={handleImageRemove}
+                onErrorOccurred={handleImageError}
+
+                uploadConfig={{
+                  merchantId: merchant.id,
+                  filename: 'punch-card-default-logo.webp',
+                  postUploadApiCall: async (merchantId, publicUrl) => {
+                    await apiClient.updateMerchantDefaultPunchCardLogo(merchantId, publicUrl);
+                  }
+                }}
+                changeButtonLabel="Change Logo"
+                fileRequirementsText="This logo will appear on punch cards (optional, max 5MB)"
               />
             </Box>
 

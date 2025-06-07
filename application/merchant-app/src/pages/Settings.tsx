@@ -73,35 +73,18 @@ export const Settings: React.FC = () => {
     }));
   };
 
-  const handleImageReady = async (imageBlob: Blob, _imageDataUrl: string) => {
-    if (!merchant) return;
+  const handleImageUploadCompleted = (publicImageUrl: string) => {
+    // Remove cache busting parameter to store clean URL
+    const cleanUrl = publicImageUrl.split('?')[0];
     
-    try {
-      // Upload to S3
-      const { uploadUrl, publicUrl } = await apiClient.generateFileUploadUrl(merchant.id, 'merchant_logo.webp');
-      
-      const response = await fetch(uploadUrl, {
-        method: 'PUT',
-        body: imageBlob,
-        headers: { 'Content-Type': 'image/webp' },
-      });
-
-      if (!response.ok) throw new Error('Upload failed');
-
-      // Update merchant with logo URL
-      const updateData: UpdateMerchantDto = { logoUrl: publicUrl };
-      const updatedMerchant = await apiClient.updateMerchant(merchant.id, updateData);
-      
-      // Update local state and Redux
-      setMerchantData(updatedMerchant);
-      dispatch(updateMerchant(updatedMerchant));
-      
-      setSuccess('Logo uploaded successfully!');
-      setError(null);
-      setTimeout(() => setSuccess(null), 5000);
-    } catch (error) {
-      setError('Failed to upload logo');
-    }
+    // Update local state with clean URL but use cache-busted URL for display
+    setMerchantData(prev => prev ? { ...prev, logoUrl: cleanUrl } : null);
+    dispatch(updateMerchant({ ...merchant!, logoUrl: cleanUrl }));
+    
+    // Handle success message here instead of separate callback
+    setSuccess('Logo uploaded successfully!');
+    setError(null);
+    setTimeout(() => setSuccess(null), 5000);
   };
 
   const handleImageRemove = async () => {
@@ -252,13 +235,21 @@ export const Settings: React.FC = () => {
               Logo
             </Typography>
             <ImagePicker
-              currentImageUrl={merchant.logoUrl}
-              onImageReady={handleImageReady}
-              onImageRemove={handleImageRemove}
-              onError={handleImageError}
-              uploadButtonText="Upload Logo"
-              changeButtonText="Change Logo"
-              helperText="Merchant logo (optional, max 5MB)"
+              currentlyDisplayedImageUrl={merchant.logoUrl}
+              onImageUploadCompleted={handleImageUploadCompleted}
+              onCurrentImageDeleted={handleImageRemove}
+              onErrorOccurred={handleImageError}
+
+              uploadConfig={{
+                merchantId: merchant.id,
+                filename: 'merchant_logo.webp',
+                postUploadApiCall: async (merchantId, publicUrl) => {
+                  const updateData: UpdateMerchantDto = { logoUrl: publicUrl };
+                  await apiClient.updateMerchant(merchantId, updateData);
+                }
+              }}
+              changeButtonLabel="Change Logo"
+              fileRequirementsText="Merchant logo (optional, max 5MB)"
             />
           </Box>
 
