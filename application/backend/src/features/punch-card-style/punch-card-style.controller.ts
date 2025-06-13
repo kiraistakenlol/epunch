@@ -10,7 +10,11 @@ export class PunchCardStyleController {
   async getMerchantDefaultStyle(
     @Param('merchantId', ParseUUIDPipe) merchantId: string,
   ): Promise<PunchCardStyleDto> {
-    return this.punchCardStyleService.getMerchantDefaultStyle(merchantId);
+    const style = await this.punchCardStyleService.getMerchantDefaultStyle(merchantId);
+    if (style) {
+      return style;
+    }
+    return this.punchCardStyleService.getDefaultAppStyle();
   }
 
   @Post('merchants/:merchantId/default')
@@ -29,26 +33,39 @@ export class PunchCardStyleController {
     return this.punchCardStyleService.updateMerchantDefaultLogo(merchantId, body.logoUrl);
   }
 
-  @Get('loyalty-programs/:loyaltyProgramId')
+  @Get('loyalty-programs/:loyaltyProgramId/merchants/:merchantId')
   async getLoyaltyProgramStyle(
     @Param('loyaltyProgramId', ParseUUIDPipe) loyaltyProgramId: string,
+    @Param('merchantId', ParseUUIDPipe) merchantId: string,
   ): Promise<PunchCardStyleDto> {
-    return this.punchCardStyleService.getLoyaltyProgramStyle(loyaltyProgramId);
+    const loyaltyStyle = await this.punchCardStyleService.getLoyaltyProgramStyle(loyaltyProgramId, merchantId);
+    if (loyaltyStyle) {
+      return loyaltyStyle;
+    }
+    
+    const merchantStyle = await this.punchCardStyleService.getMerchantDefaultStyle(merchantId);
+    if (merchantStyle) {
+      return merchantStyle;
+    }
+    
+    return this.punchCardStyleService.getDefaultAppStyle();
   }
 
-  @Post('loyalty-programs/:loyaltyProgramId')
+  @Post('loyalty-programs/:loyaltyProgramId/merchants/:merchantId')
   async createOrUpdateLoyaltyProgramStyle(
     @Param('loyaltyProgramId', ParseUUIDPipe) loyaltyProgramId: string,
+    @Param('merchantId', ParseUUIDPipe) merchantId: string,
     @Body() data: CreatePunchCardStyleDto,
   ): Promise<PunchCardStyleDto> {
-    return this.punchCardStyleService.createOrUpdateLoyaltyProgramStyle(loyaltyProgramId, data);
+    return this.punchCardStyleService.createOrUpdateLoyaltyProgramStyle(loyaltyProgramId, merchantId, data);
   }
 
-  @Put('loyalty-programs/:loyaltyProgramId')
+  @Put('loyalty-programs/:loyaltyProgramId/merchants/:merchantId')
   async updateLoyaltyProgramStyle(
     @Param('loyaltyProgramId', ParseUUIDPipe) loyaltyProgramId: string,
+    @Param('merchantId', ParseUUIDPipe) merchantId: string,
     @Body() data: UpdatePunchCardStyleDto,
   ): Promise<PunchCardStyleDto> {
-    return this.punchCardStyleService.createOrUpdateLoyaltyProgramStyle(loyaltyProgramId, data);
+    return this.punchCardStyleService.createOrUpdateLoyaltyProgramStyle(loyaltyProgramId, merchantId, data);
   }
 } 
