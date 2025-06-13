@@ -42,16 +42,6 @@ export class PunchCardsRepository {
     private pool: Pool
   ) {}
 
-  async findLoyaltyProgramById(loyaltyProgramId: string): Promise<LoyaltyProgram | null> {
-    const query = `
-      SELECT * FROM loyalty_program 
-      WHERE id = $1
-    `;
-    
-    const result = await this.pool.query(query, [loyaltyProgramId]);
-    return result.rows[0] || null;
-  }
-
   async findPunchCardByUserIdAndLoyaltyProgramId(
     userId: string,
     loyaltyProgramId: string,
