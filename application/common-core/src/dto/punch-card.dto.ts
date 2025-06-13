@@ -1,3 +1,5 @@
+import { PunchCardStyleDto } from './punch-card-style.dto';
+
 export type PunchCardStatusDto = 'ACTIVE' | 'REWARD_READY' | 'REWARD_REDEEMED';
 
 export interface PunchCardDto {
@@ -9,6 +11,7 @@ export interface PunchCardDto {
   totalPunches: number;
   status: PunchCardStatusDto;
   createdAt: string; // ISO string format
+  styles: PunchCardStyleDto;
 }
 
 export interface CreatePunchCardDto {

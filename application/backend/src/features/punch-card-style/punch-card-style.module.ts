@@ -2,14 +2,12 @@ import { Module } from '@nestjs/common';
 import { PunchCardStyleController } from './punch-card-style.controller';
 import { PunchCardStyleService } from './punch-card-style.service';
 import { PunchCardStyleRepository } from './punch-card-style.repository';
-import { PunchCardsModule } from '../punch-cards/punch-cards.module';
-import { MerchantRepository } from '../merchant/merchant.repository';
 import { LoyaltyModule } from '../loyalty/loyalty.module';
 
 @Module({
-  imports: [PunchCardsModule, LoyaltyModule],
+  imports: [LoyaltyModule],
   controllers: [PunchCardStyleController],
-  providers: [PunchCardStyleService, PunchCardStyleRepository, MerchantRepository],
+  providers: [PunchCardStyleService, PunchCardStyleRepository],
   exports: [PunchCardStyleService, PunchCardStyleRepository],
 })
 export class PunchCardStyleModule {} 

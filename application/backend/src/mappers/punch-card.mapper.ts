@@ -1,4 +1,4 @@
-import { PunchCardDto } from 'e-punch-common-core';
+import { PunchCardDto, PunchCardStyleDto } from 'e-punch-common-core';
 import { PunchCard } from '../features/punch-cards/punch-cards.repository';
 
 export class PunchCardMapper {
@@ -6,7 +6,8 @@ export class PunchCardMapper {
     punchCard: PunchCard, 
     merchantName: string, 
     merchantAddress: string | null, 
-    requiredPunches: number
+    requiredPunches: number,
+    styles: PunchCardStyleDto
   ): PunchCardDto {
     return {
       id: punchCard.id,
@@ -17,6 +18,7 @@ export class PunchCardMapper {
       totalPunches: requiredPunches,
       status: punchCard.status,
       createdAt: punchCard.created_at.toISOString(),
+      styles: styles,
     };
   }
 } 
