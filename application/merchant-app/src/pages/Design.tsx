@@ -222,8 +222,8 @@ export const Design: React.FC = () => {
             <Box 
               sx={{ 
                 '& img': {
-                  width: { xs: '150px !important', sm: '200px !important', md: '250px !important' },
-                  height: { xs: '150px !important', sm: '200px !important', md: '250px !important' },
+                  width: { xs: '225px !important', sm: '300px !important', md: '375px !important' },
+                  height: { xs: '225px !important', sm: '300px !important', md: '375px !important' },
                   objectFit: 'contain'
                 }
               }}
@@ -243,6 +243,9 @@ export const Design: React.FC = () => {
                 }}
                 changeButtonLabel="Change Logo"
                 fileRequirementsText="This logo will appear on punch cards (optional, max 5MB)"
+                showCropInterface={true}
+                showShapeToggle={true}
+                logoShape="circle"
               />
             </Box>
 

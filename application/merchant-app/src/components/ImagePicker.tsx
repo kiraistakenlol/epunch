@@ -1,8 +1,10 @@
-import React, { useState, useRef, useCallback } from 'react';
-import { Box, Button, Typography, CircularProgress, Modal, Paper } from '@mui/material';
-import { Delete, Upload, Save, Cancel, Edit, ImageOutlined } from '@mui/icons-material';
+import React, { useState, useCallback } from 'react';
+import { Box, Button, Typography, CircularProgress, Modal, Paper, ButtonGroup } from '@mui/material';
+import { Delete, Upload, Edit, ImageOutlined, Save, Cancel, RadioButtonUnchecked, CropSquare } from '@mui/icons-material';
 import { useDropzone } from 'react-dropzone';
 import { apiClient } from 'e-punch-common-ui';
+import { ImageCropEditor } from './ImageCropEditor';
+import { TransparencyBackground } from './TransparencyBackground';
 
 interface ImagePickerProps {
   /** The URL of the currently displayed image (if any) */
@@ -36,6 +38,12 @@ interface ImagePickerProps {
   changeButtonLabel?: string;
   /** Help text shown to user about file requirements */
   fileRequirementsText?: string;
+  /** Logo shape for cropping ('circle' | 'square') */
+  logoShape?: 'circle' | 'square';
+  /** Whether to show crop interface */
+  showCropInterface?: boolean;
+  /** Whether to show shape toggle buttons */
+  showShapeToggle?: boolean;
 }
 
 export const ImagePicker: React.FC<ImagePickerProps> = ({
@@ -51,12 +59,20 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
   isDisabled = false,
   changeButtonLabel = 'Change Image',
   fileRequirementsText = 'Max 5MB, JPEG/PNG/WebP',
+  logoShape = 'circle',
+  showCropInterface = false,
+  showShapeToggle = false,
 }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [imageSrc, setImageSrc] = useState<string>('');
   const [originalFileType, setOriginalFileType] = useState<string>('');
   const [modalOpen, setModalOpen] = useState(false);
-  const imageRef = useRef<HTMLImageElement>(null);
+  const [cropShape, setCropShape] = useState<'circle' | 'square'>(logoShape);
+  const [getBlob, setGetBlob] = useState<(() => Promise<Blob>) | null>(null);
+  
+  const handleAPIReady = (blobFunction: () => Promise<Blob>) => {
+    setGetBlob(() => blobFunction);
+  };
 
   const onDrop = useCallback((acceptedFiles: File[], rejectedFiles: any[]) => {
     if (rejectedFiles.length > 0) {
@@ -91,114 +107,15 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
     disabled: isDisabled || isProcessing,
   });
 
-  const getResizedImage = (image: HTMLImageElement, originalMimeType: string): Promise<Blob> => {
-    return new Promise((resolve, reject) => {
-      // Check if resizing is actually needed
-      const needsResize = image.naturalWidth !== targetImageDimensions.width || image.naturalHeight !== targetImageDimensions.height;
-      
-      if (!needsResize) {
-        // No resizing needed, convert original to blob with same format
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return reject(new Error('Canvas error'));
-
-        canvas.width = image.naturalWidth;
-        canvas.height = image.naturalHeight;
-        
-        ctx.drawImage(image, 0, 0);
-
-        // Check original transparency
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const hasTransparency = imageData.data.some((_, i) => i % 4 === 3 && imageData.data[i] < 255);
-        
-        let format = originalMimeType;
-        let quality: number | undefined = 0.9;
-
-        if (hasTransparency && (originalMimeType === 'image/jpeg' || originalMimeType === 'image/jpg')) {
-          format = 'image/png';
-          quality = undefined;
-        } else if (originalMimeType === 'image/png') {
-          quality = undefined;
-        }
-
-        canvas.toBlob((blob) => {
-          blob ? resolve(blob) : reject(new Error('Failed to create image blob'));
-        }, format, quality);
-        return;
-      }
-
-      // Resizing is needed
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return reject(new Error('Canvas error'));
-
-      canvas.width = targetImageDimensions.width;
-      canvas.height = targetImageDimensions.height;
-
-      // Calculate aspect ratio to fit image in output size
-      const imageAspect = image.naturalWidth / image.naturalHeight;
-      const outputAspect = targetImageDimensions.width / targetImageDimensions.height;
-      
-      let drawWidth, drawHeight, drawX, drawY;
-      
-      if (imageAspect > outputAspect) {
-        // Image is wider, fit by height
-        drawHeight = targetImageDimensions.height;
-        drawWidth = drawHeight * imageAspect;
-        drawX = (targetImageDimensions.width - drawWidth) / 2;
-        drawY = 0;
-      } else {
-        // Image is taller, fit by width
-        drawWidth = targetImageDimensions.width;
-        drawHeight = drawWidth / imageAspect;
-        drawX = 0;
-        drawY = (targetImageDimensions.height - drawHeight) / 2;
-      }
-
-      ctx.drawImage(
-        image,
-        0, 0, image.naturalWidth, image.naturalHeight,
-        drawX, drawY, drawWidth, drawHeight
-      );
-
-      // Check if image has transparency
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const hasTransparency = imageData.data.some((_, i) => i % 4 === 3 && imageData.data[i] < 255);
-
-      // Determine output format
-      let format = originalMimeType;
-      let quality: number | undefined = 0.9;
-
-      // If original format doesn't support transparency but image has it, use PNG
-      if (hasTransparency && (originalMimeType === 'image/jpeg' || originalMimeType === 'image/jpg')) {
-        format = 'image/png';
-        quality = undefined;
-      }
-      // If no transparency and original is PNG, consider using WebP for better compression
-      else if (!hasTransparency && originalMimeType === 'image/png') {
-        format = 'image/webp';
-        quality = 0.9;
-      }
-      // For PNG with transparency, don't use quality
-      else if (originalMimeType === 'image/png') {
-        quality = undefined;
-      }
-
-      canvas.toBlob((blob) => {
-        blob ? resolve(blob) : reject(new Error('Failed to create image blob'));
-      }, format, quality);
-    });
-  };
-
   const handleSave = async () => {
-    if (!imageRef.current) {
+    if (!imageSrc || !getBlob) {
       onErrorOccurred('No image selected');
       return;
     }
 
     setIsProcessing(true);
     try {
-      const blob = await getResizedImage(imageRef.current, originalFileType);
+      const blob = await getBlob();
       
       const { uploadUrl, publicUrl } = await apiClient.generateFileUploadUrl(
         uploadConfig.merchantId, 
@@ -224,6 +141,7 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
       setImageSrc('');
       setModalOpen(false);
     } catch (error) {
+      console.error('Failed to process and upload image:', error);
       onErrorOccurred('Failed to process and upload image');
     } finally {
       setIsProcessing(false);
@@ -240,38 +158,39 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
     setImageSrc('');
     setOriginalFileType('');
     setModalOpen(false);
+    setCropShape(logoShape);
   };
 
   const openModal = () => {
     setModalOpen(true);
   };
 
+  const handleShapeChange = (shape: 'circle' | 'square') => {
+    setCropShape(shape);
+  };
+
+
+
   return (
     <Box>
       {/* Image Display Zone - Always Visible */}
-      <Box
+      <TransparencyBackground
+        checkSize={24}
         onClick={!currentlyDisplayedImageUrl ? openModal : undefined}
         sx={{
           mb: 2,
           border: '2px solid #8d6e63',
           borderRadius: 2,
           p: 2,
-          backgroundColor: currentlyDisplayedImageUrl ? '#ffffff' : '#ffffff',
-          ...(currentlyDisplayedImageUrl && {
-            backgroundImage: `
-              linear-gradient(45deg, #cccccc 25%, transparent 25%),
-              linear-gradient(-45deg, #cccccc 25%, transparent 25%),
-              linear-gradient(45deg, transparent 75%, #cccccc 75%),
-              linear-gradient(-45deg, transparent 75%, #cccccc 75%)
-            `,
-            backgroundSize: '24px 24px',
-            backgroundPosition: '0 0, 0 12px, 12px -12px, -12px 0px'
+          ...(currentlyDisplayedImageUrl ? {} : {
+            backgroundColor: '#ffffff',
+            backgroundImage: 'none'
           }),
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          width: 200,
-          height: 200,
+          width: { xs: 240, sm: 280, md: 320 },
+          height: { xs: 240, sm: 280, md: 320 },
           justifyContent: 'center',
           cursor: !currentlyDisplayedImageUrl ? 'pointer' : 'default',
           transition: 'all 0.2s ease-in-out',
@@ -334,7 +253,7 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
             </Typography>
           </>
         )}
-      </Box>
+      </TransparencyBackground>
 
       {/* Action Buttons */}
       {currentlyDisplayedImageUrl && (
@@ -436,40 +355,81 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
             </Box>
           ) : (
             <Box>
-              <Box sx={{ mb: 3, display: 'flex', justifyContent: 'center' }}>
-                <Box
-                  sx={{
-                    width: 200,
-                    height: 200,
-                    backgroundImage: `
-                      linear-gradient(45deg, #cccccc 25%, transparent 25%),
-                      linear-gradient(-45deg, #cccccc 25%, transparent 25%),
-                      linear-gradient(45deg, transparent 75%, #cccccc 75%),
-                      linear-gradient(-45deg, transparent 75%, #cccccc 75%)
-                    `,
-                    backgroundColor: '#ffffff',
-                    backgroundSize: '40px 40px',
-                    backgroundPosition: '0 0, 0 20px, 20px -20px, -20px 0px',
-                    borderRadius: '8px',
-                    overflow: 'hidden',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    border: '2px solid #8d6e63'
-                  }}
-                >
-                  <img 
-                    ref={imageRef} 
-                    src={imageSrc} 
-                    alt="Image preview" 
-                    style={{ 
-                      maxWidth: '100%', 
-                      maxHeight: '100%', 
-                      objectFit: 'contain'
-                    }} 
-                  />
+              {/* Shape Toggle */}
+              {showShapeToggle && showCropInterface && (
+                <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center' }}>
+                  <ButtonGroup variant="outlined" size="small">
+                    <Button
+                      onClick={() => handleShapeChange('circle')}
+                      variant={cropShape === 'circle' ? 'contained' : 'outlined'}
+                      startIcon={<RadioButtonUnchecked />}
+                      sx={{
+                        backgroundColor: cropShape === 'circle' ? '#3e2723' : 'transparent',
+                        '&:hover': { backgroundColor: cropShape === 'circle' ? '#5d4037' : 'rgba(62, 39, 35, 0.04)' }
+                      }}
+                    >
+                      Circle
+                    </Button>
+                    <Button
+                      onClick={() => handleShapeChange('square')}
+                      variant={cropShape === 'square' ? 'contained' : 'outlined'}
+                      startIcon={<CropSquare />}
+                      sx={{
+                        backgroundColor: cropShape === 'square' ? '#3e2723' : 'transparent',
+                        '&:hover': { backgroundColor: cropShape === 'square' ? '#5d4037' : 'rgba(62, 39, 35, 0.04)' }
+                      }}
+                    >
+                      Square
+                    </Button>
+                  </ButtonGroup>
                 </Box>
+              )}
+
+              <Box sx={{ mb: 3, display: 'flex', justifyContent: 'center' }}>
+                {showCropInterface ? (
+                  <ImageCropEditor
+                    imageSrc={imageSrc}
+                    cropShape={cropShape}
+                    originalFileType={originalFileType}
+                    targetImageDimensions={targetImageDimensions}
+                    onAPIReady={handleAPIReady}
+                  />
+                ) : (
+                  <TransparencyBackground
+                    checkSize={40}
+                    sx={{
+                      width: 200,
+                      height: 200,
+                      borderRadius: '8px',
+                      overflow: 'hidden',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: '2px solid #8d6e63'
+                    }}
+                  >
+                    <img 
+                      src={imageSrc} 
+                      alt="Image preview" 
+                      style={{ 
+                        maxWidth: '100%',
+                        maxHeight: '100%',
+                        objectFit: 'contain'
+                      }} 
+                    />
+                  </TransparencyBackground>
+                )}
               </Box>
+
+              {/* Crop Controls */}
+              {showCropInterface && (
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="caption" sx={{ color: '#5d4037', display: 'block', textAlign: 'center', mt: 1 }}>
+                    {cropShape === 'circle' ? 'Drag to reposition' : 'Drag to reposition • Resize with corners'}
+                  </Typography>
+                </Box>
+              )}
+
               <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
                 <Button
                   startIcon={<Cancel />}
