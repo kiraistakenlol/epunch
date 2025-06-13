@@ -74,9 +74,19 @@ This enables seamless onboarding without requiring users to manually search for 
 
 ## Live Applications
 
-1. **User App:** [https://narrow-ai-epunch.vercel.app](https://narrow-ai-epunch.vercel.app)
-2. **Merchant App:** [https://narrow-ai-epunch-merchant.vercel.app](https://narrow-ai-epunch-merchant.vercel.app)
-3. **Admin App:** [https://narrow-ai-epunch-admin.vercel.app](https://narrow-ai-epunch-admin.vercel.app)
+**🚀 Production:**
+1. **User App:** [https://epunch.app](https://epunch.app)
+2. **Merchant App:** [https://merchant.epunch.app](https://merchant.epunch.app)
+3. **Admin App:** [https://admin.epunch.app](https://admin.epunch.app)
+4. **Backend API:** [https://api.epunch.app](https://api.epunch.app)
+
+**🔧 Development:**
+1. **User App:** [https://dev.epunch.app](https://dev.epunch.app)
+2. **Merchant App:** [https://dev-merchant.epunch.app](https://dev-merchant.epunch.app)
+3. **Admin App:** [https://dev-admin.epunch.app](https://dev-admin.epunch.app)
+4. **Backend API:** [https://dev-api.epunch.app](https://dev-api.epunch.app)
+
+
 
 ## Core Entities
 
@@ -100,16 +110,7 @@ This enables seamless onboarding without requiring users to manually search for 
 * **UI Framework:** Bootstrap 5 with React Bootstrap components and Bootstrap Icons (bundled in common-ui package)
 
 ### Infrastructure & Deployment
-* **Frontend Hosting:** Vercel (for User, Merchant, and Admin apps)
-* **Backend Hosting:** Fly.io (Dockerized NestJS app)
-* **Database:** Supabase (PostgreSQL hosting only)
-* **Authentication:** AWS Cognito User Pool (deployed via Terraform)
-* **Configuration:** All config (including API endpoints, host, port) is centralized and managed via environment variables and `.env` files
-* **Secrets:** Store all secrets in `.env` in the corresponding app directory (user-app, merchant-app ...)
-* **Infrastructure Files:** All infrastructure configurations are stored in the `infra/` directory:
-  * `infra/backend/` - Backend deployment configurations (Docker, Fly.io)
-  * `infra/frontend/` - Frontend deployment configurations (Vercel)
-  * `infra/terraform/` - Terraform configurations for AWS Cognito
+* **AWS** See [infra/README_INFRA.md](infra/README_INFRA.md) for detailed setup and deployment instructions
 
 ### Real-time Features
 
@@ -131,7 +132,7 @@ The application includes a sophisticated animation system for enhanced user expe
 
 See `ANIMATION_FLOW.md` for detailed documentation of the animation architecture.
 
-##2 Development
+## Development
 
 ### Development Scripts
 
@@ -144,8 +145,6 @@ The project includes several convenience scripts for development:
 * `./build-common.sh` - Builds common-core and common-ui packages
 * `./build-all.sh` - Builds all packages in the workspace
 * `./reinstall-all.sh` - Reinstalls all dependencies across the workspace
-* `./deploy-backend.sh` - Deploys backend to Fly.io
-* `./backend-logs.sh` - Views backend logs from Fly.io
 
 ### Database Schema
 
@@ -156,136 +155,26 @@ Database schema is managed via `initial_ddl.sql`. The project is currently in de
 ```
 # Root Level
 ├── application/              # Main application code
-├── infra/                   # Infrastructure and deployment configurations
-│   ├── backend/            # Backend infrastructure
-│   │   ├── docker/        # Docker configurations
-│   │   │   ├── Dockerfile     # Backend Docker image definition
-│   │   │   └── run-docker-local.sh # Script to run locally with Docker
-│   │   └── fly/           # Fly.io deployment configurations
-│   │       ├── fly.toml     # Fly.io configuration
-│   │       ├── .env.dev     # Environment variables for deployment
-│   │       ├── deploy.sh    # One-step deployment script
-│   │       └── set-fly-secrets.sh # Script for setting Fly.io secrets
-│   ├── frontend/          # Frontend infrastructure
-│   │   └── vercel/       # Vercel deployment configurations
-│   └── terraform/         # Terraform IaC configurations
-│       └── env/
-│           └── dev/        # Development environment
-│               ├── main.tf  # Cognito User Pool configuration
-│               ├── variables.tf # Input variables
-│               ├── outputs.tf # Output values for frontend
-│               ├── deploy.sh # Automated deployment script
-│               └── README.md # Deployment instructions
+├── infra/                   # Infrastructure and deployment configurations (see README_INFRA.md)
 ├── database/                # Database schema and local development setup
-│   ├── ddl/               # Database schema definitions
-│   │   └── initial_ddl.sql   # Initial database schema
-│   └── docker-compose.yml    # Local PostgreSQL development setup
 ├── docs/                    # Additional documentation
-│   └── pitch.md             # Project pitch documentation
 ├── ANIMATION_FLOW.md        # Animation system documentation
 ├── progress-log.md          # Development progress tracking
-├── run-user-app.sh          # User app development script
-├── run-merchant-app.sh      # Merchant app development script
-├── run-admin-app.sh         # Admin app development script
-├── run-backend.sh           # Backend development script
-├── build-common.sh          # Common packages build script
-├── build-all.sh             # Build all packages script
-├── reinstall-all.sh         # Reinstall all dependencies script
-├── deploy-backend.sh        # Backend deployment script
-└── backend-logs.sh          # Backend logs viewing script
+├── run-*.sh                 # Development convenience scripts
+├── build-*.sh               # Build scripts
+└── reinstall-all.sh         # Dependency management script
+```
 
 The application code resides within the `application/` directory and is structured as a multi-module TypeScript project:
 
+```
 application/
-├── backend/                 # NestJS backend code
-├── user-app/               # React user-app code
-│   ├── src/
-│   │   ├── features/       # Feature-based modules
-│   │   │   ├── dashboard/  # Main dashboard functionality
-│   │   │   │   ├── overlay/
-│   │   │   │   │   ├── CompletionOverlay.tsx
-│   │   │   │   │   ├── CompletionOverlay.module.css
-│   │   │   │   │   └── completionOverlaySlice.ts
-│   │   │   │   ├── punch-cards/
-│   │   │   │   │   ├── punch-card/
-│   │   │   │   │   │   ├── front/
-│   │   │   │   │   │   │   ├── header/
-│   │   │   │   │   │   │   │   ├── PunchCardFrontHeader.tsx
-│   │   │   │   │   │   │   │   └── PunchCardFrontHeader.module.css
-│   │   │   │   │   │   │   ├── body/
-│   │   │   │   │   │   │   │   ├── PunchCardFrontBody.tsx
-│   │   │   │   │   │   │   │   ├── PunchCardFrontBody.module.css
-│   │   │   │   │   │   │   │   ├── PunchCardFrontBodyPunchesSection.tsx
-│   │   │   │   │   │   │   │   └── PunchCardFrontBodyPunchesSection.module.css
-│   │   │   │   │   │   │   ├── footer/
-│   │   │   │   │   │   │   │   ├── PunchCardFrontFooter.tsx
-│   │   │   │   │   │   │   │   └── PunchCardFrontFooter.module.css
-│   │   │   │   │   │   │   ├── PunchCardFront.tsx
-│   │   │   │   │   │   │   └── PunchCardFront.module.css
-│   │   │   │   │   │   ├── back/
-│   │   │   │   │   │   │   ├── PunchCardBack.tsx
-│   │   │   │   │   │   │   └── PunchCardBack.module.css
-│   │   │   │   │   │   ├── PunchCardItem.tsx
-│   │   │   │   │   │   ├── PunchCardItem.module.css
-│   │   │   │   │   │   ├── PunchCardOverlay.tsx
-│   │   │   │   │   │   └── PunchCardOverlay.module.css
-│   │   │   │   │   ├── PunchCards.tsx
-│   │   │   │   │   └── PunchCards.module.css
-│   │   │   │   ├── DashboardPage.tsx
-│   │   │   │   └── DashboardPage.module.css
-│   │   │   ├── animations/  # Animation system
-│   │   │   │   ├── animationSteps.ts
-│   │   │   │   ├── animationSlice.ts
-│   │   │   │   └── useAnimationExecutor.ts
-│   │   │   ├── auth/        # Authentication features
-│   │   │   │   ├── AuthContainer.tsx
-│   │   │   │   ├── AuthButtons.tsx
-│   │   │   │   ├── AuthModal.tsx
-│   │   │   │   ├── EmailAuthForm.tsx
-│   │   │   │   └── authSlice.ts
-│   │   │   ├── alert/       # Global alert system
-│   │   │   │   ├── Alert.tsx
-│   │   │   │   ├── Alert.module.css
-│   │   │   │   └── alertSlice.ts
-│   │   │   ├── qrCode/      # QR code display
-│   │   │   │   └── QRCode.tsx
-│   │   │   ├── loyaltyPrograms/ # Loyalty program management
-│   │   │   ├── punchCards/  # Punch card functionality
-│   │   │   ├── signOut/     # Sign out functionality
-│   │   │   └── dev/         # Development utilities
-│   │   ├── components/     # Shared components
-│   │   │   ├── AppLayout.tsx
-│   │   │   ├── AppHeader.tsx
-│   │   │   ├── SignOutModal.tsx
-│   │   │   └── EPunchModal.tsx
-│   │   ├── hooks/          # Custom React hooks
-│   │   │   ├── useMerchantOnboarding.ts
-│   │   │   ├── useWebSocketEventHandler.ts
-│   │   │   ├── useConsoleCapture.ts
-│   │   │   └── useWebSocket.ts
-│   │   ├── store/          # Redux store configuration
-│   │   │   ├── store.ts
-│   │   │   ├── rootReducer.ts
-│   │   │   └── hooks.ts
-│   │   ├── config/         # App configuration
-│   │   │   ├── amplify.ts
-│   │   │   └── env.ts
-│   │   ├── api/            # API clients
-│   │   │   └── websocketClient.ts
-│   │   ├── styles/         # Global styles
-│   │   │   └── global.css
-│   │   ├── App.tsx
-│   │   ├── main.tsx
-│   │   └── global.d.ts
-│   ├── package.json
-│   ├── tsconfig.json
-│   ├── vite.config.mts
-│   ├── vercel.json
-│   └── index.html
-├── merchant-app/           # React merchant-app code
-├── admin-app/              # React admin-app code
-├── common-core/            # Shared core types, DTOs, constants (no React dependencies)
-└── common-ui/              # Shared API client and styles (no UI components)
+├── backend/                 # NestJS backend API
+├── user-app/               # React user application
+├── merchant-app/           # React merchant application  
+├── admin-app/              # React admin application
+├── common-core/            # Shared TypeScript types, DTOs, constants
+└── common-ui/              # Shared API client and CSS styles
 ```
 
 * `common-core/` contains shared TypeScript types, DTOs, and constants used by all applications.

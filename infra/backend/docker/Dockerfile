@@ -1,4 +1,4 @@
-FROM node:20-alpine as builder
+FROM --platform=linux/amd64 node:20-alpine as builder
 
 WORKDIR /app
 
@@ -22,7 +22,7 @@ RUN yarn workspace e-punch-common-core build
 RUN yarn workspace e-punch-backend build
 
 # Production stage
-FROM node:20-alpine
+FROM --platform=linux/amd64 node:20-alpine
 
 WORKDIR /app
 
@@ -43,19 +43,20 @@ RUN yarn install --production --frozen-lockfile
 COPY --from=builder /app/common-core/dist ./common-core/dist
 COPY --from=builder /app/backend/dist ./backend/dist
 
-# Set environment variables with defaults that can be overridden
+# Set default environment variables (App Runner will override these)
 ENV NODE_ENV=production
 ENV APP_HOST=0.0.0.0
-ENV APP_PORT=8080
+ENV APP_PORT=4000
 
-# Create a run script
+# Create a run script that uses the PORT environment variable
 RUN echo '#!/bin/sh' > /app/start.sh && \
     echo 'cd /app' >> /app/start.sh && \
+    echo 'echo "Starting backend on port $APP_PORT"' >> /app/start.sh && \
     echo 'node backend/dist/main.js' >> /app/start.sh && \
     chmod +x /app/start.sh
 
-# Expose production port
-EXPOSE 8080
+# Expose the port (App Runner will override this)
+EXPOSE $APP_PORT
 
 # Command to run the application
 CMD ["/app/start.sh"] 

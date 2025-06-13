@@ -12,17 +12,28 @@ import { Pool } from 'pg';
       useFactory: async (configService: ConfigService) => {
         const logger = new Logger('DatabaseModule');
         
-        const pool = new Pool({
+        const poolConfig = {
           host: configService.get<string>('database.host'),
           port: configService.get<number>('database.port'),
           database: configService.get<string>('database.name'),
           user: configService.get<string>('database.user'),
           password: configService.get<string>('database.password'),
-          ssl: false,
+          ssl: { rejectUnauthorized: false },
           max: 20,
           idleTimeoutMillis: 30000,
           connectionTimeoutMillis: 2000,
-        });
+        };
+
+        logger.log('Database pool config:', JSON.stringify({
+          host: poolConfig.host,
+          port: poolConfig.port,
+          database: poolConfig.database,
+          user: poolConfig.user,
+          ssl: poolConfig.ssl,
+          max: poolConfig.max
+        }, null, 2));
+        
+        const pool = new Pool(poolConfig);
 
         try {
           logger.log('Testing database connection...');
@@ -37,10 +48,10 @@ import { Pool } from 'pg';
         } catch (error: any) {
           logger.error('Failed to connect to database:', error.message);
           logger.error(`Database config: {
-            host: ${configService.get<string>('database.host')},
-            port: ${configService.get<number>('database.port')},
-            database: ${configService.get<string>('database.name')},
-            user: ${configService.get<string>('database.user')}
+            host: ${poolConfig.host},
+            port: ${poolConfig.port},
+            database: ${poolConfig.database},
+            user: ${poolConfig.user}
           }`);
           await pool.end();
           throw new Error(`Database connection failed: ${error.message}`);
