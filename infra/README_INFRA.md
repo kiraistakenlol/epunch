@@ -21,6 +21,8 @@ git push origin dev        # Deploys to development
 git push origin master     # Deploys to production
 ```
 
+**Note**: All 3 frontend apps deploy on every push (excessive but simple). Could optimize with GitHub Actions + manual deployments if needed.
+
 ## URLs
 
 **Production:**
@@ -111,56 +113,3 @@ infra/
    - Authorized redirect URIs: `https://epunch-{env}.auth.us-east-1.amazoncognito.com/oauth2/idpresponse`
 4. Copy **Client ID** and **Client Secret** to your `env/{env}.tfvars` file:
    ```
-   google_client_id     = "your-client-id"
-   google_client_secret = "your-client-secret"
-   ```
-
-#### 2. Create S3 Backend Resources (Manual)
-1. **S3 Bucket**: `epunch-terraform-state` (with versioning enabled)
-2. **DynamoDB Table**: `epunch-terraform-state-lock` (partition key: `LockID`)
-
-#### 3. Deploy Core Infrastructure (Without App Runner)
-Deploy everything except App Runner since it needs ECR with Docker image:
-```bash
-cd infra/terraform
-sh scripts/plan.sh {yourepunchawsprofile} {dev|prod}
-
-# Deploy core services (ECR, RDS, Cognito, S3, etc.)
-AWS_PROFILE={yourepunchawsprofile} terraform apply -var-file="env/{env}.tfvars" \
-  -target=aws_ecr_repository.backend \
-  -target=aws_iam_role.apprunner_ecr_access \
-  -target=aws_iam_role_policy_attachment.apprunner_ecr_access \
-  -target=aws_ecr_repository_policy.backend \
-  -target=aws_db_instance.main \
-  -target=aws_cognito_user_pool.main \
-  -target=aws_s3_bucket.merchant_files \
-  -target=aws_security_group.allow_all
-```
-*Why: App Runner needs a Docker image in ECR to deploy, so we create ECR first.*
-
-#### 4. Build and Deploy Backend Image
-```bash
-# From project root
-sh infra/backend/docker/build-and-push-ecr.sh {yourepunchawsprofile} {dev|prod}
-```
-
-#### 5. Deploy App Runner and Remaining Services
-```bash
-cd infra/terraform
-sh scripts/apply.sh {yourepunchawsprofile} {dev|prod}
-```
-
-#### 6. Configure Google OAuth Redirect URLs
-1. Go back to [Google Cloud Console](https://console.cloud.google.com)
-2. Navigate to your OAuth client
-3. Add the Cognito redirect URL to **Authorized redirect URIs**:
-   ```
-   https://epunch-{env}.auth.us-east-1.amazoncognito.com/oauth2/idpresponse
-   ```
-   (Get the exact URL from Terraform outputs: `cognito_domain`)
-
-#### 7. Verify Deployment
-Check all services are running:
-- **Frontend Apps**: Should auto-deploy from GitHub
-- **Backend API**: Test at `https://{env}-api.epunch.app/health`
-- **Custom Domains**: SSL certificates should be active
