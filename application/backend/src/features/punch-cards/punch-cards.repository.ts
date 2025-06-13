@@ -1,7 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { PunchCardDto, PunchCardStatusDto as PunchCardStatus } from 'e-punch-common-core';
-import { Pool, PoolClient } from 'pg';
-import { PunchCardMapper, PunchCardWithDetails } from '../../mappers';
+import { PunchCardStatusDto as PunchCardStatus } from 'e-punch-common-core';
+import { Pool } from 'pg';
 
 export interface PunchCard {
   id: string;
@@ -40,7 +39,7 @@ export class PunchCardsRepository {
   constructor(
     @Inject('DATABASE_POOL')
     private pool: Pool
-  ) {}
+  ) { }
 
   async findPunchCardByUserIdAndLoyaltyProgramId(
     userId: string,
@@ -55,7 +54,7 @@ export class PunchCardsRepository {
       ORDER BY created_at DESC 
       LIMIT 1
     `;
-    
+
     const result = await this.pool.query(query, [userId, loyaltyProgramId, requiredPunchesForProgram]);
     return result.rows[0] || null;
   }
@@ -73,7 +72,7 @@ export class PunchCardsRepository {
       ORDER BY created_at DESC 
       LIMIT 1
     `;
-    
+
     const result = await this.pool.query(query, [userId, loyaltyProgramId, status]);
     return result.rows[0] || null;
   }
@@ -84,13 +83,13 @@ export class PunchCardsRepository {
       VALUES ($1, $2, 0, 'ACTIVE')
       RETURNING *
     `;
-    
+
     const result = await this.pool.query(query, [userId, loyaltyProgramId]);
-    
+
     if (!result.rows[0]) {
       throw new Error('Failed to create punch card');
     }
-    
+
     return result.rows[0];
   }
 
@@ -105,13 +104,13 @@ export class PunchCardsRepository {
       WHERE id = $1
       RETURNING *
     `;
-    
+
     const result = await this.pool.query(query, [punchCardId, newPunchCount, status]);
-    
+
     if (!result.rows[0]) {
       throw new Error('Failed to update punch card');
     }
-    
+
     return result.rows[0];
   }
 
@@ -121,80 +120,54 @@ export class PunchCardsRepository {
       VALUES ($1)
       RETURNING *
     `;
-    
+
     const result = await this.pool.query(query, [punchCardId]);
-    
+
     if (!result.rows[0]) {
       throw new Error('Failed to create punch record');
     }
-    
+
     return result.rows[0];
   }
 
-  async findPunchCardsByUserId(userId: string): Promise<PunchCardDto[]> {
+  async findPunchCardsByUserId(userId: string): Promise<PunchCard[]> {
     const query = `
-      SELECT 
-        pc.*,
-        lp.name as loyalty_program_name,
-        lp.required_punches,
-        m.name as merchant_name,
-        m.address as merchant_address
-      FROM punch_card pc
-      JOIN loyalty_program lp ON pc.loyalty_program_id = lp.id
-      JOIN merchant m ON lp.merchant_id = m.id
-      WHERE pc.user_id = $1
-      ORDER BY pc.created_at DESC
+      SELECT * FROM punch_card
+      WHERE user_id = $1
+      ORDER BY created_at DESC
     `;
-    
+
     const result = await this.pool.query(query, [userId]);
-    
-    return PunchCardMapper.toDtoArray(result.rows);
+
+    return result.rows;
   }
 
-  async findPunchCardById(punchCardId: string): Promise<PunchCardDto | null> {
+  async findPunchCardById(punchCardId: string): Promise<PunchCard | null> {
     const query = `
-      SELECT 
-        pc.*,
-        lp.name as loyalty_program_name,
-        lp.required_punches,
-        m.name as merchant_name,
-        m.address as merchant_address
-      FROM punch_card pc
-      JOIN loyalty_program lp ON pc.loyalty_program_id = lp.id
-      JOIN merchant m ON lp.merchant_id = m.id
-      WHERE pc.id = $1
+      SELECT * FROM punch_card
+      WHERE id = $1
     `;
-    
-    const result = await this.pool.query(query, [punchCardId]);
-    
-    if (!result.rows[0]) {
-      return null;
-    }
 
-    const row = result.rows[0];
-   
-    return PunchCardMapper.toDto(row);
+    const result = await this.pool.query(query, [punchCardId]);
+
+    return result.rows[0] || null;
   }
 
-  async updatePunchCardStatus(punchCardId: string, status: PunchCardStatus): Promise<PunchCardDto> {
-    const updateQuery = `
+  async updatePunchCardStatus(punchCardId: string, status: PunchCardStatus): Promise<PunchCard> {
+    const query = `
       UPDATE punch_card 
       SET status = $2
       WHERE id = $1
       RETURNING *
     `;
-    
-    const updateResult = await this.pool.query(updateQuery, [punchCardId, status]);
-    
-    if (!updateResult.rows[0]) {
+
+    const result = await this.pool.query(query, [punchCardId, status]);
+
+    if (!result.rows[0]) {
       throw new Error('Failed to update punch card status');
     }
 
-    const punchCard = await this.findPunchCardById(punchCardId);
-    if (!punchCard) {
-      throw new Error('Punch card not found');
-    }
-    return punchCard;
+    return result.rows[0];
   }
 
   async transferCards(fromUserId: string, toUserId: string): Promise<number> {
@@ -203,7 +176,7 @@ export class PunchCardsRepository {
       SET user_id = $2
       WHERE user_id = $1
     `;
-    
+
     const result = await this.pool.query(query, [fromUserId, toUserId]);
     return result.rowCount || 0;
   }
@@ -211,11 +184,11 @@ export class PunchCardsRepository {
   async getUserIdFromPunchCard(punchCardId: string): Promise<string | null> {
     const query = `SELECT user_id FROM punch_card WHERE id = $1`;
     const result = await this.pool.query(query, [punchCardId]);
-    
+
     if (!result.rows[0]) {
       return null;
     }
-    
+
     return result.rows[0].user_id;
   }
 } 

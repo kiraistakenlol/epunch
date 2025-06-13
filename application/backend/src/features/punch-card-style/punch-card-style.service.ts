@@ -3,6 +3,7 @@ import { PunchCardStyleDto, CreatePunchCardStyleDto, UpdatePunchCardStyleDto } f
 import { PunchCardStyleRepository } from './punch-card-style.repository';
 import { PunchCardsRepository } from '../punch-cards/punch-cards.repository';
 import { MerchantRepository } from '../merchant/merchant.repository';
+import { LoyaltyRepository } from '../loyalty/loyalty.repository';
 
 @Injectable()
 export class PunchCardStyleService {
@@ -12,7 +13,46 @@ export class PunchCardStyleService {
     private readonly punchCardStyleRepository: PunchCardStyleRepository,
     private readonly punchCardsRepository: PunchCardsRepository,
     private readonly merchantRepository: MerchantRepository,
+    private readonly loyaltyRepository: LoyaltyRepository,
   ) {}
+
+  async getPunchCardStyles(punchCardId: string): Promise<PunchCardStyleDto> {
+    this.logger.log(`Getting punch card styles for punch card: ${punchCardId}`);
+    
+    try {
+      const punchCard = await this.punchCardsRepository.findPunchCardById(punchCardId);
+      
+      if (!punchCard) {
+        this.logger.warn(`Punch card with ID ${punchCardId} not found, using default app style`);
+        return this.getDefaultAppStyle();
+      }
+
+      const loyaltyProgram = await this.loyaltyRepository.findLoyaltyProgramById(punchCard.loyalty_program_id);
+      
+      if (!loyaltyProgram) {
+        this.logger.warn(`Loyalty program with ID ${punchCard.loyalty_program_id} not found, using default app style`);
+        return this.getDefaultAppStyle();
+      }
+
+      // First try to get loyalty program specific style
+      const loyaltyProgramStyle = await this.punchCardStyleRepository.findLoyaltyProgramStyle(
+        loyaltyProgram.merchant_id, 
+        punchCard.loyalty_program_id
+      );
+      
+      if (loyaltyProgramStyle) {
+        this.logger.log(`Retrieved loyalty program specific style for punch card: ${punchCardId}`);
+        return loyaltyProgramStyle;
+      }
+      
+      // Fall back to merchant default style
+      this.logger.log(`No loyalty program style found, using merchant default for punch card: ${punchCardId}`);
+      return this.getMerchantDefaultStyle(loyaltyProgram.merchant_id);
+    } catch (error: any) {
+      this.logger.error(`Error getting punch card styles for ${punchCardId}: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
 
   async getDefaultAppStyle(): Promise<PunchCardStyleDto> {
     this.logger.log('Getting default app-wide punch card style');
@@ -82,7 +122,7 @@ export class PunchCardStyleService {
     this.logger.log(`Getting punch card style for loyalty program: ${loyaltyProgramId}`);
     
     try {
-      const loyaltyProgram = await this.punchCardsRepository.findLoyaltyProgramById(loyaltyProgramId);
+      const loyaltyProgram = await this.loyaltyRepository.findLoyaltyProgramById(loyaltyProgramId);
       
       if (!loyaltyProgram) {
         throw new NotFoundException(`Loyalty program with ID ${loyaltyProgramId} not found`);
@@ -110,7 +150,7 @@ export class PunchCardStyleService {
     this.logger.log(`Creating or updating punch card style for loyalty program: ${loyaltyProgramId}`);
     
     try {
-      const loyaltyProgram = await this.punchCardsRepository.findLoyaltyProgramById(loyaltyProgramId);
+      const loyaltyProgram = await this.loyaltyRepository.findLoyaltyProgramById(loyaltyProgramId);
       
       if (!loyaltyProgram) {
         throw new NotFoundException(`Loyalty program with ID ${loyaltyProgramId} not found`);
