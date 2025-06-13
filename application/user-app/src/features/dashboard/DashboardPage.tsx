@@ -15,7 +15,7 @@ const DashboardPage: React.FC = () => {
   const isAuthLoading = useAppSelector(selectAuthLoading);
   const selectedCard = useSelector((state: RootState) => selectSelectedCard(state));
 
-  const handleMainContentClickTmp = () => {
+  const handleMainContentClick = () => {
     if (selectedCard) {
       dispatch(clearSelectedCard());
     }
@@ -26,7 +26,7 @@ const DashboardPage: React.FC = () => {
       <AppHeader />
 
       {!isAuthLoading && <AuthContainer />}
-      <main className={styles.mainContent} onClick={handleMainContentClickTmp}>
+      <main className={styles.mainContent} onClick={handleMainContentClick}>
         <section className={styles.qrSection}>
           <QRCode />
         </section>
