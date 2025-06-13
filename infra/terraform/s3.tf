@@ -44,4 +44,21 @@ resource "aws_s3_bucket_cors_configuration" "merchant_files" {
     expose_headers  = ["ETag"]
     max_age_seconds = 3000
   }
+}
+
+resource "aws_s3_bucket_policy" "merchant_files_public_read" {
+  bucket = aws_s3_bucket.merchant_files.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "PublicReadGetObject"
+        Effect    = "Allow"
+        Principal = "*"
+        Action    = "s3:GetObject"
+        Resource  = "${aws_s3_bucket.merchant_files.arn}/*"
+      }
+    ]
+  })
 } 
