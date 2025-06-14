@@ -4,19 +4,23 @@ import { useAppSelector } from '../../../../../store/hooks';
 import { selectLoyaltyProgramById } from '../../../../loyaltyPrograms/loyaltyProgramsSlice';
 import styles from './PunchCardBack.module.css';
 
-interface PunchCardBackProps extends Pick<PunchCardDto, 'loyaltyProgramId' | 'shopName' | 'shopAddress' | 'totalPunches'> {
+interface PunchCardBackProps extends Pick<PunchCardDto, 'loyaltyProgramId' | 'shopName' | 'shopAddress' | 'totalPunches' | 'styles'> {
 }
 
 const PunchCardBack: React.FC<PunchCardBackProps> = ({
   loyaltyProgramId,
   shopName,
   shopAddress,
-  totalPunches
+  totalPunches,
+  styles: cardStyles
 }) => {
   const loyaltyProgram = useAppSelector(state => selectLoyaltyProgramById(state, loyaltyProgramId));
 
   return (
     <div className={styles.container}>
+      {cardStyles?.logoUrl && (
+        <img src={cardStyles.logoUrl} alt="" className={styles.logoBackground} />
+      )}
       <div className={styles.header}>
         <span className={styles.headerTitle}>Details</span>
       </div>

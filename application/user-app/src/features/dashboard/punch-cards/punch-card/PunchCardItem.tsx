@@ -147,6 +147,7 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
             shopName={shopName}
             shopAddress={shopAddress}
             totalPunches={totalPunches}
+            styles={cardStyles}
           />
         )}
       </div>
