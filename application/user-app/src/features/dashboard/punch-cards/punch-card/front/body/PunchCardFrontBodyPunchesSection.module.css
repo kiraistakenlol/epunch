@@ -23,13 +23,11 @@
   will-change: background-color;
   justify-self: center;
   align-self: center;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 
 }
 
 .punchCircleFilled {
   background-color: #5d4037;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 1.2);
 }
 
 .punchCircleEmpty {
