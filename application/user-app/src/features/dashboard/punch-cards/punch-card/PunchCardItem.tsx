@@ -26,6 +26,7 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
   currentPunches,
   totalPunches,
   status,
+  styles: cardStyles,
   isHighlighted = false,
   animatedPunchIndex,
   shouldSlideIn = false,
@@ -127,6 +128,7 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
       onClick={handleClick}
       style={{ cursor: 'pointer', position: 'relative' }}
     >
+
       <div className={styles.cardInner}>
         {!isFlipped ? (
           <PunchCardFront
@@ -135,6 +137,7 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
             currentPunches={currentPunches}
             totalPunches={totalPunches}
             status={status}
+            styles={cardStyles}
             animatedPunchIndex={animatedPunchIndex}
             isSelected={isSelected}
           />

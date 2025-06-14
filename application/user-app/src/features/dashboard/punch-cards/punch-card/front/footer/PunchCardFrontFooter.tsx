@@ -1,8 +1,15 @@
 import React from 'react';
 import styles from './PunchCardFrontFooter.module.css';
 
-const PunchCardFrontFooter: React.FC = () => (
+interface PunchCardFrontFooterProps {
+  logoUrl?: string | null;
+}
+
+const PunchCardFrontFooter: React.FC<PunchCardFrontFooterProps> = ({ logoUrl }) => (
   <div className={styles.container}>
+    {logoUrl && (
+      <img src={logoUrl} alt="Logo" className={styles.logo} />
+    )}
   </div>
 );
 

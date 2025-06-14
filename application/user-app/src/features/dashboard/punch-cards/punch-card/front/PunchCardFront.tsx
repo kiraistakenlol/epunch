@@ -7,7 +7,7 @@ import PunchCardFrontBody from './body/PunchCardFrontBody';
 import PunchCardFrontFooter from './footer/PunchCardFrontFooter';
 import styles from './PunchCardFront.module.css';
 
-interface PunchCardFrontProps extends Pick<PunchCardDto, 'loyaltyProgramId' | 'shopName' | 'currentPunches' | 'totalPunches' | 'status'> {
+interface PunchCardFrontProps extends Pick<PunchCardDto, 'loyaltyProgramId' | 'shopName' | 'currentPunches' | 'totalPunches' | 'status' | 'styles'> {
   animatedPunchIndex?: number;
   isSelected: boolean;
 }
@@ -18,6 +18,7 @@ const PunchCardFront: React.FC<PunchCardFrontProps> = ({
   currentPunches,
   totalPunches,
   status,
+  styles: cardStyles,
   animatedPunchIndex,
   isSelected
 }) => {
@@ -41,7 +42,7 @@ const PunchCardFront: React.FC<PunchCardFrontProps> = ({
         />
       </div>
       <div className={`${styles.containerSection} ${styles.footer}`}>
-        <PunchCardFrontFooter />
+        <PunchCardFrontFooter logoUrl={cardStyles?.logoUrl} />
       </div>
     </div>
   );

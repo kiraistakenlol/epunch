@@ -32,6 +32,14 @@ const initialState: PunchCardsState = {
   initialized: false,
 };
 
+// Helper function to preload punch card logo
+const preloadCardLogo = (card: PunchCardState | PunchCardDto) => {
+  if (card.styles?.logoUrl) {
+    const img = new Image();
+    img.src = card.styles.logoUrl;
+  }
+};
+
 export const fetchPunchCards = createAsyncThunk<
   PunchCardDto[],
   string,
@@ -65,6 +73,7 @@ const punchCardsSlice = createSlice({
     updatePunchCard: (state, action: PayloadAction<PunchCardState>) => {
       if (!state.cards) {
         state.cards = [action.payload];
+        preloadCardLogo(action.payload);
         return;
       }
       const index = state.cards.findIndex(
@@ -74,6 +83,7 @@ const punchCardsSlice = createSlice({
         state.cards[index] = action.payload;
       } else {
         state.cards.unshift(action.payload);
+        preloadCardLogo(action.payload);
       }
     },
     updatePunchCardById: (state, action: PayloadAction<{ id: string; updates: Partial<PunchCardState> }>) => {
@@ -88,6 +98,7 @@ const punchCardsSlice = createSlice({
     addPunchCard: (state, action: PayloadAction<PunchCardState>) => {
       if (!state.cards) {
         state.cards = [action.payload];
+        preloadCardLogo(action.payload);
         return;
       }
       const exists = state.cards.some(
@@ -95,6 +106,7 @@ const punchCardsSlice = createSlice({
       );
       if (!exists) {
         state.cards.unshift(action.payload);
+        preloadCardLogo(action.payload);
       }
     },
     incrementPunch: (state, action: PayloadAction<{ id: string }>) => {
@@ -146,6 +158,9 @@ const punchCardsSlice = createSlice({
         state.cards = action.payload;
         state.lastFetched = Date.now();
         state.initialized = true;
+        
+        // Preload all logo images
+        action.payload.forEach(preloadCardLogo);
       })
       .addCase(fetchPunchCards.rejected, (state, action) => {
         state.isLoading = false;
