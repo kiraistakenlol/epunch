@@ -26,7 +26,7 @@ const PunchCardFrontBody: React.FC<PunchCardFrontBodyProps> = ({
       </div>
       <div className={styles.loyaltyProgramSection}>
         {loyaltyProgram && (
-          <div className={styles.loyaltyProgramName}>{loyaltyProgram.name}</div>
+          <div className={styles.loyaltyProgramName}>🎁 {loyaltyProgram.name}</div>
         )}
       </div>
     </div>
