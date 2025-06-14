@@ -5,13 +5,16 @@
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-rows: 0.7fr 0.3fr;
-  gap: 1em;
+  grid-template-rows: 0.85fr 0.15fr; /* 70% for punches section, 10% for loyalty program name */
+  gap: 0.3em;
+  overflow: hidden;
 }
 
 /* === PUNCHES SECTION LAYOUT === */
 .punchesSection {
   display: flex;
+  overflow: hidden;
+  min-height: 0;
 }
 
 /* === PROGRAM SECTION LAYOUT === */
@@ -21,18 +24,15 @@
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
+  min-height: 0;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 /* === PROGRAM SECTION VISUAL STYLES === */
 .loyaltyProgramName {
-  max-width: 100%;
-  line-height: 1.1;
   color: #2e1501;
-  font-size: 1.8em;
   font-weight: 800;
   font-style: italic;
-  text-align: right;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  hyphens: auto;
+  text-align: center;
 } 

@@ -1,5 +1,6 @@
 import React from 'react';
 import PunchCardFrontBodyPunchesSection from './PunchCardFrontBodyPunchesSection';
+import AutoScaleText from './AutoScaleText';
 import styles from './PunchCardFrontBody.module.css';
 
 interface PunchCardFrontBodyProps {
@@ -7,6 +8,7 @@ interface PunchCardFrontBodyProps {
   currentPunches: number;
   animatedPunchIndex?: number;
   loyaltyProgram: any;
+  punchIcon?: string | null;
 }
 
 const PunchCardFrontBody: React.FC<PunchCardFrontBodyProps> = ({
@@ -26,7 +28,13 @@ const PunchCardFrontBody: React.FC<PunchCardFrontBodyProps> = ({
       </div>
       <div className={styles.loyaltyProgramSection}>
         {loyaltyProgram && (
-          <div className={styles.loyaltyProgramName}>{loyaltyProgram.name}</div>
+          <AutoScaleText 
+            className={styles.loyaltyProgramName}
+            maxFontSize="1.8em"
+            minFontSize="0.1em"
+          >
+            {loyaltyProgram.name}     
+          </AutoScaleText>
         )}
       </div>
     </div>

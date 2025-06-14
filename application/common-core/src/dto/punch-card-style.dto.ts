@@ -3,6 +3,7 @@ export interface PunchCardStyleDto {
   secondaryColor?: string | null;
   logoUrl?: string | null;
   backgroundImageUrl?: string | null;
+  punchIcon?: string | null;
 }
 
 export interface CreatePunchCardStyleDto {
@@ -11,6 +12,7 @@ export interface CreatePunchCardStyleDto {
   secondaryColor?: string;
   logoUrl?: string;
   backgroundImageUrl?: string;
+  punchIcon?: string;
 }
 
 export interface UpdatePunchCardStyleDto {
@@ -18,6 +20,7 @@ export interface UpdatePunchCardStyleDto {
   secondaryColor?: string;
   logoUrl?: string;
   backgroundImageUrl?: string;
+  punchIcon?: string;
 }
 
 export interface FileUploadUrlDto {
