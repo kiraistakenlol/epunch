@@ -6,21 +6,22 @@ export interface PunchCardStyleDto {
   punchIcons?: string | null;
 }
 
-export interface CreatePunchCardStyleDto {
-  loyaltyProgramId?: string | null;
-  primaryColor?: string;
-  secondaryColor?: string;
-  logoUrl?: string;
-  backgroundImageUrl?: string;
-  punchIcon?: string;
+export interface PunchIconSVG {
+  svg_raw_content: string;
 }
 
-export interface UpdatePunchCardStyleDto {
-  primaryColor?: string;
-  secondaryColor?: string;
-  logoUrl?: string;
-  backgroundImageUrl?: string;
-  punchIcon?: string;
+export interface PunchIcon {
+  type: 'svg';
+  data: PunchIconSVG;
+}
+
+export interface PunchIconsDto {
+  filled: PunchIcon;
+  unfilled: PunchIcon;
+}
+
+export interface UpdatePunchIconsDto {
+  punchIcons: PunchIconsDto;
 }
 
 export interface FileUploadUrlDto {

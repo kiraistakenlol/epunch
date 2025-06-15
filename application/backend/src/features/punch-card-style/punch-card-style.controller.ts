@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Put, Param, Body, ParseUUIDPipe } from '@nestjs/common';
-import { PunchCardStyleDto, CreatePunchCardStyleDto, UpdatePunchCardStyleDto } from 'e-punch-common-core';
+import { PunchCardStyleDto, UpdatePunchIconsDto } from 'e-punch-common-core';
 import { PunchCardStyleService } from './punch-card-style.service';
 
 @Controller('punch-card-styles')
@@ -20,7 +20,7 @@ export class PunchCardStyleController {
   @Post('merchants/:merchantId/default')
   async createOrUpdateMerchantDefaultStyle(
     @Param('merchantId', ParseUUIDPipe) merchantId: string,
-    @Body() data: CreatePunchCardStyleDto,
+    @Body() data: PunchCardStyleDto,
   ): Promise<PunchCardStyleDto> {
     return this.punchCardStyleService.createOrUpdateMerchantDefaultStyle(merchantId, data);
   }
@@ -31,6 +31,14 @@ export class PunchCardStyleController {
     @Body() body: { logoUrl: string },
   ): Promise<PunchCardStyleDto> {
     return this.punchCardStyleService.updateMerchantDefaultLogo(merchantId, body.logoUrl);
+  }
+
+  @Post('merchants/:merchantId/default/punch-icons')
+  async updateMerchantDefaultPunchIcons(
+    @Param('merchantId', ParseUUIDPipe) merchantId: string,
+    @Body() data: UpdatePunchIconsDto,
+  ): Promise<PunchCardStyleDto> {
+    return this.punchCardStyleService.updateMerchantDefaultPunchIcons(merchantId, data.punchIcons);
   }
 
   @Get('loyalty-programs/:loyaltyProgramId/merchants/:merchantId')
@@ -55,7 +63,7 @@ export class PunchCardStyleController {
   async createOrUpdateLoyaltyProgramStyle(
     @Param('loyaltyProgramId', ParseUUIDPipe) loyaltyProgramId: string,
     @Param('merchantId', ParseUUIDPipe) merchantId: string,
-    @Body() data: CreatePunchCardStyleDto,
+    @Body() data: PunchCardStyleDto,
   ): Promise<PunchCardStyleDto> {
     return this.punchCardStyleService.createOrUpdateLoyaltyProgramStyle(loyaltyProgramId, merchantId, data);
   }
@@ -64,7 +72,7 @@ export class PunchCardStyleController {
   async updateLoyaltyProgramStyle(
     @Param('loyaltyProgramId', ParseUUIDPipe) loyaltyProgramId: string,
     @Param('merchantId', ParseUUIDPipe) merchantId: string,
-    @Body() data: UpdatePunchCardStyleDto,
+    @Body() data: PunchCardStyleDto,
   ): Promise<PunchCardStyleDto> {
     return this.punchCardStyleService.createOrUpdateLoyaltyProgramStyle(loyaltyProgramId, merchantId, data);
   }

@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PunchCardStyleDto, CreatePunchCardStyleDto, UpdatePunchCardStyleDto } from 'e-punch-common-core';
+import { PunchCardStyleDto, PunchIconsDto } from 'e-punch-common-core';
 import { PunchCardStyleRepository } from './punch-card-style.repository';
+import { PunchCardStyleMapper } from '../../mappers/punch-card-style.mapper';
 
 @Injectable()
 export class PunchCardStyleService {
@@ -21,7 +22,7 @@ export class PunchCardStyleService {
       
       if (loyaltyProgramStyle) {
         this.logger.log(`Retrieved loyalty program specific style for punch card: ${punchCardId}`);
-        return loyaltyProgramStyle;
+        return PunchCardStyleMapper.toDto(loyaltyProgramStyle);
       }
       
       this.logger.log(`No loyalty program style found, trying merchant default for punch card: ${punchCardId}`);
@@ -47,6 +48,7 @@ export class PunchCardStyleService {
       secondaryColor: '#5d4037',
       logoUrl: null,
       backgroundImageUrl: null,
+      punchIcons: null,
     };
   }
 
@@ -58,7 +60,7 @@ export class PunchCardStyleService {
       
       if (style) {
         this.logger.log(`Retrieved default punch card style for merchant: ${merchantId}`);
-        return style;
+        return PunchCardStyleMapper.toDto(style);
       }
       
       this.logger.log(`No merchant style found for ${merchantId}`);
@@ -71,14 +73,14 @@ export class PunchCardStyleService {
 
   async createOrUpdateMerchantDefaultStyle(
     merchantId: string, 
-    data: CreatePunchCardStyleDto | UpdatePunchCardStyleDto
+    data: PunchCardStyleDto
   ): Promise<PunchCardStyleDto> {
     this.logger.log(`Creating or updating default punch card style for merchant: ${merchantId}`);
     
     try {
       const style = await this.punchCardStyleRepository.createOrUpdateMerchantDefaultStyle(merchantId, data);
       this.logger.log(`Created/updated default punch card style for merchant: ${merchantId}`);
-      return style;
+      return PunchCardStyleMapper.toDto(style);
     } catch (error: any) {
       this.logger.error(`Error creating/updating default punch card style for merchant ${merchantId}: ${error.message}`, error.stack);
       throw error;
@@ -91,9 +93,22 @@ export class PunchCardStyleService {
     try {
       const style = await this.punchCardStyleRepository.updateMerchantDefaultLogo(merchantId, logoUrl);
       this.logger.log(`Updated default punch card logo for merchant: ${merchantId}`);
-      return style;
+      return PunchCardStyleMapper.toDto(style);
     } catch (error: any) {
       this.logger.error(`Error updating default punch card logo for merchant ${merchantId}: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  async updateMerchantDefaultPunchIcons(merchantId: string, punchIcons: PunchIconsDto): Promise<PunchCardStyleDto> {
+    this.logger.log(`Updating default punch card icons for merchant: ${merchantId}`);
+    
+    try {
+      const style = await this.punchCardStyleRepository.updateMerchantDefaultPunchIcons(merchantId, punchIcons);
+      this.logger.log(`Updated default punch card icons for merchant: ${merchantId}`);
+      return PunchCardStyleMapper.toDto(style);
+    } catch (error: any) {
+      this.logger.error(`Error updating default punch card icons for merchant ${merchantId}: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -106,7 +121,7 @@ export class PunchCardStyleService {
       
       if (style) {
         this.logger.log(`Retrieved punch card style for loyalty program: ${loyaltyProgramId}`);
-        return style;
+        return PunchCardStyleMapper.toDto(style);
       }
       
       this.logger.log(`No loyalty program style found for ${loyaltyProgramId}`);
@@ -120,7 +135,7 @@ export class PunchCardStyleService {
   async createOrUpdateLoyaltyProgramStyle(
     loyaltyProgramId: string,
     merchantId: string,
-    data: CreatePunchCardStyleDto | UpdatePunchCardStyleDto
+    data: PunchCardStyleDto
   ): Promise<PunchCardStyleDto> {
     this.logger.log(`Creating or updating punch card style for loyalty program: ${loyaltyProgramId}`);
     
@@ -131,7 +146,7 @@ export class PunchCardStyleService {
         data
       );
       this.logger.log(`Created/updated punch card style for loyalty program: ${loyaltyProgramId}`);
-      return style;
+      return PunchCardStyleMapper.toDto(style);
     } catch (error: any) {
       this.logger.error(`Error creating/updating punch card style for loyalty program ${loyaltyProgramId}: ${error.message}`, error.stack);
       throw error;

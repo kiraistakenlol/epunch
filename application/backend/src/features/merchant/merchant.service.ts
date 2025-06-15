@@ -1,6 +1,6 @@
 import { Injectable, Logger, NotFoundException, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { LoyaltyProgramDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreateMerchantDto, UpdateMerchantDto, PunchCardStyleDto, UpdatePunchCardStyleDto, FileUploadUrlDto, FileUploadResponseDto } from 'e-punch-common-core';
+import { LoyaltyProgramDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreateMerchantDto, UpdateMerchantDto, FileUploadUrlDto, FileUploadResponseDto } from 'e-punch-common-core';
 import { MerchantRepository } from './merchant.repository';
 import { FileUploadService } from './file-upload.service';
 import { JwtService } from '@nestjs/jwt';

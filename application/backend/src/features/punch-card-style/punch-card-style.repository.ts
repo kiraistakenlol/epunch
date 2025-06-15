@@ -1,6 +1,18 @@
 import { Injectable, Logger, Inject } from '@nestjs/common';
 import { Pool } from 'pg';
-import { PunchCardStyleDto, CreatePunchCardStyleDto, UpdatePunchCardStyleDto } from 'e-punch-common-core';
+import { PunchCardStyleDto, PunchIconsDto } from 'e-punch-common-core';
+
+export interface PunchCardStyle {
+  id: string;
+  merchant_id: string;
+  loyalty_program_id?: string;
+  primary_color?: string;
+  secondary_color?: string;
+  logo_url?: string;
+  background_image_url?: string;
+  punch_icons?: string;
+  created_at: Date;
+}
 
 @Injectable()
 export class PunchCardStyleRepository {
@@ -8,12 +20,12 @@ export class PunchCardStyleRepository {
 
   constructor(@Inject('DATABASE_POOL') private readonly pool: Pool) {}
 
-  async findMerchantDefaultStyle(merchantId: string): Promise<PunchCardStyleDto | null> {
+  async findMerchantDefaultStyle(merchantId: string): Promise<PunchCardStyle | null> {
     this.logger.log(`Finding default style for merchant: ${merchantId}`);
     
     const query = `
       SELECT id, merchant_id, loyalty_program_id, primary_color, secondary_color, 
-             logo_url, background_image_url, created_at
+             logo_url, background_image_url, punch_icons, created_at
       FROM punch_card_style 
       WHERE merchant_id = $1 AND loyalty_program_id IS NULL
     `;
@@ -24,19 +36,13 @@ export class PunchCardStyleRepository {
       return null;
     }
     
-    const row = result.rows[0];
-    return {
-      primaryColor: row.primary_color,
-      secondaryColor: row.secondary_color,
-      logoUrl: row.logo_url,
-      backgroundImageUrl: row.background_image_url,
-    };
+    return result.rows[0];
   }
 
   async createOrUpdateMerchantDefaultStyle(
     merchantId: string, 
-    data: CreatePunchCardStyleDto | UpdatePunchCardStyleDto
-  ): Promise<PunchCardStyleDto> {
+    data: PunchCardStyleDto
+  ): Promise<PunchCardStyle> {
     this.logger.log(`Creating or updating default style for merchant: ${merchantId}`);
     
     // First check if a default style exists for this merchant
@@ -52,7 +58,7 @@ export class PunchCardStyleRepository {
             logo_url = $4,
             background_image_url = $5
         WHERE merchant_id = $1 AND loyalty_program_id IS NULL
-        RETURNING primary_color, secondary_color, logo_url, background_image_url
+        RETURNING *
       `;
       
       result = await this.pool.query(updateQuery, [
@@ -67,7 +73,7 @@ export class PunchCardStyleRepository {
       const insertQuery = `
         INSERT INTO punch_card_style (merchant_id, loyalty_program_id, primary_color, secondary_color, logo_url, background_image_url)
         VALUES ($1, NULL, $2, $3, $4, $5)
-        RETURNING primary_color, secondary_color, logo_url, background_image_url
+        RETURNING *
       `;
       
       result = await this.pool.query(insertQuery, [
@@ -79,16 +85,10 @@ export class PunchCardStyleRepository {
       ]);
     }
     
-    const row = result.rows[0];
-    return {
-      primaryColor: row.primary_color,
-      secondaryColor: row.secondary_color,
-      logoUrl: row.logo_url,
-      backgroundImageUrl: row.background_image_url,
-    };
+    return result.rows[0];
   }
 
-  async updateMerchantDefaultLogo(merchantId: string, logoUrl: string): Promise<PunchCardStyleDto> {
+  async updateMerchantDefaultLogo(merchantId: string, logoUrl: string): Promise<PunchCardStyle> {
     this.logger.log(`Updating default logo for merchant: ${merchantId}`);
     
     // First check if a default style exists for this merchant
@@ -101,7 +101,7 @@ export class PunchCardStyleRepository {
         UPDATE punch_card_style 
         SET logo_url = $2
         WHERE merchant_id = $1 AND loyalty_program_id IS NULL
-        RETURNING primary_color, secondary_color, logo_url, background_image_url
+        RETURNING *
       `;
       
       result = await this.pool.query(updateQuery, [merchantId, logoUrl]);
@@ -110,27 +110,52 @@ export class PunchCardStyleRepository {
       const insertQuery = `
         INSERT INTO punch_card_style (merchant_id, loyalty_program_id, logo_url)
         VALUES ($1, NULL, $2)
-        RETURNING primary_color, secondary_color, logo_url, background_image_url
+        RETURNING *
       `;
       
       result = await this.pool.query(insertQuery, [merchantId, logoUrl]);
     }
     
-    const row = result.rows[0];
-    return {
-      primaryColor: row.primary_color,
-      secondaryColor: row.secondary_color,
-      logoUrl: row.logo_url,
-      backgroundImageUrl: row.background_image_url,
-    };
+    return result.rows[0];
   }
 
-  async findLoyaltyProgramStyle(merchantId: string, loyaltyProgramId: string): Promise<PunchCardStyleDto | null> {
+  async updateMerchantDefaultPunchIcons(merchantId: string, punchIcons: PunchIconsDto): Promise<PunchCardStyle> {
+    this.logger.log(`Updating default punch icons for merchant: ${merchantId}`);
+    
+    // First check if a default style exists for this merchant
+    const existingStyle = await this.findMerchantDefaultStyle(merchantId);
+    
+    let result;
+    if (existingStyle) {
+      // Update existing record - only update punch_icons
+      const updateQuery = `
+        UPDATE punch_card_style 
+        SET punch_icons = $2
+        WHERE merchant_id = $1 AND loyalty_program_id IS NULL
+        RETURNING *
+      `;
+      
+      result = await this.pool.query(updateQuery, [merchantId, JSON.stringify(punchIcons)]);
+    } else {
+      // Insert new record - only set punch_icons, other fields empty
+      const insertQuery = `
+        INSERT INTO punch_card_style (merchant_id, loyalty_program_id, punch_icons)
+        VALUES ($1, NULL, $2)
+        RETURNING *
+      `;
+      
+      result = await this.pool.query(insertQuery, [merchantId, JSON.stringify(punchIcons)]);
+    }
+    
+    return result.rows[0];
+  }
+
+  async findLoyaltyProgramStyle(merchantId: string, loyaltyProgramId: string): Promise<PunchCardStyle | null> {
     this.logger.log(`Finding style for loyalty program: ${loyaltyProgramId} in merchant: ${merchantId}`);
     
     const query = `
       SELECT id, merchant_id, loyalty_program_id, primary_color, secondary_color, 
-             logo_url, background_image_url, created_at
+             logo_url, background_image_url, punch_icons, created_at
       FROM punch_card_style 
       WHERE merchant_id = $1 AND loyalty_program_id = $2
     `;
@@ -141,20 +166,14 @@ export class PunchCardStyleRepository {
       return null;
     }
     
-    const row = result.rows[0];
-    return {
-      primaryColor: row.primary_color,
-      secondaryColor: row.secondary_color,
-      logoUrl: row.logo_url,
-      backgroundImageUrl: row.background_image_url,
-    };
+    return result.rows[0];
   }
 
   async createOrUpdateLoyaltyProgramStyle(
     merchantId: string,
     loyaltyProgramId: string,
-    data: CreatePunchCardStyleDto | UpdatePunchCardStyleDto
-  ): Promise<PunchCardStyleDto> {
+    data: PunchCardStyleDto
+  ): Promise<PunchCardStyle> {
     this.logger.log(`Creating or updating style for loyalty program: ${loyaltyProgramId} in merchant: ${merchantId}`);
     
     // First check if a style exists for this loyalty program
@@ -170,7 +189,7 @@ export class PunchCardStyleRepository {
             logo_url = $5,
             background_image_url = $6
         WHERE merchant_id = $1 AND loyalty_program_id = $2
-        RETURNING primary_color, secondary_color, logo_url, background_image_url
+        RETURNING *
       `;
       
       result = await this.pool.query(updateQuery, [
@@ -186,7 +205,7 @@ export class PunchCardStyleRepository {
       const insertQuery = `
         INSERT INTO punch_card_style (merchant_id, loyalty_program_id, primary_color, secondary_color, logo_url, background_image_url)
         VALUES ($1, $2, $3, $4, $5, $6)
-        RETURNING primary_color, secondary_color, logo_url, background_image_url
+        RETURNING *
       `;
       
       result = await this.pool.query(insertQuery, [
@@ -199,12 +218,6 @@ export class PunchCardStyleRepository {
       ]);
     }
     
-    const row = result.rows[0];
-    return {
-      primaryColor: row.primary_color,
-      secondaryColor: row.secondary_color,
-      logoUrl: row.logo_url,
-      backgroundImageUrl: row.background_image_url,
-    };
+    return result.rows[0];
   }
 } 
