@@ -8,4 +8,6 @@ export * from './dto/merchant.dto';
 export * from './dto/loyalty-program.dto';
 export * from './dto/punch-operation-result.dto';
 export * from './dto/create-punch.dto';
-export * from './dto/api-response.dto'; 
+export * from './dto/api-response.dto';
+export * from './dto/icon.dto';
+export * from './constants/punch-icons'; 
