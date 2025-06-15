@@ -11,6 +11,7 @@ import { PunchesModule } from './features/punches/punches.module';
 import { WebSocketModule } from './websocket/websocket.module';
 import { MerchantModule } from './features/merchant/merchant.module';
 import { PunchCardStyleModule } from './features/punch-card-style/punch-card-style.module';
+import { IconsModule } from './features/icons/icons.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { PunchCardStyleModule } from './features/punch-card-style/punch-card-sty
     LoyaltyModule,
     MerchantModule,
     PunchCardStyleModule,
+    IconsModule,
     WebSocketModule,
   ],
 })
