@@ -41,6 +41,7 @@ CREATE TABLE punch_card_style (
     secondary_color VARCHAR(7),
     logo_url TEXT,
     background_image_url TEXT,
+    punch_icons JSONB,
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
