@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, AuthResponseDto, UserDto, LoyaltyProgramDto, MerchantLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreatePunchCardDto, CreateMerchantDto, UpdateMerchantDto, PunchCardStyleDto } from 'e-punch-common-core';
+import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, AuthResponseDto, UserDto, LoyaltyProgramDto, MerchantLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreatePunchCardDto, CreateMerchantDto, UpdateMerchantDto, PunchCardStyleDto, IconSearchResultDto } from 'e-punch-common-core';
 
 // The API URL will be set by the app using this client
 let API_BASE_URL: string;
@@ -77,6 +77,21 @@ export const configureApiClient = (baseURL: string) => {
 export const apiClient = {
   async getHelloWorld(): Promise<string> {
     const response = await instance.get<string>('/hello-world');
+    return response.data;
+  },
+
+  async searchIcons(
+    query?: string, 
+    page: number = 1, 
+    limit: number = 50
+  ): Promise<IconSearchResultDto> {
+    const params = new URLSearchParams();
+    
+    if (query) params.append('q', query);
+    params.append('page', page.toString());
+    params.append('limit', limit.toString());
+    
+    const response = await instance.get<IconSearchResultDto>(`/icons/search?${params}`);
     return response.data;
   },
 
