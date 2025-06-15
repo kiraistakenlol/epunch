@@ -1,9 +1,0 @@
-{
-  "name": "e-punch-merchant-app",
-  "version": 2,
-  "buildCommand": "cd ../common-core && yarn build && cd ../common-ui && yarn build && cd ../merchant-app && yarn build",
-  "outputDirectory": "dist",
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ]
-} 
