@@ -62,6 +62,31 @@ Users have a personal QR code and digital punch cards for various businesses. Bu
 
 This enables seamless onboarding without requiring users to manually search for or enroll in loyalty programs.
 
+#### Architecture Principles
+
+**Design System First**
+- Use `foundational` components for all UI patterns
+- Design system components must be generic with zero business context
+- Pages become pure layout declarations using design system components
+- Extract business logic into focused, reusable components
+
+**CSS-First Approach**
+- CSS Modules only - separate `.module.css` files with component-specific prefixes
+- CSS Variables mandatory - all styling must use `css-variables.ts` values
+- Theme Constants required - reference `constants.ts` for consistency
+- Zero inline styles - no `sx` props, no hardcoded colors/spacing
+
+**Component Separation**
+- **Pages**: Layout-only using foundational components
+- **Business Components**: Data fetching, state management, event handlers
+- **Shared Components**: Reusable components using foundational + CSS modules
+
+**Code Quality Standards**
+- Zero Material-UI imports in business logic components
+- State machine pattern for complex flows (scanner, forms)
+- CSS module prefixes - consistent naming (`.componentName-element`)
+- React-toast for all notifications - eliminate custom alert components
+
 ### Admin App
 
 #### Features
@@ -169,13 +194,104 @@ The application code resides within the `application/` directory and is structur
 
 ```
 application/
-├── backend/                 # NestJS backend API
-├── user-app/               # React user application
-├── merchant-app/           # React merchant application  
-├── admin-app/              # React admin application
-├── common-core/            # Shared TypeScript types, DTOs, constants
-└── common-ui/              # Shared API client and CSS styles
+├── backend/
+│   ├── src/
+│   │   ├── features/
+│   │   │   ├── auth/
+│   │   │   ├── user/
+│   │   │   ├── merchant/
+│   │   │   ├── loyalty/
+│   │   │   ├── punch-cards/
+│   │   │   ├── punches/
+│   │   │   ├── punch-card-style/
+│   │   │   ├── icons/
+│   │   │   └── dev/
+│   │   ├── core/
+│   │   │   ├── middleware/
+│   │   │   ├── decorators/
+│   │   │   ├── interceptors/
+│   │   │   └── types/
+│   │   ├── database/
+│   │   ├── config/
+│   │   ├── websocket/
+│   │   ├── events/
+│   │   ├── supabase/
+│   │   └── mappers/
+├── user-app/
+│   ├── src/
+│   │   ├── features/
+│   │   │   ├── auth/
+│   │   │   ├── dashboard/
+│   │   │   ├── punchCards/
+│   │   │   ├── loyaltyPrograms/
+│   │   │   ├── qrCode/
+│   │   │   ├── animations/
+│   │   │   ├── alert/
+│   │   │   ├── signOut/
+│   │   │   └── dev/
+│   │   ├── components/
+│   │   ├── store/
+│   │   ├── hooks/
+│   │   ├── styles/
+│   │   ├── api/
+│   │   └── config/
+├── merchant-app/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── foundational/
+│   │   │   │   ├── layout/
+│   │   │   │   ├── actions/
+│   │   │   │   ├── inputs/
+│   │   │   │   ├── system/
+│   │   │   │   └── form/
+│   │   │   └── shared/
+│   │   ├── pages/
+│   │   │   ├── dashboard/
+│   │   │   ├── scanner/
+│   │   │   ├── loyalty-programs/
+│   │   │   ├── login/
+│   │   │   └── design/
+│   │   ├── store/
+│   │   ├── theme/
+│   │   ├── styles/
+│   │   └── utils/
+├── admin-app/
+│   ├── src/
+│   │   ├── pages/
+│   │   │   ├── Dashboard.tsx
+│   │   │   ├── Merchants.tsx
+│   │   │   ├── Users.tsx
+│   │   │   ├── MerchantView.tsx
+│   │   │   ├── UserView.tsx
+│   │   │   ├── MerchantCreate.tsx
+│   │   │   ├── MerchantEdit.tsx
+│   │   │   ├── MerchantDemoSetup.tsx
+│   │   │   └── LoginPage.tsx
+│   │   ├── components/
+│   │   │   ├── Table.tsx
+│   │   │   └── DashboardLayout.tsx
+│   │   ├── store/
+│   │   ├── styles/
+│   │   └── utils/
+├── common-core/
+│   ├── src/
+│   │   ├── dto/
+│   │   │   ├── auth.dto.ts
+│   │   │   ├── user.dto.ts
+│   │   │   ├── merchant.dto.ts
+│   │   │   ├── loyalty-program.dto.ts
+│   │   │   ├── punch-card.dto.ts
+│   │   │   ├── punch-card-style.dto.ts
+│   │   │   ├── qr-value.dto.ts
+│   │   │   ├── events.dto.ts
+│   │   │   └── api-response.dto.ts
+│   │   └── constants/
+└── common-ui/
+    ├── src/
+    │   ├── components/
+    │   ├── styles/
+    │   └── apiClient.ts
 ```
 
 * `common-core/` contains shared TypeScript types, DTOs, and constants used by all applications.
-* `common-ui/` contains shared API client and bundled CSS (Bootstrap + Bootstrap Icons + mobile-first base styles).
+* `common-ui/` contains shared API client and bundled CSS (Bootstrap + Bootstrap Icons + mobile-first base styles).****
