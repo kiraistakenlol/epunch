@@ -4,15 +4,14 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import { configureApiClient } from 'e-punch-common-ui';
 import { useAppSelector } from './store/hooks';
-import { LoginPage } from './pages/LoginPage';
-import { DashboardLayout } from './components/DashboardLayout';
-import { Dashboard } from './pages/Dashboard';
-import { LoyaltyPrograms } from './pages/LoyaltyPrograms';
-import { LoyaltyProgramCreate } from './pages/LoyaltyProgramCreate';
-import { LoyaltyProgramEdit } from './pages/LoyaltyProgramEdit';
-import { Settings } from './pages/Settings';
-import { Design } from './pages/Design';
-import ScannerPage from './features/scanner/ScannerPage';
+import { LoginPage } from './pages/login/LoginPage';
+import { DashboardLayout } from './components/shared/DashboardLayout';
+import { Dashboard } from './pages/dashboard/Dashboard';
+import { LoyaltyPrograms } from './pages/loyalty-programs/LoyaltyPrograms';
+import { LoyaltyProgramCreate } from './pages/loyalty-programs/LoyaltyProgramCreate';
+import { LoyaltyProgramEdit } from './pages/loyalty-programs/LoyaltyProgramEdit';
+import { Design } from './pages/design/Design';
+import ScannerPage from './pages/scanner/ScannerPage';
 import './styles/global.css';
 
 // Configure API client
@@ -99,7 +98,6 @@ function App() {
             <Route path="loyalty-programs/create" element={<LoyaltyProgramCreate />} />
             <Route path="loyalty-programs/:id/edit" element={<LoyaltyProgramEdit />} />
             <Route path="design" element={<Design />} />
-            <Route path="settings" element={<Settings />} />
             <Route path="scanner" element={<ScannerPage />} />
           </Route>
         </Routes>
