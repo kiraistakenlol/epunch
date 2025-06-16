@@ -194,4 +194,12 @@
 
 .testPunchError {
   background-color: rgba(211, 47, 47, 0.5);
+}
+
+.processingContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  min-height: 300px;
 } 

@@ -1,0 +1,109 @@
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  /* width: 100%; */
+}
+
+.formFields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md); /* Default spacing */
+}
+
+.formFields-sm {
+  gap: var(--spacing-sm);
+}
+
+.formFields-xs {
+  gap: var(--spacing-xs);
+}
+
+.formFields-md {
+  gap: var(--spacing-md);
+}
+
+.formFields-lg {
+  gap: var(--spacing-lg);
+}
+
+.formFields-xxl {
+  gap: var(--spacing-xxl);
+}
+
+.formActions {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: flex-end;
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border-divider);
+}
+
+.formActions:has(.submitButton:only-child) {
+  justify-content: stretch;
+}
+
+.formActions:has(.submitButton:only-child) .submitButton {
+  width: 100%;
+}
+
+.cancelButton {
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: 1rem;
+  font-weight: 600;
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--border-radius-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  min-width: 120px;
+}
+
+.cancelButton:hover:not(:disabled) {
+  background-color: var(--color-bg-variant);
+  border-color: var(--color-text-secondary);
+}
+
+.cancelButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.submitButton {
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: 1rem;
+  font-weight: 600;
+  background-color: var(--color-primary);
+  color: var(--color-text-light);
+  border: none;
+  border-radius: var(--border-radius-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  min-width: 120px;
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: var(--color-primary-dark);
+}
+
+.submitButton:disabled {
+  background-color: var(--color-bg-variant);
+  color: var(--color-text-secondary);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+@media (max-width: 480px) {
+  .formActions {
+    flex-direction: column-reverse;
+  }
+  
+  .cancelButton,
+  .submitButton {
+    width: 100%;
+  }
+} 

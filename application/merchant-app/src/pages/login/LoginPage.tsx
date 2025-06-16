@@ -2,17 +2,29 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { loginMerchant } from '../../store/authSlice';
-import { EpunchCard, EpunchInput, EpunchButton, EpunchTypography, EpunchAlert, EpunchBox, EpunchContainer, EpunchPage } from '../../components/foundational';
+import { FormContainer, FormField, useFormState, EpunchCard } from '../../components/foundational';
+import styles from './LoginPage.module.css';
+
+interface LoginFormData {
+  login: string;
+  password: string;
+}
 
 export const LoginPage: React.FC = () => {
-  const [login, setLogin] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const isAuthenticated = useAppSelector(state => !!state.auth.merchant);
+
+  const { formData, handleFieldChange, validateForm } = useFormState<LoginFormData>({
+    login: '',
+    password: ''
+  }, {
+    login: { required: true },
+    password: { required: true }
+  });
 
   React.useEffect(() => {
     if (isAuthenticated) {
@@ -22,90 +34,79 @@ export const LoginPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    setIsLoading(true);
 
-    if (!login.trim() || !password.trim()) {
-      setError('Please enter both login and password');
-      setIsLoading(false);
+    if (!validateForm()) {
       return;
     }
 
+    setIsLoading(true);
+    setSubmitError(null);
+
     try {
-      await dispatch(loginMerchant({ login: login.trim(), password })).unwrap();
+      await dispatch(loginMerchant({
+        login: formData.login.trim(),
+        password: formData.password
+      })).unwrap();
       navigate('/');
     } catch (err: any) {
-      setError(err.message || 'Login failed. Please check your credentials.');
+      setSubmitError(err.message || 'Login failed. Please check your credentials.');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <EpunchPage centerContent>
-      <EpunchContainer size="small">
-        <EpunchCard variant="form">
-          <EpunchTypography
-            variant="pageTitle"
-            color="primary"
-            textAlign="center"
-          >
-            E-PUNCH Merchant
-          </EpunchTypography>
-          
-          <EpunchTypography
-            variant="body"
-            color="secondary"
-            textAlign="center"
-          >
-            Sign in to your merchant account
-          </EpunchTypography>
+    <div className={styles.loginPage}>
+      <div className={styles.loginContainer}>
+        <EpunchCard>
+          <div className={styles.loginCard}>
+            <h1 className={styles.loginTitle}>
+              E-PUNCH Merchant
+            </h1>
 
-          {error && (
-            <EpunchAlert variant="error">
-              {error}
-            </EpunchAlert>
-          )}
+            <p className={styles.loginSubtitle}>
+              Sign in to your merchant account
+            </p>
 
-          <EpunchBox component="form" onSubmit={handleSubmit}>
-            <EpunchInput
-              fullWidth
-              label="Login"
-              value={login}
-              onChange={(e) => setLogin(e.target.value)}
-              required
-              autoFocus
-              disabled={isLoading}
-              inputProps={{
-                autoCapitalize: 'none',
-                autoCorrect: 'off',
-              }}
-            />
-            
-            <EpunchInput
-              fullWidth
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              disabled={isLoading}
-              inputProps={{
-                autoCapitalize: 'none',
-                autoCorrect: 'off',
-              }}
-            />
-
-            <EpunchButton
-              type="submit"
-              fullWidth
-              disabled={isLoading}
+            <FormContainer
+              onSubmit={handleSubmit}
+              onCancel={() => { }} // Not used when showCancelButton=false
+              submitText="Sign In"
+              submittingText="Signing In..."
+              isSubmitting={isLoading}
+              error={submitError}
+              variant="plain"
+              fieldSpacing="lg"
+              showCancelButton={false}
             >
-              {isLoading ? 'Signing In...' : 'Sign In'}
-            </EpunchButton>
-          </EpunchBox>
+              <FormField
+                label="Login"
+                type="text"
+                value={formData.login}
+                onChange={handleFieldChange('login')}
+                required
+                autoFocus
+                disabled={isLoading}
+                placeholder="Enter your login"
+                autoCapitalize="none"
+                autoCorrect="off"
+              />
+
+              <FormField
+                label="Password"
+                type="password"
+                value={formData.password}
+                onChange={handleFieldChange('password')}
+                required
+                disabled={isLoading}
+                placeholder="Enter your password"
+                autoCapitalize="none"
+                autoCorrect="off"
+              />
+            </FormContainer>
+          </div>
         </EpunchCard>
-      </EpunchContainer>
-    </EpunchPage>
+      </div>
+    </div>
   );
 }; 

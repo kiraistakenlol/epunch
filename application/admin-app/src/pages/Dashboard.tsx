@@ -78,8 +78,8 @@ export const Dashboard: React.FC = () => {
       const stats = await apiClient.getSystemStatistics();
       setSystemStats(stats);
     } catch (err: any) {
-      console.error('Failed to fetch system statistics:', err);
-      showSnackbar(err.message || 'Failed to load system statistics', 'error');
+      console.error('Failed to fetch modal statistics:', err);
+      showSnackbar(err.message || 'Failed to load modal statistics', 'error');
     } finally {
       setStatsLoading(false);
     }

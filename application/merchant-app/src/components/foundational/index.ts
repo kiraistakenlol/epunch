@@ -1,72 +1,37 @@
-// Foundational Design System Components
+// Foundational Components v2 - Simplified DesignPage System
 
 // Layout Components
-export { default as EpunchPage } from './EpunchPage';
-export { EpunchCard } from './EpunchCard';
-export type { EpunchCardProps } from './EpunchCard';
-export { EpunchGrid } from './EpunchGrid';
-export type { EpunchGridProps } from './EpunchGrid';
-export { EpunchBox } from './EpunchBox';
-export type { EpunchBoxProps } from './EpunchBox';
-export { EpunchContainer } from './EpunchContainer';
-export type { EpunchContainerProps } from './EpunchContainer';
-export { EpunchCenteredContainer } from './EpunchCenteredContainer';
-export type { EpunchCenteredContainerProps } from './EpunchCenteredContainer';
-export { EpunchFlexRow } from './EpunchFlexRow';
-export type { EpunchFlexRowProps } from './EpunchFlexRow';
-export { EpunchSmartGrid } from './EpunchSmartGrid';
-export { EpunchVerticalStack } from './EpunchVerticalStack';
-export type { EpunchVerticalStackProps } from './EpunchVerticalStack';
+export { EpunchPage } from './layout/EpunchPage';
+export type { EpunchPageProps } from './layout/EpunchPage';
 
-// Navigation components
-// export { EpunchNavigation } from './EpunchNavigation';
+export { EpunchCard } from './layout/EpunchCard';
+export type { EpunchCardProps } from './layout/EpunchCard';
 
-// Form Components  
-export { EpunchInput } from './EpunchInput';
-export type { EpunchInputProps } from './EpunchInput';
-export { EpunchNumberInput } from './EpunchNumberInput';
-export type { EpunchNumberInputProps } from './EpunchNumberInput';
-export { EpunchButton } from './EpunchButton';
-export type { EpunchButtonProps } from './EpunchButton';
-export { EpunchIconButton } from './EpunchIconButton';
-export type { EpunchIconButtonProps } from './EpunchIconButton';
-export { default as EpunchSwitch } from './EpunchSwitch';
-export { EpunchToggleButton, EpunchToggleButtonGroup } from './EpunchToggleButton';
-export { EpunchForm } from './EpunchForm';
-export type { EpunchFormProps } from './EpunchForm';
+// Action Components
+export { EpunchButon } from './buttons/EpunchButon.tsx';
+export { EpunchSuccessButton } from './buttons/EpunchSuccessButton.tsx';
+export { EpunchErrorButton } from './buttons/EpunchErrorButton.tsx';
+export { EpunchConfirmOrCancelButtons } from './buttons/EpunchConfirmOrCancelButtons.tsx';
 
-// Typography & Text
-export { EpunchTypography } from './EpunchTypography';
-export type { EpunchTypographyProps } from './EpunchTypography';
+// Input Components
+export { EpunchInput } from './inputs/EpunchInput';
+export type { EpunchInputProps } from './inputs/EpunchInput';
 
-// Feedback Components
-export { EpunchAlert } from './EpunchAlert';
-export type { EpunchAlertProps } from './EpunchAlert';
-export { default as EpunchProgress } from './EpunchProgress';
-export { EpunchModal } from './EpunchModal';
-export type { EpunchModalProps } from './EpunchModal';
+export { EpunchSwitch } from './inputs/EpunchSwitch';
+export type { EpunchSwitchProps } from './inputs/EpunchSwitch';
 
-// New file upload and UI components
-export { EpunchDropzone } from './EpunchDropzone';
-export type { EpunchDropzoneProps } from './EpunchDropzone';
+export { EpunchModal } from './modal/EpunchModal';
+export type { EpunchModalProps } from './modal/EpunchModal';
 
-export { EpunchImageDisplay } from './EpunchImageDisplay';
-export type { EpunchImageDisplayProps } from './EpunchImageDisplay';
+export { EpunchSpinner } from './spinner/EpunchSpinner.tsx';
+export type { SpinnerProps } from './spinner/EpunchSpinner.tsx';
 
-export { 
-  EpunchLoadingState, 
-  EpunchButtonLoading, 
-  EpunchOverlayLoading, 
-  EpunchInlineLoading 
-} from './EpunchLoadingState';
-export type { EpunchLoadingStateProps } from './EpunchLoadingState';
+// Form Components
+export { FormContainer } from './form/FormContainer';
+export type { FormContainerProps } from './form/FormContainer';
 
-export { EpunchPropertyEditor } from './EpunchPropertyEditor';
-export type { EpunchPropertyEditorProps, PropertyEditorField } from './EpunchPropertyEditor';
+export { FormField } from './form/FormField';
+export type { FormFieldProps } from './form/FormField';
 
-export { EpunchPropertyDisplay } from './EpunchPropertyDisplay';
-export type { EpunchPropertyDisplayProps, PropertyDisplayItem } from './EpunchPropertyDisplay';
-
-// Business Logic Components - Loyalty Programs
-export { LoyaltyProgramsList } from '../../pages/loyalty-programs/LoyaltyProgramsList';
-export { LoyaltyProgramListItem } from '../../pages/loyalty-programs/LoyaltyProgramListItem'; 
+export { useFormState } from './form/useFormState';
+export type { ValidationRule, ValidationRules, UseFormStateReturn } from './form/useFormState'; 

@@ -5,7 +5,6 @@ import { CssBaseline } from '@mui/material';
 import { configureApiClient } from 'e-punch-common-ui';
 import { useAppSelector } from './store/hooks';
 import { LoginPage } from './pages/LoginPage';
-import { DashboardLayout } from './components/DashboardLayout';
 import { Dashboard } from './pages/Dashboard';
 import { Merchants } from './pages/Merchants';
 import { MerchantView } from './pages/MerchantView';
@@ -15,6 +14,7 @@ import { MerchantDemoSetup } from './pages/MerchantDemoSetup';
 import { Users } from './pages/Users';
 import { UserView } from './pages/UserView';
 import './styles/global.css';
+import { AppLayout } from '../../merchant-app/src/components/shared/AppLayout';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 if (API_BASE_URL) {
@@ -48,7 +48,7 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
+    fontFamily: '-apple-modal, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
   },
   components: {
     MuiCard: {
@@ -90,7 +90,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={
             <ProtectedRoute>
-              <DashboardLayout />
+              <AppLayout />
             </ProtectedRoute>
           }>
             <Route index element={<Dashboard />} />

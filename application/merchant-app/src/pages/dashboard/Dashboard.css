@@ -1,0 +1,19 @@
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 20rem));
+  gap: 1.5rem;
+  padding: 1rem;
+  justify-items: stretch;
+  justify-content: start;
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    justify-content: stretch;
+  }
+  
+  .dashboard-card {
+    width: 100% !important;
+  }
+} 

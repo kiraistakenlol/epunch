@@ -36,7 +36,7 @@ export class IconsRepository implements OnModuleInit {
     this.logger.log('Building in-memory icon index...');
     
     const ICON_LIBRARIES = [
-      { key: 'ai', name: 'Ant Design Icons', prefix: 'Ai' },
+      { key: 'ai', name: 'Ant DesignPage Icons', prefix: 'Ai' },
       { key: 'bi', name: 'Boxicons', prefix: 'Bi' },
       { key: 'bs', name: 'Bootstrap Icons', prefix: 'Bs' },
       { key: 'ci', name: 'Circum Icons', prefix: 'Ci' },
@@ -55,7 +55,7 @@ export class IconsRepository implements OnModuleInit {
       { key: 'io5', name: 'Ionicons 5', prefix: 'Io5' },
       { key: 'lia', name: 'Line Awesome', prefix: 'Lia' },
       { key: 'lu', name: 'Lucide Icons', prefix: 'Lu' },
-      { key: 'md', name: 'Material Design', prefix: 'Md' },
+      { key: 'md', name: 'Material DesignPage', prefix: 'Md' },
       { key: 'pi', name: 'Phosphor Icons', prefix: 'Pi' },
       { key: 'ri', name: 'Remix Icons', prefix: 'Ri' },
       { key: 'rx', name: 'Radix Icons', prefix: 'Rx' },

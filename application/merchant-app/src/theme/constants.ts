@@ -21,8 +21,11 @@ export const colors = {
   successBackground: 'rgba(76, 175, 80, 0.1)',
   successBorder: 'rgba(76, 175, 80, 0.3)',
   successDark: '#2e7d32',
+  successLight: '#66bb6a',
   error: '#d32f2f',
   errorBackground: 'rgba(211, 47, 47, 0.5)',
+  errorDark: '#c62828',
+  errorLight: '#f44336',
   warning: '#ff9800',
   info: '#2196f3',
   border: {
@@ -69,7 +72,7 @@ export const shadows = {
 } as const;
 
 export const typography = {
-  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
+  fontFamily: '-apple-modal, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
   fontSize: {
     mobile: {
       h4: '1.75rem',

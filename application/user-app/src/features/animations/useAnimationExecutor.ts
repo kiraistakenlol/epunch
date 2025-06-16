@@ -89,9 +89,9 @@ export const useAnimationExecutor = () => {
       receivedEvent: receivedEvent || 'none'
     });
 
-    // 1. Check if animation system is active
+    // 1. Check if animation modal is active
     if (!isRunning || currentStepIndex >= sequence.length) {
-      if (!isRunning) console.log('❌ Animation system not running');
+      if (!isRunning) console.log('❌ Animation modal not running');
       if (currentStepIndex >= sequence.length) console.log('✅ Sequence completed');
       return;
     }

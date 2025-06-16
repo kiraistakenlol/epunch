@@ -2,17 +2,20 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
+import { ToastContainer } from 'react-toastify';
 import { configureApiClient } from 'e-punch-common-ui';
 import { useAppSelector } from './store/hooks';
 import { LoginPage } from './pages/login/LoginPage';
-import { DashboardLayout } from './components/shared/DashboardLayout';
-import { Dashboard } from './pages/dashboard/Dashboard';
-import { LoyaltyPrograms } from './pages/loyalty-programs/LoyaltyPrograms';
+import { AppLayout } from './components/shared';
+import { DashboardPage } from './pages/dashboard/DashboardPage.tsx';
+import { LoyaltyProgramsPage } from './pages/loyalty-programs/LoyaltyProgramsPage.tsx';
 import { LoyaltyProgramCreate } from './pages/loyalty-programs/LoyaltyProgramCreate';
 import { LoyaltyProgramEdit } from './pages/loyalty-programs/LoyaltyProgramEdit';
-import { Design } from './pages/design/Design';
+import { DesignPage } from './pages/design/DesignPage.tsx';
 import ScannerPage from './pages/scanner/ScannerPage';
+import { injectCSSVariables } from './styles/css-variables';
 import './styles/global.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Configure API client
 const API_BASE_URL = import.meta.env.VITE_API_URL;
@@ -48,7 +51,7 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
+    fontFamily: '-apple-modal, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
   },
   components: {
     MuiCard: {
@@ -82,6 +85,11 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 };
 
 function App() {
+  // Inject CSS variables from constants
+  React.useEffect(() => {
+    injectCSSVariables();
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -90,18 +98,30 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={
             <ProtectedRoute>
-              <DashboardLayout />
+              <AppLayout />
             </ProtectedRoute>
           }>
-            <Route index element={<Dashboard />} />
-            <Route path="loyalty-programs" element={<LoyaltyPrograms />} />
+            <Route index element={<DashboardPage />} />
+            <Route path="loyalty-programs" element={<LoyaltyProgramsPage />} />
             <Route path="loyalty-programs/create" element={<LoyaltyProgramCreate />} />
             <Route path="loyalty-programs/:id/edit" element={<LoyaltyProgramEdit />} />
-            <Route path="design" element={<Design />} />
+            <Route path="design" element={<DesignPage />} />
             <Route path="scanner" element={<ScannerPage />} />
           </Route>
         </Routes>
       </Router>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </ThemeProvider>
   );
 }

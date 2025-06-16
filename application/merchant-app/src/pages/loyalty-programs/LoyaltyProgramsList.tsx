@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Add as AddIcon } from '@mui/icons-material';
 import { apiClient } from 'e-punch-common-ui';
 import { LoyaltyProgramDto } from 'e-punch-common-core';
 import { useAppSelector } from '../../store/hooks';
-import { 
-  EpunchCard, 
-  EpunchButton, 
-  EpunchTypography, 
-  EpunchBox, 
-  EpunchFlexRow
-} from '../../components/foundational';
+import { EpunchCard, EpunchButon, EpunchSpinner } from '../../components/foundational';
 import { LoyaltyProgramListItem } from './LoyaltyProgramListItem';
+import styles from './LoyaltyProgramsList.module.css';
 
 interface LoyaltyProgramsListProps {
   onError: (error: string) => void;
@@ -66,34 +60,31 @@ export const LoyaltyProgramsList: React.FC<LoyaltyProgramsListProps> = ({ onErro
   };
 
   if (isLoading) {
-    return <EpunchTypography variant="body">Loading...</EpunchTypography>;
+    return (
+      <div className={styles.loadingState}>
+        <EpunchSpinner />
+      </div>
+    );
   }
 
   if (loyaltyPrograms.length === 0) {
     return (
-      <EpunchCard padding="large">
-        <EpunchBox>
-          <EpunchTypography variant="sectionTitle" color="secondary" textAlign="center">
-            No loyalty programs yet
-          </EpunchTypography>
-          <EpunchTypography variant="body" color="secondary" textAlign="center">
+      <EpunchCard>
+        <div className={styles.emptyState}>
+          <h2 className={styles.emptyTitle}>No loyalty programs yet</h2>
+          <p className={styles.emptyDescription}>
             Create your first loyalty program to get started
-          </EpunchTypography>
-          <EpunchFlexRow justify="center">
-            <EpunchButton
-              startIcon={<AddIcon />}
-              onClick={handleCreate}
-            >
-              Create Program
-            </EpunchButton>
-          </EpunchFlexRow>
-        </EpunchBox>
+          </p>
+          <EpunchButon onClick={handleCreate} className={styles.createButton}>
+            + Create Program
+          </EpunchButon>
+        </div>
       </EpunchCard>
     );
   }
 
   return (
-    <EpunchBox>
+    <div className={styles.programsList}>
       {loyaltyPrograms.map((program) => (
         <LoyaltyProgramListItem
           key={program.id}
@@ -101,6 +92,6 @@ export const LoyaltyProgramsList: React.FC<LoyaltyProgramsListProps> = ({ onErro
           onDelete={handleDelete}
         />
       ))}
-    </EpunchBox>
+    </div>
   );
 }; 

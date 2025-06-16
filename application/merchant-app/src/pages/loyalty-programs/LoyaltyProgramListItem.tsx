@@ -1,29 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { LoyaltyProgramDto } from 'e-punch-common-core';
-import { 
-  EpunchCard, 
-  EpunchTypography, 
-  EpunchBox, 
-  EpunchIconButton,
-  EpunchFlexRow
-} from '../../components/foundational';
+import { EpunchCard, EpunchButon } from '../../components/foundational';
+import styles from './LoyaltyProgramListItem.module.css';
 
 interface LoyaltyProgramListItemProps {
   program: LoyaltyProgramDto;
   onDelete: (id: string, name: string) => void;
 }
-
-const StatusIndicator: React.FC<{ isActive: boolean }> = ({ isActive }) => (
-  <EpunchTypography 
-    variant="caption" 
-    color={isActive ? 'primary' : 'disabled'}
-    bold
-  >
-    {isActive ? '● Active' : '○ Inactive'}
-  </EpunchTypography>
-);
 
 export const LoyaltyProgramListItem: React.FC<LoyaltyProgramListItemProps> = ({ 
   program, 
@@ -41,44 +25,36 @@ export const LoyaltyProgramListItem: React.FC<LoyaltyProgramListItemProps> = ({
 
   return (
     <EpunchCard>
-      <EpunchFlexRow justify="space-between" align="start">
-        <EpunchBox>
-          <EpunchFlexRow align="center" gap={8}>
-            <EpunchTypography variant="cardTitle" color="primary">
-              {program.name}
-            </EpunchTypography>
-            <StatusIndicator isActive={program.isActive} />
-          </EpunchFlexRow>
-          
-          <EpunchTypography variant="body" color="secondary" bold>
+      <div className={styles.programCard}>
+        <div className={styles.programHeader}>
+          <h3 className={styles.programName}>{program.name}</h3>
+          <span className={`${styles.statusBadge} ${program.isActive ? styles.statusActive : styles.statusInactive}`}>
+            {program.isActive ? '● Active' : '○ Inactive'}
+          </span>
+        </div>
+        
+        <div className={styles.programDetails}>
+          <p className={styles.programRequirement}>
             {program.requiredPunches} punches → {program.rewardDescription}
-          </EpunchTypography>
+          </p>
 
           {program.description && (
-            <EpunchTypography variant="caption" color="secondary">
+            <p className={styles.programDescription}>
               {program.description}
-            </EpunchTypography>
+            </p>
           )}
-        </EpunchBox>
+        </div>
         
-        <EpunchFlexRow gap={8}>
-          <EpunchIconButton
-            onClick={handleEdit}
-            variant="primary"
-            size="small"
-          >
-            <EditIcon fontSize="small" />
-          </EpunchIconButton>
+        <div className={styles.programActions}>
+          <EpunchButon onClick={handleEdit} className={styles.editButton}>
+            Edit
+          </EpunchButon>
           
-          <EpunchIconButton
-            onClick={handleDelete}
-            variant="secondary"
-            size="small"
-          >
-            <DeleteIcon fontSize="small" />
-          </EpunchIconButton>
-        </EpunchFlexRow>
-      </EpunchFlexRow>
+          <EpunchButon onClick={handleDelete} className={styles.deleteButton}>
+            Delete
+          </EpunchButon>
+        </div>
+      </div>
     </EpunchCard>
   );
 }; 

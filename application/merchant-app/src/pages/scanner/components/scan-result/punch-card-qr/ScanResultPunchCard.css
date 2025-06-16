@@ -1,0 +1,50 @@
+
+
+/* Punch Card Details Styling */
+.punch-card-details,
+.loyalty-program-details {
+  background: var(--color-bg-paper);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid var(--color-border-default);
+  box-shadow: var(--shadow-light);
+  margin-bottom: 16px;
+}
+
+.details-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 12px 0;
+}
+
+.details-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detail-item {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.detail-item strong {
+  color: var(--color-text-primary);
+}
+
+.program-description {
+  font-style: italic;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-border-divider);
+}
+
+.loading-text {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  text-align: center;
+  margin: 0;
+} 

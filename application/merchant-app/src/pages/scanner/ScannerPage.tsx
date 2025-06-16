@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { apiClient } from 'e-punch-common-ui';
 import { QRValueDto } from 'e-punch-common-core';
-import { EpunchPage } from '../../components/foundational';
-import { Scanner } from './components/Scanner';
-import { UserPersonalQR } from './components/UserPersonalQR';
-import { PunchCardQR } from './components/PunchCardQR';
-import { ProcessingState } from './components/ProcessingState';
-import { MessageDisplay } from './components/MessageDisplay';
+import { EpunchPage, EpunchSpinner } from '../../components/foundational';
+import { QRScanner } from './components/QRScanner.tsx';
+import { CustomerScanResult } from './components/scan-result/customer-qr/CustomerScanResult.tsx';
+import { ScanResultPunchCard } from './components/scan-result/punch-card-qr/ScanResultPunchCard.tsx';
+import { showSuccessToast, showErrorToast } from '../../utils/toast';
+import styles from './ScannerPage.module.css';
 
 type ScannerState = 'scanning' | 'userQR' | 'punchCardQR' | 'processing';
 
@@ -18,12 +18,9 @@ interface QRScanResult {
 const ScannerPage: React.FC = () => {
     const [currentState, setCurrentState] = useState<ScannerState>('scanning');
     const [scanResult, setScanResult] = useState<QRScanResult | null>(null);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    
     const handleScanResult = (result: QRScanResult) => {
         setScanResult(result);
-        setErrorMessage(null);
-        setSuccessMessage(null);
         
         if (result.parsedData.type === 'user_id') {
             setCurrentState('userQR');
@@ -33,31 +30,27 @@ const ScannerPage: React.FC = () => {
     };
 
     const handleError = (error: string) => {
-        setErrorMessage(error);
+        showErrorToast(error);
     };
 
     const handleReset = () => {
         setCurrentState('scanning');
         setScanResult(null);
-        setErrorMessage(null);
-        setSuccessMessage(null);
     };
 
     const handlePunch = async (loyaltyProgramId: string) => {
         if (!scanResult?.parsedData || scanResult.parsedData.type !== 'user_id') return;
 
         setCurrentState('processing');
-        setErrorMessage(null);
-        setSuccessMessage(null);
 
         try {
             const result = await apiClient.recordPunch(scanResult.parsedData.user_id, loyaltyProgramId);
-            setSuccessMessage(result.rewardAchieved ? "Reward Achieved!" : "Great.");
+            showSuccessToast(result.rewardAchieved ? "Reward Achieved!" : "Great.");
             
             setTimeout(() => handleReset(), 2000);
         } catch (error: any) {
             console.error('Punch operation error:', error);
-            setErrorMessage(error.response?.data?.message || error.message || 'Punch operation failed.');
+            showErrorToast(error.response?.data?.message || error.message || 'Punch operation failed.');
             setTimeout(() => handleReset(), 3000);
         }
     };
@@ -66,17 +59,15 @@ const ScannerPage: React.FC = () => {
         if (!scanResult?.parsedData || scanResult.parsedData.type !== 'redemption_punch_card_id') return;
 
         setCurrentState('processing');
-        setErrorMessage(null);
-        setSuccessMessage(null);
 
         try {
             const result = await apiClient.redeemPunchCard(scanResult.parsedData.punch_card_id);
-            setSuccessMessage(`Reward Redeemed! ${result.shopName}`);
+            showSuccessToast(`Reward Redeemed! ${result.shopName}`);
             
             setTimeout(() => handleReset(), 2000);
         } catch (error: any) {
             console.error('Redeem operation error:', error);
-            setErrorMessage(error.response?.data?.message || error.message || 'Redeem operation failed.');
+            showErrorToast(error.response?.data?.message || error.message || 'Redeem operation failed.');
             setTimeout(() => handleReset(), 3000);
         }
     };
@@ -84,11 +75,11 @@ const ScannerPage: React.FC = () => {
     return (
         <EpunchPage title="QR Code Scanner">
             {currentState === 'scanning' && (
-                <Scanner onScanResult={handleScanResult} onError={handleError} />
+                <QRScanner onScanResult={handleScanResult} onError={handleError} />
             )}
             
             {currentState === 'userQR' && scanResult && (
-                <UserPersonalQR 
+                <CustomerScanResult
                     data={scanResult} 
                     onPunch={handlePunch} 
                     onReset={handleReset} 
@@ -96,17 +87,18 @@ const ScannerPage: React.FC = () => {
             )}
             
             {currentState === 'punchCardQR' && scanResult && (
-                <PunchCardQR 
+                <ScanResultPunchCard 
                     data={scanResult} 
                     onRedeem={handleRedeem} 
                     onReset={handleReset} 
                 />
             )}
             
-            {currentState === 'processing' && <ProcessingState />}
-            
-            {errorMessage && <MessageDisplay message={errorMessage} type="error" />}
-            {successMessage && <MessageDisplay message={successMessage} type="success" />}
+            {currentState === 'processing' && (
+                <div className={styles.processingContainer}>
+                    <EpunchSpinner text="Processing..." />
+                </div>
+            )}
         </EpunchPage>
     );
 };

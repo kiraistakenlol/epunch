@@ -1,283 +1,146 @@
-# Task: Create Simplified Foundational Design System Components v2
-
-## Overview
-Create a new set of dramatically simplified foundational components based on the analysis and design in `foundational_2/index.md`. Focus on minimal props, maximum consistency, and centralized styling.
+## Current goal overview
+Wre're in the process of refactoring project's compoents to stop using `/foundational` components and migrate to `/foundational_2` components with proper CSS modules and design tokens.
 
 ## Current Problem
-Foundational components are over-engineered with too many props and variants:
-- **EpunchModal**: 12 props (too complex)
-- **EpunchTypography**: 6 variants (`pageTitle`, `sectionTitle`, `cardTitle`, `body`, `caption`, `label`)
-- **EpunchVerticalStack**: Redundant `spacing` + `customSpacing` props
-- **EpunchButton**: 4 variants + 3 sizes
-- **All components**: Debug borders that need removal
+The project currently uses over-engineered `/foundational` components throughout. We need to:
+- Replace `/foundational` components with `/foundational_2` components when appropriate
+- Use standard HTML elements with CSS modules for custom styling
+- Always use `@css-variables.ts` and `@constants.ts` for all styling
+- Eliminate Material-UI components in favor of native HTML + CSS
+- Use react-toast for error handling instead of custom alert components
 
-## Core Principles
-**12 components, minimal props, centralized styling.**
-- ❌ Multiple variants for same purpose
-- ❌ Redundant props (spacing + customSpacing) 
-- ❌ Business-specific styling options
-- ❌ Custom styles inside components
-- ✅ Single reasonable default behavior
-- ✅ Consistent responsive design
-- ✅ Zero configuration for common use cases
-- ✅ All styling centralized in `constants.ts` and CSS files
+## Current Findings (LoginPage Investigation)
 
-## Critical Styling Requirements
-**All styling must be centralized - NO custom styles inside components**
+### Available Foundational_2 Components
+- **Layout**: `EpunchPage`, `EpunchCard`
+- **Actions**: `Button`, `SuccessButton`, `ErrorButton`, `ConfirmOrCancelButtons`
+- **Inputs**: `EpunchInput`, `EpunchSwitch` 
+- **System**: `EpunchModal`
 
-### Centralized Style Sources
-- **`theme/constants.ts`** - Colors, spacing, typography, shadows, variants
-- **`styles/global.css`** - Global styles and overrides
-- **`common-ui/src/styles/index.css`** - Shared base styles
+### Critical Issue Found ✅ RESOLVED
+✅ **EpunchInput Material-UI Eliminated**: Successfully refactored `EpunchInput` to use native HTML `<input>/<textarea>` with CSS modules, removing `@mui/material/TextField` dependency.
 
-### Component Style Rules
-- ❌ NO inline styles or `sx` props in components
-- ❌ NO hardcoded colors, spacing, or dimensions
-- ❌ NO component-specific CSS files
-- ✅ USE only theme constants and CSS classes
-- ✅ REUSE existing design tokens from `constants.ts`
-- ✅ ADD new tokens to `constants.ts` if needed
+### Available Resources
+- **CSS Variables**: All set up in `@css-variables.ts` with proper root injection
+- **Theme Constants**: Complete theme system in `@constants.ts`
+- **React-Toastify**: Available via `@utils/toast.ts` with helper functions:
+  - `showSuccessToast(message)`
+  - `showErrorToast(message)`
+  - `showInfoToast(message)`
+  - `showWarningToast(message)`
 
-## Target Architecture Pattern
-**Pages should be pure layout declarations with zero business logic**
+### LoginPage Refactoring Strategy ✅ COMPLETED
+1. ✅ **Use EpunchCard for form container** - Replaced foundational EpunchCard
+2. ✅ **Refactored EpunchInput** - Eliminated Material-UI, now uses native HTML with CSS modules
+3. ✅ **Use Button from foundational_2** - Replaced EpunchButton
+4. ✅ **Replace EpunchAlert with toast** - Use `showErrorToast()` for error messages
+5. ✅ **Remove typography components** - Use native `<h1>`, `<p>` with CSS modules
+6. ✅ **Full-page layout with CSS modules** - Custom layout without over-engineered page components
 
-### Perfect Example: merchant-app/Dashboard.tsx (23 lines)
+## Core Requirements
+
+### 1. Use Foundational_2 Components
+- **Foundational_2 is already created** - Use existing components from `/foundational_2`
+- **When appropriate** - Use foundational_2 components for layout and common UI patterns
+- **Standard HTML otherwise** - Use `div`, `p`, `span`, `section` with CSS modules for custom components
+- **Ask before creating new components** - If you think we'd benefit from a new `@/foundational_2` component, ask me first
+
+### 2. CSS-First Approach
+- **Always use `@css-variables.ts`** - All styling must use available CSS variables
+- **Always use `@constants.ts`** - Reference theme constants for consistency
+- **CSS Modules with prefixes** - Create separate `.module.css` files with component-specific prefixes
+- **No inline styles** - All styling in CSS files, not JSX
+
+### 3. No Material-UI
+- **Eliminate Material-UI** - Replace all Material-UI components with HTML + CSS
+- **Use react-toast** - For error messages and notifications (already installed)
+- **Standard HTML elements** - Button, input, div, p, etc. with proper CSS styling
+
+### 4. Component Architecture
+- **Pages** - Pure layout declarations using foundational_2 components
+- **Business Components** - Focused components handling specific functionality
+- **Shared Components** - Reusable components like DashboardCard with CSS modules
+
+### 5. CSS Module Structure
+- **Component prefixes** - Use consistent naming like `.dashboardCard`, `.loyaltyOverview`
+- **Clear hierarchy** - `.componentName`, `.componentName-element`, `.componentName-modifier`
+- **Only CSS variables** - Reference `@css-variables.ts` for all styling values
+
+### 6. Error Handling
+- **React-toast only** - Use react-toast for all error messages and notifications
+- **No custom alerts** - Remove custom alert components in favor of toast
+
+## Perfect Example: Merchant Dashboard Architecture
+
+### Dashboard.tsx (Layout Only)
 ```typescript
+import { EpunchPage } from '../components/foundational';
+import { LoyaltyProgramsOverview } from './LoyaltyProgramsOverview';
+import { QrCodeScannerOverview } from './QrCodeScannerOverview';
+
 export const Dashboard: React.FC = () => {
   return (
     <EpunchPage title="Merchant Dashboard">
-      <EpunchSmartGrid>
-        <EpunchCard>
-          <LoyaltyProgramsOverview />
-        </EpunchCard>
-        <EpunchCard>
-          <QrCodeScannerOverview />
-        </EpunchCard>
-      </EpunchSmartGrid>
+      <div className={styles.dashboardGrid}>
+        <LoyaltyProgramsOverview />
+        <QrCodeScannerOverview />
+      </div>
     </EpunchPage>
   );
 };
 ```
 
-### Anti-Pattern: admin-app/Dashboard.tsx (535 lines)
-- Massive file with business logic mixed with layout
-- Direct Material-UI usage with sx props
-- State management, API calls, event handlers all in page component
-- No component decomposition
+### Business Components (LoyaltyProgramsOverview.tsx)
+- Handles API calls, state management, business logic
+- Uses DashboardCard for consistent layout
+- Uses CSS modules for custom styling
 
-### Component Hierarchy Pattern
-```
-Page (layout only)
-├── EpunchPage + EpunchSmartGrid (foundational layout)
-├── EpunchCard (foundational container)
-│   └── BusinessComponent (focused, single purpose)
-│       ├── Business logic (API, state, handlers)
-│       ├── Foundational components for layout
-│       └── Further decomposition if needed
-```
-
-## Target Component Usage Pattern
-```typescript
-// Simple, predictable foundational component usage
-<EpunchTypography>Loading...</EpunchTypography>  // No variant needed
-<EpunchButton>Save</EpunchButton>               // One default style
-<EpunchVerticalStack>                           // One spacing default
-  <div>Item 1</div>
-  <div>Item 2</div>
-</EpunchVerticalStack>
-```
-
-## New Component Implementation Plan
-**Create 12 new simplified components as defined in `foundational_2/index.md`**
-
-### Layout Components (5)
-- [ ] **EpunchPage** - `title?: string, children`
-- [ ] **EpunchCard** - `children`
-- [ ] **EpunchVerticalStack** - `spacing?: 'tight' | 'normal' | 'loose', children`
-- [ ] **EpunchHorizontalStack** - `spacing?: 'tight' | 'normal' | 'loose', align?: 'start' | 'center' | 'end', children`
-- [ ] **EpunchCenteredContainer** - `children`
-
-### Action Components (1)
-- [ ] **EpunchButton** - `loading?: boolean, children`
-
-### Input Components (2)
-- [ ] **EpunchInput** - `multiline?: boolean, ...HTMLInputProps`
-- [ ] **EpunchSwitch** - `checked: boolean, onChange: (checked: boolean) => void`
-
-### Content Components (2)
-- [ ] **EpunchTypography** - `children`
-- [ ] **EpunchAlert** - `variant?: 'success' | 'error' | 'warning' | 'info', children`
-
-### System Components (2)
-- [ ] **EpunchLoadingState** - `loading: boolean, children`
-- [ ] **EpunchModal** - `open: boolean, onClose: () => void, title?: string, children`
-
-## Debug Styling Cleanup
-All components have debug borders that must be removed:
-- `border: '2px solid red'` in EpunchBox
-- `border: '2px solid blue'` in EpunchButton  
-- `border: '2px solid green'` in EpunchCard
-- `border: '2px solid orange'` in EpunchTypography
-- And many more...
-
-## Redundant Components to Remove
-- **EpunchFlexRow** - Use EpunchBox with `display: flex`
-- **EpunchGrid** - Use Material-UI Grid directly
-- **EpunchVerticalStack** - Use EpunchBox with `display: flex, flexDirection: column`
-- **EpunchIconButton** - Weird position prop, just use Material-UI IconButton
-
-## Component Decomposition Strategy
-**Break down complex pages into focused sub-components**
-
-### Examples from merchant-app/Dashboard:
-- `LoyaltyProgramsOverview` (107 lines) - Handles loyalty program data fetching, counting, navigation
-- `QrCodeScannerOverview` (55 lines) - Handles scanner navigation, mobile responsive layout
-
-### Key Principles:
-1. **Single Responsibility** - Each component does one thing well
-2. **Business Logic Isolation** - Keep data fetching, state management in focused components
-3. **Layout Separation** - Use foundational components for consistent styling
-4. **Recursive Decomposition** - Break down further if a component gets too complex
-
-### Target Structure:
-```
-Pages/                     (Pure layout, ~20 lines)
-├── Overview Components/   (Business logic, ~50-100 lines)
-├── List Components/       (Data handling, ~80-150 lines)  
-├── Item Components/       (Single item logic, ~30-80 lines)
-└── Foundational/          (Pure styling, ~10-30 lines)
-```
-
-## Expected Benefits
-- **Faster development** - No decision paralysis on variants
-- **Consistent design** - One look for everything
-- **Smaller bundle** - Less code in components
-- **Easier maintenance** - Fewer props to test and document
-- **Better DX** - Predictable component behavior
-- **Perfect Separation** - Business logic vs layout concerns clearly separated
-- **Component Reusability** - Focused components can be reused across pages
-
-## Implementation Order
-1. **Remove debug borders** from all components
-2. **Simplify EpunchTypography** - Remove variants, just consistent text
-3. **Simplify EpunchVerticalStack** - Remove all props except children
-4. **Simplify EpunchButton** - Keep only loading prop
-5. **Simplify EpunchModal** - Remove all variants and size options
-6. **Simplify EpunchInput** - Keep only multiline prop
-7. **Simplify EpunchCard** - Remove variants and padding options
-8. **Remove redundant components** - FlexRow, Grid wrappers
-
-## Implementation Requirements
-
-### Styling Rules
-- [ ] All colors from `theme/constants.ts` only
-- [ ] All spacing from `spacing` constants only
-- [ ] All typography from `typography` constants only
-- [ ] All shadows from `shadows` constants only
-- [ ] NO inline styles or `sx` props
-- [ ] NO hardcoded values in components
-- [ ] USE CSS classes and Material-UI props only
-
-### Component Rules
-- [ ] Minimal props (average 1.5 per component)
-- [ ] Responsive by default (no responsive props needed)
-- [ ] Zero business logic in components
-- [ ] TypeScript interfaces for all props
-- [ ] Proper exports in `index.ts`
+### Shared Components (DashboardCard.tsx)
+- Uses foundational_2 EpunchCard component
+- Adds dashboard-specific styling via CSS modules
+- Reusable across dashboard components
 
 ## Success Criteria
-- [ ] 12 components total in `foundational_2/`
-- [ ] All styling centralized in `constants.ts`
-- [ ] Zero custom styles inside components
-- [ ] Zero decision making required for basic usage
-- [ ] Consistent responsive behavior across all components
-- [ ] Perfect replication of existing theme and design
+- [x] Zero imports from `/foundational`
+- [x] All components use `/foundational_2` when appropriate
+- [x] All styling uses CSS variables from `@css-variables.ts`
+- [x] All theme references use `@constants.ts`
+- [x] No Material-UI components
+- [x] React-toast for all error handling
+- [x] CSS modules with proper prefixes
+- [x] Visual appearance unchanged
+- [x] Clear component separation (layout vs business logic)
 
-## Component Usage After Simplification
+## Reference Implementation
+- **QRScanner.tsx** - Successfully refactored with CSS modules
+- **Dashboard architecture** - Perfect example of layout separation
+- **DashboardCard.tsx** - Shows foundational_2 + CSS module pattern
+- **LoginPage.tsx** - Complete refactoring with EpunchInput + CSS modules + toast
+- **EpunchInput** - Material-UI eliminated, native HTML + CSS modules
+- **Form Components** - New foundational_2/form architecture for reusable forms
+
+## New Form Architecture ✅ CREATED
+
+### Form Components in `/foundational_2/form/`
+- **FormContainer**: Replaces EpunchForm with clean layout + actions
+- **FormField**: Wraps EpunchInput with validation display
+- **useFormState**: Custom hook for form state management + validation
+
+### Usage Pattern:
 ```typescript
-// Typography - just wrap text
-<EpunchTypography>Any text content</EpunchTypography>
+const { formData, errors, handleFieldChange, validateForm } = useFormState(
+  initialData, 
+  validationRules
+);
 
-// Button - primary style, with loading state
-<EpunchButton loading={isLoading}>Save Changes</EpunchButton>
-
-// Modal - responsive (dialog/fullscreen), always closeable
-<EpunchModal open={open} onClose={close} title="Edit Item">
-  <div>Modal content here</div>
-  <EpunchButton>Save</EpunchButton>
-</EpunchModal>
-
-// Layout - default spacing and alignment
-<EpunchVerticalStack>
-  <div>Item 1</div>
-  <div>Item 2</div>
-</EpunchVerticalStack>
-
-// Card - consistent padding and elevation
-<EpunchCard>
-  <div>Card content</div>
-</EpunchCard>
+<FormContainer onSubmit={handleSubmit} submitText="Create">
+  <FormField
+    label="Name"
+    value={formData.name}
+    onChange={handleFieldChange('name')}
+    error={!!errors.name}
+    helperText={errors.name}
+    required
+  />
+</FormContainer>
 ```
-
-## Real-World Comparison
-### ✅ Good: merchant-app/Dashboard.tsx (23 lines)
-```typescript
-// Pure layout declaration
-<EpunchPage title="Merchant Dashboard">
-  <EpunchSmartGrid>
-    <EpunchCard><LoyaltyProgramsOverview /></EpunchCard>
-    <EpunchCard><QrCodeScannerOverview /></EpunchCard>
-  </EpunchSmartGrid>
-</EpunchPage>
-```
-
-### ❌ Bad: admin-app/Dashboard.tsx (535 lines)
-```typescript
-// Mixed concerns - business logic + layout + styling
-const [systemStats, setSystemStats] = useState<SystemStatistics | null>(null);
-const [statsLoading, setStatsLoading] = useState(true);
-// ... 50+ lines of state and handlers ...
-
-return (
-  <Box>
-    <Box display="flex" justifyContent="space-between" sx={{...}}>
-      <Typography variant="h4" sx={{color: '#f5f5dc', fontWeight: 'bold'}}>
-        // ... hundreds of lines of mixed logic and JSX ...
-```
-
-### Current Problems in Foundational Components:
-- **EpunchTypography**: Using `variant="body"` instead of just wrapping text
-- **EpunchVerticalStack**: Asking for `spacing` props instead of having good defaults
-- **QrCodeScannerOverview**: Using complex props like `justify="center"` and `variant="cardTitle"`
-
-### After Simplification:
-```typescript
-// Business components use simple foundational components
-<EpunchTypography>QR Scanner</EpunchTypography>          // No variants
-<EpunchButton>Save Changes</EpunchButton>               // No variants
-<EpunchVerticalStack>                                   // No spacing props
-  <ComponentA />
-  <ComponentB />
-</EpunchVerticalStack>
-```
-
-## Files to Create in `foundational_2/`
-- [ ] `index.ts` - Export all components
-- [ ] `EpunchPage.tsx` - Page wrapper with title
-- [ ] `EpunchCard.tsx` - Content container
-- [ ] `EpunchVerticalStack.tsx` - Vertical layout
-- [ ] `EpunchHorizontalStack.tsx` - Horizontal layout
-- [ ] `EpunchCenteredContainer.tsx` - Centered content
-- [ ] `EpunchButton.tsx` - Action button
-- [ ] `EpunchInput.tsx` - Text input
-- [ ] `EpunchSwitch.tsx` - Boolean toggle
-- [ ] `EpunchTypography.tsx` - Text content
-- [ ] `EpunchAlert.tsx` - User feedback
-- [ ] `EpunchLoadingState.tsx` - Loading indicators
-- [ ] `EpunchModal.tsx` - Modal dialogs
-
-## Theme Integration
-- [ ] Review existing `theme/constants.ts` for available tokens
-- [ ] Add new design tokens to `constants.ts` if needed
-- [ ] Ensure all components use only centralized styling
-- [ ] Test components match existing design perfectly 

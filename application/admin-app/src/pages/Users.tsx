@@ -122,7 +122,7 @@ export const Users: React.FC = () => {
         onRowClick={handleView}
         emptyState={{
           title: 'No users yet',
-          description: 'Users will appear here as they register or use the system',
+          description: 'Users will appear here as they register or use the modal',
         }}
       />
 

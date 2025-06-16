@@ -80,7 +80,7 @@ export function Table<T extends { id: string }>({
 
   return (
     <Box>
-      {/* Header with Title and Create Button */}
+      {/* Header with Title and Create EpunchButon */}
       {(title || createButton) && (
         <Box
           display="flex"

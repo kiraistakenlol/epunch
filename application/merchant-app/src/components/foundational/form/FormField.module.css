@@ -1,0 +1,19 @@
+.formField {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.errorText {
+  margin-top: var(--spacing-xs);
+  font-size: 0.875rem;
+  color: var(--color-error);
+  line-height: 1.4;
+}
+
+.helperText {
+  margin-top: var(--spacing-xs);
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+} 

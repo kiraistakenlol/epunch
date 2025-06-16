@@ -4,27 +4,21 @@ import { Loyalty, Add as AddIcon } from '@mui/icons-material';
 import { apiClient } from 'e-punch-common-ui';
 import { LoyaltyProgramDto } from 'e-punch-common-core';
 import { useAppSelector } from '../../store/hooks';
-import { 
-  EpunchCenteredContainer,
-  EpunchFlexRow,
-  EpunchIconButton,
-  EpunchTypography 
-} from '../../components/foundational';
+import { IconButton } from '@mui/material';
 import { colors } from '../../theme/constants';
-import { useMobile } from '../../hooks/useMobile';
+import { DashboardCard } from './DashboardCard';
 
 export const LoyaltyProgramsOverview: React.FC = () => {
-  const isMobile = useMobile();
   const navigate = useNavigate();
   const merchantId = useAppSelector(state => state.auth.merchant?.id);
-  
+
   const [loyaltyPrograms, setLoyaltyPrograms] = useState<LoyaltyProgramDto[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchLoyaltyPrograms = async () => {
       if (!merchantId) return;
-      
+
       try {
         const programs = await apiClient.getMerchantLoyaltyPrograms(merchantId);
         setLoyaltyPrograms(programs);
@@ -48,60 +42,65 @@ export const LoyaltyProgramsOverview: React.FC = () => {
   };
 
   return (
-    <EpunchCenteredContainer 
-      minHeight={isMobile ? 'auto' : '170px'}
-      style={{ position: 'relative', cursor: 'pointer' }}
-      onClick={handleNavigateToLoyaltyPrograms}
-    >
-      <EpunchIconButton
-        variant="primary"
-        position="top-right"
-        size="small"
-        onClick={handleCreateLoyaltyProgram}
+    <DashboardCard>
+      <div
+        style={{
+          position: 'relative',
+          cursor: 'pointer',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+        onClick={handleNavigateToLoyaltyPrograms}
       >
-        <AddIcon fontSize="small" />
-      </EpunchIconButton>
-      
-      <EpunchFlexRow 
-        justify={isMobile ? 'center' : 'start'}
-        gap="16px"
-        style={{ marginBottom: '16px' }}
-      >
-        <Loyalty sx={{ fontSize: isMobile ? 28 : 32, color: colors.primary }} />
-        <EpunchTypography 
-          variant="cardTitle"
-          color="primary"
-          bold
-          style={{ fontSize: isMobile ? '1.1rem' : '1.25rem' }}
+        <IconButton
+          onClick={handleCreateLoyaltyProgram}
+          sx={{
+            position: 'absolute',
+            top: '0.3em',
+            right: '0.3em',
+            backgroundColor: colors.primaryDark,
+            color: colors.text.light,
+            width: '1.5em',
+            height: '1.5em',
+            '&:hover': {
+              backgroundColor: colors.primary
+            }
+          }}
         >
-          Loyalty Programs
-        </EpunchTypography>
-      </EpunchFlexRow>
-      
-      <EpunchTypography
-        variant="pageTitle"
-        color="primary"
-        textShadow
-        style={{
-          textAlign: 'center',
-          marginBottom: '8px',
-          fontSize: isMobile ? '2.5rem' : '3.75rem',
-        }}
-      >
-        {isLoading ? '...' : loyaltyPrograms.length}
-      </EpunchTypography>
-      
-      <EpunchTypography
-        variant="body"
-        color="secondary"
-        style={{
-          textAlign: 'center',
-          fontWeight: 500,
-          fontSize: isMobile ? '0.9rem' : '1rem',
-        }}
-      >
-        Active programs
-      </EpunchTypography>
-    </EpunchCenteredContainer>
+          <AddIcon sx={{ fontSize: '0.8em' }} />
+        </IconButton>
+
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: '0.5em'
+        }}>
+          <Loyalty sx={{ fontSize: '1.5em', color: colors.primary }} />
+          <span style={{ fontSize: '0.9em', fontWeight: 500, color: colors.text.primary }}>
+            Loyalty Programs
+          </span>
+        </div>
+        
+        <div style={{ 
+          fontSize: '2.5em', 
+          fontWeight: 'bold',
+          color: colors.text.primary,
+          lineHeight: 1
+        }}>
+          {isLoading ? '...' : loyaltyPrograms.length}
+        </div>
+        
+        <div style={{ 
+          fontSize: '0.75em', 
+          color: colors.text.secondary,
+          textAlign: 'center'
+        }}>
+          Active programs
+        </div>
+      </div>
+    </DashboardCard>
   );
 }; 

@@ -1,16 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { QrCodeScanner } from '@mui/icons-material';
-import { 
-  EpunchCenteredContainer,
-  EpunchFlexRow,
-  EpunchTypography 
-} from '../../components/foundational';
 import { colors } from '../../theme/constants';
-import { useMobile } from '../../hooks/useMobile';
+import { DashboardCard } from './DashboardCard';
 
 export const QrCodeScannerOverview: React.FC = () => {
-  const isMobile = useMobile();
   const navigate = useNavigate();
 
   const handleNavigateToScanner = () => {
@@ -18,38 +12,37 @@ export const QrCodeScannerOverview: React.FC = () => {
   };
 
   return (
-    <EpunchCenteredContainer 
-      minHeight={isMobile ? 'auto' : '170px'}
-      style={{ cursor: 'pointer' }}
-      onClick={handleNavigateToScanner}
-    >
-      <EpunchFlexRow 
-        justify={isMobile ? 'center' : 'start'}
-        gap="16px"
-        style={{ marginBottom: '16px' }}
-      >
-        <QrCodeScanner sx={{ fontSize: isMobile ? 28 : 32, color: colors.primary }} />
-        <EpunchTypography 
-          variant="cardTitle"
-          color="primary"
-          bold
-          style={{ fontSize: isMobile ? '1.1rem' : '1.25rem' }}
-        >
-          QR Scanner
-        </EpunchTypography>
-      </EpunchFlexRow>
-      
-      <EpunchTypography
-        variant="body"
-        color="secondary"
-        style={{
-          textAlign: isMobile ? 'center' : 'left',
-          marginTop: '16px',
-          fontSize: isMobile ? '0.9rem' : '1rem'
-        }}
-      >
-        Scan customer QR codes to add punches or redeem rewards
-      </EpunchTypography>
-    </EpunchCenteredContainer>
+    <DashboardCard>
+      <div style={{ 
+        cursor: 'pointer',
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'center',
+        gap: '0.8em',
+        height: '100%',
+        justifyContent: 'center',
+        textAlign: 'center'
+      }} onClick={handleNavigateToScanner}>
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: '0.5em'
+        }}>
+          <QrCodeScanner sx={{ fontSize: '1.5em', color: colors.primary }} />
+          <span style={{ fontSize: '0.9em', fontWeight: 500, color: colors.text.primary }}>
+            QR Scanner
+          </span>
+        </div>
+        
+        <div style={{ 
+          fontSize: '0.75em', 
+          color: colors.text.secondary,
+          lineHeight: 1.4,
+          maxWidth: '85%'
+        }}>
+          Scan customer QR codes to add punches or redeem rewards
+        </div>
+      </div>
+    </DashboardCard>
   );
 }; 

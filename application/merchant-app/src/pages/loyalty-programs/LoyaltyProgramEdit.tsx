@@ -3,32 +3,38 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { apiClient } from 'e-punch-common-ui';
 import { UpdateLoyaltyProgramDto } from 'e-punch-common-core';
 import { useAppSelector } from '../../store/hooks';
-import { 
-  EpunchInput, 
-  EpunchSwitch, 
-  EpunchPage,
-  EpunchNumberInput,
-  EpunchForm
-} from '../../components/foundational';
+import { EpunchPage, FormContainer, FormField, useFormState, EpunchSwitch } from '../../components/foundational';
+import styles from './LoyaltyProgramEdit.module.css';
+
+interface LoyaltyProgramFormData {
+  name: string;
+  description: string;
+  requiredPunches: number;
+  rewardDescription: string;
+  isActive: boolean;
+}
 
 export const LoyaltyProgramEdit: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const merchantId = useAppSelector(state => state.auth.merchant?.id);
 
-  const [formData, setFormData] = useState({
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  const { formData, errors, handleFieldChange, handleNumberChange, handleSwitchChange, validateForm, setFormData } = useFormState<LoyaltyProgramFormData>({
     name: '',
     description: '',
     requiredPunches: 10,
     rewardDescription: '',
     isActive: true,
+  }, {
+    name: { required: true },
+    rewardDescription: { required: true },
+    requiredPunches: { required: true, min: 1, max: 10 }
   });
-
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
-  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     loadLoyaltyProgram();
@@ -67,29 +73,6 @@ export const LoyaltyProgramEdit: React.FC = () => {
     }
   };
 
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = 'Program name is required';
-    }
-
-    if (!formData.rewardDescription.trim()) {
-      newErrors.rewardDescription = 'Reward description is required';
-    }
-
-    if (formData.requiredPunches < 1) {
-      newErrors.requiredPunches = 'Required punches must be at least 1';
-    }
-
-    if (formData.requiredPunches > 10) {
-      newErrors.requiredPunches = 'Required punches cannot exceed 10';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -117,91 +100,69 @@ export const LoyaltyProgramEdit: React.FC = () => {
     }
   };
 
-  const handleInputChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value: any = e.target.value;
-    
-    if (field !== 'requiredPunches') {
-      setFormData(prev => ({ ...prev, [field]: value }));
-    }
-
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
-    }
-  };
-
-  const handlePunchesChange = (value: number | undefined) => {
-    setFormData(prev => ({ ...prev, requiredPunches: value || 0 }));
-    
-    if (errors.requiredPunches) {
-      setErrors(prev => ({ ...prev, requiredPunches: '' }));
-    }
-  };
-
-  const handleSwitchChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({ ...prev, [field]: e.target.checked }));
-  };
-
   if (isLoading) {
     return (
-      <EpunchPage title="Edit Loyalty Program" backTo="/loyalty-programs" loading>
-        <></>
+      <EpunchPage title="Edit Loyalty Program">
+        <div>Loading...</div>
       </EpunchPage>
     );
   }
 
   if (loadError) {
     return (
-      <EpunchPage title="Edit Loyalty Program" backTo="/loyalty-programs" error={loadError}>
-        <></>
+      <EpunchPage title="Edit Loyalty Program">
+        <div>Error: {loadError}</div>
       </EpunchPage>
     );
   }
 
   return (
-    <EpunchPage title="Edit Loyalty Program" backTo="/loyalty-programs">
-      <EpunchForm 
-        error={submitError}
+    <EpunchPage title="Edit Loyalty Program">
+      <FormContainer
         onSubmit={handleSubmit}
         onCancel={() => navigate('/loyalty-programs')}
         submitText="Update Program"
+        submittingText="Updating..."
         isSubmitting={isSubmitting}
+        error={submitError}
+        variant="card"
+        fieldSpacing="md"
       >
-        <EpunchInput
+        <FormField
           label="Program Name"
           value={formData.name}
-          onChange={handleInputChange('name')}
+          onChange={handleFieldChange('name')}
           error={!!errors.name}
           helperText={errors.name}
           required
           disabled={isSubmitting}
         />
 
-        <EpunchInput
+        <FormField
           label="Description (Optional)"
           value={formData.description}
-          onChange={handleInputChange('description')}
+          onChange={handleFieldChange('description')}
           disabled={isSubmitting}
           multiline
           rows={3}
         />
 
-        <EpunchNumberInput
+        <FormField
           label="Required Punches"
-          value={formData.requiredPunches}
-          onValueChange={handlePunchesChange}
-          min={1}
-          max={10}
-          placeholder="Enter 1-10"
+          type="number"
+          value={formData.requiredPunches.toString()}
+          onChange={(e) => handleNumberChange('requiredPunches')(parseInt(e.target.value) || 0)}
           error={!!errors.requiredPunches}
           helperText={errors.requiredPunches || 'Maximum 10 punches allowed'}
           required
           disabled={isSubmitting}
+          placeholder="Enter 1-10"
         />
 
-        <EpunchInput
+        <FormField
           label="Reward Description"
           value={formData.rewardDescription}
-          onChange={handleInputChange('rewardDescription')}
+          onChange={handleFieldChange('rewardDescription')}
           error={!!errors.rewardDescription}
           helperText={errors.rewardDescription}
           multiline
@@ -211,14 +172,15 @@ export const LoyaltyProgramEdit: React.FC = () => {
           placeholder="e.g., Free coffee, 20% discount, etc."
         />
 
-        <EpunchSwitch
-          checked={formData.isActive}
-          onChange={handleSwitchChange('isActive')}
-          disabled={isSubmitting}
-          label="Active"
-          variant="primary"
-        />
-      </EpunchForm>
+        <div className={styles.switchContainer}>
+          <EpunchSwitch
+            checked={formData.isActive}
+            onChange={(checked) => handleSwitchChange('isActive')({ target: { checked } } as any)}
+            disabled={isSubmitting}
+            label="Active"
+          />
+        </div>
+      </FormContainer>
     </EpunchPage>
   );
 }; 
