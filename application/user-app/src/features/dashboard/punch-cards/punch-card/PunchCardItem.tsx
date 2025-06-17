@@ -48,25 +48,16 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
     if (!cardElement) return;
 
     const handleAnimationEnd = (e: AnimationEvent) => {
-      console.log('Animation ended:', e.animationName, 'on card:', id, 'target:', e.target);
-      
       if (e.animationName.includes('newPunchAnimation')) {
-        console.log('→ Dispatching PUNCH_ANIMATION_COMPLETE');
         dispatch(handleEvent('PUNCH_ANIMATION_COMPLETE'));
       } else if (e.animationName.includes('highlightReward')) {
-        console.log('→ Dispatching HIGHLIGHT_ANIMATION_COMPLETE');
         dispatch(handleEvent('HIGHLIGHT_ANIMATION_COMPLETE'));
       } else if (e.animationName.includes('slideInFromLeft')) {
-        console.log('→ Dispatching SLIDE_IN_ANIMATION_COMPLETE');
         dispatch(handleEvent('SLIDE_IN_ANIMATION_COMPLETE'));
       } else if (e.animationName.includes('slideOutAndFade')) {
-        console.log('→ Dispatching SLIDE_OUT_ANIMATION_COMPLETE for reward claimed');
         dispatch(handleEvent('SLIDE_OUT_ANIMATION_COMPLETE'));
       } else if (e.animationName.includes('cardFlip')) {
-        console.log('→ Flip animation complete');
         setIsAnimating(false);
-      } else {
-        console.log('→ Unhandled animation name:', e.animationName);
       }
     };
 
@@ -80,13 +71,6 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
   const handleClick = (event: React.MouseEvent) => {
     event.stopPropagation();
     
-    if (isSelected) {
-      if (onCardClick) {
-        onCardClick(id);
-      }
-      return;
-    }
-    
     if (onCardClick) {
       onCardClick(id);
     }
@@ -99,6 +83,11 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
       setTimeout(() => {
         setIsFlipped(newFlippedState);
       }, 300);
+
+      // Failsafe: reset isAnimating after animation duration + buffer
+      setTimeout(() => {
+        setIsAnimating(false);
+      }, 700); // 600ms animation + 100ms buffer
     }
   };
 
