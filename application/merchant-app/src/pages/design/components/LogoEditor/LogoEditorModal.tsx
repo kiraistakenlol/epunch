@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'react-toastify';
-import { EpunchModal } from '../../../../components/foundational';
+import { EpunchModal, EpunchButon } from '../../../../components/foundational';
 
 interface LogoEditorModalProps {
   isOpen: boolean;
@@ -15,6 +15,11 @@ export const LogoEditorModal: React.FC<LogoEditorModalProps> = ({
   onSave
 }) => {
   const [isDragActive, setIsDragActive] = useState(false);
+
+  const handleRemoveLogo = () => {
+    onSave(null);
+    onClose();
+  };
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -54,7 +59,7 @@ export const LogoEditorModal: React.FC<LogoEditorModalProps> = ({
     <EpunchModal
       open={isOpen}
       onClose={onClose}
-      title="Select Logo Image"
+      title="Logo Settings"
     >
       {/* Dropzone Area */}
       <div 
@@ -66,7 +71,8 @@ export const LogoEditorModal: React.FC<LogoEditorModalProps> = ({
           textAlign: 'center',
           backgroundColor: isDragActive ? '#f5f5f5' : '#fafafa',
           cursor: 'pointer',
-          transition: 'all 0.2s ease'
+          transition: 'all 0.2s ease',
+          marginBottom: '20px'
         }}
       >
         <input {...getInputProps()} />
@@ -99,6 +105,36 @@ export const LogoEditorModal: React.FC<LogoEditorModalProps> = ({
           Supports: JPG, PNG, GIF, WebP (max 2MB)
         </div>
       </div>
+
+             {/* Remove Logo Option */}
+       <div style={{
+         textAlign: 'center',
+         paddingTop: '16px',
+         borderTop: '1px solid #e0e0e0'
+       }}>
+         <button
+           onClick={handleRemoveLogo}
+           style={{
+             backgroundColor: 'transparent',
+             color: '#d32f2f',
+             border: '1px solid #d32f2f',
+             padding: '8px 16px',
+             borderRadius: '6px',
+             cursor: 'pointer',
+             fontSize: '14px',
+             fontWeight: 'bold',
+             transition: 'all 0.2s ease'
+           }}
+           onMouseEnter={(e) => {
+             e.currentTarget.style.backgroundColor = '#ffebee';
+           }}
+           onMouseLeave={(e) => {
+             e.currentTarget.style.backgroundColor = 'transparent';
+           }}
+         >
+           Remove Current Logo
+         </button>
+       </div>
     </EpunchModal>
   );
 }; 

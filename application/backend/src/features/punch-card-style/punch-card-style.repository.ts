@@ -6,11 +6,11 @@ export interface PunchCardStyle {
   id: string;
   merchant_id: string;
   loyalty_program_id?: string;
-  primary_color?: string;
-  secondary_color?: string;
-  logo_url?: string;
-  background_image_url?: string;
-  punch_icons?: string;
+  primary_color: string | null;
+  secondary_color: string | null;
+  logo_url: string | null;
+  background_image_url: string | null;
+  punch_icons: PunchIconsDto | null;
   created_at: Date;
 }
 

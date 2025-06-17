@@ -198,12 +198,12 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
 
         {/* Icons Grid */}
         <div style={{
-          marginBottom: '24px',
-          maxHeight: '300px',
+          marginBottom: '16px',
+          maxHeight: '250px',
           overflowY: 'auto',
           border: '1px solid #e0e0e0',
           borderRadius: '6px',
-          padding: '16px'
+          padding: '12px'
         }}>
           {loading ? (
             <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
@@ -365,7 +365,7 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
           fontSize: '12px', 
           color: '#666', 
           textAlign: 'center',
-          paddingTop: '16px',
+          paddingTop: '12px',
           borderTop: '1px solid #e0e0e0'
         }}>
           Click any icon to choose filled (●) or unfilled (○) type. Changes are applied automatically.
