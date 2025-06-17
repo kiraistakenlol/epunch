@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, forwardRef } from 'react';
 import { PunchCardDto } from 'e-punch-common-core';
 import { useAppDispatch } from '../../../../store/hooks';
 import { handleEvent } from '../../../animations/animationSlice';
@@ -18,7 +18,7 @@ interface PunchCardItemProps extends PunchCardDto {
   animateRewardClaimed?: boolean;
 }
 
-const PunchCardItem: React.FC<PunchCardItemProps> = ({
+const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
   id,
   loyaltyProgramId,
   shopName,
@@ -35,15 +35,16 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
   onCardClick,
   onRedemptionClick,
   animateRewardClaimed
-}) => {
+}, forwardedRef) => {
   const dispatch = useAppDispatch();
-  const cardRef = useRef<HTMLDivElement>(null);
+  const internalRef = useRef<HTMLDivElement>(null);
+  const cardRef = forwardedRef || internalRef;
   const [isFlipped, setIsFlipped] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
 
   // Listen for CSS animation events
   useEffect(() => {
-    const cardElement = cardRef.current;
+    const cardElement = typeof cardRef === 'function' ? null : cardRef?.current;
     if (!cardElement) return;
 
     const handleAnimationEnd = (e: AnimationEvent) => {
@@ -74,7 +75,7 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
     return () => {
       cardElement.removeEventListener('animationend', handleAnimationEnd, true);
     };
-  }, [id, dispatch]);
+  }, [id, dispatch, cardRef]);
 
   const handleClick = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -159,6 +160,6 @@ const PunchCardItem: React.FC<PunchCardItemProps> = ({
       )}
     </div>
   );
-};
+});
 
 export default PunchCardItem; 

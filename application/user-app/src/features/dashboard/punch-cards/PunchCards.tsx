@@ -167,24 +167,21 @@ const PunchCards: React.FC<PunchCardsProps> = () => {
     return (
       <div className={styles.punchCardsList}>
         {cardsToRender.map((card) => (
-          <div
+          <PunchCardItem
             key={card.id}
             ref={(el) => {
               cardRefs.current[card.id] = el;
             }}
-          >
-            <PunchCardItem
-              {...card}
-              isHighlighted={card.animationFlags?.highlighted || false}
-              animatedPunchIndex={card.animationFlags?.punchAnimation?.punchIndex}
-              shouldSlideIn={slideInCards.has(card.id)}
-              shouldSlideRight={slideRightCards.has(card.id)}
-              isSelected={selectedCardId === card.id}
-              onCardClick={handleCardClick}
-              onRedemptionClick={handleRedemptionClick}
-              animateRewardClaimed={card.animationFlags?.rewardClaimedAnimation || false}
-            />
-          </div>
+            {...card}
+            isHighlighted={card.animationFlags?.highlighted || false}
+            animatedPunchIndex={card.animationFlags?.punchAnimation?.punchIndex}
+            shouldSlideIn={slideInCards.has(card.id)}
+            shouldSlideRight={slideRightCards.has(card.id)}
+            isSelected={selectedCardId === card.id}
+            onCardClick={handleCardClick}
+            onRedemptionClick={handleRedemptionClick}
+            animateRewardClaimed={card.animationFlags?.rewardClaimedAnimation || false}
+          />
         ))}
       </div>
     );
