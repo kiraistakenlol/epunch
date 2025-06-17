@@ -63,7 +63,7 @@
 }
 
 .cancelButton:hover:not(:disabled) {
-  background-color: var(--color-bg-variant);
+  background-color: var(--color-background-variant);
   border-color: var(--color-text-secondary);
 }
 
@@ -91,7 +91,7 @@
 }
 
 .submitButton:disabled {
-  background-color: var(--color-bg-variant);
+  background-color: var(--color-background-variant);
   color: var(--color-text-secondary);
   cursor: not-allowed;
   opacity: 0.6;

@@ -1,7 +1,7 @@
 .app-layout {
   display: flex;
   min-height: 100vh;
-  background-color: var(--color-bg-default);
+  background-color: var(--color-background-default);
 }
 
 .app-header {
@@ -96,7 +96,7 @@
   min-height: 100vh;
   margin-top: 60px;
   padding: var(--spacing-md);
-  background-color: var(--color-bg-default);
+  background-color: var(--color-background-default);
 }
 
 .app-main-content.desktop {

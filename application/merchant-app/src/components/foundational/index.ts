@@ -20,6 +20,12 @@ export type { EpunchInputProps } from './inputs/EpunchInput';
 export { EpunchSwitch } from './inputs/EpunchSwitch';
 export type { EpunchSwitchProps } from './inputs/EpunchSwitch';
 
+export { EpunchColorPicker } from './inputs/EpunchColorPicker';
+export type { EpunchColorPickerProps } from './inputs/EpunchColorPicker';
+
+export { EpunchSearchInput } from './inputs/EpunchSearchInput';
+export type { EpunchSearchInputProps } from './inputs/EpunchSearchInput';
+
 export { EpunchModal } from './modal/EpunchModal';
 export type { EpunchModalProps } from './modal/EpunchModal';
 

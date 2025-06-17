@@ -1,0 +1,112 @@
+.searchContainer {
+  position: relative;
+}
+
+.searchContainer.fullWidth {
+  width: 100%;
+}
+
+.searchInputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--color-background-paper);
+  border: 2px solid var(--color-border-default);
+  border-radius: var(--border-radius-medium);
+  transition: all 0.2s ease-in-out;
+  overflow: hidden;
+}
+
+.searchInputWrapper:hover:not(.disabled) {
+  border-color: var(--color-primary);
+}
+
+.searchInputWrapper.focused {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(93, 64, 55, 0.1);
+}
+
+.searchInputWrapper.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: var(--color-background-variant);
+}
+
+.searchIcon {
+  margin-left: var(--spacing-sm);
+  color: var(--color-text-secondary);
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.searchInput {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: var(--spacing-sm) var(--spacing-xs);
+  font-size: var(--font-size-body);
+  color: var(--color-text-primary);
+  background: transparent;
+  min-height: 44px;
+}
+
+.searchInput::placeholder {
+  color: var(--color-text-secondary);
+  opacity: 0.7;
+}
+
+.searchInput:disabled {
+  cursor: not-allowed;
+  color: var(--color-text-disabled);
+}
+
+.clearButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  margin-right: var(--spacing-xs);
+  border-radius: var(--border-radius-small);
+  transition: all 0.2s ease-in-out;
+  min-width: 32px;
+  min-height: 32px;
+}
+
+.clearButton:hover {
+  background: var(--color-hover-background);
+}
+
+.clearButton:focus {
+  outline: none;
+  background: var(--color-hover-background);
+  box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+.clearIcon {
+  color: var(--color-text-secondary);
+  font-size: 18px;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .searchInput {
+    font-size: 16px; /* Prevent zoom on iOS */
+    min-height: 48px;
+  }
+
+  .clearButton {
+    min-width: 36px;
+    min-height: 36px;
+  }
+
+  .searchIcon {
+    font-size: 22px;
+  }
+
+  .clearIcon {
+    font-size: 20px;
+  }
+} 

@@ -3,7 +3,7 @@
 /* Punch Card Details Styling */
 .punch-card-details,
 .loyalty-program-details {
-  background: var(--color-bg-paper);
+  background: var(--color-background-paper);
   border-radius: 12px;
   padding: 20px;
   border: 1px solid var(--color-border-default);

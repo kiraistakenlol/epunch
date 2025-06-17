@@ -1,6 +1,6 @@
 /* Cards */
 .loyalty-card {
-  background-color: var(--color-bg-paper);
+  background-color: var(--color-background-paper);
   border-radius: var(--border-radius-medium);
   box-shadow: var(--shadow-light);
   padding: var(--spacing-lg);
@@ -24,7 +24,7 @@
   border: 2px solid var(--color-primary);
   border-radius: var(--border-radius-medium);
   padding: var(--spacing-md);
-  background-color: var(--color-bg-variant);
+  background-color: var(--color-background-variant);
 }
 
 .program-name {
@@ -63,7 +63,7 @@
 
 .program-option.selected {
   border-color: var(--color-primary);
-  background-color: var(--color-bg-paper);
+  background-color: var(--color-background-paper);
   box-shadow: var(--shadow-medium);
 }
 

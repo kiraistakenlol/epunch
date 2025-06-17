@@ -3,10 +3,9 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: var(--color-bg-default);
+  background-color: var(--color-background-default);
   padding: var(--spacing-md);
 }
-
 
 .loginCard {
   padding: var(--spacing-xl);

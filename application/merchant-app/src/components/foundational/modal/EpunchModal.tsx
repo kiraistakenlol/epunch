@@ -1,15 +1,5 @@
-import React from 'react';
-import { 
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Typography,
-  IconButton,
-  useMediaQuery,
-  useTheme
-} from '@mui/material';
-import { Close } from '@mui/icons-material';
-import { colors, spacing, shadows } from '../../../theme/constants';
+import React, { useEffect } from 'react';
+import styles from './EpunchModal.module.css';
 
 export interface EpunchModalProps {
   open: boolean;
@@ -24,68 +14,59 @@ export const EpunchModal: React.FC<EpunchModalProps> = ({
   title,
   children
 }) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  // Handle escape key
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    if (open) {
+      document.addEventListener('keydown', handleEscape);
+      // Prevent body scroll when modal is open
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [open, onClose]);
+
+  if (!open) {
+    return null;
+  }
+
+  const handleBackdropClick = (event: React.MouseEvent) => {
+    if (event.target === event.currentTarget) {
+      onClose();
+    }
+  };
 
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      fullScreen={isMobile}
-      maxWidth="sm"
-      fullWidth={!isMobile}
-      sx={{
-        '& .MuiDialog-paper': {
-          backgroundColor: colors.background.paper,
-          margin: isMobile ? 0 : spacing.lg,
-          borderRadius: isMobile ? 0 : spacing.sm,
-          boxShadow: shadows.heavy
-        }
-      }}
-    >
-      {(title || !isMobile) && (
-        <DialogTitle
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            backgroundColor: colors.background.paper,
-            borderBottom: title ? `1px solid ${colors.border.divider}` : 'none',
-            padding: spacing.lg
-          }}
-        >
+    <div className={styles['epunchModal-backdrop']} onClick={handleBackdropClick}>
+      <div className={styles['epunchModal-container']}>
+        <header className={styles['epunchModal-header']}>
           {title && (
-            <Typography
-              variant="h6"
-              sx={{
-                color: colors.text.primary,
-                fontWeight: 600,
-                margin: 0
-              }}
-            >
+            <h2 className={styles['epunchModal-title']}>
               {title}
-            </Typography>
+            </h2>
           )}
-          <IconButton
+          <button
+            className={styles['epunchModal-closeButton']}
             onClick={onClose}
-            sx={{
-              color: colors.text.secondary,
-              marginLeft: title ? spacing.md : 0
-            }}
+            aria-label="Close modal"
+            type="button"
           >
-            <Close />
-          </IconButton>
-        </DialogTitle>
-      )}
-      
-      <DialogContent
-        sx={{
-          backgroundColor: colors.background.paper,
-          padding: spacing.lg
-        }}
-      >
-        {children}
-      </DialogContent>
-    </Dialog>
+            ✕
+          </button>
+        </header>
+        
+        <div className={styles['epunchModal-content']}>
+          {children}
+        </div>
+      </div>
+    </div>
   );
 }; 

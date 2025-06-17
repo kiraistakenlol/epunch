@@ -1,146 +1,193 @@
-## Current goal overview
-Wre're in the process of refactoring project's compoents to stop using `/foundational` components and migrate to `/foundational_2` components with proper CSS modules and design tokens.
+# CURRENT TASK: Build DesignPage for Merchant PunchCard Style Management
 
-## Current Problem
-The project currently uses over-engineered `/foundational` components throughout. We need to:
-- Replace `/foundational` components with `/foundational_2` components when appropriate
-- Use standard HTML elements with CSS modules for custom styling
-- Always use `@css-variables.ts` and `@constants.ts` for all styling
-- Eliminate Material-UI components in favor of native HTML + CSS
-- Use react-toast for error handling instead of custom alert components
+## 🎯 OBJECTIVE
+Create a comprehensive design page that allows merchants to create/update their default punch card style including colors, logo, and punch icons. **Rewrite existing logic into cleaner, more extensible components.**
 
-## Current Findings (LoginPage Investigation)
+## 📋 FINDINGS & CURRENT STATE
 
-### Available Foundational_2 Components
-- **Layout**: `EpunchPage`, `EpunchCard`
-- **Actions**: `Button`, `SuccessButton`, `ErrorButton`, `ConfirmOrCancelButtons`
-- **Inputs**: `EpunchInput`, `EpunchSwitch` 
-- **System**: `EpunchModal`
+### ✅ **Logic Available for Extraction:**
 
-### Critical Issue Found ✅ RESOLVED
-✅ **EpunchInput Material-UI Eliminated**: Successfully refactored `EpunchInput` to use native HTML `<input>/<textarea>` with CSS modules, removing `@mui/material/TextField` dependency.
+#### **1. Image Management Logic** (from existing components)
+- **File Upload Flow**: S3 URL generation → File upload → API update
+- **Image Cropping**: Advanced cropping with circle/square shapes using `react-advanced-cropper`
+- **File Validation**: Size limits, format validation, error handling
+- **Preview System**: Transparency background, responsive preview
+- **State Management**: Upload progress, crop states, modal management
 
-### Available Resources
-- **CSS Variables**: All set up in `@css-variables.ts` with proper root injection
-- **Theme Constants**: Complete theme system in `@constants.ts`
-- **React-Toastify**: Available via `@utils/toast.ts` with helper functions:
-  - `showSuccessToast(message)`
-  - `showErrorToast(message)`
-  - `showInfoToast(message)`
-  - `showWarningToast(message)`
+#### **2. Icon Management Logic** (from existing components)
+- **Icon Search**: Debounced search with pagination from backend API
+- **Icon Selection**: Grid display with selection states
+- **SVG Customization**: Size, color, opacity, rotation, scaling properties
+- **Preview System**: Real-time punch card preview with filled/unfilled states
+- **Data Transformation**: IconDto → PunchIcon conversion
 
-### LoginPage Refactoring Strategy ✅ COMPLETED
-1. ✅ **Use EpunchCard for form container** - Replaced foundational EpunchCard
-2. ✅ **Refactored EpunchInput** - Eliminated Material-UI, now uses native HTML with CSS modules
-3. ✅ **Use Button from foundational_2** - Replaced EpunchButton
-4. ✅ **Replace EpunchAlert with toast** - Use `showErrorToast()` for error messages
-5. ✅ **Remove typography components** - Use native `<h1>`, `<p>` with CSS modules
-6. ✅ **Full-page layout with CSS modules** - Custom layout without over-engineered page components
+#### **3. API Integration Patterns**
+- Error handling and loading states
+- Data fetching and caching strategies
+- File upload with progress tracking
+- Style persistence and updates
 
-## Core Requirements
+### 🏗️ **NEW ARCHITECTURAL APPROACH**
 
-### 1. Use Foundational_2 Components
-- **Foundational_2 is already created** - Use existing components from `/foundational_2`
-- **When appropriate** - Use foundational_2 components for layout and common UI patterns
-- **Standard HTML otherwise** - Use `div`, `p`, `span`, `section` with CSS modules for custom components
-- **Ask before creating new components** - If you think we'd benefit from a new `@/foundational_2` component, ask me first
+## **Component Hierarchy (Redesigned for Extensibility)**
 
-### 2. CSS-First Approach
-- **Always use `@css-variables.ts`** - All styling must use available CSS variables
-- **Always use `@constants.ts`** - Reference theme constants for consistency
-- **CSS Modules with prefixes** - Create separate `.module.css` files with component-specific prefixes
-- **No inline styles** - All styling in CSS files, not JSX
-
-### 3. No Material-UI
-- **Eliminate Material-UI** - Replace all Material-UI components with HTML + CSS
-- **Use react-toast** - For error messages and notifications (already installed)
-- **Standard HTML elements** - Button, input, div, p, etc. with proper CSS styling
-
-### 4. Component Architecture
-- **Pages** - Pure layout declarations using foundational_2 components
-- **Business Components** - Focused components handling specific functionality
-- **Shared Components** - Reusable components like DashboardCard with CSS modules
-
-### 5. CSS Module Structure
-- **Component prefixes** - Use consistent naming like `.dashboardCard`, `.loyaltyOverview`
-- **Clear hierarchy** - `.componentName`, `.componentName-element`, `.componentName-modifier`
-- **Only CSS variables** - Reference `@css-variables.ts` for all styling values
-
-### 6. Error Handling
-- **React-toast only** - Use react-toast for all error messages and notifications
-- **No custom alerts** - Remove custom alert components in favor of toast
-
-## Perfect Example: Merchant Dashboard Architecture
-
-### Dashboard.tsx (Layout Only)
-```typescript
-import { EpunchPage } from '../components/foundational';
-import { LoyaltyProgramsOverview } from './LoyaltyProgramsOverview';
-import { QrCodeScannerOverview } from './QrCodeScannerOverview';
-
-export const Dashboard: React.FC = () => {
-  return (
-    <EpunchPage title="Merchant Dashboard">
-      <div className={styles.dashboardGrid}>
-        <LoyaltyProgramsOverview />
-        <QrCodeScannerOverview />
-      </div>
-    </EpunchPage>
-  );
-};
+```
+DesignPage/
+├── hooks/
+│   ├── useDesignPageState.ts          # Main state management
+│   ├── useStylePersistence.ts         # Save/load operations
+│   └── useModalManager.ts             # Modal state coordination
+├── components/
+│   ├── StyleSummaryCard/
+│   │   ├── StyleSummaryCard.tsx       # Main summary component
+│   │   ├── ColorPreview.tsx           # Color swatch display
+│   │   ├── LogoPreview.tsx            # Logo thumbnail display
+│   │   └── IconsPreview.tsx           # Icons preview in punch card format
+│   ├── ColorEditor/
+│   │   ├── ColorEditorModal.tsx       # Modal wrapper
+│   │   ├── ColorPickerSection.tsx     # Individual color picker
+│   │   └── ColorPresetGrid.tsx        # Preset color combinations
+│   ├── LogoEditor/
+│   │   ├── LogoEditorModal.tsx        # Modal wrapper
+│   │   ├── LogoUploader.tsx           # File upload + validation
+│   │   ├── LogoCropper.tsx            # Cropping interface
+│   │   └── LogoPreview.tsx            # Preview with transparency
+│   └── IconEditor/
+│       ├── IconEditorModal.tsx        # Modal wrapper
+│       ├── IconSearchGrid.tsx         # Searchable icon grid
+│       ├── IconCustomizer.tsx         # Property editor
+│       ├── IconPreview.tsx            # Punch card preview
+│       └── IconSelector.tsx           # Filled/unfilled selector
+└── utils/
+    ├── imageProcessing.ts             # Image upload/crop utilities
+    ├── iconTransform.ts               # Icon data transformations
+    └── styleValidation.ts             # Style data validation
 ```
 
-### Business Components (LoyaltyProgramsOverview.tsx)
-- Handles API calls, state management, business logic
-- Uses DashboardCard for consistent layout
-- Uses CSS modules for custom styling
+## **Foundational Components (New/Enhanced)**
 
-### Shared Components (DashboardCard.tsx)
-- Uses foundational_2 EpunchCard component
-- Adds dashboard-specific styling via CSS modules
-- Reusable across dashboard components
-
-## Success Criteria
-- [x] Zero imports from `/foundational`
-- [x] All components use `/foundational_2` when appropriate
-- [x] All styling uses CSS variables from `@css-variables.ts`
-- [x] All theme references use `@constants.ts`
-- [x] No Material-UI components
-- [x] React-toast for all error handling
-- [x] CSS modules with proper prefixes
-- [x] Visual appearance unchanged
-- [x] Clear component separation (layout vs business logic)
-
-## Reference Implementation
-- **QRScanner.tsx** - Successfully refactored with CSS modules
-- **Dashboard architecture** - Perfect example of layout separation
-- **DashboardCard.tsx** - Shows foundational_2 + CSS module pattern
-- **LoginPage.tsx** - Complete refactoring with EpunchInput + CSS modules + toast
-- **EpunchInput** - Material-UI eliminated, native HTML + CSS modules
-- **Form Components** - New foundational_2/form architecture for reusable forms
-
-## New Form Architecture ✅ CREATED
-
-### Form Components in `/foundational_2/form/`
-- **FormContainer**: Replaces EpunchForm with clean layout + actions
-- **FormField**: Wraps EpunchInput with validation display
-- **useFormState**: Custom hook for form state management + validation
-
-### Usage Pattern:
-```typescript
-const { formData, errors, handleFieldChange, validateForm } = useFormState(
-  initialData, 
-  validationRules
-);
-
-<FormContainer onSubmit={handleSubmit} submitText="Create">
-  <FormField
-    label="Name"
-    value={formData.name}
-    onChange={handleFieldChange('name')}
-    error={!!errors.name}
-    helperText={errors.name}
-    required
-  />
-</FormContainer>
 ```
+foundational/
+├── inputs/
+│   ├── EpunchColorPicker.tsx          # Extensible color picker wrapper
+│   ├── EpunchImageUploader.tsx        # Reusable image upload component
+│   └── EpunchSearchInput.tsx          # Debounced search input
+├── display/
+│   ├── EpunchColorSwatch.tsx          # Color display component
+│   ├── EpunchImagePreview.tsx         # Image preview with transparency
+│   └── EpunchIconGrid.tsx             # Generic icon grid display
+└── layout/
+    ├── EpunchPropertyEditor.tsx       # Generic property editor
+    └── EpunchPreviewCard.tsx          # Generic preview container
+```
+
+## **Key Architectural Improvements**
+
+### **1. Separation of Concerns**
+- **Hooks**: Business logic and state management
+- **Components**: Pure UI components with props
+- **Utils**: Reusable utilities and transformations
+- **Foundational**: Generic components for future use
+
+### **2. Extensibility Design**
+- **Plugin Architecture**: Easy to add new customization types
+- **Property System**: Generic property editor for any customizable element
+- **Preset System**: Color/style presets for quick selection
+- **Validation Framework**: Extensible validation rules
+
+### **3. State Management Strategy**
+```typescript
+// useDesignPageState.ts - Central state management
+interface DesignPageState {
+  style: PunchCardStyleDto
+  modals: {
+    colors: boolean
+    logo: boolean  
+    icons: boolean
+  }
+  loading: {
+    fetch: boolean
+    save: boolean
+    upload: boolean
+  }
+  errors: Record<string, string>
+}
+```
+
+### **4. Future-Ready Features**
+- **Background Patterns**: Easy to add pattern customization
+- **Typography**: Ready for text customization options
+- **Animations**: Prepared for punch animation customization
+- **Themes**: Support for multiple style themes
+- **Templates**: Pre-built style templates
+
+## **Implementation Phases (Revised)**
+
+### **Phase 1: Foundation & Architecture**
+1. ✅ Install dependencies (`react-colorful`, any additional needs)
+2. ✅ Create foundational components (EpunchColorPicker, etc.)
+3. ✅ Set up hooks architecture (state management, persistence)
+4. ✅ Create utility functions for data transformation
+
+### **Phase 2: Core Editing Components**
+5. ✅ Build ColorEditor with preset system
+6. ✅ Build LogoEditor with improved upload/crop flow
+7. ✅ Build IconEditor with enhanced search/customization
+8. ✅ Create StyleSummaryCard with live previews
+
+### **Phase 3: Integration & Polish**
+9. ✅ Integrate all editors into DesignPage
+10. ✅ Add comprehensive error handling and loading states
+11. ✅ Implement responsive design patterns
+12. ✅ Add accessibility features and keyboard navigation
+
+### **Phase 4: Extensibility Features**
+13. ✅ Add preset style templates
+14. ✅ Implement style import/export
+15. ✅ Add undo/redo functionality
+16. ✅ Create style versioning system
+
+## **Technical Improvements Over Existing Code**
+
+### **1. Better Error Handling**
+- Centralized error state management
+- User-friendly error messages
+- Retry mechanisms for failed operations
+- Validation feedback in real-time
+
+### **2. Performance Optimizations**
+- Debounced search with proper cleanup
+- Image optimization and caching
+- Lazy loading for icon grids
+- Memoized preview components
+
+### **3. Accessibility Enhancements**
+- Proper ARIA labels and roles
+- Keyboard navigation for all interactions
+- Screen reader announcements for state changes
+- High contrast mode support
+
+### **4. Mobile-First Responsive Design**
+- Touch-friendly interfaces
+- Optimized modal layouts for mobile
+- Swipe gestures for icon browsing
+- Adaptive preview sizes
+
+## **Data Flow Architecture**
+
+```
+User Action → Hook (Business Logic) → API/Utils → State Update → Component Re-render
+     ↓
+Modal Management → Validation → Error Handling → Success Feedback
+```
+
+## **Extension Points for Future Features**
+
+1. **Custom Color Palettes**: Easy to add palette management
+2. **Advanced Image Effects**: Ready for filters, overlays, gradients
+3. **Icon Collections**: Support for custom icon libraries
+4. **Style Templates**: Framework for pre-built style combinations
+5. **A/B Testing**: Infrastructure for style variant testing
+6. **Brand Guidelines**: Integration with brand consistency rules
+
+This approach transforms the existing reference code into a scalable, maintainable architecture that's ready for future enhancements while preserving all the complex logic that already works.

@@ -12,9 +12,10 @@ export const injectCSSVariables = () => {
   root.style.setProperty('--color-secondary-dark', colors.secondaryDark);
   
   // Background colors
-  root.style.setProperty('--color-bg-default', colors.background.default);
-  root.style.setProperty('--color-bg-paper', colors.background.paper);
-  root.style.setProperty('--color-bg-variant', colors.background.variant);
+  root.style.setProperty('--color-background-default', colors.background.default);
+  root.style.setProperty('--color-background-paper', colors.background.paper);
+  root.style.setProperty('--color-background-variant', colors.background.variant);
+  root.style.setProperty('--color-background-hover', colors.hover.background);
   
   // Text colors
   root.style.setProperty('--color-text-primary', colors.text.primary);
@@ -42,12 +43,19 @@ export const injectCSSVariables = () => {
   root.style.setProperty('--spacing-xxl', `${spacing.xxl}px`);
   
   // Border radius
-  root.style.setProperty('--border-radius-small', borderRadius.small);
-  root.style.setProperty('--border-radius-medium', borderRadius.medium);
-  root.style.setProperty('--border-radius-large', borderRadius.large);
+  root.style.setProperty('--border-radius-sm', borderRadius.small);
+  root.style.setProperty('--border-radius-md', borderRadius.medium);
+  root.style.setProperty('--border-radius-lg', borderRadius.large);
   
   // Shadows
   root.style.setProperty('--shadow-light', shadows.light);
   root.style.setProperty('--shadow-medium', shadows.medium);
   root.style.setProperty('--shadow-heavy', shadows.heavy);
+  
+  // Typography
+  root.style.setProperty('--font-size-lg', '1.25rem');
+  root.style.setProperty('--font-weight-bold', '600');
+  
+  // Z-index
+  root.style.setProperty('--z-modal', '1300');
 }; 

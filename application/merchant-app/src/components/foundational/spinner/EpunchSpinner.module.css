@@ -46,7 +46,7 @@
 }
 
 .spinner-primary .dot {
-  background-color: var(--color-bg-paper);
+  background-color: var(--color-background-paper);
 }
 
 .spinner-secondary .dot {
@@ -57,7 +57,7 @@
   margin: 0;
   font-weight: var(--font-weight-medium);
   text-align: center;
-  color: var(--color-bg-paper);
+  color: var(--color-background-paper);
 }
 
 .spinner-sm .spinnerText {
@@ -73,7 +73,7 @@
 }
 
 .spinner-primary .spinnerText {
-  color: var(--color-bg-paper);
+  color: var(--color-background-paper);
 }
 
 .spinner-secondary .spinnerText {
