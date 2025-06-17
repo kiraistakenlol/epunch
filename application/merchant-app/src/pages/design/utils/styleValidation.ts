@@ -67,13 +67,8 @@ export const validatePunchCardStyle = (style: PunchCardStyleDto): {
 
   // Validate punch icons
   if (style.punchIcons) {
-    try {
-      const punchIcons = JSON.parse(style.punchIcons);
-      if (!isValidPunchIcons(punchIcons)) {
-        errors.push('Punch icons data is invalid or corrupted');
-      }
-    } catch {
-      errors.push('Punch icons data is not valid JSON');
+    if (!isValidPunchIcons(style.punchIcons)) {
+      errors.push('Punch icons data is invalid or corrupted');
     }
   }
 
@@ -122,13 +117,8 @@ export const sanitizeStyle = (style: Partial<PunchCardStyleDto>): PunchCardStyle
 
   // Sanitize punch icons
   if (style.punchIcons) {
-    try {
-      const punchIcons = JSON.parse(style.punchIcons);
-      if (isValidPunchIcons(punchIcons)) {
-        sanitized.punchIcons = style.punchIcons;
-      }
-    } catch {
-      // Keep null if invalid
+    if (isValidPunchIcons(style.punchIcons)) {
+      sanitized.punchIcons = style.punchIcons;
     }
   }
 

@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, AuthResponseDto, UserDto, LoyaltyProgramDto, MerchantLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreatePunchCardDto, CreateMerchantDto, UpdateMerchantDto, PunchCardStyleDto, IconSearchResultDto, UpdatePunchIconsDto, PunchIconsDto } from 'e-punch-common-core';
+import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, AuthResponseDto, UserDto, LoyaltyProgramDto, MerchantLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreatePunchCardDto, CreateMerchantDto, UpdateMerchantDto, PunchCardStyleDto, IconSearchResultDto, PunchIconsDto } from 'e-punch-common-core';
 
 // The API URL will be set by the app using this client
 let API_BASE_URL: string;
@@ -341,7 +341,7 @@ export const apiClient = {
     return response.data;
   },
 
-  async createOrUpdateMerchantDefaultStyle(merchantId: string, data: { primaryColor?: string; secondaryColor?: string }): Promise<PunchCardStyleDto> {
+  async createOrUpdateMerchantDefaultStyle(merchantId: string, data: PunchCardStyleDto): Promise<PunchCardStyleDto> {
     if (!merchantId) {
       return Promise.reject(new Error('Merchant ID is required.'));
     }
@@ -354,15 +354,6 @@ export const apiClient = {
       return Promise.reject(new Error('Merchant ID is required.'));
     }
     const response = await instance.put<PunchCardStyleDto>(`/punch-card-styles/merchants/${merchantId}/default/logo`, { logoUrl });
-    return response.data;
-  },
-
-  async updateMerchantDefaultPunchIcons(merchantId: string, punchIcons: PunchIconsDto): Promise<PunchCardStyleDto> {
-    if (!merchantId) {
-      return Promise.reject(new Error('Merchant ID is required.'));
-    }
-    const payload: UpdatePunchIconsDto = { punchIcons };
-    const response = await instance.post<PunchCardStyleDto>(`/punch-card-styles/merchants/${merchantId}/default/punch-icons`, payload);
     return response.data;
   },
 }; 

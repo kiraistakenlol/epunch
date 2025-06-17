@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { HexColorPicker } from 'react-colorful';
-import { colors, spacing, borderRadius, shadows } from '../../../theme/constants';
+import { colors } from '../../../theme/constants';
 import styles from './EpunchColorPicker.module.css';
 
 export interface EpunchColorPickerProps {

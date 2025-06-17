@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import SVG from 'react-inlinesvg';
-import { toast } from 'react-toastify';
 import { apiClient } from 'e-punch-common-ui';
 import { PunchIconsDto, IconSearchResultDto, IconDto } from 'e-punch-common-core';
 import { EpunchModal } from '../../../../components/foundational';
@@ -8,37 +7,28 @@ import { EpunchModal } from '../../../../components/foundational';
 interface IconsEditorModalProps {
   isOpen: boolean;
   onClose: () => void;
-  merchantId: string;
-  currentIcons?: string | null;
+  currentIcons?: PunchIconsDto | null;
   onSave: (icons: PunchIconsDto) => Promise<void>;
-  isSaving?: boolean;
 }
 
 export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
   isOpen,
   onClose,
-  merchantId,
   currentIcons,
-  onSave,
-  isSaving = false
-}) => {
+  onSave}) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [availableIcons, setAvailableIcons] = useState<IconDto[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedFilled, setSelectedFilled] = useState<IconDto | null>(null);
   const [selectedUnfilled, setSelectedUnfilled] = useState<IconDto | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   // Load current icons if available
   useEffect(() => {
     if (currentIcons) {
-      try {
-        const parsed = JSON.parse(currentIcons) as PunchIconsDto;
-        // Note: We can't easily reverse-lookup the original icons from SVG content
-        // So we'll start with empty selection for now
-      } catch (error) {
-        console.error('Failed to parse current icons:', error);
-      }
+      // Note: We can't easily reverse-lookup the original icons from SVG content
+      // So we'll start with empty selection for now
     }
   }, [currentIcons]);
 
@@ -55,7 +45,6 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
         setAvailableIcons(result.icons);
       } catch (error) {
         console.error('Failed to search icons:', error);
-        toast.error('Failed to load icons');
       } finally {
         setLoading(false);
       }
@@ -76,16 +65,13 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
     } else {
       setSelectedUnfilled(icon);
     }
+    setOpenDropdown(null); // Close dropdown after selection
   };
 
-  const handleSave = async () => {
-    if (!selectedFilled || !selectedUnfilled) {
-      toast.error('Please select both filled and unfilled icons');
-      return;
-    }
-
-    try {
-      const iconsData: PunchIconsDto = {
+  // Auto-save when both icons are selected
+  React.useEffect(() => {
+    if (selectedFilled && selectedUnfilled && isOpen) {
+      const icons: PunchIconsDto = {
         filled: {
           type: 'svg',
           data: {
@@ -99,15 +85,24 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
           }
         }
       };
-
-      await onSave(iconsData);
-      toast.success('Icons updated successfully!');
-      onClose();
-    } catch (error) {
-      console.error('Failed to save icons:', error);
-      toast.error('Failed to save icons');
+      onSave(icons);
     }
+  }, [selectedFilled, selectedUnfilled, isOpen, onSave]);
+
+  const handleIconClick = (iconId: string) => {
+    setOpenDropdown(openDropdown === iconId ? null : iconId);
   };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = () => setOpenDropdown(null);
+    if (openDropdown) {
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+  }, [openDropdown]);
+
+
 
   const renderIcon = (icon: IconDto, size = 40) => (
     <div 
@@ -181,6 +176,8 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
           </div>
         </div>
 
+
+
         {/* Search */}
         <div style={{ marginBottom: '20px' }}>
           <input
@@ -222,93 +219,156 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
               gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))',
               gap: '12px'
             }}>
-              {availableIcons.map((icon) => (
-                <div key={icon.id} style={{ textAlign: 'center' }}>
-                  <button
-                    onClick={() => handleIconSelect(icon, 'filled')}
-                    style={{
-                      width: '60px',
-                      height: '60px',
-                      border: selectedFilled?.id === icon.id ? '3px solid #4caf50' : '2px solid #d0d0d0',
-                      borderRadius: '8px',
-                      backgroundColor: 'white',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      marginBottom: '4px'
-                    }}
-                    title={`Select as filled: ${icon.name}`}
-                  >
-                    {renderIcon(icon, 30)}
-                  </button>
-                  <button
-                    onClick={() => handleIconSelect(icon, 'unfilled')}
-                    style={{
-                      width: '60px',
-                      height: '20px',
-                      border: selectedUnfilled?.id === icon.id ? '2px solid #ff9800' : '1px solid #d0d0d0',
-                      borderRadius: '4px',
-                      backgroundColor: selectedUnfilled?.id === icon.id ? '#fff3e0' : 'white',
-                      cursor: 'pointer',
-                      fontSize: '10px',
-                      color: '#666'
-                    }}
-                    title={`Select as unfilled: ${icon.name}`}
-                  >
-                    Unfilled
-                  </button>
-                </div>
-              ))}
+              {availableIcons.map((icon) => {
+                const isFilledSelected = selectedFilled?.id === icon.id;
+                const isUnfilledSelected = selectedUnfilled?.id === icon.id;
+                const isDropdownOpen = openDropdown === icon.id;
+                
+                return (
+                  <div key={icon.id} style={{ textAlign: 'center', position: 'relative' }}>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleIconClick(icon.id);
+                      }}
+                      style={{
+                        width: '60px',
+                        height: '60px',
+                        border: isFilledSelected ? '3px solid #4caf50' : isUnfilledSelected ? '3px solid #ff9800' : '2px solid #d0d0d0',
+                        borderRadius: '8px',
+                        backgroundColor: isFilledSelected ? '#e8f5e8' : isUnfilledSelected ? '#fff3e0' : 'white',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        position: 'relative',
+                        transition: 'all 0.2s ease'
+                      }}
+                      title={`Click to select: ${icon.name}`}
+                    >
+                      {renderIcon(icon, 30)}
+                      {(isFilledSelected || isUnfilledSelected) && (
+                        <div style={{
+                          position: 'absolute',
+                          top: '-8px',
+                          right: '-8px',
+                          width: '20px',
+                          height: '20px',
+                          borderRadius: '50%',
+                          backgroundColor: isFilledSelected ? '#4caf50' : '#ff9800',
+                          color: 'white',
+                          fontSize: '12px',
+                          fontWeight: 'bold',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}>
+                          {isFilledSelected ? '●' : '○'}
+                        </div>
+                      )}
+                    </button>
+
+                    {/* Dropdown */}
+                    {isDropdownOpen && (
+                      <div style={{
+                        position: 'absolute',
+                        top: '65px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        zIndex: 1000,
+                        backgroundColor: 'white',
+                        border: '2px solid #e0e0e0',
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                        minWidth: '100px'
+                      }}>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleIconSelect(icon, 'filled');
+                          }}
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            border: 'none',
+                            backgroundColor: isFilledSelected ? '#e8f5e8' : 'transparent',
+                            color: isFilledSelected ? '#4caf50' : '#333',
+                            cursor: 'pointer',
+                            fontSize: '12px',
+                            fontWeight: 'bold',
+                            borderRadius: '6px 6px 0 0',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (!isFilledSelected) {
+                              e.currentTarget.style.backgroundColor = '#f5f5f5';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (!isFilledSelected) {
+                              e.currentTarget.style.backgroundColor = 'transparent';
+                            }
+                          }}
+                        >
+                          <span style={{ color: '#4caf50' }}>●</span>
+                          Filled
+                          {isFilledSelected && <span style={{ marginLeft: 'auto', color: '#4caf50' }}>✓</span>}
+                        </button>
+                        
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleIconSelect(icon, 'unfilled');
+                          }}
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            border: 'none',
+                            backgroundColor: isUnfilledSelected ? '#fff3e0' : 'transparent',
+                            color: isUnfilledSelected ? '#ff9800' : '#333',
+                            cursor: 'pointer',
+                            fontSize: '12px',
+                            fontWeight: 'bold',
+                            borderRadius: '0 0 6px 6px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (!isUnfilledSelected) {
+                              e.currentTarget.style.backgroundColor = '#f5f5f5';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (!isUnfilledSelected) {
+                              e.currentTarget.style.backgroundColor = 'transparent';
+                            }
+                          }}
+                        >
+                          <span style={{ color: '#ff9800' }}>○</span>
+                          Unfilled
+                          {isUnfilledSelected && <span style={{ marginLeft: 'auto', color: '#ff9800' }}>✓</span>}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
 
-        {/* Footer */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
+        {/* Instructions */}
+        <div style={{ 
+          fontSize: '12px', 
+          color: '#666', 
+          textAlign: 'center',
           paddingTop: '16px',
           borderTop: '1px solid #e0e0e0'
         }}>
-          <div style={{ fontSize: '12px', color: '#666' }}>
-            Click icons to select as filled (green) or unfilled (orange)
-          </div>
-          
-          <div style={{ display: 'flex', gap: '12px' }}>
-            <button
-              onClick={onClose}
-              disabled={isSaving}
-              style={{
-                padding: '10px 20px',
-                backgroundColor: 'transparent',
-                color: '#5d4037',
-                border: '2px solid #5d4037',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                fontWeight: 'bold'
-              }}
-            >
-              Cancel
-            </button>
-            
-            <button
-              onClick={handleSave}
-              disabled={!selectedFilled || !selectedUnfilled || isSaving}
-              style={{
-                padding: '10px 20px',
-                backgroundColor: (selectedFilled && selectedUnfilled) ? '#5d4037' : '#ccc',
-                color: 'white',
-                border: 'none',
-                borderRadius: '6px',
-                cursor: (selectedFilled && selectedUnfilled) ? 'pointer' : 'not-allowed',
-                fontWeight: 'bold'
-              }}
-            >
-              {isSaving ? 'Saving...' : 'Save Icons'}
-            </button>
-          </div>
+          Click any icon to choose filled (●) or unfilled (○) type. Changes are applied automatically.
         </div>
       </>
     </EpunchModal>

@@ -100,19 +100,6 @@ export class PunchCardStyleService {
     }
   }
 
-  async updateMerchantDefaultPunchIcons(merchantId: string, punchIcons: PunchIconsDto): Promise<PunchCardStyleDto> {
-    this.logger.log(`Updating default punch card icons for merchant: ${merchantId}`);
-    
-    try {
-      const style = await this.punchCardStyleRepository.updateMerchantDefaultPunchIcons(merchantId, punchIcons);
-      this.logger.log(`Updated default punch card icons for merchant: ${merchantId}`);
-      return PunchCardStyleMapper.toDto(style);
-    } catch (error: any) {
-      this.logger.error(`Error updating default punch card icons for merchant ${merchantId}: ${error.message}`, error.stack);
-      throw error;
-    }
-  }
-
   async getLoyaltyProgramStyle(loyaltyProgramId: string, merchantId: string): Promise<PunchCardStyleDto | null> {
     this.logger.log(`Getting punch card style for loyalty program: ${loyaltyProgramId}`);
     

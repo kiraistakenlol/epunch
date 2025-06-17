@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Put, Param, Body, ParseUUIDPipe } from '@nestjs/common';
-import { PunchCardStyleDto, UpdatePunchIconsDto } from 'e-punch-common-core';
+import { PunchCardStyleDto } from 'e-punch-common-core';
 import { PunchCardStyleService } from './punch-card-style.service';
 
 @Controller('punch-card-styles')
@@ -31,14 +31,6 @@ export class PunchCardStyleController {
     @Body() body: { logoUrl: string },
   ): Promise<PunchCardStyleDto> {
     return this.punchCardStyleService.updateMerchantDefaultLogo(merchantId, body.logoUrl);
-  }
-
-  @Post('merchants/:merchantId/default/punch-icons')
-  async updateMerchantDefaultPunchIcons(
-    @Param('merchantId', ParseUUIDPipe) merchantId: string,
-    @Body() data: UpdatePunchIconsDto,
-  ): Promise<PunchCardStyleDto> {
-    return this.punchCardStyleService.updateMerchantDefaultPunchIcons(merchantId, data.punchIcons);
   }
 
   @Get('loyalty-programs/:loyaltyProgramId/merchants/:merchantId')

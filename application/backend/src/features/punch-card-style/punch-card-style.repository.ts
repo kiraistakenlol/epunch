@@ -119,37 +119,6 @@ export class PunchCardStyleRepository {
     return result.rows[0];
   }
 
-  async updateMerchantDefaultPunchIcons(merchantId: string, punchIcons: PunchIconsDto): Promise<PunchCardStyle> {
-    this.logger.log(`Updating default punch icons for merchant: ${merchantId}`);
-    
-    // First check if a default style exists for this merchant
-    const existingStyle = await this.findMerchantDefaultStyle(merchantId);
-    
-    let result;
-    if (existingStyle) {
-      // Update existing record - only update punch_icons
-      const updateQuery = `
-        UPDATE punch_card_style 
-        SET punch_icons = $2
-        WHERE merchant_id = $1 AND loyalty_program_id IS NULL
-        RETURNING *
-      `;
-      
-      result = await this.pool.query(updateQuery, [merchantId, JSON.stringify(punchIcons)]);
-    } else {
-      // Insert new record - only set punch_icons, other fields empty
-      const insertQuery = `
-        INSERT INTO punch_card_style (merchant_id, loyalty_program_id, punch_icons)
-        VALUES ($1, NULL, $2)
-        RETURNING *
-      `;
-      
-      result = await this.pool.query(insertQuery, [merchantId, JSON.stringify(punchIcons)]);
-    }
-    
-    return result.rows[0];
-  }
-
   async findLoyaltyProgramStyle(merchantId: string, loyaltyProgramId: string): Promise<PunchCardStyle | null> {
     this.logger.log(`Finding style for loyalty program: ${loyaltyProgramId} in merchant: ${merchantId}`);
     

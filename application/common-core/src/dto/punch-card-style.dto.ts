@@ -1,9 +1,9 @@
 export interface PunchCardStyleDto {
-  primaryColor?: string | null;
-  secondaryColor?: string | null;
-  logoUrl?: string | null;
-  backgroundImageUrl?: string | null;
-  punchIcons?: string | null;
+  primaryColor: string | null;
+  secondaryColor: string | null;
+  logoUrl: string | null;
+  backgroundImageUrl: string | null;
+  punchIcons: PunchIconsDto | null;
 }
 
 export interface PunchIconSVG {
@@ -18,10 +18,6 @@ export interface PunchIcon {
 export interface PunchIconsDto {
   filled: PunchIcon;
   unfilled: PunchIcon;
-}
-
-export interface UpdatePunchIconsDto {
-  punchIcons: PunchIconsDto;
 }
 
 export interface FileUploadUrlDto {

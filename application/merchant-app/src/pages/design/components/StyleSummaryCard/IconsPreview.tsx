@@ -2,9 +2,10 @@ import React from 'react';
 import { Category } from '@mui/icons-material';
 import { extractIconsFromPunchIcons, createDefaultPunchIcons } from '../../utils/iconTransform';
 import styles from './IconsPreview.module.css';
+import { PunchIconsDto } from 'e-punch-common-core';
 
 interface IconsPreviewProps {
-  punchIcons?: string | null;
+  punchIcons?: PunchIconsDto | null;
 }
 
 export const IconsPreview: React.FC<IconsPreviewProps> = ({ punchIcons }) => {
@@ -12,8 +13,7 @@ export const IconsPreview: React.FC<IconsPreviewProps> = ({ punchIcons }) => {
   const icons = React.useMemo(() => {
     if (punchIcons) {
       try {
-        const parsed = JSON.parse(punchIcons);
-        return extractIconsFromPunchIcons(parsed);
+        return extractIconsFromPunchIcons(punchIcons);
       } catch {
         // If parsing fails, use defaults
       }

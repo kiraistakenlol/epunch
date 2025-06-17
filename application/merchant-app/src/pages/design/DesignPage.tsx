@@ -3,23 +3,27 @@ import { toast } from 'react-toastify';
 import SVG from 'react-inlinesvg';
 import { apiClient } from 'e-punch-common-ui';
 import { PunchCardStyleDto, PunchIconsDto } from 'e-punch-common-core';
-import { EpunchPage, EpunchCard } from '../../components/foundational';
+import { EpunchPage, EpunchCard, EpunchConfirmOrCancelButtons } from '../../components/foundational';
 import { useAppSelector } from '../../store/hooks';
 import { ColorEditorModal } from './components/ColorEditor/ColorEditorModal';
 import { LogoEditorModal } from './components/LogoEditor/LogoEditorModal';
 import { IconsEditorModal } from './components/IconsEditor/IconsEditorModal';
+import { PunchCardPreview } from './components/PunchCardPreview';
 
 export const DesignPage: React.FC = () => {
   const merchant = useAppSelector(state => state.auth.merchant);
   
-  // Simple state management
-  const [style, setStyle] = useState<PunchCardStyleDto>({
+  // Two simple states: current (saved) and updated (pending)
+  const [currentStyle, setCurrentStyle] = useState<PunchCardStyleDto>({
     primaryColor: '#5d4037',
     secondaryColor: '#795548',
     logoUrl: null,
     backgroundImageUrl: null,
     punchIcons: null
   });
+
+  const [updatedStyle, setUpdatedStyle] = useState<PunchCardStyleDto | null>(null);
+  const [pendingImageFile, setPendingImageFile] = useState<File | null>(null);
   
   const [modals, setModals] = useState({
     colors: false,
@@ -31,8 +35,6 @@ export const DesignPage: React.FC = () => {
     fetch: false,
     save: false
   });
-  
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
   // Load style on mount
   useEffect(() => {
@@ -45,26 +47,27 @@ export const DesignPage: React.FC = () => {
       
       try {
         const fetchedStyle = await apiClient.getMerchantDefaultPunchCardStyle(merchant.id);
-          const styleWithDefaults = {
-            ...fetchedStyle,
-            primaryColor: fetchedStyle.primaryColor || '#5d4037',
-            secondaryColor: fetchedStyle.secondaryColor || '#795548'
-          };
-          setStyle(styleWithDefaults);
-          setHasUnsavedChanges(false);
+        const styleWithDefaults = {
+          ...fetchedStyle,
+          primaryColor: fetchedStyle.primaryColor || '#5d4037',
+          secondaryColor: fetchedStyle.secondaryColor || '#795548'
+        };
+        setCurrentStyle(styleWithDefaults);
+        setUpdatedStyle(null); // Clear any pending changes
       } catch (error) {
         console.error('Failed to fetch style:', error);
-          toast.error('Failed to load style settings. Using defaults.');
-          setStyle({
-            primaryColor: '#5d4037',
-            secondaryColor: '#795548',
-            logoUrl: null,
-            backgroundImageUrl: null,
-            punchIcons: null
-          });
-          setHasUnsavedChanges(false);
+        toast.error('Failed to load style settings. Using defaults.');
+        const defaultStyle = {
+          primaryColor: '#5d4037',
+          secondaryColor: '#795548',
+          logoUrl: null,
+          backgroundImageUrl: null,
+          punchIcons: null
+        };
+        setCurrentStyle(defaultStyle);
+        setUpdatedStyle(null);
       } finally {
-          setLoading(prev => ({ ...prev, fetch: false }));
+        setLoading(prev => ({ ...prev, fetch: false }));
       }
     };
 
@@ -79,73 +82,107 @@ export const DesignPage: React.FC = () => {
     setModals(prev => ({ ...prev, [modal]: false }));
   };
 
-  const handleSaveAll = async () => {
-    if (!merchant?.id) return;
-    
-    setLoading(prev => ({ ...prev, save: true }));
-    try {
-      await apiClient.createOrUpdateMerchantDefaultStyle(merchant.id, {
-        primaryColor: style.primaryColor || undefined,
-        secondaryColor: style.secondaryColor || undefined
-      });
-      setHasUnsavedChanges(false);
-      toast.success('Style settings saved successfully!');
-    } catch (error) {
-      console.error('Failed to save style:', error);
-      toast.error('Failed to save style settings');
-    } finally {
-      setLoading(prev => ({ ...prev, save: false }));
-    }
-  };
+  // Get the style to show in previews and modals (updated if exists, otherwise current)
+  const displayStyle = updatedStyle || currentStyle;
 
+  // Handlers for updating pending changes
   const handleUpdateColors = async (primaryColor: string, secondaryColor: string) => {
-    if (!merchant?.id) return;
-    
-    setLoading(prev => ({ ...prev, save: true }));
-    try {
-      await apiClient.createOrUpdateMerchantDefaultStyle(merchant.id, {
-        primaryColor,
-        secondaryColor
-      });
-      setStyle(prev => ({
-        ...prev,
-        primaryColor,
-        secondaryColor
-      }));
-      setHasUnsavedChanges(false);
-      toast.success('Colors updated successfully!');
-    } catch (error) {
-      console.error('Failed to update colors:', error);
-      toast.error('Failed to update colors');
-      throw error;
-    } finally {
-      setLoading(prev => ({ ...prev, save: false }));
-    }
+    setUpdatedStyle(prev => ({
+      ...(prev || currentStyle),
+      primaryColor,
+      secondaryColor
+    }));
   };
 
-  const handleUpdateLogo = async (logoUrl: string | null) => {
-    if (!merchant?.id) return;
-    
-    await apiClient.updateMerchantDefaultPunchCardLogo(merchant.id, logoUrl || '');
-    setStyle(prev => ({
-      ...prev,
+  const handleUpdateLogo = async (logoUrl: string | null, file?: File) => {
+    setUpdatedStyle(prev => ({
+      ...(prev || currentStyle),
       logoUrl
     }));
-    setHasUnsavedChanges(false);
+    
+    // If a file is provided, store it for later upload
+    if (file) {
+      setPendingImageFile(file);
+    } else if (logoUrl === null) {
+      // If removing logo, clear pending file
+      setPendingImageFile(null);
+    }
   };
 
   const handleUpdateIcons = async (icons: PunchIconsDto) => {
-    if (!merchant?.id) return;
-    
-    await apiClient.updateMerchantDefaultPunchIcons(merchant.id, icons);
-    setStyle(prev => ({
-      ...prev,
-      punchIcons: JSON.stringify(icons)
+    setUpdatedStyle(prev => ({
+      ...(prev || currentStyle),
+      punchIcons: icons
     }));
-    setHasUnsavedChanges(false);
   };
 
+  // Apply changes to server
+  const handleApplyStyle = async () => {
+    if (!merchant?.id || !updatedStyle) return;
+    
+    setLoading(prev => ({ ...prev, save: true }));
+    try {
+      let finalLogoUrl = updatedStyle.logoUrl;
+      
+      // If there's a pending image file, upload it to S3 first
+      if (pendingImageFile) {
+        const fileName = `logo-${Date.now()}-${pendingImageFile.name}`;
+        const { uploadUrl, publicUrl } = await apiClient.generateFileUploadUrl(merchant.id, fileName);
+        
+        // Upload the file to S3
+        const uploadResponse = await fetch(uploadUrl, {
+          method: 'PUT',
+          body: pendingImageFile,
+          headers: {
+            'Content-Type': pendingImageFile.type,
+          },
+        });
+        
+        if (!uploadResponse.ok) {
+          throw new Error('Failed to upload image to S3');
+        }
+        
+        finalLogoUrl = publicUrl;
+        
+        // Clean up the blob URL
+        if (updatedStyle.logoUrl && updatedStyle.logoUrl.startsWith('blob:')) {
+          URL.revokeObjectURL(updatedStyle.logoUrl);
+        }
+      }
+      
+      // Ensure proper null values for API compatibility
+      const styleForApi: PunchCardStyleDto = {
+        primaryColor: updatedStyle.primaryColor || null,
+        secondaryColor: updatedStyle.secondaryColor || null,
+        logoUrl: finalLogoUrl || null,
+        backgroundImageUrl: updatedStyle.backgroundImageUrl || null,
+        punchIcons: updatedStyle.punchIcons || null
+      };
+      
+      await apiClient.createOrUpdateMerchantDefaultStyle(merchant.id, styleForApi);
+      
+      // Update current style with the final S3 URL
+      const finalUpdatedStyle = {
+        ...updatedStyle,
+        logoUrl: finalLogoUrl
+      };
+      
+      setCurrentStyle(finalUpdatedStyle);
+      setUpdatedStyle(null);
+      setPendingImageFile(null);
+      toast.success('Style applied successfully!');
+    } catch (error) {
+      console.error('Failed to apply style:', error);
+      toast.error('Failed to apply style');
+    } finally {
+      setLoading(prev => ({ ...prev, save: false }));
+    }
+  };
 
+  // Reset changes
+  const handleReset = () => {
+    setUpdatedStyle(null);
+  };
 
   if (loading.fetch) {
     return (
@@ -190,369 +227,419 @@ export const DesignPage: React.FC = () => {
   return (
     <EpunchPage title="Design Settings">
       <EpunchCard>
-        <div style={{ padding: '24px' }}>
+        <div className="design-page card-content" style={{ padding: '24px' }}>
           <h2 style={{ marginBottom: '24px', color: '#3e2723' }}>
             Punch Card Style
-            {hasUnsavedChanges && (
-              <span style={{ 
-                marginLeft: '16px', 
-                backgroundColor: '#ff9800', 
-                color: 'white', 
-                padding: '4px 12px', 
-                borderRadius: '16px', 
-                fontSize: '12px',
-                fontWeight: 'bold'
-              }}>
-                Unsaved Changes
-              </span>
-            )}
           </h2>
+
+          {/* Preview Section */}
+          <div style={{ 
+            marginBottom: '32px', 
+            padding: '24px', 
+            border: '2px solid #e0e0e0', 
+            borderRadius: '12px',
+            backgroundColor: '#f8f8f8'
+          }}>
+            <h3 style={{ margin: '0 0 20px 0', color: '#3e2723', fontSize: '20px', textAlign: 'center' }}>
+              📱 {updatedStyle ? 'Current vs New Style' : 'Current Style'}
+            </h3>
+            
+            <div 
+              className="preview-grid"
+              style={{
+                display: 'grid',
+                gridTemplateColumns: updatedStyle ? '1fr auto 1fr' : '1fr',
+                gap: '24px',
+                justifyItems: 'center',
+                alignItems: 'center'
+              }}
+            >
+                             {/* Current Style */}
+               <div style={{ textAlign: 'center' }}>
+                 <PunchCardPreview
+                   primaryColor={currentStyle.primaryColor || '#5d4037'}
+                   secondaryColor={currentStyle.secondaryColor || '#795548'}
+                   logoUrl={currentStyle.logoUrl}
+                   punchIcons={currentStyle.punchIcons}
+                   size="large"
+                 />
+               </div>
+
+               {/* Arrow (only show if there are changes) */}
+               {updatedStyle && (
+                 <div 
+                   className="preview-arrow"
+                   style={{ 
+                     display: 'flex', 
+                     alignItems: 'center', 
+                     justifyContent: 'center',
+                     fontSize: '32px',
+                     color: '#5d4037'
+                   }}
+                 >
+                   →
+                 </div>
+               )}
+
+               {/* Updated Style (only show if there are changes) */}
+               {updatedStyle && (
+                 <div style={{ textAlign: 'center' }}>
+                   <PunchCardPreview
+                     primaryColor={updatedStyle.primaryColor || '#5d4037'}
+                     secondaryColor={updatedStyle.secondaryColor || '#795548'}
+                     logoUrl={updatedStyle.logoUrl}
+                     punchIcons={updatedStyle.punchIcons}
+                     size="large"
+                   />
+                 </div>
+               )}
+             </div>
+
+             {/* Apply/Reset Buttons - only show if there are pending changes */}
+             {updatedStyle && (
+               <div 
+                 className="apply-buttons"
+                 style={{
+                   paddingTop: '20px',
+                   borderTop: '1px solid #e0e0e0',
+                   display: 'flex',
+                   justifyContent: 'center'
+                 }}
+               >
+                 <EpunchConfirmOrCancelButtons
+                   onCancel={handleReset}
+                   onConfirm={handleApplyStyle}
+                   cancelText="Reset"
+                   confirmText="Apply Style"
+                   confirmDisabled={loading.save}
+                   cancelDisabled={loading.save}
+                 />
+               </div>
+             )}
+           </div>
           
-          {/* Colors Section */}
-          <div style={{ 
-            marginBottom: '24px', 
-            padding: '20px', 
-            border: '2px solid #e0e0e0', 
-            borderRadius: '8px',
-            backgroundColor: '#f8f8f8'
-          }}>
-            <h3 style={{ margin: '0 0 16px 0', color: '#3e2723' }}>🎨 Colors</h3>
-            <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ 
-                  width: '60px', 
-                  height: '60px', 
-                  backgroundColor: style.primaryColor || '#5d4037',
-                  borderRadius: '50%',
-                  border: '3px solid white',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                  margin: '0 auto 8px'
-                }} />
-                <div style={{ fontSize: '12px', fontWeight: 'bold' }}>Primary</div>
-                <div style={{ fontSize: '10px', fontFamily: 'monospace' }}>
-                  {style.primaryColor || '#5d4037'}
-                </div>
-              </div>
-              
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ 
-                  width: '60px', 
-                  height: '60px', 
-                  backgroundColor: style.secondaryColor || '#795548',
-                  borderRadius: '50%',
-                  border: '3px solid white',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                  margin: '0 auto 8px'
-                }} />
-                <div style={{ fontSize: '12px', fontWeight: 'bold' }}>Secondary</div>
-                <div style={{ fontSize: '10px', fontFamily: 'monospace' }}>
-                  {style.secondaryColor || '#795548'}
-                </div>
-              </div>
-            </div>
-            
-            <button 
+          {/* Quick Actions Grid */}
+          <div 
+            className="quick-actions-grid"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: '16px',
+              marginBottom: '24px'
+            }}
+          >
+            {/* Colors Quick Action */}
+            <div 
               onClick={() => openModal('colors')}
-              style={{
-                padding: '8px 16px',
-                backgroundColor: '#5d4037',
-                color: 'white',
-                border: 'none',
-                borderRadius: '6px',
+              style={{ 
+                padding: '24px', 
+                border: '2px solid #e0e0e0', 
+                borderRadius: '12px',
+                backgroundColor: 'white',
                 cursor: 'pointer',
-                fontWeight: 'bold'
+                transition: 'all 0.2s ease',
+                textAlign: 'center'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = '#5d4037';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = '#e0e0e0';
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
               }}
             >
-              Edit Colors
-            </button>
-          </div>
-
-          {/* Logo Section */}
-          <div style={{ 
-            marginBottom: '24px', 
-            padding: '20px', 
-            border: '2px solid #e0e0e0', 
-            borderRadius: '8px',
-            backgroundColor: '#f8f8f8'
-          }}>
-            <h3 style={{ margin: '0 0 16px 0', color: '#3e2723' }}>🖼️ Logo</h3>
-            
-            {style.logoUrl ? (
-              <div style={{ marginBottom: '16px', textAlign: 'center' }}>
-                <img 
-                  src={style.logoUrl} 
-                  alt="Current logo" 
-                  style={{
-                    maxWidth: '150px',
-                    maxHeight: '150px',
-                    objectFit: 'contain',
-                    border: '2px solid #e0e0e0',
-                    borderRadius: '4px',
-                    backgroundColor: 'white'
-                  }}
-                />
+              <div style={{ fontSize: '40px', marginBottom: '16px' }}>🎨</div>
+              <h4 style={{ margin: '0 0 16px 0', color: '#3e2723', fontSize: '18px' }}>Edit Colors</h4>
+              <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginBottom: '12px' }}>
+                <div style={{ 
+                  width: '40px', 
+                  height: '40px', 
+                  backgroundColor: displayStyle.primaryColor || '#5d4037',
+                  borderRadius: '50%',
+                  border: '3px solid white',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.2)'
+                }} />
+                <div style={{ 
+                  width: '40px', 
+                  height: '40px', 
+                  backgroundColor: displayStyle.secondaryColor || '#795548',
+                  borderRadius: '50%',
+                  border: '3px solid white',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.2)'
+                }} />
               </div>
-            ) : (
-              <p style={{ marginBottom: '16px', color: '#666' }}>No logo set</p>
-            )}
-            
-            <button 
+              <p style={{ margin: 0, fontSize: '13px', color: '#666' }}>
+                Primary & Secondary colors
+              </p>
+            </div>
+
+            {/* Logo Quick Action */}
+            <div 
               onClick={() => openModal('logo')}
-              style={{
-                padding: '8px 16px',
-                backgroundColor: '#5d4037',
-                color: 'white',
-                border: 'none',
-                borderRadius: '6px',
+              style={{ 
+                padding: '24px', 
+                border: '2px solid #e0e0e0', 
+                borderRadius: '12px',
+                backgroundColor: 'white',
                 cursor: 'pointer',
-                fontWeight: 'bold'
+                transition: 'all 0.2s ease',
+                textAlign: 'center'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = '#5d4037';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = '#e0e0e0';
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
               }}
             >
-              {style.logoUrl ? 'Change Logo' : 'Add Logo'}
-            </button>
-          </div>
+              <div style={{ fontSize: '40px', marginBottom: '16px' }}>🖼️</div>
+              <h4 style={{ margin: '0 0 16px 0', color: '#3e2723', fontSize: '18px' }}>Edit Logo</h4>
+              <div style={{ 
+                height: '60px', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                marginBottom: '12px'
+              }}>
+                {displayStyle.logoUrl ? (
+                  <img 
+                    src={displayStyle.logoUrl} 
+                    alt="Logo" 
+                    style={{
+                      maxWidth: '60px',
+                      maxHeight: '60px',
+                      objectFit: 'contain',
+                      border: '2px solid #e0e0e0',
+                      borderRadius: '6px',
+                      boxShadow: '0 2px 6px rgba(0,0,0,0.1)'
+                    }}
+                  />
+                ) : (
+                  <div style={{ 
+                    width: '60px', 
+                    height: '60px', 
+                    backgroundColor: '#f0f0f0',
+                    borderRadius: '8px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#999',
+                    fontSize: '24px',
+                    border: '2px dashed #d0d0d0'
+                  }}>
+                    +
+                  </div>
+                )}
+              </div>
+              <p style={{ margin: 0, fontSize: '13px', color: '#666' }}>
+                {displayStyle.logoUrl ? 'Change logo' : 'Add logo'}
+              </p>
+            </div>
 
-          {/* Icons Section */}
-          <div style={{ 
-            marginBottom: '24px', 
-            padding: '20px', 
-            border: '2px solid #e0e0e0', 
-            borderRadius: '8px',
-            backgroundColor: '#f8f8f8'
-          }}>
-            <h3 style={{ margin: '0 0 16px 0', color: '#3e2723' }}>⚪ Punch Icons</h3>
-            
-            {style.punchIcons ? (
-              <div style={{ marginBottom: '16px' }}>
-                <div style={{ display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '12px' }}>
-                  {(() => {
+            {/* Icons Quick Action */}
+            <div 
+              onClick={() => openModal('icons')}
+              style={{ 
+                padding: '24px', 
+                border: '2px solid #e0e0e0', 
+                borderRadius: '12px',
+                backgroundColor: 'white',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                textAlign: 'center'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = '#5d4037';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = '#e0e0e0';
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              <div style={{ fontSize: '40px', marginBottom: '16px' }}>⚪</div>
+              <h4 style={{ margin: '0 0 16px 0', color: '#3e2723', fontSize: '18px' }}>Edit Icons</h4>
+              <div style={{ 
+                height: '60px', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                gap: '16px',
+                marginBottom: '12px'
+              }}>
+                {displayStyle.punchIcons ? (
+                  (() => {
                     try {
-                      const parsed = JSON.parse(style.punchIcons);
                       return (
                         <>
-                          <div style={{ textAlign: 'center' }}>
-                            <div 
-                              style={{ 
-                                width: '32px', 
-                                height: '32px', 
-                                display: 'flex', 
-                                alignItems: 'center', 
-                                justifyContent: 'center',
-                                marginBottom: '4px',
-                                color: style.secondaryColor || '#795548'
-                              }}
-                            >
-                              <SVG 
-                                src={`data:image/svg+xml;utf8,${encodeURIComponent(parsed.filled.data.svg_raw_content)}`}
-                                width={24}
-                                height={24}
-                              />
-                            </div>
-                            <div style={{ fontSize: '10px', color: '#666' }}>Filled</div>
+                          <div style={{ 
+                            width: '32px', 
+                            height: '32px', 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center',
+                            color: displayStyle.secondaryColor || '#795548',
+                            border: '2px solid #f0f0f0',
+                            borderRadius: '6px',
+                            backgroundColor: 'white'
+                          }}>
+                            <SVG 
+                              src={`data:image/svg+xml;utf8,${encodeURIComponent(displayStyle.punchIcons.filled.data.svg_raw_content)}`}
+                              width={24}
+                              height={24}
+                            />
                           </div>
-                          <div style={{ textAlign: 'center' }}>
-                            <div 
-                              style={{ 
-                                width: '32px', 
-                                height: '32px', 
-                                display: 'flex', 
-                                alignItems: 'center', 
-                                justifyContent: 'center',
-                                marginBottom: '4px',
-                                color: style.secondaryColor || '#795548'
-                              }}
-                            >
-                              <SVG 
-                                src={`data:image/svg+xml;utf8,${encodeURIComponent(parsed.unfilled.data.svg_raw_content)}`}
-                                width={24}
-                                height={24}
-                              />
-                            </div>
-                            <div style={{ fontSize: '10px', color: '#666' }}>Unfilled</div>
+                          <div style={{ 
+                            width: '32px', 
+                            height: '32px', 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center',
+                            color: displayStyle.secondaryColor || '#795548',
+                            border: '2px solid #f0f0f0',
+                            borderRadius: '6px',
+                            backgroundColor: 'white'
+                          }}>
+                            <SVG 
+                              src={`data:image/svg+xml;utf8,${encodeURIComponent(displayStyle.punchIcons.unfilled.data.svg_raw_content)}`}
+                              width={24}
+                              height={24}
+                            />
                           </div>
                         </>
                       );
                     } catch (error) {
                       return (
                         <>
-                          <div style={{ textAlign: 'center' }}>
-                            <div style={{ fontSize: '24px', marginBottom: '4px' }}>●</div>
-                            <div style={{ fontSize: '10px', color: '#666' }}>Filled</div>
-                          </div>
-                          <div style={{ textAlign: 'center' }}>
-                            <div style={{ fontSize: '24px', marginBottom: '4px' }}>○</div>
-                            <div style={{ fontSize: '10px', color: '#666' }}>Unfilled</div>
-                          </div>
+                          <div style={{ 
+                            fontSize: '24px', 
+                            color: displayStyle.secondaryColor || '#795548',
+                            width: '32px',
+                            height: '32px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            border: '2px solid #f0f0f0',
+                            borderRadius: '6px',
+                            backgroundColor: 'white'
+                          }}>●</div>
+                          <div style={{ 
+                            fontSize: '24px', 
+                            color: displayStyle.secondaryColor || '#795548',
+                            width: '32px',
+                            height: '32px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            border: '2px solid #f0f0f0',
+                            borderRadius: '6px',
+                            backgroundColor: 'white'
+                          }}>○</div>
                         </>
                       );
                     }
-                  })()}
-                </div>
-                
-                {/* Mini preview of punch card with icons */}
-                <div style={{
-                  backgroundColor: 'white',
-                  borderRadius: '6px',
-                  padding: '12px',
-                  border: '1px solid #e0e0e0',
-                  marginBottom: '8px'
-                }}>
-                  <div style={{ 
-                    fontSize: '11px', 
-                    fontWeight: 'bold', 
-                    marginBottom: '8px',
-                    color: style.primaryColor || '#5d4037'
-                  }}>
-                    Preview
-                  </div>
-                  <div style={{
-                    display: 'flex',
-                    gap: '6px',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}>
-                    {[...Array(5)].map((_, i) => {
-                      try {
-                        const parsed = JSON.parse(style.punchIcons!);
-                        const svgContent = i < 3 
-                          ? parsed.filled.data.svg_raw_content 
-                          : parsed.unfilled.data.svg_raw_content;
-                                                 return (
-                           <div
-                             key={i}
-                             style={{
-                               width: '20px',
-                               height: '20px',
-                               display: 'flex',
-                               alignItems: 'center',
-                               justifyContent: 'center',
-                               color: style.secondaryColor || '#795548'
-                             }}
-                           >
-                             <SVG 
-                               src={`data:image/svg+xml;utf8,${encodeURIComponent(svgContent)}`}
-                               width={16}
-                               height={16}
-                             />
-                           </div>
-                         );
-                      } catch (error) {
-                        return (
-                          <div
-                            key={i}
-                            style={{
-                              width: '20px',
-                              height: '20px',
-                              borderRadius: '50%',
-                              backgroundColor: i < 3 ? (style.secondaryColor || '#795548') : 'transparent',
-                              border: `2px solid ${style.secondaryColor || '#795548'}`,
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '10px',
-                              color: i < 3 ? 'white' : (style.secondaryColor || '#795548'),
-                              fontWeight: 'bold'
-                            }}
-                          >
-                            {i < 3 ? '✓' : ''}
-                          </div>
-                        );
-                      }
-                    })}
-                  </div>
-                </div>
-                
-                <p style={{ margin: '0', fontSize: '12px', color: '#666' }}>✓ Custom icons configured</p>
+                  })()
+                ) : (
+                  <>
+                    <div style={{ 
+                      fontSize: '24px', 
+                      color: displayStyle.secondaryColor || '#795548',
+                      width: '32px',
+                      height: '32px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: '2px solid #f0f0f0',
+                      borderRadius: '6px',
+                      backgroundColor: 'white'
+                    }}>●</div>
+                    <div style={{ 
+                      fontSize: '24px', 
+                      color: displayStyle.secondaryColor || '#795548',
+                      width: '32px',
+                      height: '32px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: '2px solid #f0f0f0',
+                      borderRadius: '6px',
+                      backgroundColor: 'white'
+                    }}>○</div>
+                  </>
+                )}
               </div>
-            ) : (
-              <div style={{ marginBottom: '16px' }}>
-                <div style={{ display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '8px' }}>
-                  <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '24px', marginBottom: '4px', color: style.secondaryColor || '#795548' }}>●</div>
-                    <div style={{ fontSize: '10px', color: '#666' }}>Filled</div>
-                  </div>
-                  <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '24px', marginBottom: '4px', color: style.secondaryColor || '#795548' }}>○</div>
-                    <div style={{ fontSize: '10px', color: '#666' }}>Unfilled</div>
-                  </div>
-                </div>
-                <p style={{ margin: '0', fontSize: '12px', color: '#666' }}>Using default circle icons</p>
-              </div>
-            )}
-            
-            <button 
-              onClick={() => openModal('icons')}
-              style={{
-                padding: '8px 16px',
-                backgroundColor: '#5d4037',
-                color: 'white',
-                border: 'none',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                fontWeight: 'bold'
-              }}
-            >
-              {style.punchIcons ? 'Change Icons' : 'Customize Icons'}
-            </button>
+              <p style={{ margin: 0, fontSize: '13px', color: '#666' }}>
+                {displayStyle.punchIcons ? 'Custom icons' : 'Default circles'}
+              </p>
+            </div>
           </div>
 
-          {/* Action Buttons */}
-          <div style={{ 
-            display: 'flex', 
-            gap: '12px', 
-            justifyContent: 'flex-end',
-            paddingTop: '16px',
-            borderTop: '1px solid #d7ccc8'
-          }}>
-            <button 
-              onClick={handleSaveAll}
-              disabled={!hasUnsavedChanges || loading.save}
-              style={{
-                padding: '10px 20px',
-                backgroundColor: hasUnsavedChanges ? '#5d4037' : '#ccc',
-                color: 'white',
-                border: 'none',
-                borderRadius: '6px',
-                cursor: hasUnsavedChanges ? 'pointer' : 'not-allowed',
-                fontWeight: 'bold'
-              }}
-            >
-              {loading.save ? 'Saving...' : 'Save All Changes'}
-            </button>
-          </div>
+
         </div>
       </EpunchCard>
 
-      {/* Color Editor Modal */}
+      {/* Modals */}
       <ColorEditorModal
         isOpen={modals.colors}
         onClose={() => closeModal('colors')}
-        primaryColor={style.primaryColor || '#5d4037'}
-        secondaryColor={style.secondaryColor || '#795548'}
-        currentIcons={style.punchIcons}
+        primaryColor={displayStyle.primaryColor || '#5d4037'}
+        secondaryColor={displayStyle.secondaryColor || '#795548'}
         onSave={handleUpdateColors}
-        isSaving={loading.save}
       />
 
-      {/* Logo Editor Modal */}
       <LogoEditorModal
         isOpen={modals.logo}
         onClose={() => closeModal('logo')}
-        merchantId={merchant?.id || ''}
-        currentLogoUrl={style.logoUrl}
         onSave={handleUpdateLogo}
-        isSaving={loading.save}
       />
 
-      {/* Icons Editor Modal */}
       <IconsEditorModal
         isOpen={modals.icons}
         onClose={() => closeModal('icons')}
-        merchantId={merchant?.id || ''}
-        currentIcons={style.punchIcons}
+        currentIcons={displayStyle.punchIcons}
         onSave={handleUpdateIcons}
-        isSaving={loading.save}
       />
+
+      {/* Mobile responsive styles */}
+      <style>{`
+        @media (max-width: 768px) {
+          .preview-grid {
+            grid-template-columns: 1fr !important;
+            gap: 16px !important;
+          }
+          
+          /* Change arrow direction on mobile */
+          .preview-arrow {
+            transform: rotate(90deg) !important;
+          }
+          
+          /* Make action cards smaller on mobile */
+          .design-page .quick-actions-grid {
+            grid-template-columns: 1fr !important;
+            gap: 12px !important;
+          }
+          
+          /* Reduce padding on mobile */
+          .design-page .card-content {
+            padding: 16px !important;
+          }
+          
+          /* Stack Apply/Reset buttons on mobile */
+          .design-page .apply-buttons {
+            flex-direction: column !important;
+            gap: 8px !important;
+          }
+        }
+      `}</style>
     </EpunchPage>
   );
 }; 
