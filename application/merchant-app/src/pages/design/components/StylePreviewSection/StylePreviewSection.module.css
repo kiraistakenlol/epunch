@@ -3,7 +3,6 @@
   padding: var(--spacing-lg);
   border: 2px solid var(--color-border-default);
   border-radius: var(--border-radius-large);
-  background-color: var(--color-background-variant);
 }
 
 .previewTitle {

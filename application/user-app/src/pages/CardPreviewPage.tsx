@@ -6,6 +6,7 @@ const CardPreviewPage: React.FC = () => {
   
   // Parse all URL parameters
   const logoUrl = searchParams.get('logoUrl') || searchParams.get('logoBase64') || undefined;
+  const renderOnBackgroundColor = searchParams.get('renderOnBackgroundColor') || 'transparent';
   
   const previewProps = {
     primaryColor: searchParams.get('primaryColor') || '#007bff',
@@ -23,7 +24,8 @@ const CardPreviewPage: React.FC = () => {
     currentPunches: parseInt(searchParams.get('currentPunches') || '3'),
     totalPunches: parseInt(searchParams.get('totalPunches') || '10'),
     status: (searchParams.get('status') as any) || 'ACTIVE',
-    showAnimations: searchParams.get('animations') === 'true'
+    showAnimations: searchParams.get('animations') === 'true',
+    renderOnBackgroundColor
   };
 
   // Debug logging
@@ -34,10 +36,21 @@ const CardPreviewPage: React.FC = () => {
     logoBase64: searchParams.get('logoBase64') ? 'base64 data present' : null,
     finalLogoUrl: logoUrl ? logoUrl.substring(0, 50) + (logoUrl.length > 50 ? '...' : '') : null,
     punchIcons: searchParams.get('punchIcons')?.substring(0, 100) + '...',
-    merchantName: searchParams.get('merchantName')
+    merchantName: searchParams.get('merchantName'),
+    renderOnBackgroundColor
   });
 
-  return <PunchCardPreviewWrapper {...previewProps} />;
+  return (
+    <div style={{ 
+      backgroundColor: renderOnBackgroundColor,
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}>
+      <PunchCardPreviewWrapper {...previewProps} />
+    </div>
+  );
 };
 
 export default CardPreviewPage; 

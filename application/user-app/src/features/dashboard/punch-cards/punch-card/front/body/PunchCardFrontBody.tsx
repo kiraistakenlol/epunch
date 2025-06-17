@@ -28,13 +28,11 @@ const PunchCardFrontBody: React.FC<PunchCardFrontBodyProps> = ({
       </div>
       <div className={styles.loyaltyProgramSection}>
         {loyaltyProgram && (
-          <AutoScaleText 
+          <div 
             className={styles.loyaltyProgramName}
-            maxFontSize="1.8em"
-            minFontSize="0.1em"
           >
             {loyaltyProgram.name}     
-          </AutoScaleText>
+          </div>
         )}
       </div>
     </div>

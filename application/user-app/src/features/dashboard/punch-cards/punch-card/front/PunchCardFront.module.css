@@ -4,9 +4,9 @@
   height: 100%;
   display: grid;
   grid-template-rows: 
-    calc(var(--card-height) * 0.22)
-    calc(var(--card-height) * 0.56)
-    calc(var(--card-height) * 0.22);
+    22cqh
+    56cqh
+    22cqh;
   background-color: #8d6e63;
 }
 
@@ -18,18 +18,19 @@
 
 /* === HEADER STYLES === */
 .header {
-  padding: var(--header-padding) var(--body-padding);
+  padding: var(--padding);
   justify-content: space-between;
   align-items: center;
   background-color: #5d4037;
   color: #f5f5dc;
   border-radius: var(--card-border-radius) var(--card-border-radius) 0 0;
-  font-size: 0.85em;
+  font-size: 3.5cqh;
+  container-type: size;
 }
 
 /* === BODY STYLES === */
 .body {
-  padding: var(--body-padding);
+  padding: var(--padding);
   flex-direction: column;
 }
 

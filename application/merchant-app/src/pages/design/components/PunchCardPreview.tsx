@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PunchIconsDto } from 'e-punch-common-core';
 import { useAppSelector } from '../../../store/hooks';
+import { colors } from '../../../theme/constants';
 
 interface PunchCardPreviewProps {
   primaryColor: string;
@@ -16,6 +17,7 @@ interface PunchCardPreviewProps {
   totalPunches?: number;
   status?: 'ACTIVE' | 'REWARD_READY' | 'REWARD_REDEEMED';
   showAnimations?: boolean;
+  renderOnBackgroundColor?: string;
 }
 
 export const PunchCardPreview: React.FC<PunchCardPreviewProps> = ({
@@ -29,16 +31,17 @@ export const PunchCardPreview: React.FC<PunchCardPreviewProps> = ({
   currentPunches = 3,
   totalPunches = 10,
   status = 'ACTIVE',
-  showAnimations = false
+  showAnimations = false,
+  renderOnBackgroundColor = colors.background.paper
 }) => {
   const merchant = useAppSelector(state => state.auth.merchant);
   const [animationKey, setAnimationKey] = useState(0);
 
-  // Size configuration for iframe dimensions
+  // Size configuration with aspect ratio 1.25 (width:height = 1.25:1)
   const sizeConfig = {
-    small: { width: '240px', height: '160px' },
-    medium: { width: '320px', height: '220px' },
-    large: { width: '400px', height: '280px' }
+    small: { width: '200px' },
+    medium: { width: '300px' },
+    large: { width: '400px' }
   };
 
   // Build iframe URL with all styling parameters
@@ -55,6 +58,9 @@ export const PunchCardPreview: React.FC<PunchCardPreviewProps> = ({
     previewUrl.searchParams.set('status', status);
     previewUrl.searchParams.set('animations', showAnimations.toString());
     previewUrl.searchParams.set('key', animationKey.toString()); // Force iframe refresh for animations
+    
+    // Add background color
+    previewUrl.searchParams.set('renderOnBackgroundColor', renderOnBackgroundColor);
     
     // Handle logo URL - could be regular URL or base64 data URL
     if (logoUrl) {
@@ -90,12 +96,10 @@ export const PunchCardPreview: React.FC<PunchCardPreviewProps> = ({
           key={animationKey} // Force re-render for animations
           src={buildPreviewUrl()}
           width={sizeConfig[size].width}
-          height={sizeConfig[size].height}
           style={{
+            aspectRatio: '1.25',
             border: 'none',
-            borderRadius: '8px',
             overflow: 'hidden',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
             display: 'block'
           }}
           title="Punch Card Preview"

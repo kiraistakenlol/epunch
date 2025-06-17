@@ -44,6 +44,7 @@ interface PunchCardPreviewWrapperProps {
   totalPunches?: number;
   status?: 'ACTIVE' | 'REWARD_READY' | 'REWARD_REDEEMED';
   showAnimations?: boolean;
+  renderOnBackgroundColor?: string;
 }
 
 export const PunchCardPreviewWrapper: React.FC<PunchCardPreviewWrapperProps> = ({
@@ -55,7 +56,8 @@ export const PunchCardPreviewWrapper: React.FC<PunchCardPreviewWrapperProps> = (
   currentPunches = 3,
   totalPunches = 10,
   status = 'ACTIVE',
-  showAnimations = false
+  showAnimations = false,
+  renderOnBackgroundColor = 'transparent'
 }) => {
   // Create mock loyalty program
   const mockLoyaltyProgram: LoyaltyProgramDto = {
@@ -103,11 +105,7 @@ export const PunchCardPreviewWrapper: React.FC<PunchCardPreviewWrapperProps> = (
     <Provider store={store}>
       <div 
         className={styles.previewContainer}
-        style={{
-          '--cards-section-height': '100vh',
-          '--card-height': 'min(100vh, 100vw / 1.3)',
-          '--card-width': 'min(100vw, 100vh * 1.3)'
-        } as React.CSSProperties}
+        style={{ backgroundColor: renderOnBackgroundColor }}
       >
         <PunchCardItem
           {...mockPunchCard}
