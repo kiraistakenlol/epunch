@@ -1,5 +1,4 @@
-import React from 'react';
-import SVG from 'react-inlinesvg';
+import React, { useState, useEffect } from 'react';
 import { PunchIconsDto } from 'e-punch-common-core';
 import { useAppSelector } from '../../../store/hooks';
 
@@ -11,6 +10,12 @@ interface PunchCardPreviewProps {
   size?: 'small' | 'medium' | 'large';
   className?: string;
   style?: React.CSSProperties;
+  
+  // New preview options
+  currentPunches?: number;
+  totalPunches?: number;
+  status?: 'ACTIVE' | 'REWARD_READY' | 'REWARD_REDEEMED';
+  showAnimations?: boolean;
 }
 
 export const PunchCardPreview: React.FC<PunchCardPreviewProps> = ({
@@ -20,182 +25,103 @@ export const PunchCardPreview: React.FC<PunchCardPreviewProps> = ({
   punchIcons,
   size = 'medium',
   className,
-  style
+  style,
+  currentPunches = 3,
+  totalPunches = 10,
+  status = 'ACTIVE',
+  showAnimations = false
 }) => {
   const merchant = useAppSelector(state => state.auth.merchant);
+  const [animationKey, setAnimationKey] = useState(0);
+
+  // Size configuration for iframe dimensions
   const sizeConfig = {
-    small: {
-      maxWidth: '200px',
-      headerPadding: '8px',
-      headerFontSize: '11px',
-      bodyPadding: '12px',
-      iconSize: '16px',
-      iconContainerSize: '18px',
-      gap: '4px',
-      logoSize: '18px',
-      statusFontSize: '9px'
-    },
-    medium: {
-      maxWidth: '240px',
-      headerPadding: '10px',
-      headerFontSize: '13px',
-      bodyPadding: '14px',
-      iconSize: '18px',
-      iconContainerSize: '20px',
-      gap: '5px',
-      logoSize: '22px',
-      statusFontSize: '10px'
-    },
-    large: {
-      maxWidth: '300px',
-      headerPadding: '14px',
-      headerFontSize: '15px',
-      bodyPadding: '18px',
-      iconSize: '22px',
-      iconContainerSize: '24px',
-      gap: '6px',
-      logoSize: '26px',
-      statusFontSize: '11px'
-    }
+    small: { width: '240px', height: '160px' },
+    medium: { width: '320px', height: '220px' },
+    large: { width: '400px', height: '280px' }
   };
 
-  const config = sizeConfig[size];
-
-  const renderIcon = (index: number) => {
-    const isFilled = index < 3;
-
-    if (punchIcons) {
-      try {
-        const svgContent = isFilled 
-          ? punchIcons.filled.data.svg_raw_content 
-          : punchIcons.unfilled.data.svg_raw_content;
-
-        return (
-          <div
-            key={index}
-            style={{
-              width: config.iconContainerSize,
-              height: config.iconContainerSize,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: secondaryColor
-            }}
-          >
-            <SVG 
-              src={`data:image/svg+xml;utf8,${encodeURIComponent(svgContent)}`}
-              width={config.iconSize}
-              height={config.iconSize}
-            />
-          </div>
-        );
-      } catch (error) {
-        // Fall back to default circles if parsing fails
+  // Build iframe URL with all styling parameters
+  const buildPreviewUrl = () => {
+    const baseUrl = process.env.VITE_USER_APP_URL || 'http://localhost:5173';
+    const previewUrl = new URL(`${baseUrl}/merchant/card-preview`);
+    
+    // Don't double-encode - URL.searchParams.set() handles encoding automatically
+    previewUrl.searchParams.set('primaryColor', primaryColor);
+    previewUrl.searchParams.set('secondaryColor', secondaryColor);
+    previewUrl.searchParams.set('merchantName', merchant?.name || 'Preview Merchant');
+    previewUrl.searchParams.set('currentPunches', currentPunches.toString());
+    previewUrl.searchParams.set('totalPunches', totalPunches.toString());
+    previewUrl.searchParams.set('status', status);
+    previewUrl.searchParams.set('animations', showAnimations.toString());
+    previewUrl.searchParams.set('key', animationKey.toString()); // Force iframe refresh for animations
+    
+    // Handle logo URL - could be regular URL or base64 data URL
+    if (logoUrl) {
+      if (logoUrl.startsWith('data:')) {
+        // It's a base64 data URL, encode it for URL transmission
+        previewUrl.searchParams.set('logoBase64', logoUrl);
+      } else {
+        // It's a regular URL
+        previewUrl.searchParams.set('logoUrl', logoUrl);
       }
     }
-    
-    // Default circle icons
-    return (
-      <div
-        key={index}
-        style={{
-          width: config.iconContainerSize,
-          height: config.iconContainerSize,
-          borderRadius: '50%',
-          backgroundColor: isFilled ? secondaryColor : 'transparent',
-          border: `2px solid ${secondaryColor}`,
-          fontSize: Math.floor(parseInt(config.iconSize) * 0.6) + 'px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: isFilled ? 'white' : secondaryColor,
-          fontWeight: 'bold'
-        }}
-      >
-        {isFilled ? '✓' : ''}
-      </div>
-    );
+    if (punchIcons) previewUrl.searchParams.set('punchIcons', JSON.stringify(punchIcons));
+
+    return previewUrl.toString();
   };
 
+  // Trigger animation by refreshing iframe
+  const triggerAnimation = () => {
+    setAnimationKey(prev => prev + 1);
+  };
+
+  // Auto-trigger animation when showAnimations changes to true
+  useEffect(() => {
+    if (showAnimations) {
+      triggerAnimation();
+    }
+  }, [showAnimations]);
+
   return (
-    <div 
-      className={className}
-      style={{
-        backgroundColor: 'white',
-        borderRadius: '8px',
-        overflow: 'hidden',
-        maxWidth: config.maxWidth,
-        margin: '0 auto',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-        position: 'relative',
-        ...style
-      }}
-    >
-      {/* Header */}
-      <div style={{
-        backgroundColor: primaryColor,
-        color: 'white',
-        padding: config.headerPadding,
-        fontSize: config.headerFontSize,
-        fontWeight: 'bold',
-        textAlign: 'left'
-      }}>
-        {merchant?.name || 'Loyalty Card'}
-      </div>
-      
-      {/* Body */}
-      <div style={{ 
-        padding: config.bodyPadding,
-        position: 'relative'
-      }}>
-        {/* Punch Icons */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(5, 1fr)',
-          gridTemplateRows: 'repeat(2, 1fr)',
-          gap: config.gap,
-          marginBottom: '12px',
-          justifyItems: 'center'
-        }}>
-          {[...Array(10)].map((_, i) => renderIcon(i))}
-        </div>
-        
-        {/* Status */}
-        <div style={{ 
-          fontSize: config.statusFontSize, 
-          color: '#999',
-          textAlign: 'center',
-          fontWeight: 'bold'
-        }}>
-          11th coffee is free
-        </div>
-        
-        {/* Logo in bottom right corner */}
-        {logoUrl && (
-          <div style={{
-            position: 'absolute',
-            bottom: '4px',
-            right: '4px',
-            width: config.logoSize,
-            height: config.logoSize,
-            borderRadius: '2px',
+    <div className={className} style={style}>
+      <div style={{ position: 'relative' }}>
+        <iframe
+          key={animationKey} // Force re-render for animations
+          src={buildPreviewUrl()}
+          width={sizeConfig[size].width}
+          height={sizeConfig[size].height}
+          style={{
+            border: 'none',
+            borderRadius: '8px',
             overflow: 'hidden',
-            backgroundColor: 'rgba(255,255,255,0.9)',
-            border: '1px solid rgba(0,0,0,0.1)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}>
-            <img 
-              src={logoUrl} 
-              alt="Logo" 
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'contain'
-              }}
-            />
-          </div>
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            display: 'block'
+          }}
+          title="Punch Card Preview"
+        />
+        
+        {/* Animation trigger button (only show when animations are enabled) */}
+        {showAnimations && (
+          <button
+            onClick={triggerAnimation}
+            style={{
+              position: 'absolute',
+              top: '8px',
+              right: '8px',
+              background: 'rgba(0,0,0,0.7)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              padding: '4px 8px',
+              fontSize: '12px',
+              cursor: 'pointer',
+              zIndex: 10
+            }}
+            title="Trigger Animation"
+          >
+            🎬
+          </button>
         )}
       </div>
     </div>

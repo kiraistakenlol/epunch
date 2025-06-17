@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { configureApiClient } from 'e-punch-common-ui';
 import DashboardPage from './features/dashboard/DashboardPage';
 import DevPage from './features/dev/DevPage';
+import CardPreviewPage from './pages/CardPreviewPage';
 import AppLayout from './components/AppLayout';
 import SignOutModal from './components/SignOutModal';
 import CompletionOverlay from './features/dashboard/overlay/CompletionOverlay';
@@ -38,6 +39,7 @@ function App() {
           <Route index element={<DashboardPage />} />
           <Route path="dev" element={<DevPage />} />
         </Route>
+        <Route path="merchant/card-preview" element={<CardPreviewPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <SignOutModal />

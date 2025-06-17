@@ -38,6 +38,14 @@ export const DesignPage: React.FC = () => {
     save: false
   });
 
+  // Preview options state
+  const [previewOptions, setPreviewOptions] = useState({
+    currentPunches: 3,
+    totalPunches: 10,
+    status: 'ACTIVE' as 'ACTIVE' | 'REWARD_READY' | 'REWARD_REDEEMED',
+    showAnimations: false
+  });
+
   // Load style on mount
   useEffect(() => {
     const fetchStyle = async () => {
@@ -95,16 +103,33 @@ export const DesignPage: React.FC = () => {
   };
 
   const handleUpdateLogo = async (logoUrl: string | null, file?: File) => {
-    setUpdatedStyle(prev => ({
-      ...(prev || currentStyle),
-      logoUrl
-    }));
-    
     if (file) {
+      // Convert file to base64 for preview
+      const base64 = await fileToBase64(file);
+      setUpdatedStyle(prev => ({
+        ...(prev || currentStyle),
+        logoUrl: base64 // Store base64 for preview
+      }));
       setPendingImageFile(file);
-    } else if (logoUrl === null) {
-      setPendingImageFile(null);
+    } else {
+      setUpdatedStyle(prev => ({
+        ...(prev || currentStyle),
+        logoUrl
+      }));
+      if (logoUrl === null) {
+        setPendingImageFile(null);
+      }
     }
+  };
+
+  // Helper function to convert file to base64
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = error => reject(error);
+    });
   };
 
   const handleUpdateIcons = async (icons: PunchIconsDto) => {
@@ -188,6 +213,8 @@ export const DesignPage: React.FC = () => {
               onApplyStyle={handleApplyStyle}
               onReset={handleReset}
               loading={loading.save}
+              previewOptions={previewOptions}
+              onPreviewOptionsChange={setPreviewOptions}
             />
 
             <QuickActionsGrid

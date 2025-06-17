@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'react-toastify';
-import { EpunchModal, EpunchButon } from '../../../../components/foundational';
+import { EpunchModal } from '../../../../components/foundational';
 
 interface LogoEditorModalProps {
   isOpen: boolean;

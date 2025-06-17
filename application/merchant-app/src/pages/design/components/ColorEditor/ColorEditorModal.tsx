@@ -36,22 +36,25 @@ export const ColorEditorModal: React.FC<ColorEditorModalProps> = ({
     }
   }, [isOpen, primaryColor, secondaryColor]);
 
-  // Auto-save when colors change
-  React.useEffect(() => {
-    if (isOpen && (localPrimaryColor !== primaryColor || localSecondaryColor !== secondaryColor)) {
+  const handleClose = () => {
+    // Save colors when modal closes (if they changed)
+    if (localPrimaryColor !== primaryColor || localSecondaryColor !== secondaryColor) {
       onSave(localPrimaryColor, localSecondaryColor);
     }
-  }, [localPrimaryColor, localSecondaryColor, isOpen, primaryColor, secondaryColor, onSave]);
+    onClose();
+  };
 
   const handlePresetSelect = (preset: typeof DEFAULT_PRESETS[0]) => {
     setLocalPrimaryColor(preset.primary);
     setLocalSecondaryColor(preset.secondary);
+    // Save immediately when user selects a preset
+    onSave(preset.primary, preset.secondary);
   };
 
   return (
     <EpunchModal
       open={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       title="Edit Colors"
     >
       <>
