@@ -25,14 +25,6 @@ export class PunchCardStyleController {
     return this.punchCardStyleService.createOrUpdateMerchantDefaultStyle(merchantId, data);
   }
 
-  @Put('merchants/:merchantId/default/logo')
-  async updateMerchantDefaultLogo(
-    @Param('merchantId', ParseUUIDPipe) merchantId: string,
-    @Body() body: { logoUrl: string },
-  ): Promise<PunchCardStyleDto> {
-    return this.punchCardStyleService.updateMerchantDefaultLogo(merchantId, body.logoUrl);
-  }
-
   @Get('loyalty-programs/:loyaltyProgramId/merchants/:merchantId')
   async getLoyaltyProgramStyle(
     @Param('loyaltyProgramId', ParseUUIDPipe) loyaltyProgramId: string,

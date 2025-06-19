@@ -25,36 +25,10 @@ export class PunchCardsService {
     this.logger.log(`Fetching punch cards for user: ${userId}`);
     
     try {
-      const punchCards = await this.punchCardsRepository.findPunchCardsByUserId(userId);
-      this.logger.log(`Found ${punchCards.length} punch cards for user: ${userId}`);
+      const punchCardDetails = await this.punchCardsRepository.findPunchCardDetailsByUserId(userId);
+      this.logger.log(`Found ${punchCardDetails.length} punch cards for user: ${userId}`);
       
-      const punchCardDtos: PunchCardDto[] = [];
-      
-      for (const punchCard of punchCards) {
-        const loyaltyProgram = await this.loyaltyRepository.findLoyaltyProgramById(punchCard.loyalty_program_id);
-        if (!loyaltyProgram) {
-          this.logger.warn(`Loyalty program not found for punch card ${punchCard.id}`);
-          continue;
-        }
-        
-        const merchant = await this.merchantRepository.findMerchantById(loyaltyProgram.merchant_id);
-        if (!merchant) {
-          this.logger.warn(`Merchant not found for punch card ${punchCard.id}`);
-          continue;
-        }
-        
-        const styles = await this.punchCardStyleService.getPunchCardStyles(punchCard.id, loyaltyProgram.id, merchant.id);
-        const dto = PunchCardMapper.basicToDto(
-          punchCard,
-          merchant.name,
-          merchant.address,
-          loyaltyProgram.required_punches,
-          styles
-        );
-        punchCardDtos.push(dto);
-      }
-      
-      return punchCardDtos;
+      return punchCardDetails.map(detail => PunchCardMapper.detailToDto(detail));
     } catch (error: any) {
       this.logger.error(`Error fetching punch cards for user ${userId}: ${error.message}`, error.stack);
       throw error;

@@ -56,7 +56,8 @@ export class PunchCardStyleRepository {
         SET primary_color = $2,
             secondary_color = $3,
             logo_url = $4,
-            background_image_url = $5
+            background_image_url = $5,
+            punch_icons = $6
         WHERE merchant_id = $1 AND loyalty_program_id IS NULL
         RETURNING *
       `;
@@ -67,12 +68,13 @@ export class PunchCardStyleRepository {
         data.secondaryColor || null,
         data.logoUrl || null,
         data.backgroundImageUrl || null,
+        data.punchIcons || null,
       ]);
     } else {
       // Insert new record
       const insertQuery = `
-        INSERT INTO punch_card_style (merchant_id, loyalty_program_id, primary_color, secondary_color, logo_url, background_image_url)
-        VALUES ($1, NULL, $2, $3, $4, $5)
+        INSERT INTO punch_card_style (merchant_id, loyalty_program_id, primary_color, secondary_color, logo_url, background_image_url, punch_icons)
+        VALUES ($1, NULL, $2, $3, $4, $5, $6)
         RETURNING *
       `;
       
@@ -82,6 +84,7 @@ export class PunchCardStyleRepository {
         data.secondaryColor || null,
         data.logoUrl || null,
         data.backgroundImageUrl || null,
+        data.punchIcons || null,
       ]);
     }
     
