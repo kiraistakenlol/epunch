@@ -40,6 +40,7 @@ const PunchCardFront: React.FC<PunchCardFrontProps> = ({
           currentPunches={currentPunches}
           animatedPunchIndex={animatedPunchIndex}
           loyaltyProgram={loyaltyProgram}
+          punchIcons={cardStyles?.punchIcons}
         />
       </div>
       <div className={`${layoutStyles.cardSection}`}>

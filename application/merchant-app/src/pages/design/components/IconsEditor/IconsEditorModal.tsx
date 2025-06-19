@@ -8,7 +8,7 @@ interface IconsEditorModalProps {
   isOpen: boolean;
   onClose: () => void;
   currentIcons?: PunchIconsDto | null;
-  onSave: (icons: PunchIconsDto) => Promise<void>;
+  onSave: (icons: PunchIconsDto | null) => Promise<void>;
 }
 
 export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
@@ -89,6 +89,12 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
     }
   }, [selectedFilled, selectedUnfilled, isOpen, onSave]);
 
+  const handleRemoveIcons = async () => {
+    setSelectedFilled(null);
+    setSelectedUnfilled(null);
+    await onSave(null);
+  };
+
   const handleIconClick = (iconId: string) => {
     setOpenDropdown(openDropdown === iconId ? null : iconId);
   };
@@ -101,8 +107,6 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
       return () => document.removeEventListener('click', handleClickOutside);
     }
   }, [openDropdown]);
-
-
 
   const renderIcon = (icon: IconDto, size = 40) => (
     <div 
@@ -174,9 +178,34 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
               <div style={{ fontSize: '12px', fontWeight: 'bold' }}>Unfilled</div>
             </div>
           </div>
+          
+          {(selectedFilled || selectedUnfilled) && (
+            <div style={{ marginTop: '16px', textAlign: 'center' }}>
+              <button
+                onClick={handleRemoveIcons}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: '#f44336',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  fontSize: '12px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#d32f2f';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#f44336';
+                }}
+              >
+                Remove Custom Icons
+              </button>
+            </div>
+          )}
         </div>
-
-
 
         {/* Search */}
         <div style={{ marginBottom: '20px' }}>
@@ -368,7 +397,7 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
           paddingTop: '12px',
           borderTop: '1px solid #e0e0e0'
         }}>
-          Click any icon to choose filled (●) or unfilled (○) type. Changes are applied automatically.
+          Click any icon to choose filled (●) or unfilled (○) type. Use "Remove Custom Icons" to revert to default icons. Changes are applied automatically.
         </div>
       </>
     </EpunchModal>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { PunchIconsDto } from 'e-punch-common-core';
 import PunchCardFrontBodyPunchesSection from './punches/PunchCardFrontBodyPunchesSection';
 import styles from './PunchCardFrontBody.module.css';
 
@@ -7,14 +8,15 @@ interface PunchCardFrontBodyProps {
   currentPunches: number;
   animatedPunchIndex?: number;
   loyaltyProgram: any;
-  punchIcon?: string | null;
+  punchIcons?: PunchIconsDto | null;
 }
 
 const PunchCardFrontBody: React.FC<PunchCardFrontBodyProps> = ({
   totalPunches,
   currentPunches,
   animatedPunchIndex,
-  loyaltyProgram
+  loyaltyProgram,
+  punchIcons
 }) => {
   return (
     <div className={styles.container}>
@@ -23,6 +25,7 @@ const PunchCardFrontBody: React.FC<PunchCardFrontBodyProps> = ({
           totalPunches={totalPunches}
           currentPunches={currentPunches}
           animatedPunchIndex={animatedPunchIndex}
+          punchIcons={punchIcons}
         />
       </div>
       {loyaltyProgram && (

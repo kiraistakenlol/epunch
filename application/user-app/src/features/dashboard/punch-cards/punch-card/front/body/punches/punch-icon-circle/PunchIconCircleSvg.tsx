@@ -22,7 +22,7 @@ const PunchIconCircleSvg: React.FC<PunchIconCircleSvgProps> = ({
           cx="50"
           cy="50"
           r="45"
-          fill="#5f4037"
+          fill="currentColor"
           className={styles.filledCircle} />
       ) : (
         // Empty circle with dashed border
@@ -31,7 +31,7 @@ const PunchIconCircleSvg: React.FC<PunchIconCircleSvgProps> = ({
           cy="50"
           r="45"
           fill="transparent"
-          stroke="#5d4037"
+          stroke="currentColor"
           strokeWidth="4"
           strokeDasharray="8 4"
           className={styles.emptyCircle} />

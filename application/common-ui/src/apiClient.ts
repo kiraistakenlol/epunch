@@ -348,12 +348,4 @@ export const apiClient = {
     const response = await instance.post<PunchCardStyleDto>(`/punch-card-styles/merchants/${merchantId}/default`, data);
     return response.data;
   },
-
-  async updateMerchantDefaultPunchCardLogo(merchantId: string, logoUrl: string): Promise<PunchCardStyleDto> {
-    if (!merchantId) {
-      return Promise.reject(new Error('Merchant ID is required.'));
-    }
-    const response = await instance.put<PunchCardStyleDto>(`/punch-card-styles/merchants/${merchantId}/default/logo`, { logoUrl });
-    return response.data;
-  },
 }; 

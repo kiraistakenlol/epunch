@@ -15,25 +15,13 @@
 
 /* === FILLED STATE === */
 .filledCircle {
-  transition: fill 0.2s ease;
-  will-change: fill;
+  /* Now inherits color from .punchIconContainer */
 }
 
 /* === EMPTY STATE === */
 .emptyCircle {
-  transition: stroke 0.2s ease, stroke-dasharray 0.2s ease;
-  will-change: stroke;
+  /* Now inherits color from .punchIconContainer */
 }
 
 /* === HOVER EFFECTS === */
-.punchIconContainer:hover .punchIconSvg {
-  transform: scale(1.05);
-}
-
-.punchIconContainer:hover .filledCircle {
-  fill: #6d4c41;
-}
-
-.punchIconContainer:hover .emptyCircle {
-  stroke: #6d4c41;
-} 
+/* Hover effects are now handled by the parent container */ 

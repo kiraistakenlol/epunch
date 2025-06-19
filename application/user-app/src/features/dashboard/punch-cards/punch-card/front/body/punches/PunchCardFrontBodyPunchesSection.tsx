@@ -1,17 +1,21 @@
 import React from 'react';
+import { PunchIconsDto } from 'e-punch-common-core';
 import PunchIconCircleSvg from './punch-icon-circle/PunchIconCircleSvg';
+import CustomPunchIcon from './punch-icon-circle/CustomPunchIcon';
 import styles from './PunchCardFrontBodyPunchesSection.module.css';
 
 interface PunchCardFrontBodyPunchesSectionProps {
   totalPunches: number;
   currentPunches: number;
   animatedPunchIndex?: number;
+  punchIcons?: PunchIconsDto | null;
 }
 
 const PunchCardFrontBodyPunchesSection: React.FC<PunchCardFrontBodyPunchesSectionProps> = ({
   totalPunches,
   currentPunches,
-  animatedPunchIndex
+  animatedPunchIndex,
+  punchIcons
 }) => {
   const MAX_PUNCHES = 10;
   const punchCircles: JSX.Element[] = [];
@@ -33,7 +37,11 @@ const PunchCardFrontBodyPunchesSection: React.FC<PunchCardFrontBodyPunchesSectio
 
     punchCircles.push(
       <div key={i} className={containerClasses}>
-        <PunchIconCircleSvg isFilled={isFilled}/>
+        {punchIcons ? (
+          <CustomPunchIcon isFilled={isFilled} punchIcons={punchIcons} />
+        ) : (
+          <PunchIconCircleSvg isFilled={isFilled} />
+        )}
       </div>
     );
   }

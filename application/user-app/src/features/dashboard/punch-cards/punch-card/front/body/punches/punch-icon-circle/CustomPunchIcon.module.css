@@ -1,0 +1,18 @@
+/* === CUSTOM PUNCH ICON CONTAINER === */
+.customPunchIconContainer {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ensure any SVG inside takes full height */
+.customPunchIconContainer svg,
+.customPunchIconSvg {
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+}
+
+/* Hover effects are now handled by the parent container */ 

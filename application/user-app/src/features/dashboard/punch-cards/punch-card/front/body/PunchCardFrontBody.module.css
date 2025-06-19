@@ -4,7 +4,8 @@
   width: 100%;
   padding: 2%;
   display: grid;
-  grid-template-rows: 80fr 15fr;
+  gap: calc(var(--card-height) * 0.03);
+  grid-template-rows: 75fr 15fr;
 }
 
 /* === PUNCHES SECTION === */

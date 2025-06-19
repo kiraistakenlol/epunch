@@ -132,7 +132,7 @@ export const DesignPage: React.FC = () => {
     });
   };
 
-  const handleUpdateIcons = async (icons: PunchIconsDto) => {
+  const handleUpdateIcons = async (icons: PunchIconsDto | null) => {
     setUpdatedStyle(prev => ({
       ...(prev || currentStyle),
       punchIcons: icons
