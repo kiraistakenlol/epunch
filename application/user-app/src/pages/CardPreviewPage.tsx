@@ -42,8 +42,8 @@ const CardPreviewPage: React.FC = () => {
 
   return (
     <div style={{ 
-      backgroundColor: renderOnBackgroundColor,
-      minHeight: '100vh',
+      // backgroundColor: renderOnBackgroundColor,
+      // minHeight: '100vh',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center'

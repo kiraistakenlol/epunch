@@ -1,5 +1,5 @@
 import React from 'react';
-import PunchIconCircle from './PunchIconCircle';
+import PunchIconCircleSvg from './punch-icon-circle/PunchIconCircleSvg';
 import styles from './PunchCardFrontBodyPunchesSection.module.css';
 
 interface PunchCardFrontBodyPunchesSectionProps {
@@ -20,20 +20,20 @@ const PunchCardFrontBodyPunchesSection: React.FC<PunchCardFrontBodyPunchesSectio
     const isWithinTotal = i < totalPunches;
     const isFilled = i < currentPunches;
     const isAnimated = animatedPunchIndex === i;
-    
+
     let containerClasses = styles.punchIconContainingZone;
-    
+
     if (!isWithinTotal) {
       containerClasses += ` ${styles.punchIconContainingZoneHidden}`;
     }
-    
+
     if (isAnimated) {
       containerClasses += ` ${styles.punchIconContainingZoneAnimated}`;
     }
-    
+
     punchCircles.push(
       <div key={i} className={containerClasses}>
-        <PunchIconCircle isFilled={isFilled} />
+        <PunchIconCircleSvg isFilled={isFilled}/>
       </div>
     );
   }

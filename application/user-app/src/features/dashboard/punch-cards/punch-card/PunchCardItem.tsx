@@ -4,7 +4,7 @@ import { useAppDispatch } from '../../../../store/hooks';
 import { handleEvent } from '../../../animations/animationSlice';
 import PunchCardFront from './front/PunchCardFront';
 import PunchCardBack from './back/PunchCardBack';
-import PunchCardOverlay from './PunchCardOverlay';
+import PunchCardOverlay from './ready-overlay/PunchCardOverlay';
 import styles from './PunchCardItem.module.css';
 
 interface PunchCardItemProps extends PunchCardDto {
@@ -62,7 +62,7 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
     };
 
     cardElement.addEventListener('animationend', handleAnimationEnd, true);
-    
+
     return () => {
       cardElement.removeEventListener('animationend', handleAnimationEnd, true);
     };
@@ -70,16 +70,16 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
 
   const handleClick = (event: React.MouseEvent) => {
     event.stopPropagation();
-    
+
     if (onCardClick) {
       onCardClick(id);
     }
-    
+
     if (!isAnimating) {
       const newFlippedState = !isFlipped;
-      
+
       setIsAnimating(true);
-      
+
       setTimeout(() => {
         setIsFlipped(newFlippedState);
       }, 300);
@@ -93,14 +93,14 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
 
   const handleRedemptionClick = (event: React.MouseEvent) => {
     event.stopPropagation();
-    
+
     if (onRedemptionClick) {
       onRedemptionClick(id);
     }
   };
 
   const cardClasses = [
-    styles.punchCardItem,
+    styles.punchCardItemContainer,
     styles[`status${status}`],
     isHighlighted ? styles.highlighted : '',
     shouldSlideIn ? styles.punchCardSlideIn : '',
@@ -112,13 +112,12 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
   ].filter(Boolean).join(' ');
 
   return (
-    <div 
+    <div
       ref={cardRef}
       className={cardClasses}
       onClick={handleClick}
       style={{ cursor: 'pointer', position: 'relative' }}
     >
-
       <div className={styles.cardInner}>
         {!isFlipped ? (
           <PunchCardFront
@@ -140,13 +139,15 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
             styles={cardStyles}
           />
         )}
+
+        {!isFlipped && status === 'REWARD_READY' && (
+          <PunchCardOverlay
+            isSelected={isSelected}
+            onClick={isSelected ? undefined : handleRedemptionClick}
+          />
+        )}
       </div>
-      {!isFlipped && status === 'REWARD_READY' && (
-        <PunchCardOverlay 
-          isSelected={isSelected}
-          onClick={isSelected ? undefined : handleRedemptionClick}
-        />
-      )}
+
     </div>
   );
 });

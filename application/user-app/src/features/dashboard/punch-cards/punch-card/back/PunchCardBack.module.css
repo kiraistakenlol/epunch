@@ -1,15 +1,9 @@
-/* === BACK CARD CONTAINER === */
-.container {
-  width: 100%;
+/* === BACK CARD SPECIFIC STYLES === */
+.backCard {
   height: 100%;
-  display: grid;
-  grid-template-rows: 
-    22cqh
-    56cqh
-    22cqh;
   background-color: #6d4c41;
   color: #f5f5dc;
-  font-size: clamp(8px, 4cqh, 16px);
+  font-size: calc(var(--card-height) * 0.085);
   position: relative;
   overflow: hidden;
 }
@@ -21,38 +15,32 @@
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 0;
-  width: 120cqh;
-  height: 120cqh;
+  width: calc(var(--card-height) * 0.95);
+  height: calc(var(--card-height) * 0.95);
   object-fit: cover;
-  opacity: 0.06;
+  opacity: 0.3;
 }
 
 /* === BACK HEADER === */
 .header {
   background-color: #4a3e37;
   color: #f5f5dc;
-  padding: var(--padding);
-  border-radius: var(--card-border-radius) var(--card-border-radius) 0 0;
+  padding: calc(var(--card-height) * 0.03);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-sizing: border-box;
-  font-size: 1.35em;
-  position: relative;
   z-index: 1;
 }
 
 .headerTitle {
-  font-size: 1.6em;
-  font-weight: bold;
+  text-transform: uppercase;
 }
 
 /* === BACK CONTENT === */
 .body {
-  padding: var(--padding);
+  padding: calc(var(--card-height) * 0.08);
   display: flex;
   align-items: center;
-  font-size: 1.4em;
   justify-content: center;
   font-weight: 200;
   box-sizing: border-box;
@@ -66,28 +54,24 @@
 
 .rewardText {
   color: rgb(244, 235, 235);
-  font-size: 1.4em;
   line-height: 1.3;
 }
 
 .rewardName {
   font-weight: bold;
   text-align: center;
-  margin-top: 0.25em;
 }
 
 .shopName {
   font-style: italic;
   font-weight: bold;
   color: #fff8dc;
-  font-size: 1.1em;
-  letter-spacing: 0.5px;
-  text-shadow: 0 0 8px rgba(255, 248, 220, 0.3);
+  text-shadow: 0 0 calc(var(--card-height) * 0.05) rgba(255, 248, 220, 0.3);
   white-space: nowrap;
 }
 
 /* === BACK FOOTER === */
-.backFooter {
+.footer {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -97,7 +81,7 @@
 }
 
 .addressText {
-  font-size: 2em;
+  font-size: 0.7em;
   text-align: center;
 }
 
@@ -105,8 +89,7 @@
   background: #ffd93d;
   color: #2c3e50;
   font-weight: bold;
-  font-size: 1.2em;
-  padding: 0.1em 0.3em;
-  border-radius: 6px;
+  padding: calc(var(--card-height) * 0.01);
+  border-radius: calc(var(--card-height) * 0.01);
   white-space: nowrap;
 } 

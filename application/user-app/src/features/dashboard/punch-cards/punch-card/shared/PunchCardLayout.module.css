@@ -1,0 +1,17 @@
+/* === SHARED PUNCH CARD LAYOUT === */
+.defaultCardLayout {
+  width: 100%;
+  height: 100%;
+  
+  display: grid;
+  grid-template-rows: 
+    calc(var(--card-height) * 0.22) /* header */
+    calc(var(--card-height) * 0.56) /* body */
+    calc(var(--card-height) * 0.22); /* footer */
+}
+
+.cardSection {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}

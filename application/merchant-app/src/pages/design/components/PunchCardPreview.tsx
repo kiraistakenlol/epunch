@@ -97,7 +97,7 @@ export const PunchCardPreview: React.FC<PunchCardPreviewProps> = ({
           src={buildPreviewUrl()}
           width={sizeConfig[size].width}
           style={{
-            aspectRatio: '1.25',
+            aspectRatio: '1.3',
             border: 'none',
             overflow: 'hidden',
             display: 'block'

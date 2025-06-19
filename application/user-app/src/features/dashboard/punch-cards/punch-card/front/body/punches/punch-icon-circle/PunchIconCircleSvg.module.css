@@ -1,0 +1,39 @@
+/* === SVG PUNCH ICON CONTAINER === */
+.punchIconContainer {
+  height: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* === SVG ELEMENT === */
+.punchIconSvg {
+  transition: all 0.2s ease;
+  will-change: transform;
+}
+
+/* === FILLED STATE === */
+.filledCircle {
+  transition: fill 0.2s ease;
+  will-change: fill;
+}
+
+/* === EMPTY STATE === */
+.emptyCircle {
+  transition: stroke 0.2s ease, stroke-dasharray 0.2s ease;
+  will-change: stroke;
+}
+
+/* === HOVER EFFECTS === */
+.punchIconContainer:hover .punchIconSvg {
+  transform: scale(1.05);
+}
+
+.punchIconContainer:hover .filledCircle {
+  fill: #6d4c41;
+}
+
+.punchIconContainer:hover .emptyCircle {
+  stroke: #6d4c41;
+} 

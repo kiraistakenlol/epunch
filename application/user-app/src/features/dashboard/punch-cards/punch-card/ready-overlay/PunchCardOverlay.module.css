@@ -13,12 +13,11 @@
 }
 
 .label {
-  padding: 0.4em 0.8em;
-  border-radius: 0.2em;
-  font-size: 1.75rem;
+  padding: calc(var(--card-height) * 0.20) calc(var(--card-height) * 0.15);
+  border-radius: calc(var(--card-height) * 0.03);
+  font-size: calc(var(--card-height) * 0.1);
   font-weight: bold;
   text-transform: uppercase;
-  text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
   transition: all 0.2s ease;
   pointer-events: auto;
   cursor: pointer;
@@ -27,7 +26,6 @@
 .selected {
   color: #ffd700;
   background-color: rgba(255, 215, 0, 0.5);
-  border: 1px solid rgba(255, 215, 0, 0.3);
 }
 
 .selected:hover {
@@ -39,7 +37,6 @@
 .redeemable {
   color: #44e62f;
   background-color: rgba(68, 230, 47, 0.2);
-  border: 1px solid rgba(68, 230, 47, 0.3);
 }
 
 .redeemable:hover {

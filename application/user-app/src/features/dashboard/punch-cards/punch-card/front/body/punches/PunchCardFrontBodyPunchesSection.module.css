@@ -6,9 +6,8 @@
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  gap: 0.5em;
-  box-sizing: border-box;
-  overflow: hidden;
+  gap: calc(var(--card-height) * 0.01);
+  padding: calc(var(--card-height) * 0.03);
 }
 
 /* === PUNCH ICON CONTAINER ZONE === */
@@ -16,8 +15,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  container-type: size;
-  overflow: hidden;
 }
 
 .punchIconContainingZoneHidden {
@@ -43,7 +40,6 @@
   pointer-events: none;
   animation: punchGlow 1.5s ease-out;
 }
-
 
 /* === ANIMATIONS === */
 @keyframes newPunchAnimation {

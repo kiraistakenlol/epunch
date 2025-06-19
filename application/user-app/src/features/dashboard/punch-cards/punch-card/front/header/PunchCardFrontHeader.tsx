@@ -7,23 +7,24 @@ interface PunchCardFrontHeaderProps {
   isSelected: boolean;
 }
 
-const PunchCardFrontHeader: React.FC<PunchCardFrontHeaderProps> = ({ 
-  shopName, 
+const PunchCardFrontHeader: React.FC<PunchCardFrontHeaderProps> = ({
+  shopName,
   status,
   isSelected
-}) => (
-  <>
-    <div className={styles.headerLeft}>
+}) => {
+  
+  const rewardReadyIcon =
+    <span className={`${styles.checkIcon} ${isSelected ? styles.selected : ''}`}>
+      🎁
+    </span>;
+
+  return (
+    <div className={styles.container}>
       <span className={styles.shopName}>{shopName}</span>
+
+      {status === 'REWARD_READY' && rewardReadyIcon}
     </div>
-    <div className={styles.headerRight}>
-      {status === 'REWARD_READY' && (
-        <span className={`${styles.checkIcon} ${isSelected ? styles.selected : ''}`}>
-          🎁
-        </span>
-      )}
-    </div>
-  </>
-);
+  );
+};
 
 export default PunchCardFrontHeader; 

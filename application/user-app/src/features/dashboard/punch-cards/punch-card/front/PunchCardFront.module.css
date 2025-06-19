@@ -1,41 +1,4 @@
-/* === FRONT CARD STYLES === */
-.container {
-  width: 100%;
-  height: 100%;
-  display: grid;
-  grid-template-rows: 
-    22cqh
-    56cqh
-    22cqh;
+/* === FRONT CARD SPECIFIC STYLES === */
+.frontSide {
   background-color: #8d6e63;
 }
-
-/* === COMMON SECTION STYLES === */
-.containerSection {
-  box-sizing: border-box;
-  display: flex;
-}
-
-/* === HEADER STYLES === */
-.header {
-  padding: var(--padding);
-  justify-content: space-between;
-  align-items: center;
-  background-color: #5d4037;
-  color: #f5f5dc;
-  border-radius: var(--card-border-radius) var(--card-border-radius) 0 0;
-  font-size: 3.5cqh;
-  container-type: size;
-}
-
-/* === BODY STYLES === */
-.body {
-  padding: var(--padding);
-  flex-direction: column;
-}
-
-/* === FOOTER STYLES === */
-.footer {
-  align-items: center;
-  justify-content: center;
-} 

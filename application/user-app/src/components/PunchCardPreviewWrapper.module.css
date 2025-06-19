@@ -1,7 +1,7 @@
 /* Ensure full screen for preview */
 :global(html), :global(body) {
-  margin: 0 !important;
-  padding: 0 !important;
+  margin: 10 !important;
+  padding: 10 !important;
   width: 100% !important;
   height: 100% !important;
   overflow: hidden !important;
@@ -10,8 +10,8 @@
 :global(#root) {
   width: 100% !important;
   height: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
+  margin: 10 !important;
+  padding: 10 !important;
 }
 
 .previewContainer {

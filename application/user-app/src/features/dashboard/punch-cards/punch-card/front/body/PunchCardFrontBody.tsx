@@ -1,6 +1,5 @@
 import React from 'react';
-import PunchCardFrontBodyPunchesSection from './PunchCardFrontBodyPunchesSection';
-import AutoScaleText from './AutoScaleText';
+import PunchCardFrontBodyPunchesSection from './punches/PunchCardFrontBodyPunchesSection';
 import styles from './PunchCardFrontBody.module.css';
 
 interface PunchCardFrontBodyProps {
@@ -19,22 +18,20 @@ const PunchCardFrontBody: React.FC<PunchCardFrontBodyProps> = ({
 }) => {
   return (
     <div className={styles.container}>
-      <div className={styles.punchesSection}>
+      <div className={styles.punches}>
         <PunchCardFrontBodyPunchesSection
           totalPunches={totalPunches}
           currentPunches={currentPunches}
           animatedPunchIndex={animatedPunchIndex}
         />
       </div>
-      <div className={styles.loyaltyProgramSection}>
-        {loyaltyProgram && (
-          <div 
-            className={styles.loyaltyProgramName}
-          >
-            {loyaltyProgram.name}     
+      {loyaltyProgram && (
+        <div className={styles.loyaltyProgramNameContainer}>
+          <div className={styles.loyaltyProgramName}>
+            {loyaltyProgram.name}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

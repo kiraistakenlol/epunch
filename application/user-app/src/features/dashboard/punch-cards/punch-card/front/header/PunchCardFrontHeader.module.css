@@ -1,28 +1,24 @@
 /* === PUNCH CARD FRONT HEADER STYLES === */
 
-.headerLeft {
-  display: flex;
-  align-items: center;
-  flex: 1;
-}
+.container {
+  height: 100%;
+  width: 100%;
 
-.headerRight {
+  background-color: #5d4037;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  opacity: 0.8;
+  padding: 0 calc(var(--card-height) * 0.05);
 }
 
 .shopName {
   color: #f5f5dc;
-  font-size: 2.6em;
+  font-size: calc(var(--card-height) * 0.1);
   font-weight: bold;
-  font-style: normal;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
 }
 
 .checkIcon {
-  font-size: 4em;
+  font-size: calc(var(--card-height) * 0.13);
   font-weight: bolder;
   color: #44e62f;
   text-shadow: 

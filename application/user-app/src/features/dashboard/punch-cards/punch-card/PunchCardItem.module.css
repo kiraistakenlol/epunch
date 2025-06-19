@@ -1,40 +1,41 @@
 /* === PUNCH CARD MAIN CONTAINER === */
-.punchCardItem {
+.punchCardItemContainer {
   /* Container-agnostic dimensions - takes full height of parent */
   height: 100%;
-  aspect-ratio: 1.25;
-  
-  /* Pure proportional sizing - maintains exact proportions at all container sizes */
-  --card-border-radius: 4%;
-  --card-shadow-blur: 1%;
-  --padding: 4%;
-  
-  /* Proportional font size - scales perfectly with container */
-  font-size: 1.3cqh;
 
-  background-color: #8d6e63;
-  border-radius: var(--card-border-radius);
-  box-shadow: 0 var(--card-shadow-blur) calc(var(--card-shadow-blur) * 2) rgba(93, 64, 55, 0.3);
+  --aspect-ratio: 1.3;
+
+  aspect-ratio: var(--aspect-ratio);
+  
+  /* Establish container context for children */
+  container-type: size;
+  
+  /* Prevent squeezing in flex container */
   flex-shrink: 0;
+}
+
+/* === CARD INNER CONTAINER === */
+.cardInner {
+  --card-height: 100cqh;
+  
+  /* Apply styling */
+  height: var(--card-height);
+  aspect-ratio: 1.3;
+  
+  font-size: 2.5cqh(punch-card);
+  background-color: #8d6e63;
+  border-radius: calc(var(--card-height) * 0.05);
+  box-shadow: 0 0 calc(var(--card-height) * 0.05) 0 rgba(93, 64, 55, 0.3);
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: hidden;
   transition: transform 0.3s ease;
-  will-change: transform;
-  container-type: size;
-}
-
-/* === CARD INNER CONTAINER === */
-.cardInner {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  will-change: transform; 
 }
 
 /* === CARD HOVER & INTERACTION EFFECTS === */
-.punchCardItem::before {
+.punchCardItemContainer::before {
   content: '';
   position: absolute;
   top: 0;
@@ -52,12 +53,12 @@
   will-change: left;
 }
 
-.punchCardItem:hover::before {
+.punchCardItemContainer:hover::before {
   left: 100%;
 }
 
-.punchCardItem:hover {
-  transform: translateY(-2px);
+.punchCardItemContainer:hover {
+  transform: translateY(-0.5cqh(punch-card));
 }
 
 /* === CARD STATE STYLES === */
@@ -94,12 +95,12 @@
 }
 
 .clickableCard:hover {
-  transform: translate3d(0, -3px, 0);
+  transform: translate3d(0, -0.8cqh(punch-card), 0);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .selectedForRedemption:hover {
-  transform: scale3d(1.01, 1.01, 1) translate3d(0, -1px, 0);
+  transform: scale3d(1.01, 1.01, 1) translate3d(0, -0.3cqh(punch-card), 0);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -114,7 +115,7 @@
 }
 
 .flippableCard:hover {
-  transform: translateY(-2px);
+  transform: translateY(-0.5cqh(punch-card));
 }
 
 .flipping {
