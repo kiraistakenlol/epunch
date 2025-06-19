@@ -35,6 +35,10 @@ import { Pool } from 'pg';
         
         const pool = new Pool(poolConfig);
 
+        pool.on('error', (err) => {
+          logger.error('Unexpected error on idle client', err);
+        });
+
         try {
           logger.log('Testing database connection...');
           const client = await pool.connect();
