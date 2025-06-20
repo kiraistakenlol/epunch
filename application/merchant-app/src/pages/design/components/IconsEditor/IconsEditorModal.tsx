@@ -68,9 +68,14 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
     setOpenDropdown(null); // Close dropdown after selection
   };
 
-  // Auto-save when both icons are selected
-  React.useEffect(() => {
-    if (selectedFilled && selectedUnfilled && isOpen) {
+  const handleRemoveIcons = async () => {
+    setSelectedFilled(null);
+    setSelectedUnfilled(null);
+    await onSave(null);
+  };
+
+  const handleApplyIcons = async () => {
+    if (selectedFilled && selectedUnfilled) {
       const icons: PunchIconsDto = {
         filled: {
           type: 'svg',
@@ -85,14 +90,10 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
           }
         }
       };
-      onSave(icons);
+      await onSave(icons);
+    } else {
+      await onSave(null);
     }
-  }, [selectedFilled, selectedUnfilled, isOpen, onSave]);
-
-  const handleRemoveIcons = async () => {
-    setSelectedFilled(null);
-    setSelectedUnfilled(null);
-    await onSave(null);
   };
 
   const handleIconClick = (iconId: string) => {
@@ -178,33 +179,6 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
               <div style={{ fontSize: '12px', fontWeight: 'bold' }}>Unfilled</div>
             </div>
           </div>
-          
-          {(selectedFilled || selectedUnfilled) && (
-            <div style={{ marginTop: '16px', textAlign: 'center' }}>
-              <button
-                onClick={handleRemoveIcons}
-                style={{
-                  padding: '8px 16px',
-                  backgroundColor: '#f44336',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '6px',
-                  fontSize: '12px',
-                  fontWeight: 'bold',
-                  cursor: 'pointer',
-                  transition: 'background-color 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#d32f2f';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = '#f44336';
-                }}
-              >
-                Remove Custom Icons
-              </button>
-            </div>
-          )}
         </div>
 
         {/* Search */}
@@ -397,7 +371,61 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
           paddingTop: '12px',
           borderTop: '1px solid #e0e0e0'
         }}>
-          Click any icon to choose filled (●) or unfilled (○) type. Use "Remove Custom Icons" to revert to default icons. Changes are applied automatically.
+          Click any icon to choose filled (●) or unfilled (○) type. Press "Apply" to save your selection.
+        </div>
+
+        {/* Action Buttons */}
+        <div style={{
+          display: 'flex',
+          gap: '12px',
+          marginTop: '20px',
+          justifyContent: 'center'
+        }}>
+          <button
+            onClick={handleApplyIcons}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: '#4caf50',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              fontSize: '14px',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              transition: 'background-color 0.2s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#45a049';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#4caf50';
+            }}
+          >
+            Apply
+          </button>
+          
+          <button
+            onClick={handleRemoveIcons}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: '#f44336',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              fontSize: '14px',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              transition: 'background-color 0.2s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#d32f2f';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#f44336';
+            }}
+          >
+            Remove Custom Icons
+          </button>
         </div>
       </>
     </EpunchModal>

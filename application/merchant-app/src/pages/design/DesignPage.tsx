@@ -139,6 +139,13 @@ export const DesignPage: React.FC = () => {
     }));
   };
 
+  const handleRemoveCustomIcons = async () => {
+    setUpdatedStyle(prev => ({
+      ...(prev || currentStyle),
+      punchIcons: null
+    }));
+  };
+
   const handleApplyStyle = async () => {
     if (!merchant?.id || !updatedStyle) return;
     
@@ -222,6 +229,7 @@ export const DesignPage: React.FC = () => {
               onEditColors={() => openModal('colors')}
               onEditLogo={() => openModal('logo')}
               onEditIcons={() => openModal('icons')}
+              onRemoveCustomIcons={handleRemoveCustomIcons}
             />
           </>
         )}

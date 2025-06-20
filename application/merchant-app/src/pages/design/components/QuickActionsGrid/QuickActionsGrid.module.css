@@ -13,6 +13,7 @@
   cursor: pointer;
   transition: all var(--animation-duration-standard) var(--animation-easing);
   text-align: center;
+  position: relative;
 }
 
 .actionCard:hover {
@@ -100,6 +101,30 @@
   margin: 0;
   font-size: var(--font-size-caption);
   color: var(--color-text-secondary);
+}
+
+/* === REMOVE BUTTON === */
+.removeButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 50%;
+  background-color: #f44336;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.removeButton:hover {
+  background-color: #d32f2f;
 }
 
 /* Mobile responsive */

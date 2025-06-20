@@ -8,13 +8,15 @@ interface QuickActionsGridProps {
   onEditColors: () => void;
   onEditLogo: () => void;
   onEditIcons: () => void;
+  onRemoveCustomIcons: () => void;
 }
 
 export const QuickActionsGrid: React.FC<QuickActionsGridProps> = ({
   displayStyle,
   onEditColors,
   onEditLogo,
-  onEditIcons
+  onEditIcons,
+  onRemoveCustomIcons
 }) => {
   const renderIconPreview = () => {
     if (displayStyle.punchIcons) {
@@ -100,6 +102,18 @@ export const QuickActionsGrid: React.FC<QuickActionsGridProps> = ({
         <p className={styles.actionDescription}>
           {displayStyle.punchIcons ? 'Custom' : 'Default'}
         </p>
+        {displayStyle.punchIcons && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onRemoveCustomIcons();
+            }}
+            className={styles.removeButton}
+            title="Remove custom icons"
+          >
+            ×
+          </button>
+        )}
       </div>
     </div>
   );
