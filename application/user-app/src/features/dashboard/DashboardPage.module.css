@@ -4,7 +4,7 @@
 
 .pageContainer {
   height: 100svh;
-  background-color: #424242;
+  background-color: var(--color-background-default);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -24,14 +24,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #424242;
+  background-color: var(--color-background-default);
   padding: clamp(5px, 3svh, 20px) clamp(10px, 5vw, 30px);
   min-height: 0; /* Allow flex shrinking */
 }
 
 .cardsSection {
   height: var(--cards-section-height);
-  background-color: #795548;
+  background-color: var(--color-secondary);
   overflow-x: auto;
   overflow-y: hidden;
   padding: 15px 20px;

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import EPunchModal from '../../components/EPunchModal';
 import EmailAuthForm from './EmailAuthForm';
 import { signInWithRedirect } from 'aws-amplify/auth';
+import { colors } from '../../theme';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -25,31 +26,31 @@ const buttonStyle: React.CSSProperties = {
 
 const googleButtonStyle: React.CSSProperties = {
   ...buttonStyle,
-  backgroundColor: '#4285f4',
-  color: 'white',
+  backgroundColor: colors.button.google,
+  color: colors.text.light,
 };
 
 const emailButtonStyle: React.CSSProperties = {
   ...buttonStyle,
-  backgroundColor: '#ff9500',
-  color: 'white',
+  backgroundColor: colors.button.orange,
+  color: colors.text.light,
 };
 
 const switchModeStyle: React.CSSProperties = {
   textAlign: 'center',
   marginTop: '20px',
-  color: '#666',
+  color: colors.text.disabled,
   fontSize: '14px',
 };
 
 const linkStyle: React.CSSProperties = {
-  color: '#ff9500',
+  color: colors.button.orange,
   cursor: 'pointer',
   textDecoration: 'underline',
 };
 
 const backLinkStyle: React.CSSProperties = {
-  color: '#666',
+  color: colors.text.disabled,
   cursor: 'pointer',
   fontSize: '14px',
   marginBottom: '15px',
@@ -117,8 +118,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode }) =
     >
       {error && (
         <div style={{
-          backgroundColor: '#fee',
-          color: '#c33',
+          backgroundColor: colors.modal.errorBg,
+          color: colors.modal.errorText,
           padding: '10px',
           borderRadius: '4px',
           marginBottom: '15px',
@@ -145,10 +146,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode }) =
             style={emailButtonStyle}
             onClick={handleEmailAuth}
             onMouseOver={(e) => {
-              e.currentTarget.style.backgroundColor = '#e6850e';
+              e.currentTarget.style.backgroundColor = colors.button.orangeHover;
             }}
             onMouseOut={(e) => {
-              e.currentTarget.style.backgroundColor = '#ff9500';
+              e.currentTarget.style.backgroundColor = colors.button.orange;
             }}
           >
             Continue with Email
@@ -158,10 +159,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode }) =
             style={googleButtonStyle}
             onClick={handleGoogleAuth}
             onMouseOver={(e) => {
-              e.currentTarget.style.backgroundColor = '#3367d6';
+              e.currentTarget.style.backgroundColor = colors.button.googleHover;
             }}
             onMouseOut={(e) => {
-              e.currentTarget.style.backgroundColor = '#4285f4';
+              e.currentTarget.style.backgroundColor = colors.button.google;
             }}
           >
             Continue with Google

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactModal from 'react-modal';
+import { colors } from '../theme';
 
 interface EPunchModalProps {
   isOpen: boolean;
@@ -11,7 +12,7 @@ interface EPunchModalProps {
 
 const modalStyles: ReactModal.Styles = {
   overlay: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            backgroundColor: colors.modal.overlay,
     zIndex: 2000,
   },
   content: {
@@ -32,8 +33,8 @@ const modalStyles: ReactModal.Styles = {
 };
 
 const headerStyle: React.CSSProperties = {
-  backgroundColor: '#5d4037',
-  color: '#f5f5dc',
+  backgroundColor: colors.modal.background,
+  color: colors.modal.text,
   padding: '20px',
   textAlign: 'center',
   fontSize: '1.2em',
@@ -43,7 +44,7 @@ const headerStyle: React.CSSProperties = {
 
 const contentStyle: React.CSSProperties = {
   padding: '30px',
-  backgroundColor: 'white',
+  backgroundColor: colors.background.paper,
 };
 
 const closeButtonStyle: React.CSSProperties = {
@@ -53,7 +54,7 @@ const closeButtonStyle: React.CSSProperties = {
   background: 'none',
   border: 'none',
   fontSize: '24px',
-  color: '#f5f5dc',
+  color: colors.modal.text,
   cursor: 'pointer',
   padding: '0',
   width: '30px',

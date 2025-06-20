@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { signUp, confirmSignUp, signIn } from 'aws-amplify/auth';
+import { colors } from '../../theme';
 
 interface EmailAuthFormProps {
   mode: 'signin' | 'signup';
@@ -15,15 +16,15 @@ const formStyle: React.CSSProperties = {
 
 const inputStyle: React.CSSProperties = {
   padding: '12px',
-  border: '1px solid #ddd',
+  border: `1px solid ${colors.modal.border}`,
   borderRadius: '6px',
   fontSize: '16px',
 };
 
 const buttonStyle: React.CSSProperties = {
   padding: '12px',
-  backgroundColor: '#ff9500',
-  color: 'white',
+  backgroundColor: colors.button.orange,
+  color: colors.text.light,
   border: 'none',
   borderRadius: '6px',
   fontSize: '16px',
@@ -110,8 +111,8 @@ const EmailAuthForm: React.FC<EmailAuthFormProps> = ({ mode, onSuccess, onError 
     return (
       <form onSubmit={handleSubmit} style={formStyle}>
         <div style={{ textAlign: 'center', marginBottom: '15px' }}>
-          <h3 style={{ margin: '0 0 10px 0', color: '#333' }}>Check Your Email</h3>
-          <p style={{ margin: 0, color: '#666', fontSize: '14px' }}>
+          <h3 style={{ margin: '0 0 10px 0', color: colors.text.primary }}>Check Your Email</h3>
+          <p style={{ margin: 0, color: colors.text.disabled, fontSize: '14px' }}>
             We sent a verification code to {email}
           </p>
         </div>

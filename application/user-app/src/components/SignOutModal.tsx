@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import EPunchModal from './EPunchModal';
 import type { RootState } from '../store/store';
+import { colors } from '../theme';
 import { selectSignOutModalOpen, closeSignOutModal } from '../features/signOut/signOutSlice';
 import { signOut } from 'aws-amplify/auth';
 
@@ -19,21 +20,21 @@ const buttonStyle: React.CSSProperties = {
 
 const confirmButtonStyle: React.CSSProperties = {
   ...buttonStyle,
-  backgroundColor: '#d32f2f',
-  color: 'white',
+  backgroundColor: colors.button.danger,
+  color: colors.text.light,
 };
 
 const cancelButtonStyle: React.CSSProperties = {
   ...buttonStyle,
-  backgroundColor: '#f5f5f5',
-  color: '#333',
-  border: '1px solid #ddd',
+  backgroundColor: colors.button.cancel,
+  color: colors.text.primary,
+  border: `1px solid ${colors.modal.border}`,
 };
 
 const messageStyle: React.CSSProperties = {
   textAlign: 'center',
   marginBottom: '20px',
-  color: '#666',
+  color: colors.text.disabled,
   fontSize: '16px',
   lineHeight: '1.5',
 };
@@ -71,10 +72,10 @@ const SignOutModal: React.FC = () => {
         style={confirmButtonStyle}
         onClick={handleConfirm}
         onMouseOver={(e) => {
-          e.currentTarget.style.backgroundColor = '#b71c1c';
+          e.currentTarget.style.backgroundColor = colors.button.dangerHover;
         }}
         onMouseOut={(e) => {
-          e.currentTarget.style.backgroundColor = '#d32f2f';
+          e.currentTarget.style.backgroundColor = colors.button.danger;
         }}
       >
         Sign Out
@@ -84,10 +85,10 @@ const SignOutModal: React.FC = () => {
         style={cancelButtonStyle}
         onClick={handleClose}
         onMouseOver={(e) => {
-          e.currentTarget.style.backgroundColor = '#e0e0e0';
+          e.currentTarget.style.backgroundColor = colors.button.cancelHover;
         }}
         onMouseOut={(e) => {
-          e.currentTarget.style.backgroundColor = '#f5f5f5';
+          e.currentTarget.style.backgroundColor = colors.button.cancel;
         }}
       >
         Cancel

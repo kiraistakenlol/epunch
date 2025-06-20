@@ -4,16 +4,17 @@ import { Dropdown } from 'react-bootstrap';
 import { RootState } from '../store/store';
 import { selectIsAuthenticated, selectSuperAdmin } from '../features/auth/authSlice';
 import { openSignOutModal } from '../features/signOut/signOutSlice';
+import { colors } from '../theme';
 
 interface AppHeaderProps {
   onSignOut?: () => void;
 }
 
 const headerStyle: React.CSSProperties = {
-  backgroundColor: "#5d4037",
+  backgroundColor: colors.primary,
   padding: "0 20px",
-  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-  color: "#f5f5dc",
+          boxShadow: `0 2px 4px ${colors.shadow.border}`,
+  color: colors.text.light,
   position: "fixed",
   top: 0,
   left: 0,
@@ -28,7 +29,7 @@ const headerStyle: React.CSSProperties = {
 const logoStyle: React.CSSProperties = {
   fontSize: "1.8em",
   fontWeight: "bold",
-  textShadow: "1px 1px 1px #3e2723",
+  textShadow: `1px 1px 1px ${colors.text.secondary}`,
   flex: 1,
   textAlign: "center"
 };
@@ -37,12 +38,12 @@ const profileIconStyle: React.CSSProperties = {
   width: "45px",
   height: "45px",
   borderRadius: "50%",
-  backgroundColor: "#8d6e63",
+  backgroundColor: colors.primaryLight,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   fontSize: "22px",
-  color: "#f5f5dc",
+  color: colors.text.light,
   border: "none",
   cursor: "pointer",
   transition: "background-color 0.2s ease"
@@ -50,7 +51,7 @@ const profileIconStyle: React.CSSProperties = {
 
 const devLinkStyle: React.CSSProperties = {
   fontSize: "10px",
-  color: "rgba(245, 245, 220, 0.4)",
+  color: colors.text.disabled,
   textDecoration: "none",
   padding: "2px 4px",
   borderRadius: "2px",
@@ -81,10 +82,10 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
           href="/dev" 
           style={devLinkStyle}
           onMouseOver={(e) => {
-            e.currentTarget.style.color = 'rgba(245, 245, 220, 0.7)';
+            e.currentTarget.style.color = colors.text.secondary;
           }}
           onMouseOut={(e) => {
-            e.currentTarget.style.color = 'rgba(245, 245, 220, 0.4)';
+            e.currentTarget.style.color = colors.text.disabled;
           }}
         >
           dev
@@ -100,10 +101,10 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
             style={profileIconStyle}
             bsPrefix="custom-dropdown-toggle"
             onMouseOver={(e) => {
-              e.currentTarget.style.backgroundColor = '#a1887f';
+              e.currentTarget.style.backgroundColor = colors.secondaryLight;
             }}
             onMouseOut={(e) => {
-              e.currentTarget.style.backgroundColor = '#8d6e63';
+              e.currentTarget.style.backgroundColor = colors.primaryLight;
             }}
           >
             <i className="bi bi-person-fill"></i>

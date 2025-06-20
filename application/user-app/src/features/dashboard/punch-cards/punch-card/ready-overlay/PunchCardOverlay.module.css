@@ -25,23 +25,23 @@
 }
 
 .selected {
-  color: #ffd700;
-  background-color: rgba(255, 215, 0, 0.5);
+  color: var(--color-reward-selected);
+  background-color: var(--color-reward-selected-bg);
 }
 
 .selected:hover {
-  background-color: rgba(255, 215, 0, 0.3);
-  border-color: rgba(255, 215, 0, 0.5);
+  background-color: var(--color-reward-selected-bg-hover);
+  border-color: var(--color-reward-selected-border);
   transform: scale(1.02);
 }
 
 .redeemable {
-  color: #44e62f;
-  background-color: rgba(68, 230, 47, 0.2);
+  color: var(--color-reward-ready);
+  background-color: var(--color-reward-ready-bg);
 }
 
 .redeemable:hover {
-  background-color: rgba(68, 230, 47, 0.3);
-  border-color: rgba(68, 230, 47, 0.5);
+  background-color: var(--color-reward-ready-bg-hover);
+  border-color: var(--color-reward-ready-border);
   transform: scale(1.02);
 } 

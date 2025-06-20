@@ -27,7 +27,7 @@
   width: calc(var(--cards-section-height) * 0.07);
   height: calc(var(--cards-section-height) * 0.07);
   border-radius: 50%;
-  background-color: #5d4037;
+  background-color: var(--color-primary);
   animation: dotPulseOptimized 1.4s infinite ease-in-out;
   will-change: transform;
 }
@@ -66,14 +66,14 @@
 
 .emptyStateHeadline {
   margin: 0 0 calc(var(--cards-section-height) * 0.0375) 0;
-  color: #f5f5dc;
+  color: var(--color-text-light);
   font-size: calc(var(--cards-section-height) * 0.1);
   font-weight: bold;
 }
 
 .emptyStateSubtext {
   margin: 0;
-  color: rgba(245, 245, 220, 0.85);
+  color: var(--color-text-light);
   font-size: calc(var(--cards-section-height) * 0.06);
   line-height: 1.4;
 } 

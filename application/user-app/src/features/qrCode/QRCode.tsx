@@ -4,6 +4,7 @@ import { QRCodeCanvas } from 'qrcode.react';
 import type { QRValueDto } from 'e-punch-common-core';
 import type { RootState } from '../../store/store';
 import { selectUserId } from '../auth/authSlice';
+import { colors } from '../../theme';
 import { selectSelectedCard } from '../punchCards/punchCardsSlice';
 import { selectLoyaltyProgramById } from '../loyaltyPrograms/loyaltyProgramsSlice';
 
@@ -124,12 +125,12 @@ const QRCode: React.FC = () => {
         height: containerSize.height,
         minWidth: containerSize.minWidth,
         minHeight: containerSize.minHeight,
-        backgroundColor: '#f5f5dc',
+        backgroundColor: 'var(--color-background-paper)',
         borderRadius: '8px',
         padding: containerSize.padding,
         boxShadow: isRewardMode 
-          ? '0 4px 8px rgba(0, 0, 0, 0.3), 0 0 40px rgba(255, 215, 0, 1), 0 0 80px rgba(255, 215, 0, 0.8)' 
-          : '0 4px 8px rgba(0, 0, 0, 0.3)',
+                  ? `0 4px 8px ${colors.shadow.heavy}, 0 0 40px ${colors.reward.selected}, 0 0 80px ${colors.reward.selectedBg}`
+        : `0 4px 8px ${colors.shadow.heavy}`,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',

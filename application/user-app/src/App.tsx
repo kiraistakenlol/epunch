@@ -12,6 +12,7 @@ import Alert from './features/alert/Alert';
 import { initializeUser } from './features/auth/authSlice';
 import { configureAmplify, setupAuthListener } from './config/amplify';
 import { config } from './config/env';
+import { injectCSSVariables } from './styles/css-variables';
 import type { AppDispatch } from './store/store';
 import './styles/global.css';
 
@@ -22,6 +23,7 @@ function App() {
 
   useEffect(() => {
     configureAmplify();
+    injectCSSVariables();
     
     const removeAuthListener = setupAuthListener(dispatch);
     

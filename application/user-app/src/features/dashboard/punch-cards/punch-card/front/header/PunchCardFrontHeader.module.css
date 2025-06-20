@@ -4,7 +4,7 @@
   height: 100%;
   width: 100%;
 
-  background-color: #5d4037;
+  background-color: var(--color-primary);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -12,7 +12,7 @@
 }
 
 .shopName {
-  color: #f5f5dc;
+  color: var(--color-text-light);
   font-size: calc(var(--card-height) * 0.1);
   font-weight: bold;
 }
@@ -20,17 +20,17 @@
 .checkIcon {
   font-size: calc(var(--card-height) * 0.13);
   font-weight: bolder;
-  color: #44e62f;
+  color: var(--color-reward-ready);
   text-shadow: 
-    0 0 10px #44e62f,
-    0 0 20px #44e62f,
-    0 0 30px #44e62f;
+    0 0 10px var(--color-reward-ready),
+    0 0 20px var(--color-reward-ready),
+    0 0 30px var(--color-reward-ready);
   transition: text-shadow 0.3s ease;
 }
 
 .checkIcon.selected {
   text-shadow: 
-    0 0 10px #ffd700,
-    0 0 20px #ffd700,
-    0 0 30px #ffd700;
+    0 0 10px var(--color-reward-selected),
+    0 0 20px var(--color-reward-selected),
+    0 0 30px var(--color-reward-selected);
 } 

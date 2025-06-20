@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import AuthButtons from './AuthButtons';
+import { colors } from '../../theme';
 import AuthModal from './AuthModal';
 import { selectIsAuthenticated } from './authSlice';
 
@@ -30,8 +31,8 @@ const AuthContainer: React.FC = () => {
 
   const getContainerStyle = (): React.CSSProperties => {
     const baseStyle = {
-      backgroundColor: '#f5f5dc',
-      borderBottom: '1px solid #e0e0e0',
+      backgroundColor: 'var(--color-background-paper)',
+              borderBottom: `1px solid ${colors.background.card}`,
     };
 
     // Apply responsive adjustments based on screen size
@@ -55,7 +56,7 @@ const AuthContainer: React.FC = () => {
 
   const getTextStyle = (): React.CSSProperties => {
     const baseStyle = {
-      color: '#8b7355',
+              color: 'var(--color-text-disabled)',
     };
 
     if (windowSize.height <= 600 || windowSize.width <= 400) {

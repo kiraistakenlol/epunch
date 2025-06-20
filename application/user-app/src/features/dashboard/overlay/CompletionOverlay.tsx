@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './CompletionOverlay.module.css';
 import { handleEvent } from '../../animations/animationSlice';
+import { colors } from '../../../theme';
 import { hideOverlay, selectCompletionOverlay } from './completionOverlaySlice';
 import { useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store/store';
@@ -63,7 +64,7 @@ const CompletionOverlay: React.FC = () => {
         right: 0,
         bottom: 0,
         zIndex: 9999,
-        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        backgroundColor: colors.shadow.overlay,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
