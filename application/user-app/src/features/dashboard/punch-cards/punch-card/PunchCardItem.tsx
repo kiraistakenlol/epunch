@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState, forwardRef } from 'react';
 import { PunchCardDto } from 'e-punch-common-core';
 import { useAppDispatch } from '../../../../store/hooks';
+import { CustomizableCardStyles } from '../../../../utils/cardStyles';
+
 import { handleEvent } from '../../../animations/animationSlice';
 import PunchCardFront from './front/PunchCardFront';
 import PunchCardBack from './back/PunchCardBack';
@@ -8,6 +10,7 @@ import PunchCardOverlay from './ready-overlay/PunchCardOverlay';
 import styles from './PunchCardItem.module.css';
 
 interface PunchCardItemProps extends PunchCardDto {
+  resolvedStyles: CustomizableCardStyles;
   isHighlighted?: boolean;
   animatedPunchIndex?: number;
   shouldSlideIn?: boolean;
@@ -26,7 +29,7 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
   currentPunches,
   totalPunches,
   status,
-  styles: cardStyles,
+  resolvedStyles,
   isHighlighted = false,
   animatedPunchIndex,
   shouldSlideIn = false,
@@ -99,6 +102,8 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
     }
   };
 
+  // Components now derive their own colors internally
+
   const cardClasses = [
     styles.punchCardItemContainer,
     styles[`status${status}`],
@@ -126,7 +131,7 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
             currentPunches={currentPunches}
             totalPunches={totalPunches}
             status={status}
-            styles={cardStyles}
+            resolvedStyles={resolvedStyles}
             animatedPunchIndex={animatedPunchIndex}
             isSelected={isSelected}
           />
@@ -136,7 +141,7 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
             shopName={shopName}
             shopAddress={shopAddress}
             totalPunches={totalPunches}
-            styles={cardStyles}
+            resolvedStyles={resolvedStyles}
           />
         )}
 

@@ -1,33 +1,20 @@
 import React from 'react';
-import { PunchIconsDto } from 'e-punch-common-core';
+import { CustomizableCardStyles } from '../../../../../../../utils/cardStyles';
 import PunchIconSVG from './punch-icon-circle/PunchIconSVG';
 import styles from './PunchCardFrontBodyPunchesSection.module.css';
-
-// Default SVG content for filled and unfilled circles
-const DEFAULT_FILLED_SVG = `
-<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="50" cy="50" r="45" fill="currentColor" />
-</svg>
-`;
-
-const DEFAULT_UNFILLED_SVG = `
-<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="50" cy="50" r="45" fill="transparent" stroke="currentColor" stroke-width="4" stroke-dasharray="8 4" />
-</svg>
-`;
 
 interface PunchCardFrontBodyPunchesSectionProps {
   totalPunches: number;
   currentPunches: number;
   animatedPunchIndex?: number;
-  punchIcons?: PunchIconsDto | null;
+  resolvedStyles: CustomizableCardStyles;
 }
 
 const PunchCardFrontBodyPunchesSection: React.FC<PunchCardFrontBodyPunchesSectionProps> = ({
   totalPunches,
   currentPunches,
   animatedPunchIndex,
-  punchIcons
+  resolvedStyles
 }) => {
   const MAX_PUNCHES = 10;
   const punchCircles: JSX.Element[] = [];
@@ -48,12 +35,16 @@ const PunchCardFrontBodyPunchesSection: React.FC<PunchCardFrontBodyPunchesSectio
     }
 
     punchCircles.push(
-      <div key={i} className={containerClasses}>
+      <div 
+        key={i} 
+        className={containerClasses}
+        style={{ color: resolvedStyles.colors.punchIconColor }}
+      >
         <PunchIconSVG 
           svgRawContent={
-            punchIcons 
-              ? (isFilled ? punchIcons.filled.data.svg_raw_content : punchIcons.unfilled.data.svg_raw_content)
-              : (isFilled ? DEFAULT_FILLED_SVG : DEFAULT_UNFILLED_SVG)
+            isFilled 
+              ? resolvedStyles.punchIcons.filled.data.svg_raw_content 
+              : resolvedStyles.punchIcons.unfilled.data.svg_raw_content
           }
         />
       </div>

@@ -15,7 +15,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-primary); /* Base color for all icons */
   transition: color 0.2s ease, transform 0.2s ease;
   overflow: hidden; /* Prevent SVG sizing issues from breaking grid layout */
 }

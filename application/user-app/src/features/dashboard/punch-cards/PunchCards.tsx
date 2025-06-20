@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PunchCardItem from './punch-card/PunchCardItem';
+import { resolveCardStyles } from '../../../utils/cardStyles';
 import styles from './PunchCards.module.css';
 import type { RootState, AppDispatch } from '../../../store/store';
 import { selectAuthLoading } from '../../auth/authSlice';
@@ -166,23 +167,29 @@ const PunchCards: React.FC<PunchCardsProps> = () => {
     }
     return (
       <div className={styles.punchCardsList}>
-        {cardsToRender.map((card) => (
-          <PunchCardItem
-            key={card.id}
-            ref={(el) => {
-              cardRefs.current[card.id] = el;
-            }}
-            {...card}
-            isHighlighted={card.animationFlags?.highlighted || false}
-            animatedPunchIndex={card.animationFlags?.punchAnimation?.punchIndex}
-            shouldSlideIn={slideInCards.has(card.id)}
-            shouldSlideRight={slideRightCards.has(card.id)}
-            isSelected={selectedCardId === card.id}
-            onCardClick={handleCardClick}
-            onRedemptionClick={handleRedemptionClick}
-            animateRewardClaimed={card.animationFlags?.rewardClaimedAnimation || false}
-          />
-        ))}
+        {cardsToRender.map((card) => {
+          // Resolve styles once per card
+          const resolvedStyles = resolveCardStyles(card.styles);
+          
+          return (
+            <PunchCardItem
+              key={card.id}
+              ref={(el) => {
+                cardRefs.current[card.id] = el;
+              }}
+              {...card}
+              resolvedStyles={resolvedStyles}
+              isHighlighted={card.animationFlags?.highlighted || false}
+              animatedPunchIndex={card.animationFlags?.punchAnimation?.punchIndex}
+              shouldSlideIn={slideInCards.has(card.id)}
+              shouldSlideRight={slideRightCards.has(card.id)}
+              isSelected={selectedCardId === card.id}
+              onCardClick={handleCardClick}
+              onRedemptionClick={handleRedemptionClick}
+              animateRewardClaimed={card.animationFlags?.rewardClaimedAnimation || false}
+            />
+          );
+        })}
       </div>
     );
   };

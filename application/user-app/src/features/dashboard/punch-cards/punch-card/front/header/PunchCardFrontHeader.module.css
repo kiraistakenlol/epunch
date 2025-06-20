@@ -3,8 +3,6 @@
 .container {
   height: 100%;
   width: 100%;
-
-  background-color: var(--color-primary);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -12,7 +10,6 @@
 }
 
 .shopName {
-  color: var(--color-text-light);
   font-size: calc(var(--card-height) * 0.1);
   font-weight: bold;
 }

@@ -10,7 +10,7 @@
 /* Ensure any SVG inside takes full height */
 .customPunchIconContainer svg,
 .customPunchIconSvg {
-  height: 100%;
+  height: 80%;
   width: auto;
   max-width: 100%;
 }

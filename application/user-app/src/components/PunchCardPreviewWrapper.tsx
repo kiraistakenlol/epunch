@@ -4,6 +4,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import loyaltyProgramsReducer from '../features/loyaltyPrograms/loyaltyProgramsSlice';
 import animationReducer from '../features/animations/animationSlice';
 import PunchCardItem from '../features/dashboard/punch-cards/punch-card/PunchCardItem';
+import { resolveCardStyles } from '../utils/cardStyles';
 import type { LoyaltyProgramDto, PunchIconsDto } from 'e-punch-common-core';
 import styles from './PunchCardPreviewWrapper.module.css';
 
@@ -79,6 +80,18 @@ export const PunchCardPreviewWrapper: React.FC<PunchCardPreviewWrapperProps> = (
     createdAt: new Date().toISOString()
   };
 
+  // Create mock punch card styles
+  const mockCardStyles = {
+    primaryColor,
+    secondaryColor,
+    logoUrl: logoUrl || null,
+    backgroundImageUrl: null,
+    punchIcons: punchIcons || null
+  };
+
+  // Resolve styles once
+  const resolvedStyles = resolveCardStyles(mockCardStyles);
+
   // Create mock punch card
   const mockPunchCard = {
     id: 'preview-card',
@@ -88,13 +101,7 @@ export const PunchCardPreviewWrapper: React.FC<PunchCardPreviewWrapperProps> = (
     currentPunches,
     totalPunches,
     status,
-    styles: {
-      primaryColor,
-      secondaryColor,
-      logoUrl: logoUrl || null,
-      backgroundImageUrl: null,
-      punchIcons: punchIcons || null
-    },
+    styles: mockCardStyles,
     createdAt: new Date().toISOString()
   };
 
@@ -109,6 +116,7 @@ export const PunchCardPreviewWrapper: React.FC<PunchCardPreviewWrapperProps> = (
       >
         <PunchCardItem
           {...mockPunchCard}
+          resolvedStyles={resolvedStyles}
           isHighlighted={showAnimations}
           animatedPunchIndex={showAnimations ? currentPunches - 1 : undefined}
         />

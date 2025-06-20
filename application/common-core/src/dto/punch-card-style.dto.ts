@@ -2,7 +2,7 @@ export interface PunchCardStyleDto {
   primaryColor: string | null;
   secondaryColor: string | null;
   logoUrl: string | null;
-  backgroundImageUrl: string | null;
+  backgroundImageUrl: string | null; // todo deprecated
   punchIcons: PunchIconsDto | null;
 }
 

@@ -1,4 +1,4 @@
 /* === FRONT CARD SPECIFIC STYLES === */
 .frontSide {
-  background-color: var(--color-background-card);
+  /* Layout only - colors applied via inline styles */
 }
