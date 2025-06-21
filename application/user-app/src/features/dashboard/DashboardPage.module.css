@@ -39,6 +39,6 @@
   height: var(--bottom-section-height);
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 15px 20px;
+  padding: 20px;
   flex-shrink: 0;
 } 
