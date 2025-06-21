@@ -19,6 +19,8 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [availableIcons, setAvailableIcons] = useState<IconDto[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
   const [selectedFilled, setSelectedFilled] = useState<IconDto | null>(null);
   const [selectedUnfilled, setSelectedUnfilled] = useState<IconDto | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -35,28 +37,49 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
   // Search for icons
   useEffect(() => {
     const searchIcons = async () => {
-      setLoading(true);
+      const isNewSearch = currentPage === 1;
+      
+      if (isNewSearch) {
+        setLoading(true);
+        setAvailableIcons([]);
+      } else {
+        setLoadingMore(true);
+      }
+      
       try {
         const result: IconSearchResultDto = await apiClient.searchIcons(
           searchQuery || undefined, 
           currentPage, 
           20
         );
-        setAvailableIcons(result.icons);
+        
+        if (isNewSearch) {
+          setAvailableIcons(result.icons);
+        } else {
+          setAvailableIcons(prev => [...prev, ...result.icons]);
+        }
+        
+        setHasMore(result.icons.length === 20);
       } catch (error) {
         console.error('Failed to search icons:', error);
       } finally {
         setLoading(false);
+        setLoadingMore(false);
       }
     };
 
-    const debounceTimer = setTimeout(searchIcons, 300);
-    return () => clearTimeout(debounceTimer);
+    if (currentPage === 1) {
+      const debounceTimer = setTimeout(searchIcons, 300);
+      return () => clearTimeout(debounceTimer);
+    } else {
+      searchIcons();
+    }
   }, [searchQuery, currentPage]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     setCurrentPage(1);
+    setHasMore(true);
   };
 
   const handleIconSelect = (icon: IconDto, type: 'filled' | 'unfilled') => {
@@ -108,6 +131,16 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
       return () => document.removeEventListener('click', handleClickOutside);
     }
   }, [openDropdown]);
+
+  // Handle scroll for infinite loading
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
+    
+    if (isAtBottom && hasMore && !loading && !loadingMore) {
+      setCurrentPage(prev => prev + 1);
+    }
+  };
 
   const renderIcon = (icon: IconDto, size = 40) => (
     <div 
@@ -200,14 +233,17 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
         </div>
 
         {/* Icons Grid */}
-        <div style={{
-          marginBottom: '16px',
-          maxHeight: '250px',
-          overflowY: 'auto',
-          border: '1px solid #e0e0e0',
-          borderRadius: '6px',
-          padding: '12px'
-        }}>
+        <div 
+          onScroll={handleScroll}
+          style={{
+            marginBottom: '16px',
+            maxHeight: '250px',
+            overflowY: 'auto',
+            border: '1px solid #e0e0e0',
+            borderRadius: '6px',
+            padding: '12px'
+          }}
+        >
           {loading ? (
             <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
               Loading icons...
@@ -359,6 +395,13 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
                   </div>
                 );
               })}
+            </div>
+          )}
+          
+          {/* Loading more indicator */}
+          {loadingMore && (
+            <div style={{ textAlign: 'center', padding: '20px', color: '#666' }}>
+              Loading more icons...
             </div>
           )}
         </div>
