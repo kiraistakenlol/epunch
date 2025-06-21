@@ -44,7 +44,7 @@ const QRCode: React.FC = () => {
     if (isRewardMode && loyaltyProgram) {
       return (
         <>
-          show to get{' '}
+          Show to get{' '}
           <span className="fs-8 fw-bold text-decoration-underline">{loyaltyProgram.rewardDescription}</span>
         </>
       );
@@ -92,13 +92,9 @@ const QRCode: React.FC = () => {
       </div>
       <div className="mt-3">
         <div 
-          className="fw-bold" 
           style={{ 
-            color: isRewardMode ? appColors.epunchGreen : appColors.epunchBlack,
-            fontSize: isRewardMode ? '1.25rem' : '1.1rem',
-            textShadow: isRewardMode ? `1px 1px 3px ${appColors.epunchBlack}` : 'none',
-            textTransform: isRewardMode ? 'uppercase' : 'none',
-            letterSpacing: isRewardMode ? '0.5px' : 'normal'
+            color: isRewardMode ? appColors.epunchBlack : appColors.epunchBlack,
+            fontSize: "1.1em",
           }}
         >
           {getQRModeText()}
