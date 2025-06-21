@@ -17,17 +17,17 @@
 .checkIcon {
   font-size: calc(var(--card-height) * 0.13);
   font-weight: bolder;
-  color: var(--color-reward-ready);
+  color: var(--color-epunch-green);
   text-shadow: 
-    0 0 10px var(--color-reward-ready),
-    0 0 20px var(--color-reward-ready),
-    0 0 30px var(--color-reward-ready);
+    0 0 10px var(--color-epunch-green),
+    0 0 20px var(--color-epunch-green),
+    0 0 30px var(--color-epunch-green);
   transition: text-shadow 0.3s ease;
 }
 
 .checkIcon.selected {
   text-shadow: 
-    0 0 10px var(--color-reward-selected),
-    0 0 20px var(--color-reward-selected),
-    0 0 30px var(--color-reward-selected);
+    0 0 10px var(--color-epunch-green),
+    0 0 20px var(--color-epunch-green),
+    0 0 30px var(--color-epunch-green);
 } 

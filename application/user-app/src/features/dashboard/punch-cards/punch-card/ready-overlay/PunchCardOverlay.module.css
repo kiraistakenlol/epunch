@@ -1,11 +1,10 @@
 /* === OVERLAY STYLES === */
-.overlay {
+.container {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -25,23 +24,22 @@
 }
 
 .selected {
-  color: var(--color-reward-selected);
-  background-color: var(--color-reward-selected-bg);
+  color: var(--color-epunch-gold);
+  background-color: color-mix(in srgb, var(--color-epunch-gold) 40%, transparent);
 }
 
 .selected:hover {
-  background-color: var(--color-reward-selected-bg-hover);
-  border-color: var(--color-reward-selected-border);
+  background-color: color-mix(in srgb, var(--color-epunch-gold) 60%, transparent);
+  border-color: var(--color-epunch-gold);
   transform: scale(1.02);
 }
 
 .redeemable {
-  color: var(--color-reward-ready);
-  background-color: var(--color-reward-ready-bg);
+  color: var(--color-epunch-green);
+  background-color: color-mix(in srgb, var(--color-epunch-green) 40%, transparent);
 }
 
 .redeemable:hover {
-  background-color: var(--color-reward-ready-bg-hover);
-  border-color: var(--color-reward-ready-border);
+  background-color: color-mix(in srgb, var(--color-epunch-green) 60%, transparent);
   transform: scale(1.02);
 } 

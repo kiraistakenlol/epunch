@@ -23,7 +23,6 @@
   aspect-ratio: 1.25;
   
   font-size: 2.5cqh(punch-card);
-  background-color: var(--color-background-card);
   border-radius: calc(var(--card-height) * 0.05);
   box-shadow: 
     0 0 calc(var(--card-height) * 0.05) 0 rgba(93, 64, 55, 0.1),

@@ -168,7 +168,6 @@ const PunchCards: React.FC<PunchCardsProps> = () => {
     return (
       <div className={styles.punchCardsList}>
         {cardsToRender.map((card) => {
-          // Resolve styles once per card
           const resolvedStyles = resolveCardStyles(card.styles);
           
           return (

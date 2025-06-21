@@ -12,7 +12,7 @@ const PunchCardOverlay: React.FC<PunchCardOverlayProps> = ({ isSelected, onClick
 
   return (
     <div 
-      className={styles.overlay}
+      className={styles.container}
     >
       <span 
         className={`${styles.label} ${labelClass}`}

@@ -27,7 +27,7 @@
   width: calc(var(--cards-section-height) * 0.07);
   height: calc(var(--cards-section-height) * 0.07);
   border-radius: 50%;
-  background-color: var(--color-primary);
+  background-color: var(--color-epunch-gray);
   animation: dotPulseOptimized 1.4s infinite ease-in-out;
   will-change: transform;
 }

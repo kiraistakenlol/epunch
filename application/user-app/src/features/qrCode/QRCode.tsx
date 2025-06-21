@@ -4,7 +4,7 @@ import { QRCodeCanvas } from 'qrcode.react';
 import type { QRValueDto } from 'e-punch-common-core';
 import type { RootState } from '../../store/store';
 import { selectUserId } from '../auth/authSlice';
-import { colors } from '../../theme';
+import { appColors } from '../../theme';
 import { selectSelectedCard } from '../punchCards/punchCardsSlice';
 import { selectLoyaltyProgramById } from '../loyaltyPrograms/loyaltyProgramsSlice';
 
@@ -69,9 +69,9 @@ const QRCode: React.FC = () => {
       <div style={{ 
         width: 'clamp(120px, 25svh, 250px)',
         height: 'clamp(120px, 25svh, 250px)',
-        backgroundColor: colors.background.white,
+        backgroundColor: 'white',
         padding: 'clamp(5px, 2svh, 15px)',
-        boxShadow: `-14px 6px 16px ${colors.shadow.black}`,
+        boxShadow: `-14px 6px 16px ${appColors.epunchBlack}`,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -94,9 +94,9 @@ const QRCode: React.FC = () => {
         <div 
           className="fw-bold" 
           style={{ 
-            color: isRewardMode ? colors.reward.selected : 'black',
+            color: isRewardMode ? appColors.epunchGreen : appColors.epunchBlack,
             fontSize: isRewardMode ? '1.25rem' : '1.1rem',
-            textShadow: isRewardMode ? `1px 1px 3px rgba(0, 0, 0, 0.6)` : 'none',
+            textShadow: isRewardMode ? `1px 1px 3px ${appColors.epunchBlack}` : 'none',
             textTransform: isRewardMode ? 'uppercase' : 'none',
             letterSpacing: isRewardMode ? '0.5px' : 'normal'
           }}

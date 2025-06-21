@@ -4,7 +4,7 @@ import { Dropdown } from 'react-bootstrap';
 import { RootState } from '../store/store';
 import { selectIsAuthenticated, selectSuperAdmin } from '../features/auth/authSlice';
 import { openSignOutModal } from '../features/signOut/signOutSlice';
-import { colors } from '../theme';
+import { appColors } from '../theme';
 
 interface AppHeaderProps {
   onSignOut?: () => void;
@@ -12,7 +12,7 @@ interface AppHeaderProps {
 
 const headerStyle: React.CSSProperties = {
   padding: "0 20px",
-  color: 'black',
+  color: appColors.epunchBlack,
   position: "fixed",
   top: 0,
   left: 0,
@@ -44,7 +44,7 @@ const profileIconStyle: React.CSSProperties = {
 
 const devLinkStyle: React.CSSProperties = {
   fontSize: "10px",
-  color: colors.text.disabled,
+  color: appColors.epunchBlack,
   textDecoration: "none",
   padding: "2px 4px",
   borderRadius: "2px",
@@ -75,10 +75,10 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
           href="/dev"
           style={devLinkStyle}
           onMouseOver={(e) => {
-            e.currentTarget.style.color = colors.text.secondary;
+            e.currentTarget.style.color = appColors.epunchBeige;
           }}
           onMouseOut={(e) => {
-            e.currentTarget.style.color = colors.text.disabled;
+            e.currentTarget.style.color = appColors.epunchBlack;
           }}
         >
           dev

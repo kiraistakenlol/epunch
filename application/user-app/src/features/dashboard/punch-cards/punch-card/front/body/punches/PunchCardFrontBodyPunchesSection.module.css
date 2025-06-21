@@ -46,15 +46,15 @@
 @keyframes newPunchAnimation {
   0% {
     transform: scale(0.8);
-    color: var(--color-reward-glow);
+    color: var(--color-epunch-mint);
   }
   50% {
     transform: scale(1.2);
-    color: var(--color-reward-glow);
+    color: var(--color-epunch-mint);
   }
   100% {
     transform: scale(1);
-    color: var(--color-reward-glow);
+    color: var(--color-epunch-mint);
   }
 }
 

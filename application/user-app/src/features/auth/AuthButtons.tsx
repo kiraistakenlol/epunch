@@ -1,5 +1,5 @@
 import React from 'react';
-import { colors } from '../../theme';
+import { appColors } from '../../theme';
 
 interface AuthButtonsProps {
   onSignInClick: () => void;
@@ -19,15 +19,15 @@ const buttonBaseStyle: React.CSSProperties = {
 
 const signInButtonStyle: React.CSSProperties = {
   ...buttonBaseStyle,
-  backgroundColor: colors.warning.main,
-  color: colors.text.light,
+  backgroundColor: appColors.epunchOrange,
+  color: appColors.epunchWhite,
 };
 
 const signUpButtonStyle: React.CSSProperties = {
   ...buttonBaseStyle,
   backgroundColor: 'transparent',
-  color: colors.warning.main,
-  border: `1px solid ${colors.warning.main}`,
+  color: appColors.epunchOrange,
+  border: `1px solid ${appColors.epunchOrange}`,
 };
 
 const buttonContainerStyle: React.CSSProperties = {
@@ -42,25 +42,13 @@ const AuthButtons: React.FC<AuthButtonsProps> = ({ onSignInClick, onSignUpClick 
       <button 
         style={signInButtonStyle}
         onClick={onSignInClick}
-        onMouseOver={(e) => {
-          e.currentTarget.style.backgroundColor = colors.warning.main;
-        }}
-        onMouseOut={(e) => {
-          e.currentTarget.style.backgroundColor = colors.warning.main;
-        }}
       >
         Sign In
       </button>
-      <span style={{ color: colors.text.disabled, fontSize: '14px', alignSelf: 'center' }}>or</span>
+      <span style={{ color: appColors.epunchBlack, fontSize: '14px', alignSelf: 'center' }}>or</span>
       <button 
         style={signUpButtonStyle}
         onClick={onSignUpClick}
-        onMouseOver={(e) => {
-          e.currentTarget.style.backgroundColor = colors.hover.background;
-        }}
-        onMouseOut={(e) => {
-          e.currentTarget.style.backgroundColor = 'transparent';
-        }}
       >
         Sign Up
       </button>

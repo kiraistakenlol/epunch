@@ -60,7 +60,6 @@
 .shopName {
   font-style: italic;
   font-weight: bold;
-  text-shadow: 0 0 calc(var(--card-height) * 0.05) var(--color-shadow-text-accent);
   white-space: nowrap;
 }
 
@@ -80,8 +79,8 @@
 }
 
 .totalPunches {
-  background: var(--color-warning-light);
-  color: var(--color-info-slate);
+  background: var(--color-epunch-gold);
+  color: var(--color-epunch-black);
   font-weight: bold;
   padding: calc(var(--card-height) * 0.01);
   border-radius: calc(var(--card-height) * 0.01);

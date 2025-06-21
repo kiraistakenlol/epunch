@@ -1,7 +1,7 @@
 -- User table
 CREATE TABLE "user" (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    email TEXT UNIQUE NOT NULL,
+    email TEXT UNIQUE,
     external_id TEXT UNIQUE,
     external_provider TEXT,
     super_admin BOOLEAN NOT NULL DEFAULT false,

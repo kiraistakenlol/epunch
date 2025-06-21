@@ -4,7 +4,6 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--color-background-overlay);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -22,7 +21,7 @@
 }
 
 .completeText {
-  color: var(--color-text-light);
+  color: black;
   font-size: 3em;
   font-weight: 900;
   text-align: center;

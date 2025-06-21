@@ -53,7 +53,6 @@ const AuthContainer: React.FC = () => {
 
   const getTextStyle = (): React.CSSProperties => {
     const baseStyle = {
-      color: 'var(--color-text-disabled)',
     };
 
     if (windowSize.height <= 600 || windowSize.width <= 400) {

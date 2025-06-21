@@ -58,7 +58,7 @@ export const PunchCardPreviewWrapper: React.FC<PunchCardPreviewWrapperProps> = (
   totalPunches = 10,
   status = 'ACTIVE',
   showAnimations = false,
-  renderOnBackgroundColor = 'transparent'
+  renderOnBackgroundColor = 'white'
 }) => {
   // Create mock loyalty program
   const mockLoyaltyProgram: LoyaltyProgramDto = {

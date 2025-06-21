@@ -3,8 +3,8 @@
   top: 80px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: var(--color-success);
-  color: var(--color-text-light);
+  background-color: var(--color-epunch-green);
+  color: var(--color-epunch-white);
   padding: 12px 24px;
   border-radius: 8px;
   z-index: var(--z-header);
