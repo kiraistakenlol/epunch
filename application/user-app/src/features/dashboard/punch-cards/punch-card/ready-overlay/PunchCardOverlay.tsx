@@ -1,12 +1,31 @@
 import React from 'react';
+import { useAppDispatch, useAppSelector } from '../../../../../store/hooks';
+import { selectSelectedCardId, setSelectedCardId, clearSelectedCard, scrollToCard } from '../../../../punchCards/punchCardsSlice';
 import styles from './PunchCardOverlay.module.css';
 
 interface PunchCardOverlayProps {
-  isSelected?: boolean;
-  onClick?: (event: React.MouseEvent) => void;
+  cardId: string;
 }
 
-const PunchCardOverlay: React.FC<PunchCardOverlayProps> = ({ isSelected, onClick }) => {
+const PunchCardOverlay: React.FC<PunchCardOverlayProps> = ({ cardId }) => {
+  const dispatch = useAppDispatch();
+  const selectedCardId = useAppSelector(selectSelectedCardId);
+  const isSelected = selectedCardId === cardId;
+  
+  const handleClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    
+    if (isSelected) {
+      dispatch(clearSelectedCard());
+    } else {
+      if (selectedCardId) {
+        dispatch(clearSelectedCard());
+      }
+      dispatch(setSelectedCardId(cardId));
+    }
+    dispatch(scrollToCard(cardId));
+  };
+
   const labelClass = isSelected ? styles.selected : styles.redeemable;
   const text = isSelected ? 'SELECTED' : 'TAP TO REDEEM';
 
@@ -16,7 +35,7 @@ const PunchCardOverlay: React.FC<PunchCardOverlayProps> = ({ isSelected, onClick
     >
       <span 
         className={`${styles.label} ${labelClass}`}
-        onClick={onClick}
+        onClick={handleClick}
       >
         {text}
       </span>

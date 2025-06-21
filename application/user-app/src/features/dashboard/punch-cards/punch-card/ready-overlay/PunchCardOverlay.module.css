@@ -13,7 +13,11 @@
 }
 
 .label {
-  padding: calc(var(--card-height) * 0.20) calc(var(--card-height) * 0.15);
+  width: 80%;
+  height: 40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: calc(var(--card-height) * 0.03);
   font-size: calc(var(--card-height) * 0.1);
   font-weight: bold;
@@ -25,21 +29,13 @@
 
 .selected {
   color: var(--color-epunch-gold);
-  background-color: color-mix(in srgb, var(--color-epunch-gold) 40%, transparent);
+  background-color: color-mix(in srgb, var(--color-epunch-gold) 30%, transparent);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
 }
 
-.selected:hover {
-  background-color: color-mix(in srgb, var(--color-epunch-gold) 60%, transparent);
-  border-color: var(--color-epunch-gold);
-  transform: scale(1.02);
-}
 
 .redeemable {
   color: var(--color-epunch-green);
-  background-color: color-mix(in srgb, var(--color-epunch-green) 40%, transparent);
+  background-color: color-mix(in srgb, var(--color-epunch-green) 30%, transparent);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
 }
-
-.redeemable:hover {
-  background-color: color-mix(in srgb, var(--color-epunch-green) 60%, transparent);
-  transform: scale(1.02);
-} 

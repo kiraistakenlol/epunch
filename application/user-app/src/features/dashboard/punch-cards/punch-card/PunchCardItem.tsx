@@ -36,7 +36,6 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
   shouldSlideRight = false,
   isSelected = false,
   onCardClick,
-  onRedemptionClick,
   animateRewardClaimed
 }, forwardedRef) => {
   const dispatch = useAppDispatch();
@@ -94,15 +93,6 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
     }
   };
 
-  const handleRedemptionClick = (event: React.MouseEvent) => {
-    event.stopPropagation();
-
-    if (onRedemptionClick) {
-      onRedemptionClick(id);
-    }
-  };
-
-  // Components now derive their own colors internally
 
   const cardClasses = [
     styles.punchCardItemContainer,
@@ -147,8 +137,7 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
 
         {!isFlipped && status === 'REWARD_READY' && (
           <PunchCardOverlay
-            isSelected={isSelected}
-            onClick={isSelected ? undefined : handleRedemptionClick}
+            cardId={id}
           />
         )}
       </div>
