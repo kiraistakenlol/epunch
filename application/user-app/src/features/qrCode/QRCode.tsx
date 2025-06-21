@@ -67,8 +67,8 @@ const QRCode: React.FC = () => {
         `}
       </style>
       <div style={{ 
-        width: 'clamp(120px, 25svh, 250px)',
-        height: 'clamp(120px, 25svh, 250px)',
+        width: 'clamp(260px, svw, 350px)',
+        aspectRatio: '1',
         backgroundColor: 'white',
         padding: 'clamp(5px, 2svh, 15px)',
         boxShadow: `-14px 6px 16px ${appColors.epunchBlack}`,
