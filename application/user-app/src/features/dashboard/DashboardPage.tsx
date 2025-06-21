@@ -30,9 +30,7 @@ const DashboardPage: React.FC = () => {
       {!isAuthLoading && <AuthContainer />}
       
       <main className={styles.bodySection} onClick={handleMainContentClick}>
-        <div className={styles.qrSection}>
           <QRCode />
-        </div>
       </main>
       
       <section className={styles.bottomSection}>

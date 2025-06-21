@@ -10,8 +10,7 @@
 }
 
 .shopName {
-  font-size: calc(var(--card-height) * 0.1);
-  font-weight: bold;
+  font-size: calc(var(--card-height) * 0.08);
 }
 
 .checkIcon {

@@ -1,6 +1,6 @@
 :root {
   --header-section-height: 70px;
-  --bottom-section-height: clamp(150px, 35svh, 350px);
+  --bottom-section-height: clamp(150px, 37svh, 350px);
   /*depreciated*/
   --cards-section-height: var(--bottom-section-height);
 }
@@ -23,16 +23,6 @@
   justify-content: center;
   align-items: center;
   overflow: hidden;
-}
-
-.qrSection {
-  height: 90%;
-  width: 90%;
-  border-radius: 3%;
-  background-color: var(--color-epunch-mint);
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .bottomSection {
