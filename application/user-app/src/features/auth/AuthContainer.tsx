@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import AuthButtons from './AuthButtons';
-import { colors } from '../../theme';
 import AuthModal from './AuthModal';
 import { selectIsAuthenticated } from './authSlice';
 
