@@ -1,88 +1,44 @@
 :root {
-  --cards-section-height: clamp(150px, 35svh, 350px);
+  --header-section-height: 70px;
+  --bottom-section-height: clamp(150px, 35svh, 350px);
+  /*depreciated*/
+  --cards-section-height: var(--bottom-section-height);
 }
 
 .pageContainer {
   height: 100svh;
-  background-color: var(--color-background-default);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  padding-top: 70px; /* Account for fixed header */
 }
 
-.mainContent {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding-top: 0;
-  min-height: 0; /* Allow flex shrinking */
+.headerSection {
+  height: var(--header-section-height);
+  flex-shrink: 0;
 }
 
-.qrSection {
+.bodySection {
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--color-background-default);
-  padding: clamp(5px, 3svh, 20px) clamp(10px, 5vw, 30px);
-  min-height: 0; /* Allow flex shrinking */
+  overflow: hidden;
 }
 
-.cardsSection {
-  height: var(--cards-section-height);
-  background-color: var(--color-secondary);
+.qrSection {
+  height: 90%;
+  width: 90%;
+  border-radius: 3%;
+  background-color: var(--color-background-mint-light);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bottomSection {
+  height: var(--bottom-section-height);
   overflow-x: auto;
   overflow-y: hidden;
   padding: 15px 20px;
-  flex-shrink: 0; /* Prevent shrinking */
-}
-
-/* Responsive adjustments for page layout */
-@media (max-height: 700px) {
-  .qrSection {
-    padding: min(15px, 4vw);
-  }
-}
-
-@media (max-height: 600px) {
-  .qrSection {
-    padding: min(15px, 4vw);
-  }
-}
-
-@media (max-height: 550px) {
-  .qrSection {
-    padding: min(10px, 2vw);
-  }
-}
-
-@media (max-height: 500px) {
-  .qrSection {
-    padding: min(8px, 2vw);
-  }
-}
-
-@media (max-height: 450px) {
-  .qrSection {
-    padding: min(5px, 1vw);
-  }
-}
-
-@media (max-height: 400px) {
-  .qrSection {
-    padding: min(5px, 1vw);
-  }
-}
-
-@media (max-height: 350px) {
-  .qrSection {
-    padding: min(3px, 1vw);
-  }
-}
-
-@media (max-height: 300px) {
-  .qrSection {
-    padding: min(3px, 1vw);
-  }
+  flex-shrink: 0;
 } 

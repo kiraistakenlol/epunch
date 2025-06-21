@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { QRCodeCanvas } from 'qrcode.react';
 import type { QRValueDto } from 'e-punch-common-core';
@@ -14,14 +14,6 @@ const QRCode: React.FC = () => {
   const loyaltyProgram = useSelector((state: RootState) => 
     selectedCard ? selectLoyaltyProgramById(state, selectedCard.loyaltyProgramId) : undefined
   );
-  const [containerSize, setContainerSize] = useState({
-    width: 'min(250px, 80vw)',
-    height: 'min(250px, 80vw)',
-    minWidth: '150px',
-    minHeight: '150px',
-    padding: '15px'
-  });
-
   const generateQRValue = (): string => {
     const isRewardMode = selectedCard?.status === 'REWARD_READY';
     
@@ -41,64 +33,6 @@ const QRCode: React.FC = () => {
     return '';
   };
 
-  const updateContainerSize = () => {
-    if (typeof window !== 'undefined') {
-      const height = window.innerHeight;
-      if (height <= 500) {
-        setContainerSize({
-          width: 'min(120px, 50vw)',
-          height: 'min(120px, 50vw)',
-          minWidth: '100px',
-          minHeight: '100px',
-          padding: '5px'
-        });
-      } else if (height <= 550) {
-        setContainerSize({
-          width: 'min(140px, 55vw)',
-          height: 'min(140px, 55vw)',
-          minWidth: '110px',
-          minHeight: '110px',
-          padding: '6px'
-        });
-      } else if (height <= 600) {
-        setContainerSize({
-          width: 'min(150px, 60vw)',
-          height: 'min(150px, 60vw)',
-          minWidth: '120px',
-          minHeight: '120px',
-          padding: '8px'
-        });
-      } else if (height <= 700) {
-        setContainerSize({
-          width: 'min(200px, 70vw)',
-          height: 'min(200px, 70vw)',
-          minWidth: '140px',
-          minHeight: '140px',
-          padding: '10px'
-        });
-      } else {
-        setContainerSize({
-          width: 'min(250px, 80vw)',
-          height: 'min(250px, 80vw)',
-          minWidth: '150px',
-          minHeight: '150px',
-          padding: '15px'
-        });
-      }
-    }
-  };
-
-  useEffect(() => {
-    updateContainerSize();
-    
-    const handleResize = () => {
-      updateContainerSize();
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
   const qrValue = generateQRValue();
   const isRewardMode = selectedCard?.status === 'REWARD_READY';
 
@@ -110,32 +44,40 @@ const QRCode: React.FC = () => {
     if (isRewardMode && loyaltyProgram) {
       return (
         <>
-          Show to get{' '}
-          <span className="fs-6 fw-bold text-decoration-underline">{loyaltyProgram.rewardDescription}</span>
+          show to get{' '}
+          <span className="fs-8 fw-bold text-decoration-underline">{loyaltyProgram.rewardDescription}</span>
         </>
       );
     }
-    return 'Your QR Code';
+    return 'My QR Code';
   };
 
   return (
     <div className="text-center">
+      <style>
+        {`
+          @keyframes qrPulse {
+            0%, 100% {
+              transform: scale(1);
+            }
+            50% {
+              transform: scale(1.05);
+            }
+          }
+        `}
+      </style>
       <div style={{ 
-        width: containerSize.width,
-        height: containerSize.height,
-        minWidth: containerSize.minWidth,
-        minHeight: containerSize.minHeight,
-        backgroundColor: 'var(--color-background-paper)',
-        borderRadius: '8px',
-        padding: containerSize.padding,
-        boxShadow: isRewardMode 
-                  ? `0 4px 8px ${colors.shadow.heavy}, 0 0 40px ${colors.reward.selected}, 0 0 80px ${colors.reward.selectedBg}`
-        : `0 4px 8px ${colors.shadow.heavy}`,
+        width: 'clamp(120px, 25svh, 250px)',
+        height: 'clamp(120px, 25svh, 250px)',
+        backgroundColor: colors.background.white,
+        padding: 'clamp(5px, 2svh, 15px)',
+        boxShadow: `-14px 6px 16px ${colors.shadow.black}`,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        willChange: isRewardMode ? 'box-shadow' : 'auto',
-        margin: '0 auto'
+        margin: '0 auto',
+        animation: isRewardMode ? 'qrPulse 2s ease-in-out infinite' : 'none',
+        willChange: isRewardMode ? 'transform' : 'auto'
       }}>
         <QRCodeCanvas 
           value={qrValue} 
@@ -143,18 +85,24 @@ const QRCode: React.FC = () => {
           level="H" 
           style={{ 
             width: '100%', 
-            height: 'auto', 
-            maxWidth: '200px', 
-            maxHeight: '200px',
-            minWidth: '120px',
-            minHeight: '120px'
+            height: 'auto',
+            backgroundColor: 'green'
           }}
         />
       </div>
       <div className="mt-3">
-        <small className={`fw-medium ${isRewardMode ? 'text-warning' : 'text-white'}`}>
+        <div 
+          className="fw-bold" 
+          style={{ 
+            color: isRewardMode ? colors.reward.selected : 'black',
+            fontSize: isRewardMode ? '1.25rem' : '1.1rem',
+            textShadow: isRewardMode ? `1px 1px 3px rgba(0, 0, 0, 0.6)` : 'none',
+            textTransform: isRewardMode ? 'uppercase' : 'none',
+            letterSpacing: isRewardMode ? '0.5px' : 'normal'
+          }}
+        >
           {getQRModeText()}
-        </small>
+        </div>
       </div>
     </div>
   );

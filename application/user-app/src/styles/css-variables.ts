@@ -19,6 +19,8 @@ export const injectCSSVariables = () => {
   root.style.setProperty('--color-background-card', colors.background.card);
   root.style.setProperty('--color-background-preview', colors.background.preview);
   root.style.setProperty('--color-background-overlay', colors.background.overlay);
+  root.style.setProperty('--color-background-white', colors.background.white);
+  root.style.setProperty('--color-background-mint-light', colors.background.mintLight);
   
   // Text colors
   root.style.setProperty('--color-text-primary', colors.text.primary);
@@ -77,6 +79,8 @@ export const injectCSSVariables = () => {
   root.style.setProperty('--color-shadow-overlay', colors.shadow.overlay);
   root.style.setProperty('--color-shadow-border', colors.shadow.border);
   root.style.setProperty('--color-shadow-text-accent', colors.shadow.textAccent);
+  root.style.setProperty('--color-shadow-black', colors.shadow.black);
+  root.style.setProperty('--color-shadow-black-soft', colors.shadow.blackSoft);
   
   // Z-index
   root.style.setProperty('--z-modal', `${zIndex.modal}`);

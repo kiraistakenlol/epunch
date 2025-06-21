@@ -23,17 +23,21 @@ const DashboardPage: React.FC = () => {
 
   return (
     <div className={styles.pageContainer}>
-      <AppHeader />
+      <header className={styles.headerSection}>
+        <AppHeader />
+      </header>
 
       {!isAuthLoading && <AuthContainer />}
-      <main className={styles.mainContent} onClick={handleMainContentClick}>
-        <section className={styles.qrSection}>
+      
+      <main className={styles.bodySection} onClick={handleMainContentClick}>
+        <div className={styles.qrSection}>
           <QRCode />
-        </section>
-        <section className={styles.cardsSection}>
-          <PunchCards />
-        </section>
+        </div>
       </main>
+      
+      <section className={styles.bottomSection}>
+        <PunchCards />
+      </section>
     </div>
   );
 };

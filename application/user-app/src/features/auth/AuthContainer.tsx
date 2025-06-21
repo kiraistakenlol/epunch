@@ -31,8 +31,6 @@ const AuthContainer: React.FC = () => {
 
   const getContainerStyle = (): React.CSSProperties => {
     const baseStyle = {
-      backgroundColor: 'var(--color-background-paper)',
-              borderBottom: `1px solid ${colors.background.card}`,
     };
 
     // Apply responsive adjustments based on screen size
@@ -56,7 +54,7 @@ const AuthContainer: React.FC = () => {
 
   const getTextStyle = (): React.CSSProperties => {
     const baseStyle = {
-              color: 'var(--color-text-disabled)',
+      color: 'var(--color-text-disabled)',
     };
 
     if (windowSize.height <= 600 || windowSize.width <= 400) {
@@ -114,7 +112,7 @@ const AuthContainer: React.FC = () => {
             </small>
           </div>
         )}
-        <AuthButtons 
+        <AuthButtons
           onSignInClick={handleSignInClick}
           onSignUpClick={handleSignUpClick}
         />

@@ -11,10 +11,8 @@ interface AppHeaderProps {
 }
 
 const headerStyle: React.CSSProperties = {
-  backgroundColor: colors.primary,
   padding: "0 20px",
-          boxShadow: `0 2px 4px ${colors.shadow.border}`,
-  color: colors.text.light,
+  color: 'black',
   position: "fixed",
   top: 0,
   left: 0,
@@ -28,25 +26,20 @@ const headerStyle: React.CSSProperties = {
 
 const logoStyle: React.CSSProperties = {
   fontSize: "1.8em",
-  fontWeight: "bold",
-  textShadow: `1px 1px 1px ${colors.text.secondary}`,
   flex: 1,
   textAlign: "center"
 };
 
 const profileIconStyle: React.CSSProperties = {
-  width: "45px",
   height: "45px",
-  borderRadius: "50%",
-  backgroundColor: colors.primaryLight,
+  aspectRatio: "1",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  fontSize: "22px",
-  color: colors.text.light,
+  fontSize: "30px",
   border: "none",
   cursor: "pointer",
-  transition: "background-color 0.2s ease"
+  backgroundColor: 'transparent',
 };
 
 const devLinkStyle: React.CSSProperties = {
@@ -67,7 +60,7 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
   const isAuthenticated = useSelector((state: RootState) => selectIsAuthenticated(state));
   const isSuperAdmin = useSelector((state: RootState) => selectSuperAdmin(state));
 
-  const title = "EPunch";
+  const title = "ePunch";
   const showProfileMenu = isAuthenticated;
   const showDevLink = isSuperAdmin;
 
@@ -78,8 +71,8 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
   return (
     <header style={headerStyle}>
       {showDevLink && (
-        <a 
-          href="/dev" 
+        <a
+          href="/dev"
           style={devLinkStyle}
           onMouseOver={(e) => {
             e.currentTarget.style.color = colors.text.secondary;
@@ -93,19 +86,13 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
       )}
       <div style={{ width: showProfileMenu ? "40px" : "0" }}></div>
       <div style={logoStyle}>{title}</div>
-      
+
       {showProfileMenu && (
         <Dropdown align="end">
-          <Dropdown.Toggle 
+          <Dropdown.Toggle
             as="div"
             style={profileIconStyle}
             bsPrefix="custom-dropdown-toggle"
-            onMouseOver={(e) => {
-              e.currentTarget.style.backgroundColor = colors.secondaryLight;
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.backgroundColor = colors.primaryLight;
-            }}
           >
             <i className="bi bi-person-fill"></i>
           </Dropdown.Toggle>

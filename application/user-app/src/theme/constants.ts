@@ -16,6 +16,8 @@ export const colors = {
     card: '#8d6e63',
     preview: '#f5f5f5',
     overlay: 'rgba(0, 0, 0, 0.5)',
+    white: '#ffffff',
+    mintLight: '#d7f9f4fd',
   },
   
   // Text colors
@@ -55,7 +57,7 @@ export const colors = {
     ready: '#44e62f',
     selected: '#ffd700',
     glow: 'greenyellow',
-    selectedBg: 'rgba(255, 215, 0, 0.5)',
+    selectedBg: 'rgba(255, 215, 0, 0.2)',
     selectedBgHover: 'rgba(255, 215, 0, 0.3)',
     selectedBorder: 'rgba(255, 215, 0, 0.5)',
     readyBg: 'rgba(68, 230, 47, 0.2)',
@@ -84,7 +86,7 @@ export const colors = {
 
   // Modal and form colors
   modal: {
-    background: '#5d4037',
+    background: 'black',
     text: '#f5f5dc',
     border: '#ddd',
     errorBg: '#fee',
@@ -100,6 +102,8 @@ export const colors = {
     overlay: 'rgba(0, 0, 0, 0.7)',
     border: 'rgba(0, 0, 0, 0.1)',
     textAccent: 'rgba(255, 248, 220, 0.3)',
+    black: 'rgba(0, 0, 0, 0.6)',
+    blackSoft: 'rgba(0, 0, 0, 0.9)',
   },
 } as const;
 

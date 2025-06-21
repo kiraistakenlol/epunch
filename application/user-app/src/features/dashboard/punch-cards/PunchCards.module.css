@@ -66,14 +66,12 @@
 
 .emptyStateHeadline {
   margin: 0 0 calc(var(--cards-section-height) * 0.0375) 0;
-  color: var(--color-text-light);
   font-size: calc(var(--cards-section-height) * 0.1);
   font-weight: bold;
 }
 
 .emptyStateSubtext {
   margin: 0;
-  color: var(--color-text-light);
   font-size: calc(var(--cards-section-height) * 0.06);
   line-height: 1.4;
 } 
