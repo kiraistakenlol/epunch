@@ -1,17 +1,6 @@
-export const appColors = {
-  epunchMint: '#d7f9f4',
-  epunchWhite: '#ffffff',
-  epunchBlack: '#000000',
-  epunchRedDanger: '#ff0000',
-  epunchRedError: '#f44336',
-  epunchGold: '#ffd700',
-  epunchOrange: '#ff9800',
-  epunchBrown: '#5d4037',
-  epunchBeige: '#f5f5dc',
-  epunchGray: '#666666',
-  epunchGreen: '#47e64e',
-  
-} as const;
+import { appColors } from 'e-punch-common-ui';
+
+export { appColors };
 
 export const zIndex = {
   modal: 1300,
