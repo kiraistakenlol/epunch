@@ -16,7 +16,7 @@
   width: calc(var(--card-height) * 0.95);
   height: calc(var(--card-height) * 0.95);
   object-fit: cover;
-  opacity: 0.3;
+  opacity: 0.05;
 }
 
 /* === BACK HEADER === */
