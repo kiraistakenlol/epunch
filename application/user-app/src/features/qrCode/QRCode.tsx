@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import QRCode from 'react-qr-code';
 import type { QRValueDto } from 'e-punch-common-core';
@@ -13,18 +13,12 @@ const QRCodeComponent: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const userId = useSelector((state: RootState) => selectUserId(state));
   const selectedCard = useSelector((state: RootState) => selectSelectedCard(state));
-  const loyaltyProgram = useSelector((state: RootState) => 
+  const loyaltyProgram = useSelector((state: RootState) =>
     selectedCard ? selectLoyaltyProgramById(state, selectedCard.loyaltyProgramId) : undefined
   );
 
   const isRewardMode = selectedCard?.status === 'REWARD_READY';
 
-  // Auto-expand when a punch card is selected
-  useEffect(() => {
-    if (selectedCard) {
-      setIsExpanded(true);
-    }
-  }, [selectedCard]);
 
   const qrValue = isRewardMode && selectedCard
     ? JSON.stringify({ type: 'redemption_punch_card_id', punch_card_id: selectedCard.id } as QRValueDto)
@@ -40,8 +34,11 @@ const QRCodeComponent: React.FC = () => {
   };
 
   return (
-    <div className={styles.container} onClick={e => e.stopPropagation()}>
-      <div 
+    <div
+      data-expanded={isExpanded}
+      className={styles.container}
+      onClick={e => e.stopPropagation()}>
+      <div
         className={styles.qrWrapper}
         data-expanded={isExpanded}
         data-reward={isRewardMode}
@@ -57,15 +54,17 @@ const QRCodeComponent: React.FC = () => {
           bgColor={appColors.epunchWhite}
         />
       </div>
-      <div className={styles.modeText}>
-        {isRewardMode && loyaltyProgram ? (
-          <>
-            Show to get <span className={styles.rewardText}>{loyaltyProgram.rewardDescription}</span>
-          </>
-        ) : (
-          'My QR Code'
-        )}
-      </div>
+      {!isExpanded && (
+        <div className={styles.modeText}>
+          {isRewardMode && loyaltyProgram ? (
+            <>
+              Show to get <span className={styles.rewardText}>{loyaltyProgram.rewardDescription}</span>
+            </>
+          ) : (
+            'My QR Code'
+          )}
+        </div>
+      )}
     </div>
   );
 };
