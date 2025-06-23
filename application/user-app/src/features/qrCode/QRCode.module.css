@@ -9,11 +9,13 @@
   width: 90%;
   padding: 2cqh;
   container-type: size;
+  position: relative;
+  transition: padding 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .container[data-expanded="true"] {
-  width: 95%;
-  height: 95%;
+  width: 90%;
+  height: 90%;
   padding: 0;
 }
 
@@ -26,7 +28,10 @@
   border: 5cqh solid var(--color-epunch-white);
   cursor: pointer;
   width: 75cqh;
-  transition: all 0.3s ease;
+  transition: 
+    width 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -48,9 +53,19 @@
 
 .modeText {
   font-size: 1.1em;
+  font-weight: 600;
   color: var(--epunch-black);
   text-align: center;
-  margin-top: 2cqh;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  position: absolute;
+  bottom: 5cqh;
+  left: 50%;
+  width: 80%;
+  transform: translateX(-50%);
+  opacity: 1;
+  transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .rewardText {

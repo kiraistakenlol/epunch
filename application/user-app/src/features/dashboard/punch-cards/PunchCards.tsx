@@ -70,8 +70,6 @@ const PunchCards = () => {
     card.status !== 'REWARD_REDEEMED'
   ) || [];
 
-
-
   const handleCardClick = (cardId: string) => {
     const clickedCard = cardsToRender.find(card => card.id === cardId);
 

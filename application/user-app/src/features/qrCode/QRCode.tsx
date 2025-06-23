@@ -54,17 +54,18 @@ const QRCodeComponent: React.FC = () => {
           bgColor={appColors.epunchWhite}
         />
       </div>
-      {!isExpanded && (
-        <div className={styles.modeText}>
-          {isRewardMode && loyaltyProgram ? (
-            <>
-              Show to get <span className={styles.rewardText}>{loyaltyProgram.rewardDescription}</span>
-            </>
-          ) : (
-            'My QR Code'
-          )}
-        </div>
-      )}
+      <div 
+        className={styles.modeText}
+        style={{ opacity: isExpanded ? 0 : 1, pointerEvents: isExpanded ? 'none' : 'auto' }}
+      >
+        {isRewardMode && loyaltyProgram ? (
+          <>
+            Show to get <span className={styles.rewardText}>{loyaltyProgram.rewardDescription}</span>
+          </>
+        ) : (
+          'My QR Code'
+        )}
+      </div>
     </div>
   );
 };
