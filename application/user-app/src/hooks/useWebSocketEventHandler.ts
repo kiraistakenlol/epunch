@@ -40,7 +40,6 @@ export const useWebSocketEventHandler = () => {
             new ShowPunchAnimation(card.id, card.currentPunches - 1),
             new ShowCompletionOverlay(card.id),
             new HighlightCard(card.id),
-            new Wait(300),
             new AddNewCard(newCard)
           ];
 
