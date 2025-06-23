@@ -93,23 +93,6 @@
   z-index: -1;
 }
 
-.statusREWARD_REDEEMED {
-  opacity: 0.8;
-}
-
-.statusREWARD_REDEEMED::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: inherit;
-  box-shadow: 0 0 calc(var(--card-height) * 0.1) rgba(117, 117, 117, 0.4);
-  pointer-events: none;
-  z-index: -1;
-}
-
 .highlighted {
   animation: highlightRewardOptimized 1.5s ease-out;
   z-index: 10;
