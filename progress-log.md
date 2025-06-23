@@ -3,14 +3,7 @@ admin:
 centralize conversion db models to dtos
 
 
-// saving icon resets the image 
+user-app
 
-iconst should be withing each cell grid, font should be max to the grid cell size
+animations, sliding a bit broken.
 
-//
- merchant app:
- some fields resets to default or not saved at all at design a
-
- # User app Issues:
-
- 1. clicking on Overlay flips the card

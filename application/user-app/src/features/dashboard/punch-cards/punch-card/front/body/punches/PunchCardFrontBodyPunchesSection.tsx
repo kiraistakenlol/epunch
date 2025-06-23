@@ -8,21 +8,40 @@ interface PunchCardFrontBodyPunchesSectionProps {
   currentPunches: number;
   animatedPunchIndex?: number;
   resolvedStyles: CustomizableCardStyles;
+  showLastFilledPunchAsNotFilled?: boolean;
 }
 
 const PunchCardFrontBodyPunchesSection: React.FC<PunchCardFrontBodyPunchesSectionProps> = ({
   totalPunches,
   currentPunches,
   animatedPunchIndex,
-  resolvedStyles
+  resolvedStyles,
+  showLastFilledPunchAsNotFilled
 }) => {
   const MAX_PUNCHES = 10;
   const punchCircles: JSX.Element[] = [];
 
+  console.log('🎯 PunchCardFrontBodyPunchesSection render:', {
+    currentPunches,
+    showLastFilledPunchAsNotFilled,
+    animatedPunchIndex
+  });
+
   for (let i = 0; i < MAX_PUNCHES; i++) {
     const isWithinTotal = i < totalPunches;
-    const isFilled = i < currentPunches;
     const isAnimated = animatedPunchIndex === i;
+    
+    // Show as filled if:
+    // 1. It's a previously filled punch (i < currentPunches - 1), OR
+    // 2. It's the current punch being animated (isAnimated), OR
+    // 3. It's the current punch and no showLastFilledPunchAsNotFilled flag is set
+    const isFilled = i < currentPunches - 1 || 
+                     isAnimated || 
+                     (i === currentPunches - 1 && !showLastFilledPunchAsNotFilled);
+
+    if (i < currentPunches) {
+      console.log(`  Punch ${i}: isFilled=${isFilled}, isAnimated=${isAnimated}, showLastFilledPunchAsNotFilled=${showLastFilledPunchAsNotFilled}`);
+    }
 
     let containerClasses = styles.punchIconContainingZone;
 

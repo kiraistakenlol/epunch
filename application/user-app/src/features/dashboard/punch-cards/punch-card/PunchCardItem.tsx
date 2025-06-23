@@ -1,9 +1,6 @@
-import React, { useEffect, useRef, useState, forwardRef } from 'react';
+import React, { useRef, useState, forwardRef } from 'react';
 import { PunchCardDto } from 'e-punch-common-core';
-import { useAppDispatch } from '../../../../store/hooks';
 import { CustomizableCardStyles } from '../../../../utils/cardStyles';
-
-import { handleEvent } from '../../../animations/animationSlice';
 import PunchCardFront from './front/PunchCardFront';
 import PunchCardBack from './back/PunchCardBack';
 import PunchCardOverlay from './ready-overlay/PunchCardOverlay';
@@ -19,6 +16,9 @@ interface PunchCardItemProps extends PunchCardDto {
   onCardClick?: (cardId: string) => void;
   onRedemptionClick?: (cardId: string) => void;
   animateRewardClaimed?: boolean;
+  showLastFilledPunchAsNotFilled?: boolean;
+  hideCompletionOverlay?: boolean;
+  disableFlipping?: boolean;
 }
 
 const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
@@ -36,39 +36,17 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
   shouldSlideRight = false,
   isSelected = false,
   onCardClick,
-  animateRewardClaimed
+  animateRewardClaimed,
+  showLastFilledPunchAsNotFilled,
+  hideCompletionOverlay = false,
+  disableFlipping = false
 }, forwardedRef) => {
-  const dispatch = useAppDispatch();
   const internalRef = useRef<HTMLDivElement>(null);
   const cardRef = forwardedRef || internalRef;
   const [isFlipped, setIsFlipped] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
-
-  // Listen for CSS animation events
-  useEffect(() => {
-    const cardElement = typeof cardRef === 'function' ? null : cardRef?.current;
-    if (!cardElement) return;
-
-    const handleAnimationEnd = (e: AnimationEvent) => {
-      if (e.animationName.includes('newPunchAnimation')) {
-        dispatch(handleEvent('PUNCH_ANIMATION_COMPLETE'));
-      } else if (e.animationName.includes('highlightReward')) {
-        dispatch(handleEvent('HIGHLIGHT_ANIMATION_COMPLETE'));
-      } else if (e.animationName.includes('slideInFromLeft')) {
-        dispatch(handleEvent('SLIDE_IN_ANIMATION_COMPLETE'));
-      } else if (e.animationName.includes('slideOutAndFade')) {
-        dispatch(handleEvent('SLIDE_OUT_ANIMATION_COMPLETE'));
-      } else if (e.animationName.includes('cardFlip')) {
-        setIsAnimating(false);
-      }
-    };
-
-    cardElement.addEventListener('animationend', handleAnimationEnd, true);
-
-    return () => {
-      cardElement.removeEventListener('animationend', handleAnimationEnd, true);
-    };
-  }, [id, dispatch, cardRef]);
+  
+  // Check if there are any ongoing animations
 
   const handleClick = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -77,7 +55,7 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
       onCardClick(id);
     }
 
-    if (!isAnimating) {
+    if (!disableFlipping && !isAnimating) {
       const newFlippedState = !isFlipped;
 
       setIsAnimating(true);
@@ -92,7 +70,6 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
       }, 700); // 600ms animation + 100ms buffer
     }
   };
-
 
   const cardClasses = [
     styles.punchCardItemContainer,
@@ -124,6 +101,7 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
             resolvedStyles={resolvedStyles}
             animatedPunchIndex={animatedPunchIndex}
             isSelected={isSelected}
+            showLastFilledPunchAsNotFilled={showLastFilledPunchAsNotFilled}
           />
         ) : (
           <PunchCardBack
@@ -135,13 +113,12 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
           />
         )}
 
-        {!isFlipped && status === 'REWARD_READY' && (
+        {!isFlipped && status === 'REWARD_READY' && animatedPunchIndex === undefined && !hideCompletionOverlay && (
           <PunchCardOverlay
             cardId={id}
           />
         )}
       </div>
-
     </div>
   );
 });

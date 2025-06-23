@@ -8,6 +8,8 @@ import { AppDispatch, RootState } from '../../../store/store';
 import { selectPunchCards } from '../../punchCards/punchCardsSlice';
 import { selectLoyaltyProgramById } from '../../loyaltyPrograms/loyaltyProgramsSlice';
 import { useAppSelector } from '../../../store/hooks';
+import PunchCardItem from '../punch-cards/punch-card/PunchCardItem';
+import { resolveCardStyles } from '../../../utils/cardStyles';
 
 const CompletionOverlay: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -43,15 +45,7 @@ const CompletionOverlay: React.FC = () => {
     dispatch(handleEvent('COMPLETION_OVERLAY_CLOSED'));
   };
 
-  const punchCircles = [];
-  for (let i = 0; i < completedCard.totalPunches; i++) {
-    punchCircles.push(
-      <div
-        key={i}
-        className={styles.punchCircle}
-      ></div>
-    );
-  }
+  const resolvedStyles = resolveCardStyles(completedCard.styles);
 
   return (
     <div
@@ -64,7 +58,7 @@ const CompletionOverlay: React.FC = () => {
         right: 0,
         bottom: 0,
         zIndex: 9999,
-        backgroundColor: `${appColors.epunchBlack}80`,
+        backgroundColor: `${appColors.epunchBlack}B3`,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -81,19 +75,13 @@ const CompletionOverlay: React.FC = () => {
         <h1 className={styles.completeText}>COMPLETE!!</h1>
 
         <div className={styles.cardContainer}>
-          <div className={styles.card}>
-            <div className={styles.cardHeader}>
-              <span className={styles.shopName}>{completedCard.shopName}</span>
-            </div>
-            <div className={styles.cardBody}>
-              <div className={styles.punchCirclesContainer}>
-                {punchCircles}
-              </div>
-              {loyaltyProgram && (
-                <div className={styles.loyaltyProgramName}>{loyaltyProgram.name}</div>
-              )}
-            </div>
-          </div>
+          <PunchCardItem
+            {...completedCard}
+            resolvedStyles={resolvedStyles}
+            onCardClick={() => {}} // Disable card clicking in overlay
+            hideCompletionOverlay={true}
+            disableFlipping={true}
+          />
         </div>
 
         <button className={styles.okButton} onClick={handleOkClick}>

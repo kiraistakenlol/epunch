@@ -12,33 +12,39 @@
 }
 
 .content {
+  --overlay-card-width: min(80vw, 400px);
+  --overlay-card-height: calc(var(--overlay-card-width) / 1.25);
+  
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 30px;
-  padding: 40px 20px;
+  gap: calc(var(--overlay-card-height) * 0.12);
+  padding: calc(var(--overlay-card-height) * 0.16) calc(var(--overlay-card-height) * 0.08);
   max-width: 90vw;
 }
 
 .completeText {
   color: black;
-  font-size: 3em;
+  font-size: calc(var(--overlay-card-height) * 0.19);
   font-weight: 900;
   text-align: center;
   margin: 0;
   text-shadow: 
-    0 0 10px rgba(245, 245, 220, 0.8),
-    0 0 20px rgba(245, 245, 220, 0.6),
-    0 0 30px rgba(245, 245, 220, 0.4);
+    0 0 calc(var(--overlay-card-height) * 0.04) rgba(245, 245, 220, 0.8),
+    0 0 calc(var(--overlay-card-height) * 0.08) rgba(245, 245, 220, 0.6),
+    0 0 calc(var(--overlay-card-height) * 0.12) rgba(245, 245, 220, 0.4);
   animation: glow 1s ease-in-out infinite alternate;
 }
 
 .cardContainer {
   perspective: 1000px;
+  width: var(--overlay-card-width);
+  height: var(--overlay-card-height);
+  animation: cardCelebration 2s ease-out;
 }
 
 .card {
-  background-color: var(--color-background-card);
+  background-color: var(--color-epunch-beige);
   border-radius: 12px;
   width: 320px;
   height: 240px;
@@ -49,12 +55,11 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  animation: cardCelebration 2s ease-out;
 }
 
 .cardHeader {
-  background-color: var(--color-primary);
-  color: var(--color-text-light);
+  background-color: var(--color-epunch-brown);
+  color: var(--color-epunch-black);
   padding: 15px 20px;
   border-radius: 12px 12px 0 0;
   display: flex;
@@ -63,7 +68,7 @@
 }
 
 .shopName {
-  color: var(--color-text-light);
+  color: var(--color-epunch-black);
   font-size: 1.4em;
   font-weight: bold;
   text-align: center;
@@ -92,7 +97,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-color: var(--color-primary);
+  background-color: var(--color-epunch-gold);
   animation: punchPop 0.3s ease-out;
   animation-fill-mode: both;
 }
@@ -120,23 +125,23 @@
 }
 
 .okButton {
-  background-color: var(--color-success);
-  color: var(--color-text-light);
+  background-color: var(--color-epunch-green);
+  color: var(--color-epunch-black);
   border: none;
-  border-radius: 50px;
-  padding: 15px 40px;
-  font-size: 1.8em;
+  border-radius: calc(var(--overlay-card-height) * 0.08);
+  padding: calc(var(--overlay-card-height) * 0.06) calc(var(--overlay-card-height) * 0.16);
+  font-size: calc(var(--overlay-card-height) * 0.14);
   font-weight: 900;
   cursor: pointer;
   box-shadow: 
-    0 4px 12px rgba(76, 175, 80, 0.6),
-    0 0 20px rgba(76, 175, 80, 0.4);
+    0 calc(var(--overlay-card-height) * 0.016) calc(var(--overlay-card-height) * 0.047) rgba(76, 175, 80, 0.6),
+    0 0 calc(var(--overlay-card-height) * 0.08) rgba(76, 175, 80, 0.4);
   transition: all 0.3s ease;
   animation: buttonPulse 2s ease-in-out infinite;
 }
 
 .okButton:hover {
-  background-color: var(--color-success-dark);
+  background-color: var(--color-epunch-green);
   transform: scale(1.05);
   box-shadow: 
     0 6px 16px rgba(76, 175, 80, 0.8),
@@ -159,15 +164,15 @@
 @keyframes glow {
   0% {
     text-shadow: 
-      0 0 10px rgba(245, 245, 220, 0.8),
-      0 0 20px rgba(245, 245, 220, 0.6),
-      0 0 30px rgba(245, 245, 220, 0.4);
+      0 0 calc(var(--overlay-card-height) * 0.04) rgba(245, 245, 220, 0.8),
+      0 0 calc(var(--overlay-card-height) * 0.08) rgba(245, 245, 220, 0.6),
+      0 0 calc(var(--overlay-card-height) * 0.12) rgba(245, 245, 220, 0.4);
   }
   100% {
     text-shadow: 
-      0 0 15px rgba(245, 245, 220, 1),
-      0 0 30px rgba(245, 245, 220, 0.8),
-      0 0 45px rgba(245, 245, 220, 0.6);
+      0 0 calc(var(--overlay-card-height) * 0.06) rgba(245, 245, 220, 1),
+      0 0 calc(var(--overlay-card-height) * 0.12) rgba(245, 245, 220, 0.8),
+      0 0 calc(var(--overlay-card-height) * 0.18) rgba(245, 245, 220, 0.6);
   }
 }
 
@@ -189,15 +194,15 @@
 @keyframes punchPop {
   0% {
     transform: scale(0);
-    background-color: var(--color-reward-selected);
+    background-color: var(--color-epunch-gold);
   }
   70% {
     transform: scale(1.3);
-    background-color: var(--color-warning);
+    background-color: var(--color-epunch-gold);
   }
   100% {
     transform: scale(1);
-    background-color: var(--color-primary);
+    background-color: var(--color-epunch-green);
   }
 }
 
@@ -210,40 +215,4 @@
   }
 }
 
-/* Mobile responsiveness */
-@media (max-width: 400px) {
-  .completeText {
-    font-size: 2.5em;
-  }
-  
-  .card {
-    width: 280px;
-    height: 200px;
-  }
-  
-  .punchCircle {
-    width: 28px;
-    height: 28px;
-  }
-  
-  .okButton {
-    font-size: 1.5em;
-    padding: 12px 30px;
-  }
-}
-
-@media (max-height: 600px) {
-  .content {
-    gap: 20px;
-    padding: 20px;
-  }
-  
-  .completeText {
-    font-size: 2em;
-  }
-  
-  .card {
-    width: 260px;
-    height: 180px;
-  }
-} 
+ 

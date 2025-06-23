@@ -10,8 +10,7 @@ import {
   HighlightCard, 
   ShowNewCardAnimation, 
   ShowRewardClaimedAnimation, 
-  ScrollToCard 
-} from '../features/animations/animationSteps';
+  ScrollToCard} from '../features/animations/animationSteps';
 import { Wait } from '../features/animations/animationSlice';
 import { AppEvent } from 'e-punch-common-core';
 import type { AppDispatch } from '../store/store';
@@ -36,7 +35,12 @@ export const useWebSocketEventHandler = () => {
         
         console.log('PUNCH_ADDED event received:', { punchCard, newCard });
         
-        dispatch(updatePunchCard(punchCard));
+        const updatedCard = {
+          ...punchCard,
+          showLastFilledPunchAsNotFilled: true
+        };
+        console.log('🔄 Updating punch card with showLastFilledPunchAsNotFilled: true', updatedCard);
+        dispatch(updatePunchCard(updatedCard));
 
         if (newCard) {
           console.log('Adding new card with visible: false:', newCard);
@@ -49,12 +53,12 @@ export const useWebSocketEventHandler = () => {
 
           const animationSequence = [
             new ScrollToCard(punchCard.id),
-            new Wait(1000),
+            // new ShowPunchAlert(),
             new ShowPunchAnimation(punchCard.id, punchCard.currentPunches - 1),
-            new Wait(1000),
+            new Wait(300),
             new ShowCompletionOverlay(punchCard.id),
             new HighlightCard(punchCard.id),
-            new Wait(500),
+            new Wait(300),
             new ShowNewCardAnimation(newCard.id)
           ];
 
@@ -65,9 +69,9 @@ export const useWebSocketEventHandler = () => {
           
           const animationSequence = [
             new ScrollToCard(punchCard.id),
-            new Wait(100),
-            new ShowPunchAnimation(punchCard.id, punchCard.currentPunches - 1),
-            new Wait(1000)
+            new Wait(1000),
+            // new ShowPunchAlert(),
+            new ShowPunchAnimation(punchCard.id, punchCard.currentPunches - 1)
           ];
 
           dispatch(startSequence(animationSequence));

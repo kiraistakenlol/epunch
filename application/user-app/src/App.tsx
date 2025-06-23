@@ -15,6 +15,7 @@ import { config } from './config/env';
 import { injectCSSVariables } from './styles/css-variables';
 import type { AppDispatch } from './store/store';
 import './styles/global.css';
+import { useGlobalAnimationEvents } from './hooks/useGlobalAnimationEvents';
 
 configureApiClient(config.api.baseUrl);
 
@@ -33,6 +34,8 @@ function App() {
       removeAuthListener();
     };
   }, [dispatch]);
+
+  useGlobalAnimationEvents();
 
   return (
     <BrowserRouter>

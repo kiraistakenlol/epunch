@@ -17,6 +17,7 @@ export class ShowPunchAnimation extends AnimationStep {
   }
 
   execute(dispatch: AppDispatch) {
+    console.log('🎬 ShowPunchAnimation execute - setting animation flags for card:', this.cardId);
     dispatch(updatePunchCardById({
       id: this.cardId,
       updates: { 
@@ -25,21 +26,33 @@ export class ShowPunchAnimation extends AnimationStep {
         }
       }
     }));
-
-    dispatch(showAlert("✨ You've got a new punch!"));
   }
 
   cleanup(dispatch: AppDispatch) {
+    console.log('🧹 ShowPunchAnimation cleanup - clearing flags and showing punch as filled for card:', this.cardId);
     dispatch(updatePunchCardById({
       id: this.cardId,
       updates: { 
+        showLastFilledPunchAsNotFilled: false,
         animationFlags: { 
           punchAnimation: undefined
         }
       }
     }));
-    
-    dispatch(hideAlert());
+  }
+}
+
+export class ShowPunchAlert extends AnimationStep {
+  getWaitForEvent(): string | null {
+    return null; // Don't wait for event, use timeout
+  }
+
+  execute(dispatch: AppDispatch) {
+    dispatch(showAlert("✨ New punch! ✨"));
+
+    setTimeout(() => {
+      dispatch(hideAlert());
+    }, 3000);
   }
 }
 

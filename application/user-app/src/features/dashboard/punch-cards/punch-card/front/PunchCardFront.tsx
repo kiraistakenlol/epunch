@@ -13,6 +13,7 @@ interface PunchCardFrontProps extends Pick<PunchCardDto, 'loyaltyProgramId' | 's
   resolvedStyles: CustomizableCardStyles;
   animatedPunchIndex?: number;
   isSelected: boolean;
+  showLastFilledPunchAsNotFilled?: boolean;
 }
 
 const PunchCardFront: React.FC<PunchCardFrontProps> = ({
@@ -23,7 +24,8 @@ const PunchCardFront: React.FC<PunchCardFrontProps> = ({
   status,
   resolvedStyles,
   animatedPunchIndex,
-  isSelected
+  isSelected,
+  showLastFilledPunchAsNotFilled
 }) => {
   const loyaltyProgram = useAppSelector(state => selectLoyaltyProgramById(state, loyaltyProgramId));
 
@@ -47,6 +49,7 @@ const PunchCardFront: React.FC<PunchCardFrontProps> = ({
           animatedPunchIndex={animatedPunchIndex}
           loyaltyProgram={loyaltyProgram}
           resolvedStyles={resolvedStyles}
+          showLastFilledPunchAsNotFilled={showLastFilledPunchAsNotFilled}
         />
       </div>
       <div className={`${layoutStyles.cardSection}`}>

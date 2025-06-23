@@ -1,14 +1,15 @@
 .alert {
   position: fixed;
-  top: 80px;
+  top: 15%;
   left: 50%;
   transform: translateX(-50%);
   background-color: var(--color-epunch-green);
-  color: var(--color-epunch-white);
-  padding: 12px 24px;
-  border-radius: 8px;
+  color: var(--color-epunch-black);
+  padding: 12px 10px;
+  border-radius: 0.5svh;
   z-index: var(--z-header);
+  width: 80svw;
   font-weight: bold;
-  max-width: calc(100vw - 40px);
   text-align: center;
+  font-size: 1.3em;
 } 
