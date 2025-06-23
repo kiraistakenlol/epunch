@@ -18,20 +18,40 @@ const CompletionOverlay: React.FC = () => {
   // Find the completed card from punch cards slice
   const completedCard = punchCards?.find(card => card.id === completionOverlay.cardId) || null;
 
-  if (!completionOverlay.isVisible || !completedCard) return null;
+  console.log('🎭 [CompletionOverlay] Render called with state:', {
+    isVisible: completionOverlay.isVisible,
+    cardId: completionOverlay.cardId,
+    hasCompletedCard: !!completedCard
+  });
+
+  if (!completionOverlay.isVisible || !completedCard) {
+    if (!completionOverlay.isVisible) {
+      console.log('🎭 [CompletionOverlay] Not rendering - overlay not visible');
+    } else {
+      console.log('🎭 [CompletionOverlay] Not rendering - completed card not found');
+    }
+    return null;
+  }
+
+  console.log('🎭 [CompletionOverlay] Rendering overlay for card:', completedCard.id);
 
   const handleOverlayClick = () => {
+    console.log('🎭 [CompletionOverlay] Overlay clicked, dispatching hide and event actions');
     dispatch(hideOverlay());
     dispatch(handleEvent('COMPLETION_OVERLAY_CLOSED'));
+    console.log('🎭 [CompletionOverlay] Overlay click handlers dispatched');
   };
 
   const handleContentClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    console.log('🎭 [CompletionOverlay] Content clicked, stopping propagation');
     e.stopPropagation();
   };
 
   const handleOkClick = () => {
+    console.log('🎭 [CompletionOverlay] OK button clicked, dispatching hide and event actions');
     dispatch(hideOverlay());
     dispatch(handleEvent('COMPLETION_OVERLAY_CLOSED'));
+    console.log('🎭 [CompletionOverlay] OK click handlers dispatched');
   };
 
   const resolvedStyles = resolveCardStyles(completedCard.styles);

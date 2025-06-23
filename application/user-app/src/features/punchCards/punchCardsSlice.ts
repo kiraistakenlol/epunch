@@ -3,12 +3,9 @@ import { PunchCardDto, PunchCardStatusDto } from 'e-punch-common-core';
 import { apiClient } from 'e-punch-common-ui';
 
 export interface PunchCardState extends PunchCardDto {
-  visible?: boolean;
   animationFlags?: {
     punchAnimation?: { punchIndex: number };
     highlighted?: boolean;
-    slideAnimation?: boolean;
-    rewardClaimedAnimation?: boolean;
   };
 }
 

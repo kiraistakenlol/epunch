@@ -367,7 +367,7 @@ const DevPage: React.FC = () => {
           }
 
           // Wait 500ms before next punch
-          await new Promise(resolve => setTimeout(resolve, 2000));
+          await new Promise(resolve => setTimeout(resolve, 700));
         } catch (error: any) {
           setScenarioStatus(`❌ Error on punch ${punchCount}: ${error.response?.data?.message || error.message}`);
           break;

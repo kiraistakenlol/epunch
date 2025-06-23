@@ -12,7 +12,6 @@ export class ShowPunchAnimation extends AnimationStep {
   }
 
   execute(dispatch: AppDispatch) {
-    // Set the animated punch index to trigger Framer Motion animation
     dispatch(updatePunchCardById({
       id: this.cardId,
       updates: { 
@@ -21,21 +20,6 @@ export class ShowPunchAnimation extends AnimationStep {
         }
       }
     }));
-
-    // Auto-advance after animation duration
-    setTimeout(() => {
-      // Clear animation flag
-      dispatch(updatePunchCardById({
-        id: this.cardId,
-        updates: { 
-          animationFlags: { 
-            punchAnimation: undefined
-          }
-        }
-      }));
-      // Advance to next step in sequence
-      dispatch(advanceToNextStep());
-    }, 1500); // Match Framer Motion animation duration
   }
 }
 

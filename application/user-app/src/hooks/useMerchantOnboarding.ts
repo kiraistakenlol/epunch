@@ -18,49 +18,43 @@ export const useMerchantOnboarding = () => {
   useEffect(() => {
     const handleMerchantOnboarding = async () => {
       if (!merchantSlug || !userId || !initialized) return;
-      
+
       const url = new URL(window.location.href);
       url.searchParams.delete('merchant');
       window.history.replaceState({}, '', url.toString());
-      
+
       try {
         const merchants = await apiClient.getAllMerchants(merchantSlug);
         if (merchants.length === 0) {
           console.warn(`Merchant with slug ${merchantSlug} not found`);
           return;
         }
-        
+
         const merchant = merchants[0];
         const loyaltyPrograms = await apiClient.getMerchantLoyaltyPrograms(merchant.id);
-        
+
         for (const program of loyaltyPrograms) {
-          const hasActiveCard = existingCards?.some(card => 
+          const hasActiveCard = existingCards?.some(card =>
             card.loyaltyProgramId === program.id && card.status === 'ACTIVE'
           );
-          
+
           if (hasActiveCard) {
             console.log(`User already has an active punch card for ${program.name}`);
             continue;
           }
-          
+
           try {
-            const newPunchCard = await apiClient.createPunchCard(userId, { 
-              userId, 
-              loyaltyProgramId: program.id 
+            const newPunchCard = await apiClient.createPunchCard(userId, {
+              userId,
+              loyaltyProgramId: program.id
             });
-            
-            dispatch(addPunchCard({
-              ...newPunchCard,
-              visible: true,
-              animationFlags: {
-                slideAnimation: true
-              }
-            }));
+
+            dispatch(addPunchCard(newPunchCard));
           } catch (error) {
             console.log(`Punch card for ${program.name} already exists or creation failed`, error);
           }
         }
-        
+
       } catch (error) {
         console.error('Error during merchant onboarding:', error);
       }
