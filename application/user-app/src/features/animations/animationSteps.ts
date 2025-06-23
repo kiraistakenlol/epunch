@@ -1,4 +1,4 @@
-import { AnimationStep, advanceToNextStep } from './animationSlice';
+import { AnimationStep } from './animationSlice';
 import { showOverlay } from '../dashboard/overlay/completionOverlaySlice';
 import { updatePunchCardById, scrollToCard, addPunchCard } from '../punchCards/punchCardsSlice';
 import type { AppDispatch } from '../../store/store';
