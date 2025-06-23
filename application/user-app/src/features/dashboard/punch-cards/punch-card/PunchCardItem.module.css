@@ -60,14 +60,14 @@
 
 /* === ANIMATION UTILITIES === */
 .scaleUpAndBackToNormalAnimation {
-  animation: scaleUp 1.5s ease-out;
+  animation: scaleUpAndBackToNormal 1.5s ease-out;
 }
 
 .flipAnimation {
   animation: cardFlip 0.6s ease-in-out;
 }
 
-@keyframes scaleUp {
+@keyframes scaleUpAndBackToNormal {
   0% {
     transform: scale3d(1, 1, 1);
     opacity: 1;

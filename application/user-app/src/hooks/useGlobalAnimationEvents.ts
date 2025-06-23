@@ -8,14 +8,8 @@ export const useGlobalAnimationEvents = () => {
   useEffect(() => {
     const handleAnimationEnd = (e: AnimationEvent) => {
       // Map animation names to their corresponding events
-      if (e.animationName.includes('newPunchAnimation')) {
-        dispatch(handleEvent('PUNCH_ANIMATION_COMPLETE'));
-      } else if (e.animationName.includes('highlightReward')) {
+      if (e.animationName.includes('scaleUpAndBackToNormal')) {
         dispatch(handleEvent('HIGHLIGHT_ANIMATION_COMPLETE'));
-      } else if (e.animationName.includes('slideInFromLeft')) {
-        dispatch(handleEvent('SLIDE_IN_ANIMATION_COMPLETE'));
-      } else if (e.animationName.includes('slideOutAndFade')) {
-        dispatch(handleEvent('SLIDE_OUT_ANIMATION_COMPLETE'));
       }
     };
 
