@@ -44,7 +44,6 @@ const PunchCards = () => {
     }
   }, [isLoading, error, punchCards]);
 
-  // Handle scrolling to target card
   useEffect(() => {
     if (scrollTargetCardId && cardRefs.current[scrollTargetCardId]) {
       const cardElement = cardRefs.current[scrollTargetCardId];
@@ -52,7 +51,6 @@ const PunchCards = () => {
         const rect = cardElement.getBoundingClientRect();
         const isPartiallyVisible = rect.top < window.innerHeight && rect.bottom > 0;
         
-        // Only scroll if the card is not at least partially visible
         if (!isPartiallyVisible) {
           cardElement.scrollIntoView({
             behavior: 'smooth',
@@ -61,7 +59,6 @@ const PunchCards = () => {
           });
         }
       }
-      // Clear the scroll target after checking/scrolling
       dispatch(clearScrollTarget());
     }
   }, [scrollTargetCardId, dispatch]);
@@ -73,17 +70,13 @@ const PunchCards = () => {
   const handleCardClick = (cardId: string) => {
     const clickedCard = cardsToRender.find(card => card.id === cardId);
 
-    // If clicking a selected card, unselect it
     if (selectedCardId === cardId) {
       dispatch(clearSelectedCard());
     } else if (clickedCard?.status === 'REWARD_READY') {
-      // For REWARD_READY cards, don't auto-select - selection only happens via "TAP TO REDEEM"
-      // Just clear any existing selection if clicking a different REWARD_READY card
       if (selectedCardId) {
         dispatch(clearSelectedCard());
       }
     } else {
-      // If clicking a non-REWARD_READY card, always clear any existing selection
       if (selectedCardId) {
         dispatch(clearSelectedCard());
       }
@@ -92,17 +85,13 @@ const PunchCards = () => {
 
   const handleRedemptionClick = (cardId: string) => {
     if (selectedCardId === cardId) {
-      // If clicking the currently selected card's redemption button, deselect it
       dispatch(clearSelectedCard());
     } else {
-      // If clicking a different card's redemption button, clear previous selection and select new one
       if (selectedCardId) {
         dispatch(clearSelectedCard());
       }
       dispatch(setSelectedCardId(cardId));
     }
-
-    // Also scroll to the card
     dispatch(scrollToCard(cardId));
   };
 

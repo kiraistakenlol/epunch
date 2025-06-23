@@ -10,8 +10,6 @@ interface PunchCardItemProps extends PunchCardDto {
   resolvedStyles: CustomizableCardStyles;
   isHighlighted?: boolean;
   animatedPunchIndex?: number;
-  shouldSlideIn?: boolean;
-  shouldSlideRight?: boolean;
   isSelected?: boolean;
   onCardClick?: (cardId: string) => void;
   onRedemptionClick?: (cardId: string) => void;
@@ -31,8 +29,6 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
   resolvedStyles,
   isHighlighted = false,
   animatedPunchIndex,
-  shouldSlideIn = false,
-  shouldSlideRight = false,
   isSelected = false,
   onCardClick,
   animateRewardClaimed,
@@ -73,8 +69,6 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
     styles.punchCardItemContainer,
     styles[`status${status}`],
     isHighlighted ? styles.highlighted : '',
-    shouldSlideIn ? styles.punchCardSlideIn : '',
-    shouldSlideRight ? styles.punchCardSlideRight : '',
     isSelected ? styles.selectedForRedemption : '',
     status === 'REWARD_READY' ? styles.clickableCard : styles.flippableCard,
     animateRewardClaimed ? styles.punchCardSlideOut : '',
