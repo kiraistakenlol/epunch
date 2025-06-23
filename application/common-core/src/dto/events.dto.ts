@@ -9,7 +9,7 @@ export interface BaseEvent {
 // Specific event types
 export interface PunchAddedEvent extends BaseEvent {
   type: 'PUNCH_ADDED';
-  punchCard: PunchCardDto;
+  card: PunchCardDto;
   newCard: PunchCardDto | null;
 }
 

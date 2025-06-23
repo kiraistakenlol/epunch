@@ -16,7 +16,6 @@ interface PunchCardItemProps extends PunchCardDto {
   onCardClick?: (cardId: string) => void;
   onRedemptionClick?: (cardId: string) => void;
   animateRewardClaimed?: boolean;
-  showLastFilledPunchAsNotFilled?: boolean;
   hideCompletionOverlay?: boolean;
   disableFlipping?: boolean;
 }
@@ -37,7 +36,6 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
   isSelected = false,
   onCardClick,
   animateRewardClaimed,
-  showLastFilledPunchAsNotFilled,
   hideCompletionOverlay = false,
   disableFlipping = false
 }, forwardedRef) => {
@@ -101,7 +99,6 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
             resolvedStyles={resolvedStyles}
             animatedPunchIndex={animatedPunchIndex}
             isSelected={isSelected}
-            showLastFilledPunchAsNotFilled={showLastFilledPunchAsNotFilled}
           />
         ) : (
           <PunchCardBack

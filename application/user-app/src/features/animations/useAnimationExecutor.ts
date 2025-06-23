@@ -47,9 +47,9 @@ export const useAnimationExecutor = () => {
   const executeAnimationStep = (step: AnimationStep) => {
     step.execute(dispatch);
     
-    const eventToWaitFor = step.getWaitForEvent();
-    if (eventToWaitFor) {
-      dispatch(setWaitingForEvent({ eventName: eventToWaitFor, step }));
+    const completionEventName = step.getCompletionEventName();
+    if (completionEventName) {
+      dispatch(setWaitingForEvent({ eventName: completionEventName, step }));
     } else {
       dispatch(advanceToNextStep());
     }

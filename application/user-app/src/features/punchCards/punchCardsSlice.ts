@@ -4,7 +4,6 @@ import { apiClient } from 'e-punch-common-ui';
 
 export interface PunchCardState extends PunchCardDto {
   visible?: boolean;
-  showLastFilledPunchAsNotFilled?: boolean;
   animationFlags?: {
     punchAnimation?: { punchIndex: number };
     highlighted?: boolean;

@@ -10,7 +10,6 @@ interface PunchCardFrontBodyProps {
   animatedPunchIndex?: number;
   loyaltyProgram: LoyaltyProgramDto | null;
   resolvedStyles: CustomizableCardStyles;
-  showLastFilledPunchAsNotFilled?: boolean;
 }
 
 const PunchCardFrontBody: React.FC<PunchCardFrontBodyProps> = ({
@@ -18,8 +17,7 @@ const PunchCardFrontBody: React.FC<PunchCardFrontBodyProps> = ({
   currentPunches,
   animatedPunchIndex,
   loyaltyProgram,
-  resolvedStyles,
-  showLastFilledPunchAsNotFilled
+  resolvedStyles
 }) => {
   return (
     <div className={styles.container}>
@@ -29,7 +27,6 @@ const PunchCardFrontBody: React.FC<PunchCardFrontBodyProps> = ({
           currentPunches={currentPunches}
           animatedPunchIndex={animatedPunchIndex}
           resolvedStyles={resolvedStyles}
-          showLastFilledPunchAsNotFilled={showLastFilledPunchAsNotFilled}
         />
       </div>
       {loyaltyProgram && (

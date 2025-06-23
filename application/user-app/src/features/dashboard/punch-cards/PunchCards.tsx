@@ -60,9 +60,7 @@ const PunchCards = () => {
     }
   }, [scrollTargetCardId, dispatch]);
 
-  // Filter cards based on visibility
   const cardsToRender = punchCards?.filter(card =>
-    card.visible !== false &&
     card.status !== 'REWARD_REDEEMED'
   ) || [];
 

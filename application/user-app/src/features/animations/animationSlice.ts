@@ -3,8 +3,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export abstract class AnimationStep {
   abstract execute(dispatch: any): void;
   
-  // Return event name to wait for after execution, or null for immediate advancement
-  getWaitForEvent(): string | null {
+  // Return event name that will be dispatched when the step is complete
+  getCompletionEventName(): string | null {
     return null;
   }
   

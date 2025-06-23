@@ -2,15 +2,14 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useWebSocket } from './useWebSocket';
 import { selectUserId } from '../features/auth/authSlice';
-import { updatePunchCard, addPunchCard, type PunchCardState } from '../features/punchCards/punchCardsSlice';
+import { updatePunchCard } from '../features/punchCards/punchCardsSlice';
 import { startSequence } from '../features/animations/animationSlice';
 import { 
   ShowPunchAnimation, 
   ShowCompletionOverlay, 
   HighlightCard, 
-  ShowNewCardAnimation, 
-  ShowRewardClaimedAnimation, 
-  ScrollToCard} from '../features/animations/animationSteps';
+  ScrollToCard,
+  AddNewCard} from '../features/animations/animationSteps';
 import { Wait } from '../features/animations/animationSlice';
 import { AppEvent } from 'e-punch-common-core';
 import type { AppDispatch } from '../store/store';
@@ -31,39 +30,26 @@ export const useWebSocketEventHandler = () => {
       if (appEvent.userId !== userId) return;
 
       if (appEvent.type === 'PUNCH_ADDED') {
-        const { punchCard, newCard } = appEvent;
+        const { punchCard: card, newCard } = appEvent;
         
-        const updatedCard = {
-          ...punchCard,
-          showLastFilledPunchAsNotFilled: true
-        };
-        dispatch(updatePunchCard(updatedCard));
+        dispatch(updatePunchCard(card));
 
         if (newCard) {
-          const newCardWithState: PunchCardState = { 
-            ...newCard, 
-            visible: false 
-          };
-          dispatch(addPunchCard(newCardWithState));
-
           const animationSequence = [
-            new ScrollToCard(punchCard.id),
-            // new ShowPunchAlert(),
-            new ShowPunchAnimation(punchCard.id, punchCard.currentPunches - 1),
+            new ScrollToCard(card.id),
+            new ShowPunchAnimation(card.id, card.currentPunches - 1),
             new Wait(300),
-            new ShowCompletionOverlay(punchCard.id),
-            new HighlightCard(punchCard.id),
+            new ShowCompletionOverlay(card.id),
+            new HighlightCard(card.id),
             new Wait(300),
-            new ShowNewCardAnimation(newCard.id)
+            new AddNewCard(newCard)
           ];
 
           dispatch(startSequence(animationSequence));
         } else {
           const animationSequence = [
-            new ScrollToCard(punchCard.id),
-            new Wait(1000),
-            // new ShowPunchAlert(),
-            new ShowPunchAnimation(punchCard.id, punchCard.currentPunches - 1)
+            new ScrollToCard(card.id),
+            new ShowPunchAnimation(card.id, card.currentPunches - 1)
           ];
 
           dispatch(startSequence(animationSequence));
@@ -73,11 +59,7 @@ export const useWebSocketEventHandler = () => {
       if (appEvent.type === 'REWARD_CLAIMED') {
         const { card } = appEvent;
         
-        const animationSequence = [
-          new ShowRewardClaimedAnimation(card.id)
-        ];
-
-        dispatch(startSequence(animationSequence));
+        dispatch(updatePunchCard(card));
       }
     }
   }, [events, userId, dispatch]);
