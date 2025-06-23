@@ -367,7 +367,7 @@ const DevPage: React.FC = () => {
           }
 
           // Wait 500ms before next punch
-          await new Promise(resolve => setTimeout(resolve, 700));
+          await new Promise(resolve => setTimeout(resolve, 300));
         } catch (error: any) {
           setScenarioStatus(`❌ Error on punch ${punchCount}: ${error.response?.data?.message || error.message}`);
           break;
@@ -425,7 +425,7 @@ const DevPage: React.FC = () => {
 
       // Step 4: Wait 2 seconds
       setScenarioStatus("Waiting 2 seconds...");
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 300));
 
       // Step 5: Send punch to second loyalty program
       setScenarioStatus(`Step 4: Sending punch to "${program2.name}"...`);

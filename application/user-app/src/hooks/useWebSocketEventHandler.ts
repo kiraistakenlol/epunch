@@ -38,7 +38,6 @@ export const useWebSocketEventHandler = () => {
           const animationSequence = [
             new ScrollToCard(card.id),
             new ShowPunchAnimation(card.id, card.currentPunches - 1),
-            new Wait(300),
             new ShowCompletionOverlay(card.id),
             new HighlightCard(card.id),
             new Wait(300),
