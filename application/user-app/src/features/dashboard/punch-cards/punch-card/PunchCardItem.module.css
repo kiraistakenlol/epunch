@@ -14,153 +14,60 @@
   flex-shrink: 0;
 }
 
-/* === CARD INNER CONTAINER === */
+/* === CARD INNER BASE === */
 .cardInner {
   --card-height: 100cqh;
+  --shadow-intensity: 0.03;
   
-  /* Apply styling */
   height: var(--card-height);
   aspect-ratio: 1.25;
-  
   font-size: 2.5cqh(punch-card);
   border-radius: calc(var(--card-height) * 0.05);
-  box-shadow: 
-    0 0 calc(var(--card-height) * 0.05) 0 rgba(93, 64, 55, 0.1),
-    -10px 6px 16px rgba(0, 0, 0, 0.9);
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: hidden;
-  transition: transform 0.3s ease;
-  will-change: transform; 
-}
-
-/* === CARD HOVER & INTERACTION EFFECTS === */
-.punchCardItemContainer::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.05),
-    transparent
-  );
-  transition: left 0.3s ease;
-  pointer-events: none;
-  will-change: left;
-}
-
-.punchCardItemContainer:hover::before {
-  left: 100%;
-}
-
-.punchCardItemContainer:hover {
-  transform: translateY(-0.5cqh(punch-card));
-}
-
-/* === CARD STATE STYLES === */
-.statusACTIVE::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: inherit;
-  box-shadow: 0 0 calc(var(--card-height) * 0.1) rgba(255, 152, 0, 0.4);
-  pointer-events: none;
-  z-index: -1;
-}
-
-.statusREWARD_READY::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: inherit;
-  box-shadow: 
-    0 0 calc(var(--card-height) * 0.1) rgba(76, 175, 80, 0.6),
-    0 0 calc(var(--card-height) * 0.15) rgba(76, 175, 80, 0.6);
-  animation: rewardGlowOptimized 2s ease-in-out infinite alternate;
-  will-change: opacity;
-  pointer-events: none;
-  z-index: -1;
-}
-
-.highlighted {
-  animation: highlightRewardOptimized 1.5s ease-out;
-  z-index: 10;
-}
-
-.selectedForRedemption {
-  transform: scale3d(1.02, 1.02, 1);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: transform;
-}
-
-.selectedForRedemption::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: inherit;
-  box-shadow: 
-    0 0 calc(var(--card-height) * 0.2) rgba(255, 215, 0, 0.9),
-    0 0 calc(var(--card-height) * 0.4) rgba(255, 215, 0, 0.6);
-  transition: box-shadow 0.3s ease;
-  pointer-events: none;
-  z-index: -1;
-}
-
-.clickableCard:hover {
-  transform: translate3d(0, -0.8cqh(punch-card), 0);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.selectedForRedemption:hover {
-  transform: scale3d(1.01, 1.01, 1) translate3d(0, -0.3cqh(punch-card), 0);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.clickableCard {
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: transform;
-}
-
-.flippableCard {
   cursor: pointer;
-  transition: transform 0.3s ease;
 }
 
-.flippableCard:hover {
-  transform: translateY(-0.5cqh(punch-card));
+.shadowBlack {
+  box-shadow: 
+    calc(var(--card-height) * -0.02) 
+    calc(var(--card-height) * 0.02) 
+    calc(var(--card-height) * var(--shadow-intensity)) 
+    var(--color-epunch-black);
 }
 
-.flipping {
+.shadowGold {
+  box-shadow: 
+    calc(var(--card-height) * -0.02) 
+    calc(var(--card-height) * 0.02) 
+    calc(var(--card-height) * var(--shadow-intensity)) 
+    var(--color-epunch-gold);
+}
+
+.shadowGreen {
+  box-shadow: 
+    calc(var(--card-height) * -0.02) 
+    calc(var(--card-height) * 0.02) 
+    calc(var(--card-height) * var(--shadow-intensity)) 
+    var(--color-epunch-green);
+}
+/* === TRANSFORM UTILITIES === */
+.scaleUp {
+  transform: scale3d(1.04, 1.04, 1);
+}
+
+/* === ANIMATION UTILITIES === */
+.scaleUpAndBackToNormalAnimation {
+  animation: scaleUp 1.5s ease-out;
+}
+
+.flipAnimation {
   animation: cardFlip 0.6s ease-in-out;
 }
 
-/* === SELECTION OVERLAY === */
-
-/* === ANIMATIONS === */
-@keyframes rewardGlowOptimized {
-  0% {
-    opacity: 0.9;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-@keyframes highlightRewardOptimized {
+@keyframes scaleUp {
   0% {
     transform: scale3d(1, 1, 1);
     opacity: 1;

@@ -13,7 +13,6 @@ interface PunchCardItemProps extends PunchCardDto {
   isSelected?: boolean;
   onCardClick?: (cardId: string) => void;
   onRedemptionClick?: (cardId: string) => void;
-  animateRewardClaimed?: boolean;
   hideCompletionOverlay?: boolean;
   disableFlipping?: boolean;
 }
@@ -31,15 +30,14 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
   animatedPunchIndex,
   isSelected = false,
   onCardClick,
-  animateRewardClaimed,
   hideCompletionOverlay = false,
   disableFlipping = false
 }, forwardedRef) => {
   const internalRef = useRef<HTMLDivElement>(null);
   const cardRef = forwardedRef || internalRef;
   const [isFlipped, setIsFlipped] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
-  
+  const [isFlipping, setIsFlipping] = useState(false);
+
   // Check if there are any ongoing animations
 
   const handleClick = (event: React.MouseEvent) => {
@@ -49,40 +47,53 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
       onCardClick(id);
     }
 
-    if (!disableFlipping && !isAnimating) {
+    if (!disableFlipping && !isFlipping) {
       const newFlippedState = !isFlipped;
 
-      setIsAnimating(true);
+      setIsFlipping(true);
 
       setTimeout(() => {
         setIsFlipped(newFlippedState);
       }, 300);
 
-      // Failsafe: reset isAnimating after animation duration + buffer
       setTimeout(() => {
-        setIsAnimating(false);
-      }, 700); // 600ms animation + 100ms buffer
+        setIsFlipping(false);
+      }, 700);
     }
   };
 
-  const cardClasses = [
-    styles.punchCardItemContainer,
-    styles[`status${status}`],
-    isHighlighted ? styles.highlighted : '',
-    isSelected ? styles.selectedForRedemption : '',
-    status === 'REWARD_READY' ? styles.clickableCard : styles.flippableCard,
-    animateRewardClaimed ? styles.punchCardSlideOut : '',
-    isAnimating ? styles.flipping : ''
-  ].filter(Boolean).join(' ');
+  // Visual state logic
+  const getCardVisualClasses = () => {
+    const classes = [styles.cardInner];
+
+    // Shadow priority: selected > reward ready > active > base
+    if (isSelected) {
+      classes.push(styles.shadowGold, styles.scaleUp);
+    } else if (status === 'REWARD_READY') {
+      classes.push(styles.shadowGreen);
+    } else {
+      classes.push(styles.shadowBlack);
+    }
+
+    // Animation states
+    if (isHighlighted) {
+      classes.push(styles.scaleUpAndBackToNormalAnimation);
+    }
+
+    if (isFlipping) {
+      classes.push(styles.flipAnimation);
+    }
+
+    return classes.join(' ');
+  };
 
   return (
     <div
       ref={cardRef}
-      className={cardClasses}
+      className={styles.punchCardItemContainer}
       onClick={handleClick}
-      style={{ cursor: 'pointer', position: 'relative' }}
     >
-      <div className={styles.cardInner}>
+      <div className={getCardVisualClasses()}>
         {!isFlipped ? (
           <PunchCardFront
             loyaltyProgramId={loyaltyProgramId}
