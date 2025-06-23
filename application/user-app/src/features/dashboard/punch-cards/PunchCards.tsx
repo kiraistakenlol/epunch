@@ -49,13 +49,19 @@ const PunchCards = () => {
     if (scrollTargetCardId && cardRefs.current[scrollTargetCardId]) {
       const cardElement = cardRefs.current[scrollTargetCardId];
       if (cardElement) {
-        cardElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-          inline: 'center'
-        });
+        const rect = cardElement.getBoundingClientRect();
+        const isPartiallyVisible = rect.top < window.innerHeight && rect.bottom > 0;
+        
+        // Only scroll if the card is not at least partially visible
+        if (!isPartiallyVisible) {
+          cardElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+            inline: 'center'
+          });
+        }
       }
-      // Clear the scroll target after scrolling
+      // Clear the scroll target after checking/scrolling
       dispatch(clearScrollTarget());
     }
   }, [scrollTargetCardId, dispatch]);
