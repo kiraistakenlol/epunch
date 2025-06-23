@@ -49,7 +49,7 @@ const PunchCards = () => {
       const cardElement = cardRefs.current[scrollTargetCardId];
       if (cardElement) {
         const rect = cardElement.getBoundingClientRect();
-        const isPartiallyVisible = rect.top < window.innerHeight && rect.bottom > 0;
+        const isPartiallyVisible = rect.left < window.innerWidth && rect.right > 0;
         
         if (!isPartiallyVisible) {
           cardElement.scrollIntoView({
