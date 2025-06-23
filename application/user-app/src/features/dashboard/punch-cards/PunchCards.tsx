@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { AnimatePresence, motion } from 'framer-motion';
 import PunchCardItem from './punch-card/PunchCardItem';
 import { resolveCardStyles } from '../../../utils/cardStyles';
 import styles from './PunchCards.module.css';
@@ -18,9 +19,8 @@ import {
 } from '../../punchCards/punchCardsSlice';
 import { useAppSelector } from '../../../store/hooks';
 
-interface PunchCardsProps {}
 
-const PunchCards: React.FC<PunchCardsProps> = () => {
+const PunchCards = () => {
   const dispatch = useDispatch<AppDispatch>();
   const isAuthLoading = useAppSelector(selectAuthLoading);
   const punchCards = useSelector((state: RootState) => selectPunchCards(state));
@@ -28,7 +28,6 @@ const PunchCards: React.FC<PunchCardsProps> = () => {
   const scrollTargetCardId = useSelector((state: RootState) => selectScrollTargetCardId(state));
   const isLoading = useSelector((state: RootState) => selectPunchCardsLoading(state));
   const error = useSelector((state: RootState) => selectPunchCardsError(state));
-  
   const [showEmptyState, setShowEmptyState] = useState(false);
   const cardRefs = useRef<{ [cardId: string]: HTMLDivElement | null }>({});
 
@@ -61,42 +60,17 @@ const PunchCards: React.FC<PunchCardsProps> = () => {
     }
   }, [scrollTargetCardId, dispatch]);
 
-  const getCardAnimations = () => {
-    const slideInCards = new Set<string>();
-    const slideRightCards = new Set<string>();
-    
-    if (!punchCards) return { slideInCards, slideRightCards };
-    
-    const newlyCreatedCards = punchCards.filter(card => card.animationFlags?.slideAnimation);
-    const allCards = punchCards;
-    
-    newlyCreatedCards.forEach((newlyCreatedCard) => {
-      slideInCards.add(newlyCreatedCard.id);
-      
-      const newlyCreatedCardIndex = allCards.findIndex(card => card.id === newlyCreatedCard.id);
-      
-      allCards.forEach((card) => {
-        const cardIndex = allCards.findIndex(c => c.id === card.id);
-        if (cardIndex > newlyCreatedCardIndex && !card.animationFlags?.slideAnimation) {
-          slideRightCards.add(card.id);
-        }
-      });
-    });
-    
-    return { slideInCards, slideRightCards };
-  };
-
-  const { slideInCards, slideRightCards } = getCardAnimations();
-  
   // Filter cards based on visibility
-  const cardsToRender = punchCards?.filter(card => 
-    card.visible !== false && 
+  const cardsToRender = punchCards?.filter(card =>
+    card.visible !== false &&
     card.status !== 'REWARD_REDEEMED'
   ) || [];
 
+
+
   const handleCardClick = (cardId: string) => {
     const clickedCard = cardsToRender.find(card => card.id === cardId);
-    
+
     // If clicking a selected card, unselect it
     if (selectedCardId === cardId) {
       dispatch(clearSelectedCard());
@@ -112,7 +86,7 @@ const PunchCards: React.FC<PunchCardsProps> = () => {
         dispatch(clearSelectedCard());
       }
     }
-    
+
     // Then scroll to the clicked card to ensure it's fully visible
     dispatch(scrollToCard(cardId));
   };
@@ -128,7 +102,7 @@ const PunchCards: React.FC<PunchCardsProps> = () => {
       }
       dispatch(setSelectedCardId(cardId));
     }
-    
+
     // Also scroll to the card
     dispatch(scrollToCard(cardId));
   };
@@ -167,28 +141,36 @@ const PunchCards: React.FC<PunchCardsProps> = () => {
     }
     return (
       <div className={styles.punchCardsList}>
-        {cardsToRender.map((card) => {
-          const resolvedStyles = resolveCardStyles(card.styles);
-          
-          return (
-            <PunchCardItem
-              key={card.id}
-              ref={(el) => {
-                cardRefs.current[card.id] = el;
-              }}
-              {...card}
-              resolvedStyles={resolvedStyles}
-              isHighlighted={card.animationFlags?.highlighted || false}
-              animatedPunchIndex={card.animationFlags?.punchAnimation?.punchIndex}
-              shouldSlideIn={slideInCards.has(card.id)}
-              shouldSlideRight={slideRightCards.has(card.id)}
-              isSelected={selectedCardId === card.id}
-              onCardClick={handleCardClick}
-              onRedemptionClick={handleRedemptionClick}
-              animateRewardClaimed={card.animationFlags?.rewardClaimedAnimation || false}
-            />
-          );
-        })}
+        <AnimatePresence>
+          {cardsToRender.map((card) => {
+            const resolvedStyles = resolveCardStyles(card.styles);
+
+            return (
+              <motion.div
+                key={card.id}
+                layout
+                initial={{ x: -100, opacity: 0, scale: 0.8 }}
+                animate={{ x: 0, opacity: 1, scale: 1 }}
+                exit={{ x: -100, opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.6, layout: { duration: 0.6 } }}
+                style={{ height: '100%' }}
+              >
+                <PunchCardItem
+                  ref={(el) => {
+                    cardRefs.current[card.id] = el;
+                  }}
+                  {...card}
+                  resolvedStyles={resolvedStyles}
+                  isHighlighted={card.animationFlags?.highlighted || false}
+                  animatedPunchIndex={card.animationFlags?.punchAnimation?.punchIndex}
+                  isSelected={selectedCardId === card.id}
+                  onCardClick={handleCardClick}
+                  onRedemptionClick={handleRedemptionClick}
+                />
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
       </div>
     );
   };

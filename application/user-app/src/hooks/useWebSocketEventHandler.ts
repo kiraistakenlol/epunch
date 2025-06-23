@@ -33,18 +33,13 @@ export const useWebSocketEventHandler = () => {
       if (appEvent.type === 'PUNCH_ADDED') {
         const { punchCard, newCard } = appEvent;
         
-        console.log('PUNCH_ADDED event received:', { punchCard, newCard });
-        
         const updatedCard = {
           ...punchCard,
           showLastFilledPunchAsNotFilled: true
         };
-        console.log('🔄 Updating punch card with showLastFilledPunchAsNotFilled: true', updatedCard);
         dispatch(updatePunchCard(updatedCard));
 
         if (newCard) {
-          console.log('Adding new card with visible: false:', newCard);
-          
           const newCardWithState: PunchCardState = { 
             ...newCard, 
             visible: false 
@@ -62,11 +57,8 @@ export const useWebSocketEventHandler = () => {
             new ShowNewCardAnimation(newCard.id)
           ];
 
-          console.log('Starting complex animation sequence:', animationSequence);
           dispatch(startSequence(animationSequence));
         } else {
-          console.log('Starting simple animation sequence for card:', punchCard.id);
-          
           const animationSequence = [
             new ScrollToCard(punchCard.id),
             new Wait(1000),
@@ -80,8 +72,6 @@ export const useWebSocketEventHandler = () => {
 
       if (appEvent.type === 'REWARD_CLAIMED') {
         const { card } = appEvent;
-        
-        console.log('REWARD_CLAIMED event received:', card);
         
         const animationSequence = [
           new ShowRewardClaimedAnimation(card.id)

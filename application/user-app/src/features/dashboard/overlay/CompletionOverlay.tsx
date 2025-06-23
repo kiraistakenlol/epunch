@@ -4,9 +4,8 @@ import { handleEvent } from '../../animations/animationSlice';
 import { appColors } from '../../../theme';
 import { hideOverlay, selectCompletionOverlay } from './completionOverlaySlice';
 import { useDispatch } from 'react-redux';
-import { AppDispatch, RootState } from '../../../store/store';
+import { AppDispatch } from '../../../store/store';
 import { selectPunchCards } from '../../punchCards/punchCardsSlice';
-import { selectLoyaltyProgramById } from '../../loyaltyPrograms/loyaltyProgramsSlice';
 import { useAppSelector } from '../../../store/hooks';
 import PunchCardItem from '../punch-cards/punch-card/PunchCardItem';
 import { resolveCardStyles } from '../../../utils/cardStyles';
@@ -18,29 +17,19 @@ const CompletionOverlay: React.FC = () => {
 
   // Find the completed card from punch cards slice
   const completedCard = punchCards?.find(card => card.id === completionOverlay.cardId) || null;
-  
-  // Get loyalty program from the loyalty programs slice
-  const loyaltyProgram = useAppSelector((state: RootState) => 
-    completedCard?.loyaltyProgramId 
-      ? selectLoyaltyProgramById(state, completedCard.loyaltyProgramId)
-      : null
-  );
 
   if (!completionOverlay.isVisible || !completedCard) return null;
 
-  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    console.log('Overlay clicked, target:', e.target, 'currentTarget:', e.currentTarget);
+  const handleOverlayClick = () => {
     dispatch(hideOverlay());
     dispatch(handleEvent('COMPLETION_OVERLAY_CLOSED'));
   };
 
   const handleContentClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    console.log('Content clicked, stopping propagation');
     e.stopPropagation();
   };
 
   const handleOkClick = () => {
-    console.log('OK button clicked, closing overlay...');
     dispatch(hideOverlay());
     dispatch(handleEvent('COMPLETION_OVERLAY_CLOSED'));
   };

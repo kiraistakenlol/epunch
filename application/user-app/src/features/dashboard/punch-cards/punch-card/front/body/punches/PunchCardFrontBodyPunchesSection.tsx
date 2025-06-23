@@ -21,12 +21,6 @@ const PunchCardFrontBodyPunchesSection: React.FC<PunchCardFrontBodyPunchesSectio
   const MAX_PUNCHES = 10;
   const punchCircles: JSX.Element[] = [];
 
-  console.log('🎯 PunchCardFrontBodyPunchesSection render:', {
-    currentPunches,
-    showLastFilledPunchAsNotFilled,
-    animatedPunchIndex
-  });
-
   for (let i = 0; i < MAX_PUNCHES; i++) {
     const isWithinTotal = i < totalPunches;
     const isAnimated = animatedPunchIndex === i;
@@ -38,11 +32,6 @@ const PunchCardFrontBodyPunchesSection: React.FC<PunchCardFrontBodyPunchesSectio
     const isFilled = i < currentPunches - 1 || 
                      isAnimated || 
                      (i === currentPunches - 1 && !showLastFilledPunchAsNotFilled);
-
-    if (i < currentPunches) {
-      console.log(`  Punch ${i}: isFilled=${isFilled}, isAnimated=${isAnimated}, showLastFilledPunchAsNotFilled=${showLastFilledPunchAsNotFilled}`);
-    }
-
     let containerClasses = styles.punchIconContainingZone;
 
     if (!isWithinTotal) {

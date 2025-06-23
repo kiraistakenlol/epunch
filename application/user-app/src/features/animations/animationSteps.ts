@@ -17,7 +17,6 @@ export class ShowPunchAnimation extends AnimationStep {
   }
 
   execute(dispatch: AppDispatch) {
-    console.log('🎬 ShowPunchAnimation execute - setting animation flags for card:', this.cardId);
     dispatch(updatePunchCardById({
       id: this.cardId,
       updates: { 
@@ -29,7 +28,6 @@ export class ShowPunchAnimation extends AnimationStep {
   }
 
   cleanup(dispatch: AppDispatch) {
-    console.log('🧹 ShowPunchAnimation cleanup - clearing flags and showing punch as filled for card:', this.cardId);
     dispatch(updatePunchCardById({
       id: this.cardId,
       updates: { 
@@ -67,8 +65,6 @@ export class ShowCompletionOverlay extends AnimationStep {
 
   async execute(dispatch: AppDispatch) {
     try {
-      console.log('ShowCompletionOverlay executing, showing overlay');
-      
       dispatch(showOverlay({
         cardId: this.cardId
       }));
@@ -120,8 +116,6 @@ export class ShowNewCardAnimation extends AnimationStep {
   }
 
   execute(dispatch: AppDispatch) {
-    console.log('ShowNewCardAnimation executing for card:', this.cardId);
-    
     dispatch(updatePunchCardById({
       id: this.cardId,
       updates: { 
@@ -131,13 +125,9 @@ export class ShowNewCardAnimation extends AnimationStep {
         }
       }
     }));
-
-    console.log('Set card visible and slideAnimation to true for:', this.cardId);
   }
 
   cleanup(dispatch: AppDispatch) {
-    console.log('Clearing slideAnimation for card:', this.cardId);
-    
     dispatch(updatePunchCardById({
       id: this.cardId,
       updates: { 
@@ -169,35 +159,17 @@ export class ShowRewardClaimedAnimation extends AnimationStep {
   }
 
   execute(dispatch: AppDispatch) {
-    dispatch(updatePunchCardById({
-      id: this.cardId,
-      updates: { 
-        animationFlags: { 
-          rewardClaimedAnimation: true
-        }
-      }
-    }));
-
     dispatch(showAlert("🎉 Reward redeemed! Enjoy your treat!"));
 
-    // Auto-cleanup after animation duration (1s for slideOutAndFade)
+    // With Framer Motion, we can immediately change the status
+    // AnimatePresence will handle the smooth exit animation
     setTimeout(() => {
       this.cleanup(dispatch);
-    }, 3000); // Slightly longer than animation duration for safety
+    }, 500); // Just enough time for alert to show
   }
 
   cleanup(dispatch: AppDispatch) {
-    // First clear the animation flag
-    dispatch(updatePunchCardById({
-      id: this.cardId,
-      updates: { 
-        animationFlags: { 
-          rewardClaimedAnimation: false
-        }
-      }
-    }));
-    
-    // Then update the card status to REWARD_REDEEMED so it gets filtered out
+    // Update the card status to REWARD_REDEEMED - Framer Motion handles the rest
     dispatch(updatePunchCardById({
       id: this.cardId,
       updates: { 

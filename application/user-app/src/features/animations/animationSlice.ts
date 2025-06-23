@@ -85,7 +85,6 @@ const animationSlice = createSlice({
     },
 
     handleEvent: (state, action: PayloadAction<string>) => {
-      console.log('handleEvent: received event', action.payload);
       state.receivedEvent = action.payload;
     },
 
