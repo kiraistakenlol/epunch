@@ -30,7 +30,7 @@ export const useWebSocketEventHandler = () => {
       if (appEvent.userId !== userId) return;
 
       if (appEvent.type === 'PUNCH_ADDED') {
-        const { punchCard: card, newCard } = appEvent;
+        const { card, newCard } = appEvent;
         
         dispatch(updatePunchCard(card));
 

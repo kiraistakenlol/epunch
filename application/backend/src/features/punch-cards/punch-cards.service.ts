@@ -297,7 +297,7 @@ export class PunchCardsService {
     this.eventService.emitAppEvent({
       type: 'PUNCH_ADDED',
       userId,
-      punchCard: updatedPunchCardDto,
+      card: updatedPunchCardDto,
       newCard: newPunchCardDto || null,
     });
 

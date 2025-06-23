@@ -88,9 +88,6 @@ const PunchCards = () => {
         dispatch(clearSelectedCard());
       }
     }
-
-    // Then scroll to the clicked card to ensure it's fully visible
-    dispatch(scrollToCard(cardId));
   };
 
   const handleRedemptionClick = (cardId: string) => {

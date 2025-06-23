@@ -5,5 +5,5 @@ centralize conversion db models to dtos
 
 user-app
 
-animations, sliding a bit broken.
+qr code expansion make smoother. the surrounding area chagens it's size when expanding ****
 
