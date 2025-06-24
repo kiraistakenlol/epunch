@@ -71,7 +71,7 @@ resource "aws_amplify_app" "apps" {
   # SPA routing configuration
   custom_rule {
     source = "/<*>"
-    status = "404-200"
+    status = "200"
     target = "/index.html"
   }
   
