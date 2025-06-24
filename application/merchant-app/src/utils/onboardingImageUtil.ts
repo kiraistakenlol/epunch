@@ -2,86 +2,27 @@ import html2canvas from 'html2canvas';
 import QRCode from 'qrcode';
 import { MerchantDto } from 'e-punch-common-core';
 import { apiClient } from 'e-punch-common-ui';
+import { punchCardPreviewService } from './punchCardPreviewService';
 
 const capturePunchCardDesign = async (merchant: MerchantDto, backgroundColor: string, loyaltyProgramName?: string): Promise<string> => {
   try {
     const merchantStyle = await apiClient.getMerchantDefaultPunchCardStyle(merchant.id);
     
-    const baseUrl = import.meta.env.VITE_USER_APP_URL;
-    const previewParams = new URLSearchParams({
+    const cardImageDataUrl = await punchCardPreviewService.captureCardImage({
+      primaryColor: merchantStyle.primaryColor ?? undefined,
+      secondaryColor: merchantStyle.secondaryColor ?? undefined,
+      logoUrl: merchantStyle.logoUrl,
+      punchIcons: merchantStyle.punchIcons,
       merchantName: merchant.name,
-      currentPunches: '3',
-      totalPunches: '10',
+      loyaltyProgramName,
+      currentPunches: 3,
+      totalPunches: 10,
       status: 'ACTIVE',
-      hideShadow: 'true',
+      hideShadow: true,
       renderOnBackgroundColor: backgroundColor
     });
 
-    if (merchantStyle.primaryColor) {
-      previewParams.set('primaryColor', merchantStyle.primaryColor);
-    }
-    if (merchantStyle.secondaryColor) {
-      previewParams.set('secondaryColor', merchantStyle.secondaryColor);
-    }
-
-    if (merchantStyle.logoUrl) {
-      previewParams.set('logoUrl', merchantStyle.logoUrl);
-    }
-
-    if (merchantStyle.punchIcons) {
-      previewParams.set('punchIcons', JSON.stringify(merchantStyle.punchIcons));
-    }
-
-    if (loyaltyProgramName?.trim()) {
-      previewParams.set('loyaltyProgramName', loyaltyProgramName.trim());
-    }
-
-    const iframeUrl = `${baseUrl}/merchant/card-preview?${previewParams.toString()}`;
-
-    const iframe = document.createElement('iframe');
-    iframe.src = iframeUrl;
-    iframe.style.position = 'absolute';
-    iframe.style.left = '-9999px';
-    iframe.style.top = '-9999px';
-    iframe.style.width = '500px';
-    iframe.style.height = '400px'; // 500/400 = 1.25 aspect ratio
-    iframe.style.border = 'none';
-
-    document.body.appendChild(iframe);
-
-    return new Promise<string>((resolve) => {
-      const timeout = setTimeout(() => {
-        document.body.removeChild(iframe);
-        resolve('');
-      }, 10000);
-
-      const handleMessage = (event: MessageEvent) => {
-        if (event.source !== iframe.contentWindow) return;
-
-        if (event.data.type === 'CARD_PREVIEW_READY') {
-          iframe.contentWindow?.postMessage({ type: 'CAPTURE_CARD' }, '*');
-        } else if (event.data.type === 'CARD_CAPTURED') {
-          clearTimeout(timeout);
-          window.removeEventListener('message', handleMessage);
-          document.body.removeChild(iframe);
-          resolve(event.data.imageDataURL);
-        } else if (event.data.type === 'CARD_CAPTURE_ERROR') {
-          clearTimeout(timeout);
-          window.removeEventListener('message', handleMessage);
-          document.body.removeChild(iframe);
-          resolve(''); // Fallback to empty string
-        }
-      };
-
-      window.addEventListener('message', handleMessage);
-
-      iframe.onerror = (error) => {
-        clearTimeout(timeout);
-        window.removeEventListener('message', handleMessage);
-        document.body.removeChild(iframe);
-        resolve(''); // Fallback to empty string
-      };
-    });
+    return cardImageDataUrl;
 
   } catch (error) {
     console.error('[PDF] Failed to capture punch card design:', error);
@@ -97,7 +38,8 @@ export const generateOnboardingImage = async (
   title: string,
   loyaltyProgramName?: string
 ): Promise<string> => {
-  const qrCodeUrl = `https://epunch.app?merchant=${merchant.slug}`;
+  const baseUrl = import.meta.env.VITE_USER_APP_URL || 'https://epunch.app';
+  const qrCodeUrl = `${baseUrl}?merchant=${merchant.slug}`;
 
   const qrCodeDataURL = await QRCode.toDataURL(qrCodeUrl, {
     margin: 1,

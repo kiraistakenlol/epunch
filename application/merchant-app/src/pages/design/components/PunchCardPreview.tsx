@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PunchIconsDto } from 'e-punch-common-core';
 import { useAppSelector } from '../../../store/hooks';
 import { colors } from '../../../theme/constants';
+import { punchCardPreviewService } from '../../../utils/punchCardPreviewService';
 
 interface PunchCardPreviewProps {
   primaryColor: string;
@@ -46,28 +47,24 @@ export const PunchCardPreview: React.FC<PunchCardPreviewProps> = ({
 
   // Build iframe URL with all styling parameters
   const buildPreviewUrl = () => {
-    const baseUrl = process.env.VITE_USER_APP_URL || 'http://localhost:5173';
-    const previewUrl = new URL(`${baseUrl}/merchant/card-preview`);
+    const url = punchCardPreviewService.getPreviewUrl({
+      primaryColor,
+      secondaryColor,
+      logoUrl,
+      punchIcons,
+      merchantName: merchant?.name || 'Preview Merchant',
+      currentPunches,
+      totalPunches,
+      status,
+      showAnimations,
+      hideShadow: true,
+      renderOnBackgroundColor
+    });
     
-    previewUrl.searchParams.set('primaryColor', primaryColor);
-    previewUrl.searchParams.set('secondaryColor', secondaryColor);
-    previewUrl.searchParams.set('merchantName', merchant?.name || 'Preview Merchant');
-    previewUrl.searchParams.set('currentPunches', currentPunches.toString());
-    previewUrl.searchParams.set('totalPunches', totalPunches.toString());
-    previewUrl.searchParams.set('status', status);
-    previewUrl.searchParams.set('animations', showAnimations.toString());
-    previewUrl.searchParams.set('hideShadow', 'true');
-    previewUrl.searchParams.set('key', animationKey.toString()); // Force iframe refresh for animations
+    // Add animation key for force refresh
+    const previewUrl = new URL(url);
+    previewUrl.searchParams.set('key', animationKey.toString());
     
-    // Add background color
-    previewUrl.searchParams.set('renderOnBackgroundColor', renderOnBackgroundColor);
-    
-    // Handle logo URL
-    if (logoUrl) {
-      previewUrl.searchParams.set('logoUrl', logoUrl);
-    }
-    if (punchIcons) previewUrl.searchParams.set('punchIcons', JSON.stringify(punchIcons));
-
     return previewUrl.toString();
   };
 
