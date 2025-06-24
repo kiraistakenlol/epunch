@@ -33,4 +33,7 @@ db_password = "your_secure_database_password"
 
 # Google OAuth Configuration
 google_oauth_client_id = "your_google_oauth_client_id.apps.googleusercontent.com"
-google_oauth_client_secret = "GOCSPX-your_google_oauth_client_secret" 
+google_oauth_client_secret = "GOCSPX-your_google_oauth_client_secret"
+
+# User App URL
+user_app_url = "https://dev.epunch.app" 

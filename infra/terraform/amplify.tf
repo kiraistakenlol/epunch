@@ -17,8 +17,9 @@ locals {
       name = "merchant-app"
       build_directory = "merchant-app"
       environment_variables = {
-        VITE_API_URL    = "https://${local.api_domain}/api/v1"
-        VITE_AWS_REGION = var.aws_region
+        VITE_API_URL      = "https://${local.api_domain}/api/v1"
+        VITE_AWS_REGION   = var.aws_region
+        VITE_USER_APP_URL = var.user_app_url
       }
       custom_domain_prefix = var.environment == "prod" ? "merchant" : "dev-merchant"
     }

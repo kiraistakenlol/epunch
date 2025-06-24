@@ -73,4 +73,9 @@ variable "db_password" {
   description = "Database master password"
   type        = string
   sensitive   = true
+}
+
+variable "user_app_url" {
+  description = "URL of the user app for merchant app to reference"
+  type        = string
 } 

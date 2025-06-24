@@ -3,7 +3,7 @@ resource "aws_db_instance" "main" {
   identifier = "epunch-${var.environment}-database"
   
   engine         = "postgres"
-  engine_version = "17.2"
+  engine_version = "17.4"
   instance_class = "db.t3.micro"
   
   allocated_storage     = 20
