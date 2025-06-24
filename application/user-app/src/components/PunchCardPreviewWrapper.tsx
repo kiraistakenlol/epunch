@@ -5,10 +5,9 @@ import loyaltyProgramsReducer from '../features/loyaltyPrograms/loyaltyProgramsS
 import animationReducer from '../features/animations/animationSlice';
 import PunchCardItem from '../features/dashboard/punch-cards/punch-card/PunchCardItem';
 import { resolveCardStyles } from '../utils/cardStyles';
-import type { LoyaltyProgramDto, PunchIconsDto } from 'e-punch-common-core';
+import type { LoyaltyProgramDto, PunchCardDto, PunchCardStyleDto, PunchIconsDto } from 'e-punch-common-core';
 import styles from './PunchCardPreviewWrapper.module.css';
 
-// Create minimal store with only required slices
 const createPreviewStore = (mockLoyaltyProgram: LoyaltyProgramDto) => {
   return configureStore({
     reducer: {
@@ -34,11 +33,13 @@ const createPreviewStore = (mockLoyaltyProgram: LoyaltyProgramDto) => {
 
 interface PunchCardPreviewWrapperProps {
   // All the styling from merchant-app
-  primaryColor: string;
-  secondaryColor: string;
+  primaryColor?: string;
+  secondaryColor?: string;
   logoUrl?: string;
   punchIcons?: PunchIconsDto;
+
   merchantName: string;
+  loyaltyProgramName?: string;
   
   // Preview options
   currentPunches?: number;
@@ -55,6 +56,7 @@ export const PunchCardPreviewWrapper: React.FC<PunchCardPreviewWrapperProps> = (
   logoUrl,
   punchIcons,
   merchantName,
+  loyaltyProgramName,
   currentPunches = 3,
   totalPunches = 10,
   status = 'ACTIVE',
@@ -62,10 +64,10 @@ export const PunchCardPreviewWrapper: React.FC<PunchCardPreviewWrapperProps> = (
   hideShadow = false,
   renderOnBackgroundColor = 'white'
 }) => {
-  // Create mock loyalty program
+
   const mockLoyaltyProgram: LoyaltyProgramDto = {
     id: 'preview-loyalty-program',
-    name: `${merchantName} Rewards`,
+    name: loyaltyProgramName || `${merchantName} Rewards`,
     description: null,
     requiredPunches: totalPunches,
     rewardDescription: `${totalPunches}th coffee is free!`,
@@ -80,21 +82,18 @@ export const PunchCardPreviewWrapper: React.FC<PunchCardPreviewWrapperProps> = (
       createdAt: new Date().toISOString()
     },
     createdAt: new Date().toISOString()
-  };
+  } as LoyaltyProgramDto;
 
-  // Create mock punch card styles
   const mockCardStyles = {
     primaryColor,
     secondaryColor,
     logoUrl: logoUrl || null,
     backgroundImageUrl: null,
     punchIcons: punchIcons || null
-  };
+  } as PunchCardStyleDto;
 
-  // Resolve styles once
   const resolvedStyles = resolveCardStyles(mockCardStyles);
 
-  // Create mock punch card
   const mockPunchCard = {
     id: 'preview-card',
     loyaltyProgramId: 'preview-loyalty-program',
@@ -105,9 +104,8 @@ export const PunchCardPreviewWrapper: React.FC<PunchCardPreviewWrapperProps> = (
     status,
     styles: mockCardStyles,
     createdAt: new Date().toISOString()
-  };
+  } as PunchCardDto;
 
-  // Create store with mock data
   const store = createPreviewStore(mockLoyaltyProgram);
 
   return (
