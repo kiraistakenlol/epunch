@@ -16,8 +16,8 @@ export interface PunchIcon {
 }
 
 export interface PunchIconsDto {
-  filled: PunchIcon;
-  unfilled: PunchIcon;
+  filled: PunchIcon | null;
+  unfilled: PunchIcon | null;
 }
 
 export interface FileUploadUrlDto {

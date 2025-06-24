@@ -40,7 +40,10 @@ const DEFAULT_PUNCH_ICONS: PunchIconsDto = {
 export interface CustomizableCardStyles {
   colors: CardColors;
   logoUrl: string | null;
-  punchIcons: PunchIconsDto;
+  punchIcons: {
+    filled: NonNullable<PunchIconsDto['filled']>;
+    unfilled: NonNullable<PunchIconsDto['unfilled']>;
+  };
   backgroundImageUrl: string | null;
 }
 
@@ -49,10 +52,23 @@ export function resolveCardStyles(
 ): CustomizableCardStyles {
   const resolvedColors = deriveCardColors(customization?.primaryColor, customization?.secondaryColor);
   
+  // Handle individual icon nulls - use default for any missing icons
+  let resolvedPunchIcons: CustomizableCardStyles['punchIcons'] = {
+    filled: DEFAULT_PUNCH_ICONS.filled!,
+    unfilled: DEFAULT_PUNCH_ICONS.unfilled!
+  };
+  
+  if (customization?.punchIcons) {
+    resolvedPunchIcons = {
+      filled: customization.punchIcons.filled || DEFAULT_PUNCH_ICONS.filled!,
+      unfilled: customization.punchIcons.unfilled || DEFAULT_PUNCH_ICONS.unfilled!
+    };
+  }
+  
   return {
     colors: resolvedColors,
     logoUrl: customization?.logoUrl || null,
-    punchIcons: customization?.punchIcons || DEFAULT_PUNCH_ICONS,
+    punchIcons: resolvedPunchIcons,
     backgroundImageUrl: customization?.backgroundImageUrl || null,
   };
 }

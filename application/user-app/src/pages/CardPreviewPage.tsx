@@ -5,7 +5,7 @@ const CardPreviewPage: React.FC = () => {
   const searchParams = new URLSearchParams(window.location.search);
   
   // Parse all URL parameters
-  const logoUrl = searchParams.get('logoUrl') || searchParams.get('logoBase64') || undefined;
+  const logoUrl = searchParams.get('logoUrl') || undefined;
   const renderOnBackgroundColor = searchParams.get('renderOnBackgroundColor') || 'transparent';
   
   const previewProps = {
@@ -34,7 +34,6 @@ const CardPreviewPage: React.FC = () => {
     primaryColor: searchParams.get('primaryColor'),
     secondaryColor: searchParams.get('secondaryColor'),
     logoUrl: searchParams.get('logoUrl'),
-    logoBase64: searchParams.get('logoBase64') ? 'base64 data present' : null,
     finalLogoUrl: logoUrl ? logoUrl.substring(0, 50) + (logoUrl.length > 50 ? '...' : '') : null,
     punchIcons: searchParams.get('punchIcons')?.substring(0, 100) + '...',
     merchantName: searchParams.get('merchantName'),
