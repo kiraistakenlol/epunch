@@ -11,16 +11,17 @@ import { useAppSelector } from '../../store/hooks';
 import { generateOnboardingImage, downloadImage } from '../../utils/onboardingImageUtil';
 import { showSuccessToast, showErrorToast } from '../../utils/toast';
 import styles from './WelcomeQRPage.module.css';
+import { appColors } from '../../../../common-ui/src/theme/colors';
 
 export const WelcomeQRPage: React.FC = () => {
   const { merchant, loading: merchantLoading, error: merchantError } = useAppSelector((state) => state.merchant);
   const [onboardingImageUrl, setOnboardingImageUrl] = useState<string | null>(null);
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const [loyaltyProgramName, setLoyaltyProgramName] = useState<string>('');
+  const [titleColor, setTitleColor] = useState<string>(appColors.epunchWhite);
   const [title, setTitle] = useState<string>('');
-  const [backgroundColor, setBackgroundColor] = useState<string>('#424242');
-  const [qrCodeBackgroundColor, setQrCodeBackgroundColor] = useState<string>('#ffffff');
-  const [titleColor, setTitleColor] = useState<string>('#f5f5dc');
+  const [backgroundColor, setBackgroundColor] = useState<string>(appColors.epunchOrangeDark);
+  const [qrCodeBackgroundColor, setQrCodeBackgroundColor] = useState<string>(appColors.epunchWhite);
 
   useEffect(() => {
     if (merchant && !title) {
