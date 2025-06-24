@@ -6,6 +6,7 @@ export const appColors = {
   epunchRedError: '#f44336',
   epunchGold: '#ffd700',
   epunchOrange: '#ff9800',
+  epunchOrangeDark: '#f1ae1e',
   epunchBrown: '#5d4037',
   epunchBeige: '#f5f5dc',
   epunchGray: '#666666',

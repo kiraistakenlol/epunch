@@ -4,7 +4,8 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import { ToastContainer } from 'react-toastify';
 import { configureApiClient } from 'e-punch-common-ui';
-import { useAppSelector } from './store/hooks';
+import { useAppSelector, useAppDispatch } from './store/hooks';
+import { fetchMerchant } from './store/merchantSlice';
 import { LoginPage } from './pages/login/LoginPage';
 import { AppLayout } from './components/shared';
 import { DashboardPage } from './pages/dashboard/DashboardPage.tsx';
@@ -13,9 +14,12 @@ import { LoyaltyProgramCreate } from './pages/loyalty-programs/LoyaltyProgramCre
 import { LoyaltyProgramEdit } from './pages/loyalty-programs/LoyaltyProgramEdit';
 import { DesignPage } from './pages/design/DesignPage.tsx';
 import ScannerPage from './pages/scanner/ScannerPage';
+import { WelcomeQRPage } from './pages/welcome-qr/WelcomeQRPage';
 import { injectCSSVariables } from './styles/css-variables';
 import './styles/global.css';
 import 'react-toastify/dist/ReactToastify.css';
+import { RootState } from './store/store';
+import { Auth } from './store/authSlice.ts';
 
 // Configure API client
 const API_BASE_URL = import.meta.env.VITE_API_URL;
@@ -75,9 +79,9 @@ const theme = createTheme({
 });
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const isAuthenticated = useAppSelector(state => !!state.auth.merchant);
+  const auth: Auth | null = useAppSelector((state: RootState) => state.auth.merchant);
   
-  if (!isAuthenticated) {
+  if (!auth) {
     return <Navigate to="/login" replace />;
   }
   
@@ -85,10 +89,20 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 };
 
 function App() {
+  const dispatch = useAppDispatch();
+  const authMerchant = useAppSelector((state: RootState) => state.auth.merchant);
+
   // Inject CSS variables from constants
   React.useEffect(() => {
     injectCSSVariables();
   }, []);
+
+  // Fetch merchant data when authenticated
+  React.useEffect(() => {
+    if (authMerchant?.id) {
+      dispatch(fetchMerchant(authMerchant.id));
+    }
+  }, [authMerchant?.id, dispatch]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -107,6 +121,7 @@ function App() {
             <Route path="loyalty-programs/:id/edit" element={<LoyaltyProgramEdit />} />
             <Route path="design" element={<DesignPage />} />
             <Route path="scanner" element={<ScannerPage />} />
+            <Route path="welcome-qr" element={<WelcomeQRPage />} />
           </Route>
         </Routes>
       </Router>

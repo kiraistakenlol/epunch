@@ -17,6 +17,7 @@ import {
   QrCodeScanner,
   Loyalty,
   Palette,
+  QrCode as QrCodeIcon,
 } from '@mui/icons-material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { colors } from '../../theme';
@@ -24,6 +25,7 @@ import { colors } from '../../theme';
 const menuItems = [
   { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
   { text: 'QR Scanner', icon: <QrCodeScanner />, path: '/scanner' },
+  { text: 'Welcome QR', icon: <QrCodeIcon />, path: '/welcome-qr' },
   { text: 'Loyalty Programs', icon: <Loyalty />, path: '/loyalty-programs' },
   { text: 'DesignPage', icon: <Palette />, path: '/design' },
 ];

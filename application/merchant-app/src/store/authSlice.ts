@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { apiClient } from 'e-punch-common-ui';
 import { MerchantLoginDto } from 'e-punch-common-core';
 
-interface MerchantUser {
+export interface Auth {
   id: string;
   name: string;
   email: string;
@@ -12,7 +12,7 @@ interface MerchantUser {
 interface AuthState {
   isAuthenticated: boolean;
   token: string | null;
-  merchant: MerchantUser | null;
+  merchant: Auth | null;
   loading: boolean;
   error: string | null;
 }
@@ -62,7 +62,7 @@ const authSlice = createSlice({
       state.loading = true;
       state.error = null;
     },
-    loginSuccess: (state, action: PayloadAction<{ token: string; merchant: MerchantUser }>) => {
+    loginSuccess: (state, action: PayloadAction<{ token: string; merchant: Auth }>) => {
       console.log('Redux: loginSuccess', action.payload);
       state.isAuthenticated = true;
       state.token = action.payload.token;
@@ -101,7 +101,7 @@ const authSlice = createSlice({
         localStorage.setItem('merchant_data', JSON.stringify(state.merchant));
       }
     },
-    updateMerchant: (state, action: PayloadAction<MerchantUser>) => {
+    updateMerchant: (state, action: PayloadAction<Auth>) => {
       state.merchant = action.payload;
       localStorage.setItem('merchant_data', JSON.stringify(action.payload));
     },
