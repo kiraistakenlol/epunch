@@ -57,6 +57,7 @@ export const PunchCardPreview: React.FC<PunchCardPreviewProps> = ({
     previewUrl.searchParams.set('totalPunches', totalPunches.toString());
     previewUrl.searchParams.set('status', status);
     previewUrl.searchParams.set('animations', showAnimations.toString());
+    previewUrl.searchParams.set('hideShadow', 'true');
     previewUrl.searchParams.set('key', animationKey.toString()); // Force iframe refresh for animations
     
     // Add background color

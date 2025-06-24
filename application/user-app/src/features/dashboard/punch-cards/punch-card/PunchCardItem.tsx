@@ -15,6 +15,7 @@ interface PunchCardItemProps extends PunchCardDto {
   onRedemptionClick?: (cardId: string) => void;
   hideCompletionOverlay?: boolean;
   disableFlipping?: boolean;
+  hideShadow?: boolean;
 }
 
 const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
@@ -31,7 +32,8 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
   isSelected = false,
   onCardClick,
   hideCompletionOverlay = false,
-  disableFlipping = false
+  disableFlipping = false,
+  hideShadow = false
 }, forwardedRef) => {
   const internalRef = useRef<HTMLDivElement>(null);
   const cardRef = forwardedRef || internalRef;
@@ -66,13 +68,19 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
   const getCardVisualClasses = () => {
     const classes = [styles.cardInner];
 
-    // Shadow priority: selected > reward ready > active > base
-    if (isSelected) {
-      classes.push(styles.shadowGold, styles.scaleUp);
-    } else if (status === 'REWARD_READY') {
-      classes.push(styles.shadowGreen);
-    } else {
-      classes.push(styles.shadowBlack);
+    // Only apply shadow classes if hideShadow is false
+    if (!hideShadow) {
+      // Shadow priority: selected > reward ready > active > base
+      if (isSelected) {
+        classes.push(styles.shadowGold, styles.scaleUp);
+      } else if (status === 'REWARD_READY') {
+        classes.push(styles.shadowGreen);
+      } else {
+        classes.push(styles.shadowBlack);
+      }
+    } else if (isSelected) {
+      // Still apply scaleUp for selected state even without shadow
+      classes.push(styles.scaleUp);
     }
 
     // Animation states

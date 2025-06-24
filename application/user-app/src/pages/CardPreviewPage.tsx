@@ -25,6 +25,7 @@ const CardPreviewPage: React.FC = () => {
     totalPunches: parseInt(searchParams.get('totalPunches') || '10'),
     status: (searchParams.get('status') as any) || 'ACTIVE',
     showAnimations: searchParams.get('animations') === 'true',
+    hideShadow: searchParams.get('hideShadow') === 'true',
     renderOnBackgroundColor
   };
 
@@ -37,6 +38,7 @@ const CardPreviewPage: React.FC = () => {
     finalLogoUrl: logoUrl ? logoUrl.substring(0, 50) + (logoUrl.length > 50 ? '...' : '') : null,
     punchIcons: searchParams.get('punchIcons')?.substring(0, 100) + '...',
     merchantName: searchParams.get('merchantName'),
+    hideShadow: searchParams.get('hideShadow'),
     renderOnBackgroundColor
   });
 
