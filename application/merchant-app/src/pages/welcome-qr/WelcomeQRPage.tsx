@@ -1,26 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  Button,
-  CircularProgress,
-  TextField,
-} from '@mui/material';
-import {
-  Download as DownloadIcon,
-} from '@mui/icons-material';
+  EpunchPage,
+  EpunchCard,
+  EpunchInput,
+  EpunchColorPicker,
+  EpunchButon,
+  EpunchSpinner,
+} from '../../components/foundational';
 import { useAppSelector } from '../../store/hooks';
 import { generateOnboardingImage, downloadImage } from '../../utils/onboardingImageUtil';
 import { showSuccessToast, showErrorToast } from '../../utils/toast';
+import styles from './WelcomeQRPage.module.css';
 
 export const WelcomeQRPage: React.FC = () => {
   const { merchant, loading: merchantLoading, error: merchantError } = useAppSelector((state) => state.merchant);
   const [onboardingImageUrl, setOnboardingImageUrl] = useState<string | null>(null);
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const [loyaltyProgramName, setLoyaltyProgramName] = useState<string>('');
-  const [title, setTitle] = useState<string>();
+  const [title, setTitle] = useState<string>('');
   const [backgroundColor, setBackgroundColor] = useState<string>('#424242');
   const [qrCodeBackgroundColor, setQrCodeBackgroundColor] = useState<string>('#ffffff');
   const [titleColor, setTitleColor] = useState<string>('#f5f5dc');
@@ -84,260 +81,126 @@ export const WelcomeQRPage: React.FC = () => {
 
   if (merchantLoading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
-        <CircularProgress />
-      </Box>
+      <EpunchPage title="Welcome QR Code" isLoading={true}>
+        <div />
+      </EpunchPage>
     );
-  };
+  }
 
   if (merchantError) {
     return (
-      <Box textAlign="center" py={4}>
-        <Typography variant="h6" color="error" gutterBottom>
-          Error loading merchant data: {merchantError}
-        </Typography>
-      </Box>
+      <EpunchPage title="Welcome QR Code">
+        <div className={styles['welcomeQRPage-errorContainer']}>
+          <h2 className={styles['welcomeQRPage-errorTitle']}>
+            Error loading merchant data: {merchantError}
+          </h2>
+        </div>
+      </EpunchPage>
     );
   }
 
   if (!merchant) {
     return (
-      <Box textAlign="center" py={4}>
-        <Typography variant="h6" color="error" gutterBottom>
-          Unable to load merchant data
-        </Typography>
-      </Box>
+      <EpunchPage title="Welcome QR Code">
+        <div className={styles['welcomeQRPage-errorContainer']}>
+          <h2 className={styles['welcomeQRPage-errorTitle']}>
+            Unable to load merchant data
+          </h2>
+        </div>
+      </EpunchPage>
     );
   }
 
   return (
-    <Box>
-      <Typography
-        variant="h4"
-        sx={{
-          color: '#f5f5dc',
-          fontWeight: 'bold',
-          textShadow: '1px 1px 1px #3e2723',
-          mb: 3,
-        }}
-      >
-        Welcome QR Code
-      </Typography>
-
-      <Card sx={{ backgroundColor: '#f5f5dc', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)', mb: 4 }}>
-        <CardContent sx={{ p: 4 }}>
-          <Box
-            display="flex"
-            flexDirection={{ xs: 'column', md: 'row' }}
-            gap={4}
-          >
-            {/* Controls Block */}
-            <Box sx={{
-              flex: { xs: '1', md: '0 0 400px' },
-              order: { xs: 2, md: 1 }
-            }}>
-              {/* Controls */}
-              <TextField
-                fullWidth
+    <EpunchPage title="Welcome QR Code">
+      <div className={styles['welcomeQRPage-container']}>
+        <EpunchCard>
+          <div className={styles['welcomeQRPage-contentLayout']}>
+            {/* Controls Section */}
+            <div className={styles['welcomeQRPage-controlsSection']}>
+              <EpunchInput
                 label="Title"
                 placeholder="Your business name or title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                sx={{
-                  mb: 3,
-                  '& .MuiOutlinedInput-root': {
-                    backgroundColor: '#fff',
-                    fontSize: '1.1rem',
-                    '& fieldset': { borderColor: '#8d6e63' },
-                    '&:hover fieldset': { borderColor: '#5d4037' },
-                    '&.Mui-focused fieldset': { borderColor: '#5d4037' },
-                  },
-                  '& .MuiInputLabel-root': { color: '#5d4037', fontSize: '1.1rem' },
-                  '& .MuiInputLabel-root.Mui-focused': { color: '#5d4037' },
-                }}
-                helperText="This will be displayed as the main title on your QR code"
               />
 
-              <TextField
-                fullWidth
+              <EpunchInput
                 label="Loyalty Program Name"
                 placeholder="e.g., Coffee Rewards, VIP Program"
                 value={loyaltyProgramName}
                 onChange={(e) => setLoyaltyProgramName(e.target.value)}
-                sx={{
-                  mb: 3,
-                  '& .MuiOutlinedInput-root': {
-                    backgroundColor: '#fff',
-                    fontSize: '1.1rem',
-                    '& fieldset': { borderColor: '#8d6e63' },
-                    '&:hover fieldset': { borderColor: '#5d4037' },
-                    '&.Mui-focused fieldset': { borderColor: '#5d4037' },
-                  },
-                  '& .MuiInputLabel-root': { color: '#5d4037', fontSize: '1.1rem' },
-                  '& .MuiInputLabel-root.Mui-focused': { color: '#5d4037' },
-                }}
-                helperText="Name of your loyalty program for the punch card"
               />
 
-              <TextField
-                fullWidth
+              <EpunchColorPicker
                 label="Background Color"
-                type="color"
                 value={backgroundColor}
-                onChange={(e) => setBackgroundColor(e.target.value)}
-                sx={{
-                  mb: 3,
-                  '& .MuiOutlinedInput-root': {
-                    backgroundColor: '#fff',
-                    fontSize: '1.1rem',
-                    '& fieldset': { borderColor: '#8d6e63' },
-                    '&:hover fieldset': { borderColor: '#5d4037' },
-                    '&.Mui-focused fieldset': { borderColor: '#5d4037' },
-                  },
-                  '& .MuiInputLabel-root': { color: '#5d4037', fontSize: '1.1rem' },
-                  '& .MuiInputLabel-root.Mui-focused': { color: '#5d4037' },
-                }}
-                helperText="Choose the background color for your QR code image"
+                onChange={setBackgroundColor}
               />
 
-              <TextField
-                fullWidth
+              <EpunchColorPicker
                 label="QR Code Background Color"
-                type="color"
                 value={qrCodeBackgroundColor}
-                onChange={(e) => setQrCodeBackgroundColor(e.target.value)}
-                sx={{
-                  mb: 3,
-                  '& .MuiOutlinedInput-root': {
-                    backgroundColor: '#fff',
-                    fontSize: '1.1rem',
-                    '& fieldset': { borderColor: '#8d6e63' },
-                    '&:hover fieldset': { borderColor: '#5d4037' },
-                    '&.Mui-focused fieldset': { borderColor: '#5d4037' },
-                  },
-                  '& .MuiInputLabel-root': { color: '#5d4037', fontSize: '1.1rem' },
-                  '& .MuiInputLabel-root.Mui-focused': { color: '#5d4037' },
-                }}
-                helperText="Choose the QR code background color"
+                onChange={setQrCodeBackgroundColor}
               />
 
-              <TextField
-                fullWidth
+              <EpunchColorPicker
                 label="Title Color"
-                type="color"
                 value={titleColor}
-                onChange={(e) => setTitleColor(e.target.value)}
-                sx={{
-                  mb: 3,
-                  '& .MuiOutlinedInput-root': {
-                    backgroundColor: '#fff',
-                    fontSize: '1.1rem',
-                    '& fieldset': { borderColor: '#8d6e63' },
-                    '&:hover fieldset': { borderColor: '#5d4037' },
-                    '&.Mui-focused fieldset': { borderColor: '#5d4037' },
-                  },
-                  '& .MuiInputLabel-root': { color: '#5d4037', fontSize: '1.1rem' },
-                  '& .MuiInputLabel-root.Mui-focused': { color: '#5d4037' },
-                }}
-                helperText="Choose the color for title and text elements"
+                onChange={setTitleColor}
               />
 
-              <Box display="flex" justifyContent="center">
-                <Button
-                  variant="contained"
+              <div className={styles['welcomeQRPage-buttonContainer']}>
+                <EpunchButon
                   onClick={handleRegenerateImage}
                   disabled={isGeneratingImage}
-                  sx={{
-                    backgroundColor: '#5d4037',
-                    color: '#f5f5dc',
-                    '&:hover': { backgroundColor: '#6d4c41' },
-                    '&:disabled': { backgroundColor: '#8d6e63' },
-                    py: 1,
-                    px: 2,
-                    fontSize: '1rem',
-                    fontWeight: 'bold',
-                    minWidth: '160px',
-                  }}
+                  className={styles['welcomeQRPage-primaryButton']}
                 >
                   Apply
-                </Button>
-              </Box>
-            </Box>
+                </EpunchButon>
+              </div>
+            </div>
 
-            {/* Preview Block */}
-            <Box sx={{
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              order: { xs: 1, md: 2 }
-            }}>
-              {/* Image Preview */}
+            {/* Preview Section */}
+            <div className={styles['welcomeQRPage-previewSection']}>
               {isGeneratingImage ? (
-                <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
-                  <CircularProgress sx={{ color: '#5d4037' }} />
-                  <Typography variant="body1" sx={{ ml: 2, color: '#5d4037' }}>
+                <div className={styles['welcomeQRPage-loadingContainer']}>
+                  <EpunchSpinner size="lg" />
+                  <p className={styles['welcomeQRPage-loadingText']}>
                     Generating your QR code...
-                  </Typography>
-                </Box>
+                  </p>
+                </div>
               ) : onboardingImageUrl ? (
-                <>
-                  <Box display="flex" justifyContent="center" mb={3}>
-                    <Box
-                      sx={{
-                        border: '2px solid #5d4037',
-                        borderRadius: '8px',
-                        overflow: 'hidden',
-                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
-                        maxWidth: '100%',
-                      }}
-                    >
-                      <img
-                        src={onboardingImageUrl}
-                        alt="QR Code Image Preview"
-                        style={{
-                          width: '100%',
-                          height: 'auto',
-                          display: 'block',
-                          maxWidth: 'min(1200px, 90vw)'
-                        }}
-                      />
-                    </Box>
-                  </Box>
+                <div className={styles['welcomeQRPage-imagePreviewContainer']}>
+                  <div className={styles['welcomeQRPage-imageWrapper']}>
+                    <img
+                      src={onboardingImageUrl}
+                      alt="QR Code Image Preview"
+                      className={styles['welcomeQRPage-previewImage']}
+                    />
+                  </div>
 
-                  <Box display="flex" justifyContent="center">
-                    <Button
-                      variant="contained"
-                      startIcon={<DownloadIcon />}
+                  <div className={styles['welcomeQRPage-buttonContainer']}>
+                    <EpunchButon
                       onClick={handleDownloadImage}
                       disabled={!onboardingImageUrl}
-                      sx={{
-                        backgroundColor: '#5d4037',
-                        color: '#f5f5dc',
-                        '&:hover': { backgroundColor: '#6d4c41' },
-                        '&:disabled': { backgroundColor: '#8d6e63' },
-                        py: 1,
-                        px: 2,
-                        fontSize: '1rem',
-                        fontWeight: 'bold',
-                        minWidth: '160px',
-                      }}
+                      className={styles['welcomeQRPage-downloadButton']}
                     >
                       Download
-                    </Button>
-                  </Box>
-                </>
+                    </EpunchButon>
+                  </div>
+                </div>
               ) : (
-                <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
-                  <Typography variant="body1" sx={{ color: '#8d6e63' }}>
+                <div className={styles['welcomeQRPage-loadingContainer']}>
+                  <p className={styles['welcomeQRPage-noPreviewText']}>
                     Preview will appear here
-                  </Typography>
-                </Box>
+                  </p>
+                </div>
               )}
-            </Box>
-          </Box>
-        </CardContent>
-      </Card>
-    </Box>
+            </div>
+          </div>
+        </EpunchCard>
+      </div>
+    </EpunchPage>
   );
 }; 

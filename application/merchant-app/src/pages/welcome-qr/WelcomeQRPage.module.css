@@ -1,0 +1,167 @@
+.welcomeQRPage-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.welcomeQRPage-errorContainer {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--color-error);
+}
+
+.welcomeQRPage-errorTitle {
+  font-size: var(--font-size-h6);
+  font-weight: var(--font-weight-600);
+  margin: 0;
+}
+
+.welcomeQRPage-contentLayout {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-xl);
+}
+
+.welcomeQRPage-controlsSection {
+  flex: 0 0 400px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.welcomeQRPage-controlsSection :global(.inputContainer) {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-medium);
+  border: 2px solid transparent;
+  transition: border-color var(--animation-duration-short) var(--animation-easing);
+}
+
+.welcomeQRPage-controlsSection :global(.inputContainer):hover {
+  border-color: var(--color-primary-light);
+}
+
+.welcomeQRPage-controlsSection :global(.inputContainer):focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(93, 64, 55, 0.1);
+}
+
+.welcomeQRPage-controlsSection :global(.colorPickerContainer) {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-medium);
+  border: 2px solid transparent;
+  transition: border-color var(--animation-duration-short) var(--animation-easing);
+}
+
+.welcomeQRPage-controlsSection :global(.colorPickerContainer):hover {
+  border-color: var(--color-primary-light);
+}
+
+.welcomeQRPage-controlsSection :global(.colorPickerContainer):focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(93, 64, 55, 0.1);
+}
+
+.welcomeQRPage-previewSection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.welcomeQRPage-loadingContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  min-height: 400px;
+  gap: var(--spacing-md);
+}
+
+.welcomeQRPage-loadingText {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-medium);
+  margin: 0;
+}
+
+.welcomeQRPage-imagePreviewContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.welcomeQRPage-imageWrapper {
+  border: 2px solid var(--color-primary);
+  border-radius: var(--border-radius-medium);
+  overflow: hidden;
+  box-shadow: var(--shadow-medium);
+  max-width: 100%;
+}
+
+.welcomeQRPage-previewImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  max-width: min(1200px, 90vw);
+}
+
+.welcomeQRPage-noPreviewText {
+  color: var(--color-text-disabled);
+  font-size: var(--font-size-medium);
+  margin: 0;
+}
+
+.welcomeQRPage-buttonContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.welcomeQRPage-primaryButton {
+  background-color: var(--color-primary) !important;
+  color: var(--color-text-light) !important;
+  border: none !important;
+  padding: var(--spacing-xs) var(--spacing-sm) !important;
+  border-radius: var(--border-radius-small) !important;
+  font-size: var(--font-size-xsmall) !important;
+  font-weight: var(--font-weight-600) !important;
+  min-width: 100px !important;
+  cursor: pointer !important;
+  transition: background-color var(--animation-duration-short) var(--animation-easing) !important;
+}
+
+.welcomeQRPage-primaryButton:hover:not(:disabled) {
+  background-color: var(--color-hover-primary) !important;
+}
+
+.welcomeQRPage-primaryButton:disabled {
+  background-color: var(--color-text-disabled) !important;
+  cursor: not-allowed !important;
+}
+
+.welcomeQRPage-downloadButton {
+  composes: welcomeQRPage-primaryButton;
+}
+
+@media (max-width: 768px) {
+  .welcomeQRPage-contentLayout {
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+  
+  .welcomeQRPage-controlsSection {
+    flex: none;
+    order: 2;
+  }
+  
+  .welcomeQRPage-previewSection {
+    order: 1;
+  }
+  
+  .welcomeQRPage-imageWrapper {
+    max-width: 100%;
+  }
+} 
