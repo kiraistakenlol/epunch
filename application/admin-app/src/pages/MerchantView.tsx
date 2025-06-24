@@ -346,7 +346,7 @@ export const MerchantView: React.FC = () => {
                 }}
               >
                 <QRCodeSVG 
-                  value={`https://narrow-ai-epunch.vercel.app?merchant=${merchant.slug}`}
+                  value={`https://epunch.app?merchant=${merchant.slug}`}
                   size={200}
                   level="M"
                   includeMargin={true}
@@ -361,7 +361,7 @@ export const MerchantView: React.FC = () => {
                 <Typography 
                   variant="body2" 
                   component="a"
-                  href={`https://narrow-ai-epunch.vercel.app?merchant=${merchant.slug}`}
+                  href={`https://epunch.app?merchant=${merchant.slug}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   sx={{ 
@@ -375,7 +375,7 @@ export const MerchantView: React.FC = () => {
                     }
                   }}
                 >
-                  https://narrow-ai-epunch.vercel.app?merchant={merchant.slug}
+                  https://epunch.app?merchant={merchant.slug}
                 </Typography>
               </Box>
             </Box>

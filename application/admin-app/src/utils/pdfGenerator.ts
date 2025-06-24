@@ -36,7 +36,7 @@ const getIconSvg = async (IconComponent: React.ComponentType<any>, size: number 
 };
 
 export const generateMerchantQRPDF = async (merchant: MerchantDto): Promise<void> => {
-  const qrCodeUrl = `https://narrow-ai-epunch.vercel.app?merchant=${merchant.slug}`;
+  const qrCodeUrl = `https://epunch.app?merchant=${merchant.slug}`;
   
   // Generate QR code as data URL
   const qrCodeDataURL = await QRCode.toDataURL(qrCodeUrl, {
