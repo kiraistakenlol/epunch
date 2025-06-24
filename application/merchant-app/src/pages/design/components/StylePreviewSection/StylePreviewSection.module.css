@@ -104,7 +104,8 @@
   }
   
   .stylePreviewSection {
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
+    overflow-x: hidden;
   }
 
   .previewControls {
@@ -121,5 +122,27 @@
   .controlLabel {
     width: 100%;
     justify-content: space-between;
+  }
+
+  .previewCardContainer {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .previewGrid {
+    width: 100%;
+    overflow: hidden;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .stylePreviewSection {
+    padding: var(--spacing-xs);
+  }
+  
+  .previewControls {
+    padding: var(--spacing-xs);
+    gap: var(--spacing-sm);
   }
 } 

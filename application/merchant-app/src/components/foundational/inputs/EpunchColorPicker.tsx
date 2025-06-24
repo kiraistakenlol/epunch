@@ -12,6 +12,7 @@ export interface EpunchColorPickerProps {
   fullWidth?: boolean;
   presetColors?: string[];
   showPresets?: boolean;
+  inline?: boolean;
 }
 
 export const EpunchColorPicker: React.FC<EpunchColorPickerProps> = ({
@@ -35,7 +36,8 @@ export const EpunchColorPicker: React.FC<EpunchColorPickerProps> = ({
     '#ff00ff',
     '#00ffff'
   ],
-  showPresets = true
+  showPresets = true,
+  inline = false
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -51,18 +53,18 @@ export const EpunchColorPicker: React.FC<EpunchColorPickerProps> = ({
       }
     };
 
-    if (isOpen) {
+    if (isOpen && !inline) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isOpen]);
+  }, [isOpen, inline]);
 
   // Position popover to avoid overflow on mobile
   useEffect(() => {
-    if (isOpen && containerRef.current && popoverRef.current) {
+    if (isOpen && containerRef.current && popoverRef.current && !inline) {
       const updatePosition = () => {
         const container = containerRef.current;
         const popover = popoverRef.current;
@@ -105,21 +107,64 @@ export const EpunchColorPicker: React.FC<EpunchColorPickerProps> = ({
         window.removeEventListener('scroll', updatePosition);
       };
     }
-  }, [isOpen]);
+  }, [isOpen, inline]);
 
   const handleColorSwatchClick = () => {
-    if (!disabled) {
+    if (!disabled && !inline) {
       setIsOpen(!isOpen);
     }
   };
 
   const handlePresetClick = (color: string) => {
     onChange(color);
-    setIsOpen(false);
+    if (!inline) {
+      setIsOpen(false);
+    }
   };
 
   const handleFocus = () => setIsFocused(true);
   const handleBlur = () => setIsFocused(false);
+
+  // Inline rendering
+  if (inline) {
+    return (
+      <div className={styles.colorPickerContainer} style={{ width: fullWidth ? '100%' : 'auto' }}>
+        {label && (
+          <label className={`${styles.colorPickerLabel} ${disabled ? styles.disabled : ''}`}>
+            {label}
+            {required && ' *'}
+          </label>
+        )}
+        
+        <div className={styles.inlineColorPicker}>
+          <HexColorPicker 
+            color={value} 
+            onChange={onChange}
+            className={styles.hexColorPickerInline}
+          />
+          
+          {showPresets && (
+            <div className={styles.presetColorsSection}>
+              <div className={styles.presetColorsLabel}>Preset Colors</div>
+              <div className={styles.presetColorsGrid}>
+                {presetColors.map((presetColor) => (
+                  <button
+                    key={presetColor}
+                    type="button"
+                    className={`${styles.presetColorSwatch} ${value === presetColor ? styles.selected : ''}`}
+                    style={{ backgroundColor: presetColor }}
+                    onClick={() => handlePresetClick(presetColor)}
+                    aria-label={`Preset color: ${presetColor}`}
+                    title={presetColor}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div 

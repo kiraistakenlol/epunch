@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import SVG from 'react-inlinesvg';
 import { apiClient } from 'e-punch-common-ui';
 import { PunchIconsDto, IconSearchResultDto, IconDto } from 'e-punch-common-core';
-import { EpunchModal } from '../../../../components/foundational';
+import { EpunchModal, RemoveButton } from '../../../../components/foundational';
 
 interface IconsEditorModalProps {
   isOpen: boolean;
@@ -24,15 +24,49 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
   const [selectedFilled, setSelectedFilled] = useState<IconDto | null>(null);
   const [selectedUnfilled, setSelectedUnfilled] = useState<IconDto | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [activeSlot, setActiveSlot] = useState<'filled' | 'unfilled' | null>(null);
 
   // Load current icons if available
   useEffect(() => {
-    if (currentIcons) {
-      // Note: We can't easily reverse-lookup the original icons from SVG content
-      // So we'll start with empty selection for now
+    if (currentIcons && isOpen) {
+      // Try to find matching icons by searching for common terms and matching SVG content
+      const searchForCurrentIcons = async () => {
+        try {
+          // Search for icons and try to match by SVG content
+          const result: IconSearchResultDto = await apiClient.searchIcons(undefined, 1, 100);
+          
+          const filledSvg = currentIcons.filled?.data?.svg_raw_content;
+          const unfilledSvg = currentIcons.unfilled?.data?.svg_raw_content;
+          
+          if (filledSvg) {
+            const matchingFilled = result.icons.find(icon => 
+              icon.svg_content.replace(/\s+/g, '') === filledSvg.replace(/\s+/g, '')
+            );
+            if (matchingFilled) {
+              setSelectedFilled(matchingFilled);
+            }
+          }
+          
+          if (unfilledSvg) {
+            const matchingUnfilled = result.icons.find(icon => 
+              icon.svg_content.replace(/\s+/g, '') === unfilledSvg.replace(/\s+/g, '')
+            );
+            if (matchingUnfilled) {
+              setSelectedUnfilled(matchingUnfilled);
+            }
+          }
+        } catch (error) {
+          console.error('Failed to load current icons:', error);
+        }
+      };
+      
+      searchForCurrentIcons();
+    } else if (!currentIcons) {
+      // Clear selections if no current icons
+      setSelectedFilled(null);
+      setSelectedUnfilled(null);
     }
-  }, [currentIcons]);
+  }, [currentIcons, isOpen]);
 
   // Search for icons
   useEffect(() => {
@@ -82,55 +116,63 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
     setHasMore(true);
   };
 
-  const handleIconSelect = (icon: IconDto, type: 'filled' | 'unfilled') => {
-    if (type === 'filled') {
+  const updateIcons = async (newFilled: IconDto | null, newUnfilled: IconDto | null) => {
+    // If both icons are null, send null to clear all custom icons
+    if (!newFilled && !newUnfilled) {
+      await onSave(null);
+      return;
+    }
+
+    // Create PunchIconsDto with individual nulls allowed
+    const icons: PunchIconsDto = {
+      filled: newFilled ? {
+        type: 'svg',
+        data: {
+          svg_raw_content: newFilled.svg_content
+        }
+      } : null,
+      unfilled: newUnfilled ? {
+        type: 'svg',
+        data: {
+          svg_raw_content: newUnfilled.svg_content
+        }
+      } : null
+    };
+
+    await onSave(icons);
+  };
+
+  const handleIconSelect = async (icon: IconDto) => {
+    if (!activeSlot) return;
+    
+    const newFilled = activeSlot === 'filled' ? icon : selectedFilled;
+    const newUnfilled = activeSlot === 'unfilled' ? icon : selectedUnfilled;
+    
+    if (activeSlot === 'filled') {
       setSelectedFilled(icon);
     } else {
       setSelectedUnfilled(icon);
     }
-    setOpenDropdown(null); // Close dropdown after selection
+    
+    await updateIcons(newFilled, newUnfilled);
   };
 
-  const handleRemoveIcons = async () => {
-    setSelectedFilled(null);
-    setSelectedUnfilled(null);
-    await onSave(null);
-  };
-
-  const handleApplyIcons = async () => {
-    if (selectedFilled && selectedUnfilled) {
-      const icons: PunchIconsDto = {
-        filled: {
-          type: 'svg',
-          data: {
-            svg_raw_content: selectedFilled.svg_content
-          }
-        },
-        unfilled: {
-          type: 'svg',
-          data: {
-            svg_raw_content: selectedUnfilled.svg_content
-          }
-        }
-      };
-      await onSave(icons);
+  const handleRemoveIcon = async (type: 'filled' | 'unfilled') => {
+    const newFilled = type === 'filled' ? null : selectedFilled;
+    const newUnfilled = type === 'unfilled' ? null : selectedUnfilled;
+    
+    if (type === 'filled') {
+      setSelectedFilled(null);
     } else {
-      await onSave(null);
+      setSelectedUnfilled(null);
     }
+    
+    await updateIcons(newFilled, newUnfilled);
   };
 
-  const handleIconClick = (iconId: string) => {
-    setOpenDropdown(openDropdown === iconId ? null : iconId);
+  const handleSlotSelect = (slot: 'filled' | 'unfilled') => {
+    setActiveSlot(activeSlot === slot ? null : slot);
   };
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = () => setOpenDropdown(null);
-    if (openDropdown) {
-      document.addEventListener('click', handleClickOutside);
-      return () => document.removeEventListener('click', handleClickOutside);
-    }
-  }, [openDropdown]);
 
   // Handle scroll for infinite loading
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -160,70 +202,129 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
     </div>
   );
 
+  const renderCurrentIcon = (svg_content: string, size = 40) => (
+    <div 
+      style={{
+        width: `${size}px`,
+        height: `${size}px`,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
+      <SVG 
+        src={`data:image/svg+xml;utf8,${encodeURIComponent(svg_content)}`}
+        width={size}
+        height={size}
+      />
+    </div>
+  );
+
   return (
     <EpunchModal
       open={isOpen}
       onClose={onClose}
       title="Icon Editor"
     >
-      <>
-        
+      <>        
         {/* Current Selection */}
         <div style={{
-          marginBottom: '24px',
+          marginBottom: '20px',
           padding: '16px',
           backgroundColor: '#f8f8f8',
           borderRadius: '8px',
-          border: '2px solid #e0e0e0'
+          border: '1px solid #e0e0e0'
         }}>
-          <h4 style={{ margin: '0 0 12px 0', color: '#3e2723' }}>Selected Icons</h4>
-          <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ 
-                width: '60px', 
-                height: '60px', 
-                border: '2px solid #d0d0d0',
-                borderRadius: '8px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'white',
-                marginBottom: '8px'
-              }}>
-                {selectedFilled ? renderIcon(selectedFilled, 40) : <span style={{ color: '#999' }}>?</span>}
+          <h4 style={{ margin: '0 0 16px 0', color: '#3e2723', fontSize: '14px', fontWeight: 'bold' }}>Custom Icons</h4>
+          <div style={{ 
+            display: 'flex', 
+            gap: '16px', 
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexWrap: 'wrap'
+          }}>
+            <div style={{ textAlign: 'center', position: 'relative', minWidth: '70px' }}>
+              <button
+                onClick={() => handleSlotSelect('filled')}
+                style={{ 
+                  width: '50px', 
+                  height: '50px', 
+                  border: activeSlot === 'filled' ? '3px solid #4caf50' : '2px solid #d0d0d0',
+                  borderRadius: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: activeSlot === 'filled' ? '#e8f5e8' : 'white',
+                  marginBottom: '8px',
+                  margin: '0 auto 8px auto',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+                title="Click to select filled slot"
+              >
+                {selectedFilled ? renderIcon(selectedFilled, 30) : 
+                 currentIcons?.filled ? renderCurrentIcon(currentIcons.filled.data.svg_raw_content, 30) :
+                 <span style={{ color: '#999', fontSize: '14px' }}>?</span>}
+              </button>
+              <div style={{ fontSize: '11px', fontWeight: 'bold' }}>
+                Filled {activeSlot === 'filled' && <span style={{ color: '#4caf50' }}>●</span>}
               </div>
-              <div style={{ fontSize: '12px', fontWeight: 'bold' }}>Filled</div>
+              {(selectedFilled || currentIcons?.filled) && (
+                <RemoveButton
+                  onClick={() => handleRemoveIcon('filled')}
+                  title="Remove filled icon"
+                  right="calc(50% - 31px)"
+                />
+              )}
             </div>
             
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ 
-                width: '60px', 
-                height: '60px', 
-                border: '2px solid #d0d0d0',
-                borderRadius: '8px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'white',
-                marginBottom: '8px'
-              }}>
-                {selectedUnfilled ? renderIcon(selectedUnfilled, 40) : <span style={{ color: '#999' }}>?</span>}
+            <div style={{ textAlign: 'center', position: 'relative', minWidth: '70px' }}>
+              <button
+                onClick={() => handleSlotSelect('unfilled')}
+                style={{ 
+                  width: '50px', 
+                  height: '50px', 
+                  border: activeSlot === 'unfilled' ? '3px solid #ff9800' : '2px solid #d0d0d0',
+                  borderRadius: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: activeSlot === 'unfilled' ? '#fff3e0' : 'white',
+                  marginBottom: '8px',
+                  margin: '0 auto 8px auto',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+                title="Click to select unfilled slot"
+              >
+                {selectedUnfilled ? renderIcon(selectedUnfilled, 30) : 
+                 currentIcons?.unfilled ? renderCurrentIcon(currentIcons.unfilled.data.svg_raw_content, 30) :
+                 <span style={{ color: '#999', fontSize: '14px' }}>?</span>}
+              </button>
+              <div style={{ fontSize: '11px', fontWeight: 'bold' }}>
+                Unfilled {activeSlot === 'unfilled' && <span style={{ color: '#ff9800' }}>●</span>}
               </div>
-              <div style={{ fontSize: '12px', fontWeight: 'bold' }}>Unfilled</div>
+              {(selectedUnfilled || currentIcons?.unfilled) && (
+                <RemoveButton
+                  onClick={() => handleRemoveIcon('unfilled')}
+                  title="Remove unfilled icon"
+                  right="calc(50% - 31px)"
+                />
+              )}
             </div>
           </div>
         </div>
 
         {/* Search */}
-        <div style={{ marginBottom: '20px' }}>
+        <div style={{ marginBottom: '16px' }}>
           <input
             type="text"
-            placeholder="Search icons (e.g., star, heart, coffee)..."
+            placeholder="Search icons..."
             value={searchQuery}
             onChange={(e) => handleSearch(e.target.value)}
             style={{
               width: '100%',
-              padding: '12px',
+              padding: '10px',
               border: '2px solid #d0d0d0',
               borderRadius: '6px',
               fontSize: '14px',
@@ -237,66 +338,66 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
           onScroll={handleScroll}
           style={{
             marginBottom: '16px',
-            maxHeight: '250px',
+            maxHeight: '220px',
             overflowY: 'auto',
             border: '1px solid #e0e0e0',
             borderRadius: '6px',
-            padding: '12px'
+            padding: '8px'
           }}
         >
           {loading ? (
-            <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
+            <div style={{ textAlign: 'center', padding: '30px', color: '#666', fontSize: '14px' }}>
               Loading icons...
             </div>
           ) : availableIcons.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
+            <div style={{ textAlign: 'center', padding: '30px', color: '#666', fontSize: '14px' }}>
               No icons found. Try a different search term.
             </div>
           ) : (
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))',
-              gap: '12px'
+              gridTemplateColumns: 'repeat(auto-fill, minmax(60px, 1fr))',
+              gap: '8px',
+              justifyItems: 'center'
             }}>
               {availableIcons.map((icon) => {
                 const isFilledSelected = selectedFilled?.id === icon.id;
                 const isUnfilledSelected = selectedUnfilled?.id === icon.id;
-                const isDropdownOpen = openDropdown === icon.id;
                 
                 return (
-                  <div key={icon.id} style={{ textAlign: 'center', position: 'relative' }}>
+                  <div key={icon.id} style={{ textAlign: 'center', position: 'relative', width: '100%' }}>
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleIconClick(icon.id);
-                      }}
+                      onClick={() => handleIconSelect(icon)}
+                      disabled={!activeSlot}
                       style={{
-                        width: '60px',
-                        height: '60px',
-                        border: isFilledSelected ? '3px solid #4caf50' : isUnfilledSelected ? '3px solid #ff9800' : '2px solid #d0d0d0',
-                        borderRadius: '8px',
+                        width: '50px',
+                        height: '50px',
+                        border: isFilledSelected ? '2px solid #4caf50' : isUnfilledSelected ? '2px solid #ff9800' : '1px solid #d0d0d0',
+                        borderRadius: '6px',
                         backgroundColor: isFilledSelected ? '#e8f5e8' : isUnfilledSelected ? '#fff3e0' : 'white',
-                        cursor: 'pointer',
+                        cursor: activeSlot ? 'pointer' : 'not-allowed',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         position: 'relative',
-                        transition: 'all 0.2s ease'
+                        transition: 'all 0.2s ease',
+                        margin: '0 auto',
+                        opacity: activeSlot ? 1 : 0.5
                       }}
-                      title={`Click to select: ${icon.name}`}
+                      title={activeSlot ? `Click to assign to ${activeSlot} slot` : 'Select a slot first'}
                     >
-                      {renderIcon(icon, 30)}
+                      {renderIcon(icon, 24)}
                       {(isFilledSelected || isUnfilledSelected) && (
                         <div style={{
                           position: 'absolute',
-                          top: '-8px',
-                          right: '-8px',
-                          width: '20px',
-                          height: '20px',
+                          top: '-6px',
+                          right: '-6px',
+                          width: '16px',
+                          height: '16px',
                           borderRadius: '50%',
                           backgroundColor: isFilledSelected ? '#4caf50' : '#ff9800',
                           color: 'white',
-                          fontSize: '12px',
+                          fontSize: '10px',
                           fontWeight: 'bold',
                           display: 'flex',
                           alignItems: 'center',
@@ -306,92 +407,6 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
                         </div>
                       )}
                     </button>
-
-                    {/* Dropdown */}
-                    {isDropdownOpen && (
-                      <div style={{
-                        position: 'absolute',
-                        top: '65px',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        zIndex: 1000,
-                        backgroundColor: 'white',
-                        border: '2px solid #e0e0e0',
-                        borderRadius: '8px',
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-                        minWidth: '100px'
-                      }}>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleIconSelect(icon, 'filled');
-                          }}
-                          style={{
-                            width: '100%',
-                            padding: '10px 12px',
-                            border: 'none',
-                            backgroundColor: isFilledSelected ? '#e8f5e8' : 'transparent',
-                            color: isFilledSelected ? '#4caf50' : '#333',
-                            cursor: 'pointer',
-                            fontSize: '12px',
-                            fontWeight: 'bold',
-                            borderRadius: '6px 6px 0 0',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '6px'
-                          }}
-                          onMouseEnter={(e) => {
-                            if (!isFilledSelected) {
-                              e.currentTarget.style.backgroundColor = '#f5f5f5';
-                            }
-                          }}
-                          onMouseLeave={(e) => {
-                            if (!isFilledSelected) {
-                              e.currentTarget.style.backgroundColor = 'transparent';
-                            }
-                          }}
-                        >
-                          <span style={{ color: '#4caf50' }}>●</span>
-                          Filled
-                          {isFilledSelected && <span style={{ marginLeft: 'auto', color: '#4caf50' }}>✓</span>}
-                        </button>
-                        
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleIconSelect(icon, 'unfilled');
-                          }}
-                          style={{
-                            width: '100%',
-                            padding: '10px 12px',
-                            border: 'none',
-                            backgroundColor: isUnfilledSelected ? '#fff3e0' : 'transparent',
-                            color: isUnfilledSelected ? '#ff9800' : '#333',
-                            cursor: 'pointer',
-                            fontSize: '12px',
-                            fontWeight: 'bold',
-                            borderRadius: '0 0 6px 6px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '6px'
-                          }}
-                          onMouseEnter={(e) => {
-                            if (!isUnfilledSelected) {
-                              e.currentTarget.style.backgroundColor = '#f5f5f5';
-                            }
-                          }}
-                          onMouseLeave={(e) => {
-                            if (!isUnfilledSelected) {
-                              e.currentTarget.style.backgroundColor = 'transparent';
-                            }
-                          }}
-                        >
-                          <span style={{ color: '#ff9800' }}>○</span>
-                          Unfilled
-                          {isUnfilledSelected && <span style={{ marginLeft: 'auto', color: '#ff9800' }}>✓</span>}
-                        </button>
-                      </div>
-                    )}
                   </div>
                 );
               })}
@@ -400,7 +415,7 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
           
           {/* Loading more indicator */}
           {loadingMore && (
-            <div style={{ textAlign: 'center', padding: '20px', color: '#666' }}>
+            <div style={{ textAlign: 'center', padding: '16px', color: '#666', fontSize: '14px' }}>
               Loading more icons...
             </div>
           )}
@@ -411,64 +426,10 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
           fontSize: '12px', 
           color: '#666', 
           textAlign: 'center',
-          paddingTop: '12px',
+          paddingTop: '16px',
           borderTop: '1px solid #e0e0e0'
         }}>
-          Click any icon to choose filled (●) or unfilled (○) type. Press "Apply" to save your selection.
-        </div>
-
-        {/* Action Buttons */}
-        <div style={{
-          display: 'flex',
-          gap: '12px',
-          marginTop: '20px',
-          justifyContent: 'center'
-        }}>
-          <button
-            onClick={handleApplyIcons}
-            style={{
-              padding: '10px 20px',
-              backgroundColor: '#4caf50',
-              color: 'white',
-              border: 'none',
-              borderRadius: '6px',
-              fontSize: '14px',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              transition: 'background-color 0.2s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#45a049';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#4caf50';
-            }}
-          >
-            Apply
-          </button>
-          
-          <button
-            onClick={handleRemoveIcons}
-            style={{
-              padding: '10px 20px',
-              backgroundColor: '#f44336',
-              color: 'white',
-              border: 'none',
-              borderRadius: '6px',
-              fontSize: '14px',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              transition: 'background-color 0.2s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#d32f2f';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#f44336';
-            }}
-          >
-            Remove Custom Icons
-          </button>
+          Select a slot above, then click an icon to assign it
         </div>
       </>
     </EpunchModal>

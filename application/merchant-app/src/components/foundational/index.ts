@@ -12,6 +12,7 @@ export { EpunchButon } from './buttons/EpunchButon.tsx';
 export { EpunchSuccessButton } from './buttons/EpunchSuccessButton.tsx';
 export { EpunchErrorButton } from './buttons/EpunchErrorButton.tsx';
 export { EpunchConfirmOrCancelButtons } from './buttons/EpunchConfirmOrCancelButtons.tsx';
+export { RemoveButton } from './buttons/RemoveButton';
 
 // Input Components
 export { EpunchInput } from './inputs/EpunchInput';

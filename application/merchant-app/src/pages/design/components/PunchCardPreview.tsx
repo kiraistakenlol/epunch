@@ -37,11 +37,11 @@ export const PunchCardPreview: React.FC<PunchCardPreviewProps> = ({
   const merchant = useAppSelector(state => state.auth.merchant);
   const [animationKey, setAnimationKey] = useState(0);
 
-  // Size configuration with aspect ratio 1.25 (width:height = 1.25:1)
+  // Size configuration with responsive widths
   const sizeConfig = {
-    small: { width: '200px' },
-    medium: { width: '300px' },
-    large: { width: '400px' }
+    small: { maxWidth: '200px', width: '100%' },
+    medium: { maxWidth: '300px', width: '100%' },
+    large: { maxWidth: '400px', width: '100%' }
   };
 
   // Build iframe URL with all styling parameters
@@ -49,7 +49,6 @@ export const PunchCardPreview: React.FC<PunchCardPreviewProps> = ({
     const baseUrl = process.env.VITE_USER_APP_URL || 'http://localhost:5173';
     const previewUrl = new URL(`${baseUrl}/merchant/card-preview`);
     
-    // Don't double-encode - URL.searchParams.set() handles encoding automatically
     previewUrl.searchParams.set('primaryColor', primaryColor);
     previewUrl.searchParams.set('secondaryColor', secondaryColor);
     previewUrl.searchParams.set('merchantName', merchant?.name || 'Preview Merchant');
@@ -63,15 +62,9 @@ export const PunchCardPreview: React.FC<PunchCardPreviewProps> = ({
     // Add background color
     previewUrl.searchParams.set('renderOnBackgroundColor', renderOnBackgroundColor);
     
-    // Handle logo URL - could be regular URL or base64 data URL
+    // Handle logo URL
     if (logoUrl) {
-      if (logoUrl.startsWith('data:')) {
-        // It's a base64 data URL, encode it for URL transmission
-        previewUrl.searchParams.set('logoBase64', logoUrl);
-      } else {
-        // It's a regular URL
-        previewUrl.searchParams.set('logoUrl', logoUrl);
-      }
+      previewUrl.searchParams.set('logoUrl', logoUrl);
     }
     if (punchIcons) previewUrl.searchParams.set('punchIcons', JSON.stringify(punchIcons));
 
@@ -96,11 +89,11 @@ export const PunchCardPreview: React.FC<PunchCardPreviewProps> = ({
         <iframe
           key={animationKey} // Force re-render for animations
           src={buildPreviewUrl()}
-          width={sizeConfig[size].width}
           style={{
+            width: sizeConfig[size].width,
+            maxWidth: sizeConfig[size].maxWidth,
             aspectRatio: '1.3',
             border: 'none',
-            overflow: 'hidden',
             display: 'block'
           }}
           title="Punch Card Preview"

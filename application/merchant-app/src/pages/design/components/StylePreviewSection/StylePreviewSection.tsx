@@ -129,7 +129,7 @@ export const StylePreviewSection: React.FC<StylePreviewSectionProps> = ({
             onCancel={onReset}
             onConfirm={onApplyStyle}
             cancelText="Reset"
-            confirmText="Apply Style"
+            confirmText="Apply"
             confirmDisabled={loading}
             cancelDisabled={loading}
           />

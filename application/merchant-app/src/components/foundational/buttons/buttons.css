@@ -44,3 +44,15 @@
   align-items: center;
   margin-top: 24px;
 }
+
+@media (max-width: 768px) {
+  .action-buttons-container {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .action-buttons-container .btn {
+    width: 100%;
+    min-width: unset;
+  }
+}

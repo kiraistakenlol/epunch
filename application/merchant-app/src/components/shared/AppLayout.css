@@ -93,7 +93,6 @@
 
 .app-main-content {
   flex-grow: 1;
-  min-height: 100vh;
   margin-top: 60px;
   padding: var(--spacing-md);
   background-color: var(--color-background-default);

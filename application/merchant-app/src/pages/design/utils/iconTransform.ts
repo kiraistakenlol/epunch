@@ -40,9 +40,22 @@ export const extractIconsFromPunchIcons = (punchIcons: PunchIconsDto): {
   filled: IconDto;
   unfilled: IconDto;
 } => {
+  // Fallback icons for when individual icons are null
+  const defaultFilledIcon: IconDto = {
+    id: 'default-filled',
+    name: 'Filled Circle',
+    svg_content: '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>'
+  };
+  
+  const defaultUnfilledIcon: IconDto = {
+    id: 'default-unfilled',
+    name: 'Empty Circle',
+    svg_content: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>'
+  };
+
   return {
-    filled: punchIconToIconDto(punchIcons.filled, 'filled-icon'),
-    unfilled: punchIconToIconDto(punchIcons.unfilled, 'unfilled-icon')
+    filled: punchIcons.filled ? punchIconToIconDto(punchIcons.filled, 'filled-icon') : defaultFilledIcon,
+    unfilled: punchIcons.unfilled ? punchIconToIconDto(punchIcons.unfilled, 'unfilled-icon') : defaultUnfilledIcon
   };
 };
 
@@ -64,8 +77,12 @@ export const isValidIcon = (icon: IconDto): boolean => {
  */
 export const isValidPunchIcons = (punchIcons: PunchIconsDto): boolean => {
   try {
-    const { filled, unfilled } = extractIconsFromPunchIcons(punchIcons);
-    return isValidIcon(filled) && isValidIcon(unfilled);
+    // Check if at least one icon is present and valid
+    const hasValidFilled = punchIcons.filled ? isValidIcon(punchIconToIconDto(punchIcons.filled, 'test')) : false;
+    const hasValidUnfilled = punchIcons.unfilled ? isValidIcon(punchIconToIconDto(punchIcons.unfilled, 'test')) : false;
+    
+    // Valid if at least one icon is present and valid
+    return hasValidFilled || hasValidUnfilled;
   } catch {
     return false;
   }

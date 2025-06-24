@@ -1,22 +1,14 @@
 import React, { useState } from 'react';
-import { EpunchModal, EpunchColorPicker } from '../../../../components/foundational';
+import { EpunchModal, EpunchColorPicker, RemoveButton } from '../../../../components/foundational';
+import styles from './ColorEditorModal.module.css';
 
 interface ColorEditorModalProps {
   isOpen: boolean;
   onClose: () => void;
-  primaryColor: string;
-  secondaryColor: string;
-  onSave: (primaryColor: string, secondaryColor: string) => Promise<void>;
+  primaryColor: string | null;
+  secondaryColor: string | null;
+  onSave: (primaryColor: string | null, secondaryColor: string | null) => Promise<void>;
 }
-
-const DEFAULT_PRESETS = [
-  { name: 'Coffee Brown', primary: '#5d4037', secondary: '#795548' },
-  { name: 'Ocean Blue', primary: '#1976d2', secondary: '#42a5f5' },
-  { name: 'Forest Green', primary: '#388e3c', secondary: '#66bb6a' },
-  { name: 'Wine Red', primary: '#c62828', secondary: '#e57373' },
-  { name: 'Royal Purple', primary: '#6a1b9a', secondary: '#ba68c8' },
-  { name: 'Sunset Orange', primary: '#ef6c00', secondary: '#ff9800' },
-];
 
 export const ColorEditorModal: React.FC<ColorEditorModalProps> = ({
   isOpen,
@@ -25,131 +17,108 @@ export const ColorEditorModal: React.FC<ColorEditorModalProps> = ({
   secondaryColor,
   onSave
 }) => {
-  const [localPrimaryColor, setLocalPrimaryColor] = useState(primaryColor);
-  const [localSecondaryColor, setLocalSecondaryColor] = useState(secondaryColor);
-
-  // Reset local state when modal opens
+  const [editingColor, setEditingColor] = useState<'primary' | 'secondary' | null>(null);
+  
   React.useEffect(() => {
-    if (isOpen) {
-      setLocalPrimaryColor(primaryColor);
-      setLocalSecondaryColor(secondaryColor);
+    if (!isOpen) {
+      setEditingColor(null);
     }
-  }, [isOpen, primaryColor, secondaryColor]);
+  }, [isOpen]);
 
-  const handleClose = () => {
-    // Save colors when modal closes (if they changed)
-    if (localPrimaryColor !== primaryColor || localSecondaryColor !== secondaryColor) {
-      onSave(localPrimaryColor, localSecondaryColor);
+  const handleColorChange = (color: string) => {
+    if (editingColor === 'primary') {
+      onSave(color, secondaryColor);
+    } else if (editingColor === 'secondary') {
+      onSave(primaryColor, color);
     }
-    onClose();
   };
 
-  const handlePresetSelect = (preset: typeof DEFAULT_PRESETS[0]) => {
-    setLocalPrimaryColor(preset.primary);
-    setLocalSecondaryColor(preset.secondary);
-    // Save immediately when user selects a preset
-    onSave(preset.primary, preset.secondary);
+  const handleResetColors = () => {
+    onSave(null, null);
+    setEditingColor(null);
   };
+
+  const ColorArea = ({ 
+    label, 
+    color, 
+    colorType 
+  }: { 
+    label: string; 
+    color: string | null; 
+    colorType: 'primary' | 'secondary';
+  }) => (
+    <div className={styles.colorArea}>
+      <label className={styles.colorLabel}>{label}</label>
+      {color ? (
+        <div 
+          className={styles.colorBox}
+          style={{ backgroundColor: color }}
+          onClick={() => setEditingColor(colorType)}
+        >
+          <span className={styles.colorValue}>{color}</span>
+        </div>
+      ) : (
+        <div 
+          className={styles.unsetColorBox}
+          onClick={() => setEditingColor(colorType)}
+        >
+          Unset (click to set)
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <EpunchModal
       open={isOpen}
-      onClose={handleClose}
+      onClose={onClose}
       title="Edit Colors"
     >
-      <>
-        {/* Color Pickers Row */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '16px',
-          marginBottom: '20px'
-        }}>
-          <EpunchColorPicker
-            label="Primary Color"
-            value={localPrimaryColor}
-            onChange={setLocalPrimaryColor}
-            showPresets={false}
-          />
-          
-          <EpunchColorPicker
-            label="Secondary Color"
-            value={localSecondaryColor}
-            onChange={setLocalSecondaryColor}
-            showPresets={false}
-          />
-        </div>
-
-
-
-        {/* Quick Presets - Horizontal */}
-        <div style={{ marginBottom: '20px' }}>
-          <div style={{
-            fontSize: '14px',
-            fontWeight: 'bold',
-            marginBottom: '12px',
-            color: '#3e2723'
-          }}>
-            Quick Presets
-          </div>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '8px'
-          }}>
-            {DEFAULT_PRESETS.map((preset) => (
-              <button
-                key={preset.name}
-                onClick={() => handlePresetSelect(preset)}
-                title={preset.name}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '8px',
-                  border: '1px solid #e0e0e0',
-                  borderRadius: '6px',
-                  backgroundColor: 'white',
-                  cursor: 'pointer',
-                  fontSize: '11px',
-                  fontWeight: '500',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = '#5d4037';
-                  e.currentTarget.style.backgroundColor = '#f8f8f8';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = '#e0e0e0';
-                  e.currentTarget.style.backgroundColor = 'white';
-                }}
+      <div className={styles.colorEditor}>
+        {editingColor ? (
+          <div className={styles.colorPickerSection}>
+            <div className={styles.colorPickerHeader}>
+              <h3>Editing {editingColor} color</h3>
+              <button 
+                className={styles.backButton}
+                onClick={() => setEditingColor(null)}
               >
-                <div style={{ display: 'flex', gap: '2px' }}>
-                  <div style={{
-                    width: '12px',
-                    height: '12px',
-                    backgroundColor: preset.primary,
-                    borderRadius: '50%',
-                    border: '1px solid rgba(0,0,0,0.1)'
-                  }} />
-                  <div style={{
-                    width: '12px',
-                    height: '12px',
-                    backgroundColor: preset.secondary,
-                    borderRadius: '50%',
-                    border: '1px solid rgba(0,0,0,0.1)'
-                  }} />
-                </div>
-                <span style={{ color: '#3e2723', fontSize: '10px' }}>
-                  {preset.name.split(' ')[0]}
-                </span>
+                ← Back
               </button>
-            ))}
+            </div>
+            <EpunchColorPicker
+              value={editingColor === 'primary' ? primaryColor || '#000000' : secondaryColor || '#000000'}
+              onChange={handleColorChange}
+              inline={true}
+              showPresets={true}
+            />
           </div>
-        </div>
-
-
-      </>
+        ) : (
+          <div className={styles.colorAreas}>
+            <div className={styles.colorAreasGrid}>
+              <ColorArea 
+                label="Primary" 
+                color={primaryColor} 
+                colorType="primary" 
+              />
+              <ColorArea 
+                label="Secondary" 
+                color={secondaryColor} 
+                colorType="secondary" 
+              />
+            </div>
+            
+            {(primaryColor !== null || secondaryColor !== null) && (
+              <RemoveButton
+                onClick={handleResetColors}
+                title="Remove custom colors"
+                top="8px"
+                right="8px"
+              />
+            )}
+          </div>
+        )}
+      </div>
     </EpunchModal>
   );
 }; 
