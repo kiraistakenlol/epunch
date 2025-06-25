@@ -1,4 +1,5 @@
 import React from 'react';
+import { FaWhatsapp, FaTelegram } from 'react-icons/fa';
 import styles from './MerchantLandingPage.module.css';
 
 const MerchantLandingPage: React.FC = () => {
@@ -9,11 +10,11 @@ const MerchantLandingPage: React.FC = () => {
         <div className={styles.topContactContent}>
           <span>Get started today: </span>
           <a href="https://wa.me/79250419362" className={styles.topContactLink}>
-            📞 WhatsApp
+            <FaWhatsapp /> WhatsApp
           </a>
           <span> | </span>
           <a href="https://t.me/sobolevchelovek" className={styles.topContactLink}>
-            ✈️ Telegram
+            <FaTelegram /> Telegram
           </a>
         </div>
       </div>
@@ -165,10 +166,10 @@ const MerchantLandingPage: React.FC = () => {
           </p>
           <div className={styles.contactButtons}>
             <a href="https://wa.me/79250419362" className={styles.primaryButton}>
-              📞 WhatsApp
+              <FaWhatsapp /> WhatsApp
             </a>
             <a href="https://t.me/sobolevchelovek" className={styles.secondaryButton}>
-              ✈️ Telegram
+              <FaTelegram /> Telegram
             </a>
           </div>
           <div className={styles.contactInfo}>
