@@ -43,7 +43,7 @@ const MerchantLandingPage: React.FC = () => {
                   playsInline
                   poster="/images/card_completion_flow/5_completion_overlay.png"
                 >
-                  <source src="/videos/card_completion_recording.mp4" type="video/mp4" />
+                  <source src="/videos/final_version_1.mp4" type="video/mp4" />
                   <source src="/videos/card_completion_recording.mov" type="video/quicktime" />
                   Your browser does not support the video tag.
                 </video>
