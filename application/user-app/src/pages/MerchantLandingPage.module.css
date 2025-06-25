@@ -1,0 +1,574 @@
+.container {
+  min-height: 100vh;
+  background: #d7f9f4;
+  color: #333;
+}
+
+.topContact {
+  background: rgba(215, 249, 244, 0.3);
+  text-align: center;
+  padding: 0.5rem 0;
+  margin-bottom: 2rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #333;
+  max-width: 1200px;
+  margin: 0 auto 2rem auto;
+}
+
+.topContactContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.topContactLink {
+  color: #006b3d;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.topContactLink:hover {
+  color: #004d2a;
+  text-decoration: underline;
+}
+
+.hero {
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.heroContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.heroText {
+  max-width: 500px;
+}
+
+.heroBullets {
+  max-width: 500px;
+}
+
+.brandTitle {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #000;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.heroTitle {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+}
+
+.highlight {
+  color: #000;
+  font-weight: 800;
+}
+
+.heroSubtitle {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  opacity: 0.8;
+  margin-bottom: 2rem;
+  color: #666;
+}
+
+.bulletPoint {
+  font-weight: 700;
+  margin: 0.5rem 0;
+  color: #333;
+}
+
+.heroDemo {
+  display: flex;
+  justify-content: center;
+}
+
+.heroVideoDemo {
+  text-align: center;
+}
+
+.demoTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.heroVideoContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.heroDemoVideo {
+  max-width: 350px;
+  height: auto;
+  border-radius: 1rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.heroDemoVideo:hover {
+  transform: scale(1.02);
+}
+
+.customerJourney {
+  background: white;
+  padding: 5rem 2rem;
+  color: #333;
+}
+
+.journeySubtitle {
+  text-align: center;
+  font-size: 1.125rem;
+  color: #666;
+  margin-bottom: 3rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.journeyFlow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 3rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.journeyStep {
+  text-align: center;
+}
+
+.stepHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stepNumber {
+  background: #000;
+  color: white;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.stepHeader h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.screenshotContainer {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.journeyImage {
+  max-width: 250px;
+  height: auto;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.journeyImage:hover {
+  transform: scale(1.05);
+}
+
+.journeyStep p {
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 250px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.videoContainer {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.journeyVideo {
+  max-width: 250px;
+  height: auto;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.journeyVideo:hover {
+  transform: scale(1.02);
+}
+
+.completeFlowVideo {
+  background: #f8fafc;
+  padding: 5rem 2rem;
+  color: #333;
+}
+
+.videoDemoSubtitle {
+  text-align: center;
+  font-size: 1.125rem;
+  color: #666;
+  margin-bottom: 3rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.videoDemoContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.mainDemoVideo {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 1rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.mainDemoVideo:hover {
+  transform: scale(1.02);
+}
+
+.videoCaption {
+  text-align: center;
+  max-width: 500px;
+}
+
+.videoCaption h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.videoCaption p {
+  color: #666;
+  line-height: 1.6;
+  font-size: 1.125rem;
+}
+
+.stepLabel {
+  margin: 0;
+  font-weight: 600;
+  color: #666;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.sectionContent {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.sectionTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 3rem;
+  color: #333;
+}
+
+.customerExperience {
+  background: #f8fafc;
+  padding: 5rem 2rem;
+  color: #333;
+}
+
+.experienceGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.experienceCard {
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  transition: transform 0.3s ease;
+}
+
+.experienceCard:hover {
+  transform: translateY(-4px);
+}
+
+.experienceIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.experienceCard h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.experienceCard p {
+  margin: 0;
+  color: #666;
+  line-height: 1.6;
+}
+
+.benefits {
+  background: white;
+  padding: 5rem 2rem;
+  color: #333;
+}
+
+.benefitsList {
+  display: grid;
+  gap: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.benefit {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: #f8fafc;
+  border-radius: 1rem;
+}
+
+.benefitIcon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.benefitText h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.benefitText p {
+  margin: 0;
+  color: #666;
+  line-height: 1.6;
+}
+
+.cta {
+  background: #000;
+  padding: 5rem 2rem;
+  text-align: center;
+  color: white;
+}
+
+.ctaContent {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.ctaTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.ctaSubtitle {
+  font-size: 1.25rem;
+  opacity: 0.9;
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
+}
+
+.contactButtons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.contactInfo {
+  text-align: center;
+}
+
+.contactInfo p {
+  margin: 0;
+  opacity: 0.8;
+  font-size: 1rem;
+  color: #ccc;
+}
+
+.primaryButton {
+  background: #d7f9f4;
+  color: #000;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 0.75rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.primaryButton:hover {
+  transform: translateY(-2px);
+}
+
+.secondaryButton {
+  background: transparent;
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  padding: 1rem 2rem;
+  border-radius: 0.75rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.secondaryButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+@media (max-width: 768px) {
+  .topContact {
+    margin-bottom: 0;
+  }
+  
+  .hero {
+    padding: 1rem 0.5rem;
+  }
+  
+  .heroContent {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .heroText {
+    order: 1;
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .heroTitle {
+    order: 1;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .heroDemo {
+    order: 2;
+    margin: 0;
+  }
+  
+  .heroBullets {
+    order: 3;
+  }
+  
+  .brandTitle {
+    display: none;
+  }
+  
+
+  
+  .heroSubtitle {
+    order: 3;
+    margin-top: 1rem;
+  }
+  
+  .demoTitle {
+    display: none;
+  }
+  
+  .heroVideoContainer {
+    gap: 0.5rem;
+  }
+  
+  .heroDemoVideo {
+    max-width: 300px;
+    width: 90%;
+  }
+  
+  .journeyFlow {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .journeyImage {
+    max-width: 200px;
+  }
+  
+  .journeyVideo {
+    max-width: 200px;
+  }
+  
+  .mainDemoVideo {
+    max-width: 300px;
+  }
+  
+  .videoDemoContainer {
+    gap: 1.5rem;
+  }
+  
+  .steps {
+    grid-template-columns: 1fr;
+  }
+  
+  .step {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+  
+  .benefit {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+  
+  .contactButtons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .primaryButton,
+  .secondaryButton {
+    width: 100%;
+    max-width: 280px;
+  }
+} 
