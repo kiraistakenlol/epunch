@@ -1,0 +1,15 @@
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  gap: 1rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.loadingContainer p {
+  color: #666;
+  font-size: 1.1rem;
+} 

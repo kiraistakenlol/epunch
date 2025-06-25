@@ -26,6 +26,21 @@ export const fetchMerchant = createAsyncThunk(
   }
 );
 
+export const fetchMerchantBySlug = createAsyncThunk(
+  'merchant/fetchMerchantBySlug',
+  async (slug: string, { rejectWithValue }) => {
+    try {
+      const merchants = await apiClient.getAllMerchants(slug);
+      if (merchants.length === 0) {
+        throw new Error(`Merchant with slug ${slug} not found`);
+      }
+      return merchants[0];
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Failed to fetch merchant data');
+    }
+  }
+);
+
 const merchantSlice = createSlice({
   name: 'merchant',
   initialState,
@@ -50,6 +65,19 @@ const merchantSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchMerchant.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(fetchMerchantBySlug.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchMerchantBySlug.fulfilled, (state, action: PayloadAction<MerchantDto>) => {
+        state.loading = false;
+        state.merchant = action.payload;
+        state.error = null;
+      })
+      .addCase(fetchMerchantBySlug.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });
