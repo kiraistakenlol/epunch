@@ -6,29 +6,39 @@
 
 .heroContent {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "brand"
+    "title"
+    "demo"
+    "button";
+  row-gap: 1rem;
   align-items: center;
 }
 
 .heroText {
-  max-width: 600px;
+  display: contents;
 }
 
 .brandTitle {
+  grid-area: brand;
   font-size: 2.5rem;
   font-weight: 900;
   color: #006b3d;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0;
   letter-spacing: -0.03em;
+  text-align: center;
 }
 
 .heroTitle {
+  grid-area: title;
   font-size: 3.5rem;
   font-weight: 800;
   line-height: 1.1;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0;
   color: #1a1a1a;
+  text-align: center;
+  max-width: none;
 }
 
 .merchantName {
@@ -68,8 +78,10 @@
 }
 
 .demoUrl {
-  margin-top: 2rem;
+  grid-area: button;
+  margin-top: 3rem;
   text-align: center;
+  justify-self: center;
 }
 
 .demoUrl p {
@@ -187,8 +199,156 @@
 }
 
 .heroDemo {
+  grid-area: demo;
   display: flex;
   justify-content: center;
+}
+
+.problemSolution {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  max-width: 1000px;
+}
+
+.problemCard, .solutionCard {
+  text-align: center;
+  flex: 1;
+}
+
+.problemTitle {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: #dc2626;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.solutionTitle {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: #006b3d;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.physicalCard {
+  width: 300px;
+  height: 200px;
+  background: linear-gradient(135deg, #f5f5dc, #e8e8dc);
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    -12px 12px 8px rgba(0, 0, 0, 0.5);
+  position: relative;
+  transform: rotate(-2deg);
+  transition: transform 0.3s ease;
+}
+
+.physicalCard::after {
+  content: '';
+  position: absolute;
+  top: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 200px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M10 10 L90 90 M90 10 L10 90' stroke='%23dc2626' stroke-width='8' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.85;
+  z-index: 10;
+  pointer-events: none;
+  animation: rejectPulse 2s ease-in-out infinite;
+}
+
+@keyframes rejectPulse {
+  0%, 100% {
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    transform: translateX(-50%) scale(1.1);
+  }
+}
+
+.physicalCard:hover {
+  transform: rotate(0deg);
+}
+
+.cardHeader {
+  text-align: center;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.cardSubtitle {
+  display: block;
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+.punchGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.punchHole {
+  width: 30px;
+  height: 30px;
+  border: 2px solid #999;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  background: white;
+}
+
+.punchHole.punched {
+  background: #006b3d;
+  color: white;
+  border-color: #006b3d;
+}
+
+.cardFooter {
+  font-size: 0.7rem;
+  color: #666;
+  text-align: center;
+}
+
+.transformArrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.arrowHead {
+  font-size: 2rem;
+  color: #006b3d;
+  font-weight: 900;
+  animation: arrowPulse 2s ease-in-out infinite;
+}
+
+@keyframes arrowPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
 }
 
 .loadingImageContainer {
@@ -302,37 +462,89 @@
 .phoneFrame {
   width: 350px;
   height: 600px;
-  background: #000;
-  border-radius: 25px;
-  padding: 15px;
+  background: linear-gradient(145deg, #1a1a1a, #000);
+  border-radius: 45px;
+  padding: 8px;
   margin: 0 auto;
   position: relative;
-  box-shadow: 0 12px 32px rgba(0, 107, 61, 0.2);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    -12px 12px 8px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    /* Right side (closer) - thicker bright edge */
+    6px 0 0 -2px rgba(100, 100, 100, 0.6),
+    8px 0 0 -2px rgba(150, 150, 150, 0.4),
+    /* Left side (farther) - thinner dark edge */
+    -2px 0 0 -1px rgba(0, 0, 0, 0.8),
+    /* Top/bottom depth */
+    0 2px 0 -1px rgba(80, 80, 80, 0.5),
+    0 -2px 0 -1px rgba(80, 80, 80, 0.5);
   transition: all 0.4s ease;
+  transform: perspective(1000px) rotateY(-10deg) rotateX(3deg);
 }
 
 .phoneFrame::before {
   content: '';
   position: absolute;
-  top: 8px;
+  top: 12px;
   left: 50%;
   transform: translateX(-50%);
-  width: 40px;
-  height: 3px;
-  background: #333;
-  border-radius: 2px;
+  width: 120px;
+  height: 28px;
+  background: #000;
+  border-radius: 20px;
+  z-index: 10;
 }
 
-.phoneFrame:hover {
-  transform: scale(1.02);
-  box-shadow: 0 16px 40px rgba(0, 107, 61, 0.3);
+.phoneFrame::after {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  z-index: 10;
 }
+
+.phoneFrame .statusBarArea {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  height: 32px;
+  background: #ffffff;
+  border-radius: 37px 37px 0 0;
+  z-index: 5;
+}
+
+  .phoneFrame:hover {
+    transform: perspective(1000px) rotateY(-8deg) rotateX(2deg) scale(1.03);
+    box-shadow: 
+      0 6px 16px rgba(0, 0, 0, 0.2),
+      -16px 16px 12px rgba(0, 0, 0, 0.6),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      /* Enhanced right side (closer) - thicker bright edge */
+      8px 0 0 -2px rgba(120, 120, 120, 0.8),
+      10px 0 0 -2px rgba(180, 180, 180, 0.5),
+      /* Enhanced left side (farther) - thinner dark edge */
+      -3px 0 0 -1px rgba(0, 0, 0, 0.9),
+      /* Enhanced top/bottom depth */
+      0 3px 0 -1px rgba(100, 100, 100, 0.6),
+      0 -3px 0 -1px rgba(100, 100, 100, 0.6);
+  }
 
 .appIframe {
   width: 100%;
-  height: 100%;
+  height: calc(100% - 32px);
   border: none;
-  border-radius: 15px;
+  border-radius: 0 0 37px 37px;
+  background: #fff;
+  margin-top: 32px;
+  position: relative;
+  display: block;
 }
 
 @media (max-width: 768px) {
@@ -371,6 +583,35 @@
   .heroDemo {
     grid-area: demo;
     margin: 0;
+  }
+
+  .problemSolution {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .physicalCard {
+    width: 280px;
+    height: 180px;
+    transform: rotate(-1deg);
+  }
+
+  .punchHole {
+    width: 25px;
+    height: 25px;
+    font-size: 1rem;
+  }
+
+  .transformArrow {
+    transform: rotate(90deg);
+  }
+
+  .arrowHead {
+    font-size: 1.5rem;
+  }
+
+  .problemTitle, .solutionTitle {
+    font-size: 1rem;
   }
   
   .demoUrl {
