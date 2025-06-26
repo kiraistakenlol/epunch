@@ -12,10 +12,7 @@ interface HeroSectionProps {
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
   merchant,
-  userAppUrl,
-  onboardingImageUrl,
-  isGeneratingImage
-}) => {
+  userAppUrl}) => {
   return (
     <section className={styles.hero}>
       <div className={styles.heroContent}>
