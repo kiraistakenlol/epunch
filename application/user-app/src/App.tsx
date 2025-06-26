@@ -5,6 +5,7 @@ import { configureApiClient } from 'e-punch-common-ui';
 import DashboardPage from './features/dashboard/DashboardPage';
 import DevPage from './features/dev/DevPage';
 import CardPreviewPage from './pages/CardPreviewPage';
+import DashboardPreviewPage from './pages/DashboardPreviewPage';
 import MerchantLandingPage from './pages/MerchantLandingPage';
 import AppLayout from './components/AppLayout';
 import SignOutModal from './components/SignOutModal';
@@ -46,6 +47,7 @@ function App() {
           <Route path="dev" element={<DevPage />} />
         </Route>
         <Route path="merchant/card-preview" element={<CardPreviewPage />} />
+        <Route path="preview" element={<DashboardPreviewPage />} />
         <Route path="for-merchants" element={<MerchantLandingPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
