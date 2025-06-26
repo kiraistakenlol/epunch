@@ -16,6 +16,7 @@ import { DesignPage } from './pages/design/DesignPage.tsx';
 import ScannerPage from './pages/scanner/ScannerPage';
 import { WelcomeQRPage } from './pages/welcome-qr/WelcomeQRPage';
 import { MerchantOnboardingPage } from './pages/merchant-onboarding/MerchantOnboardingPage';
+import UserAppTestPage from './pages/test/UserAppTestPage';
 import { injectCSSVariables } from './styles/css-variables';
 import './styles/global.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -112,6 +113,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/onboarding/:merchantSlug" element={<MerchantOnboardingPage />} />
+          <Route path="test/user-app" element={<UserAppTestPage />} />
           <Route path="/" element={
             <ProtectedRoute>
               <AppLayout />

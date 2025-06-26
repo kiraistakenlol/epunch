@@ -10,7 +10,7 @@ export interface DashboardPreviewParams {
 }
 
 export interface DashboardPreviewConfig {
-  baseUrl?: string;
+  userAppBaseUrl?: string;
   timeout?: number;
 }
 
@@ -19,7 +19,7 @@ class DashboardPreviewService {
   private defaultTimeout: number;
 
   constructor(config: DashboardPreviewConfig = {}) {
-    this.baseUrl = config.baseUrl || import.meta.env.VITE_USER_APP_URL || 'http://localhost:5173';
+    this.baseUrl = config.userAppBaseUrl || import.meta.env.VITE_USER_APP_URL || 'http://localhost:5173';
     this.defaultTimeout = config.timeout || 10000;
   }
 

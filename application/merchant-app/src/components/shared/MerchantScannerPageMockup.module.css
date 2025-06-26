@@ -1,0 +1,127 @@
+.scannerInterface {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 3%;
+  font-size: 1rem;
+}
+
+.scannerHeader {
+  text-align: center;
+  margin-bottom: 4%;
+}
+
+.scannerTitle {
+  font-size: 1.2em;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 0.3em 0;
+}
+
+.scannerSubtitle {
+  font-size: 0.9em;
+  color: #000000;
+  margin: 0;
+  font-weight: 400;
+}
+
+.scannerViewfinder {
+  flex: 1;
+  position: relative;
+  border: 0.1em solid #000000;
+  background: #545454;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 5%;
+  margin-bottom: 3%;
+  min-height: 60%;
+}
+
+.scanningFrame {
+  position: absolute;
+  width: min(50%, 12em);
+  height: min(50%, 12em);
+  border: 0.15em solid #00ff00;
+  border-radius: 4%;
+  z-index: 5;
+  opacity: 0.8;
+  animation: scanPulse 2s infinite;
+}
+
+.scanningCorners {
+  position: absolute;
+  width: min(50%, 12em);
+  height: min(50%, 12em);
+  z-index: 6;
+}
+
+.corner {
+  position: absolute;
+  width: 8%;
+  height: 8%;
+  border: 0.2em solid #00ff00;
+}
+
+.corner[data-position="top-left"] {
+  top: -0.2em;
+  left: -0.2em;
+  border-right: none;
+  border-bottom: none;
+}
+
+.corner[data-position="top-right"] {
+  top: -0.2em;
+  right: -0.2em;
+  border-left: none;
+  border-bottom: none;
+}
+
+.corner[data-position="bottom-left"] {
+  bottom: -0.2em;
+  left: -0.2em;
+  border-right: none;
+  border-top: none;
+}
+
+.corner[data-position="bottom-right"] {
+  bottom: -0.2em;
+  right: -0.2em;
+  border-left: none;
+  border-top: none;
+}
+
+.scannerBottomBar {
+  height: 15%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.scannerButton {
+  width: 4em;
+  height: 4em;
+  background: white;
+  border-radius: 50%;
+  border: 0.2em solid #ccc;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.scannerButton:active {
+  transform: scale(0.95);
+}
+
+@keyframes scanPulse {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+} 

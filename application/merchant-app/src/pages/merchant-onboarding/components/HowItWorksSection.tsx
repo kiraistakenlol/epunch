@@ -1,6 +1,17 @@
 import React, { useMemo } from 'react';
 import { MerchantDto, PunchCardDto } from 'e-punch-common-core';
 import { WorkflowStep } from './WorkflowStep';
+import {
+  PhoneFrame,
+  PhoneFrameNew,
+  UserAppIframeView,
+  MerchantAppMobileFrameMockup,
+  MerchantScannerPageMockup,
+  MerchantCustomerScanResult,
+  MerchantPunchCardRedeemResult,
+  TwoScreenFlow,
+  PhoneWithUserApp
+} from '../../../components/shared';
 import { dashboardPreviewService } from '../../../utils/dashboardPreviewService';
 import styles from './HowItWorksSection.module.css';
 
@@ -75,10 +86,10 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
   return (
     <section className={styles.howItWorks}>
       <div className={styles.sectionContent}>
-                  <h2 className={styles.sectionTitle}>
-            How It Works
-          </h2>
-        
+        <h2 className={styles.sectionTitle}>
+          How It Works
+        </h2>
+
         <div className={styles.stepsContainer}>
           <WorkflowStep
             stepNumber={1}
@@ -112,139 +123,57 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
             showArrow={true}
           >
             <div className={styles.singleStep}>
-              <div className={styles.scanningDemo}>
-                <div className={styles.phoneWithCamera}>
-                  <div className={styles.phoneFrame}>
-                    <div className={styles.phoneScreen}>
-                      <div className={styles.cameraInterface}>
-                        <div className={styles.cameraTopBar}>
-                          <span className={styles.cameraTitle}>Camera</span>
-                          <div className={styles.cameraControls}>×</div>
-                        </div>
-                        <div className={styles.cameraViewfinder}>
-                          <div className={styles.scanningFrame}></div>
-                          {onboardingImageUrl && (
-                            <img
-                              src={onboardingImageUrl}
-                              alt="QR Code being scanned"
-                              className={styles.qrCodeInCamera}
-                            />
-                          )}
-                          <div className={styles.scanningCorners}>
-                            <div className={styles.corner} data-position="top-left"></div>
-                            <div className={styles.corner} data-position="top-right"></div>
-                            <div className={styles.corner} data-position="bottom-left"></div>
-                            <div className={styles.corner} data-position="bottom-right"></div>
-                          </div>
-                        </div>
-                        <div className={styles.cameraBottomBar}>
-                          <div className={styles.cameraButton}></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className={styles.scanResult}>
-                  <div className={styles.resultArrow}>→</div>
-                  <div className={styles.resultPhone}>
-                    <div className={styles.resultPhoneFrame}>
-                      <div className={styles.statusBarArea}></div>
-                      <iframe
-                        src={userAppUrl}
-                        className={styles.appIframe}
-                        title={`${merchant.name} ePunch App Opens`}
-                        loading="lazy"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <TwoScreenFlow
+                firstScreen={
+                  <PhoneFrameNew>
+                    <MerchantAppMobileFrameMockup merchant={merchant}>
+                      <MerchantScannerPageMockup>
+                        {onboardingImageUrl && (
+                          <img
+                            src={onboardingImageUrl}
+                            alt="QR Code being scanned"
+                            className={styles.qrCodeInCamera}
+                          />
+                        )}
+                      </MerchantScannerPageMockup>
+                    </MerchantAppMobileFrameMockup>
+                  </PhoneFrameNew>
+                }
+                secondScreen={
+                  <PhoneWithUserApp src={userAppUrl} />
+                }
+              />
             </div>
           </WorkflowStep>
 
           <WorkflowStep
             stepNumber={3}
             role="you"
-            title="Scan their QR, hit 'PUNCH'"
+            title="Scan client's QR and PUNCH"
             note="Simple one-tap process"
             showArrow={true}
           >
             <div className={styles.singleStep}>
-              <div className={styles.merchantScanningDemo}>
-                <div className={styles.phoneWithCamera}>
-                  <div className={styles.phoneFrame}>
-                    <div className={styles.phoneScreen}>
-                      <div className={styles.cameraInterface}>
-                        <div className={styles.cameraTopBar}>
-                          <span className={styles.cameraTitle}>ePunch Merchant</span>
-                          <div className={styles.cameraControls}>×</div>
+              <TwoScreenFlow
+                firstScreen={
+                  <PhoneFrame>
+                    <MerchantAppMobileFrameMockup merchant={merchant}>
+                      <MerchantScannerPageMockup>
+                        <div style={{width: '200px', aspectRatio: '375 / 667'}}>
+                          <PhoneWithUserApp src={userAppUrl} />
                         </div>
-                        <div className={styles.cameraViewfinder}>
-                          <div className={styles.scanningFrame}></div>
-                          <div className={styles.customerPhoneInCamera}>
-                            <div className={styles.miniPhoneFrame}>
-                              <iframe
-                                src={userAppUrl}
-                                className={styles.customerAppIframe}
-                                title="Customer's ePunch App being scanned"
-                                loading="lazy"
-                              />
-                            </div>
-                          </div>
-                          <div className={styles.scanningCorners}>
-                            <div className={styles.corner} data-position="top-left"></div>
-                            <div className={styles.corner} data-position="top-right"></div>
-                            <div className={styles.corner} data-position="bottom-left"></div>
-                            <div className={styles.corner} data-position="bottom-right"></div>
-                          </div>
-                        </div>
-                        <div className={styles.cameraBottomBar}>
-                          <div className={styles.cameraButton}></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className={styles.scanResult}>
-                  <div className={styles.resultArrow}>→</div>
-                  <div className={styles.resultPhone}>
-                    <div className={styles.resultPhoneFrame}>
-                      <div className={styles.merchantScanResultInterface}>
-                        <div className={styles.merchantAppHeader}>
-                          <span className={styles.merchantAppTitle}>ePunch Merchant</span>
-                          <div className={styles.merchantAppControls}>×</div>
-                        </div>
-                        <div className={styles.scanResultContent}>
-                          <div className={styles.scanResultHeader}>
-                            <h3>Select Loyalty Program</h3>
-                            <p className={styles.userId}>User ID: abc123...</p>
-                          </div>
-                          <div className={styles.loyaltyProgramsList}>
-                            <div className={styles.loyaltyProgram}>
-                              <div className={styles.programInfo}>
-                                <span className={styles.programName}>{merchant.name} Rewards</span>
-                                <span className={styles.programProgress}>7/10 punches</span>
-                              </div>
-                              <div className={styles.selectedIndicator}>✓</div>
-                            </div>
-                            <div className={styles.loyaltyProgram}>
-                              <div className={styles.programInfo}>
-                                <span className={styles.programName}>VIP Program</span>
-                                <span className={styles.programProgress}>2/5 punches</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div className={styles.punchButtonContainer}>
-                            <div className={styles.punchButton}>PUNCH</div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                      </MerchantScannerPageMockup>
+                    </MerchantAppMobileFrameMockup>
+                  </PhoneFrame>
+                }
+                secondScreen={
+                  <PhoneFrame>
+                    <MerchantAppMobileFrameMockup merchant={merchant}>
+                      <MerchantCustomerScanResult merchant={merchant} />
+                    </MerchantAppMobileFrameMockup>
+                  </PhoneFrame>
+                }
+              />
             </div>
           </WorkflowStep>
 
@@ -258,14 +187,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
             <div className={styles.singleStep}>
               <div className={styles.cardProgressDemo}>
                 <div className={styles.resultPhone}>
-                  <div className={styles.resultPhoneFrame}>
-                    <div className={styles.statusBarArea}></div>
-                    <iframe
-                      src={step4PreviewUrl}
-                      className={styles.appIframe}
-                      title={`${merchant.name} ePunch Card Progress - 7/10 punches`}
-                      loading="lazy"
-                    />
+                  <div className={styles.regularPhoneContainer}>
+                    <PhoneWithUserApp src={step4PreviewUrl} />
                   </div>
                 </div>
               </div>
@@ -282,14 +205,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
             <div className={styles.singleStep}>
               <div className={styles.cardCompletionDemo}>
                 <div className={styles.resultPhone}>
-                  <div className={styles.resultPhoneFrame}>
-                    <div className={styles.statusBarArea}></div>
-                    <iframe
-                      src={step5PreviewUrl}
-                      className={styles.appIframe}
-                      title={`${merchant.name} ePunch Reward Ready - 10/10 punches complete`}
-                      loading="lazy"
-                    />
+                <div className={styles.regularPhoneContainer}>
+                    <PhoneWithUserApp src={step5PreviewUrl} />
                   </div>
                 </div>
               </div>
@@ -304,84 +221,26 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
             showArrow={true}
           >
             <div className={styles.singleStep}>
-              <div className={styles.redeemScanningDemo}>
-                <div className={styles.phoneWithCamera}>
-                  <div className={styles.phoneFrame}>
-                    <div className={styles.phoneScreen}>
-                      <div className={styles.cameraInterface}>
-                        <div className={styles.cameraTopBar}>
-                          <span className={styles.cameraTitle}>ePunch Merchant</span>
-                          <div className={styles.cameraControls}>×</div>
+              <TwoScreenFlow
+                firstScreen={
+                  <PhoneFrame>
+                    <MerchantAppMobileFrameMockup merchant={merchant}>
+                      <MerchantScannerPageMockup>
+                        <div style={{width: '70%', height: '100%', paddingTop: '10%'}}>
+                          <PhoneWithUserApp src={step5PreviewUrl} />
                         </div>
-                        <div className={styles.cameraViewfinder}>
-                          <div className={styles.scanningFrame}></div>
-                          <div className={styles.customerPhoneInCamera}>
-                            <div className={styles.miniPhoneFrame}>
-                              <iframe
-                                src={step5PreviewUrl}
-                                className={styles.customerAppIframe}
-                                title="Customer's reward-ready punch card QR"
-                                loading="lazy"
-                              />
-                            </div>
-                          </div>
-                          <div className={styles.scanningCorners}>
-                            <div className={styles.corner} data-position="top-left"></div>
-                            <div className={styles.corner} data-position="top-right"></div>
-                            <div className={styles.corner} data-position="bottom-left"></div>
-                            <div className={styles.corner} data-position="bottom-right"></div>
-                          </div>
-                        </div>
-                        <div className={styles.cameraBottomBar}>
-                          <div className={styles.cameraButton}></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className={styles.scanResult}>
-                  <div className={styles.resultArrow}>→</div>
-                  <div className={styles.resultPhone}>
-                    <div className={styles.resultPhoneFrame}>
-                      <div className={styles.redeemResultInterface}>
-                        <div className={styles.merchantAppHeader}>
-                          <span className={styles.merchantAppTitle}>ePunch Merchant</span>
-                          <div className={styles.merchantAppControls}>×</div>
-                        </div>
-                        <div className={styles.redeemResultContent}>
-                          <div className={styles.redeemResultHeader}>
-                            <h3>🎁 Reward Redemption</h3>
-                            <p className={styles.redeemCardId}>Card ID: demo123...</p>
-                          </div>
-                          <div className={styles.punchCardDetails}>
-                            <h4>Punch Card Details</h4>
-                            <div className={styles.detailsContent}>
-                              <p><strong>Shop:</strong> {merchant.name}</p>
-                              <p><strong>Address:</strong> {merchant.address || '123 Main Street'}</p>
-                              <p><strong>Punches:</strong> 10/10</p>
-                              <p><strong>Status:</strong> REWARD_READY</p>
-                            </div>
-                          </div>
-                          <div className={styles.loyaltyProgramDetails}>
-                            <h4>Loyalty Program</h4>
-                            <div className={styles.detailsContent}>
-                              <p><strong>Name:</strong> {merchant.name} Rewards</p>
-                              <p><strong>Reward:</strong> Free coffee</p>
-                              <p className={styles.programDescription}>
-                                Get a free coffee after 10 punches!
-                              </p>
-                            </div>
-                          </div>
-                          <div className={styles.redeemButtonContainer}>
-                            <div className={styles.redeemButton}>REDEEM!</div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                      </MerchantScannerPageMockup>
+                    </MerchantAppMobileFrameMockup>
+                  </PhoneFrame>
+                }
+                secondScreen={
+                  <PhoneFrame>
+                    <MerchantAppMobileFrameMockup merchant={merchant}>
+                      <MerchantPunchCardRedeemResult merchant={merchant} />
+                    </MerchantAppMobileFrameMockup>
+                  </PhoneFrame>
+                }
+              />
             </div>
           </WorkflowStep>
 
@@ -397,8 +256,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
                 <div className={styles.schemaArrow}>→</div>
                 <div className={styles.clientAvatar}>
                   <div className={styles.avatarCircle}>
-                    <img 
-                      src="/images/client.png" 
+                    <img
+                      src="/images/client.png"
                       alt="Customer"
                       className={styles.clientAvatarImage}
                     />

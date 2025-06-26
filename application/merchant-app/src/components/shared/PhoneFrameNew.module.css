@@ -1,0 +1,27 @@
+.phoneFrame {
+  width: 100%;
+  aspect-ratio: 375 / 667;
+  background: #1a1a1a;
+  border-radius: 6.67%;
+  padding: 3%;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  margin: 0 auto;
+  box-sizing: border-box;
+  container-type: size;
+  contain: layout style;
+}
+
+.phoneFrame::before {
+  content: '';
+  position: absolute;
+  top: 2.13%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10.67%;
+  height: 0.6%;
+  background: #333;
+  border-radius: 3%;
+  z-index: 10;
+} 

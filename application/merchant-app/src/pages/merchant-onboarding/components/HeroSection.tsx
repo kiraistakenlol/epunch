@@ -1,6 +1,6 @@
 import React from 'react';
 import { MerchantDto } from 'e-punch-common-core';
-import { EpunchSpinner } from '../../../components/foundational';
+import { PhoneWithUserApp } from '../../../components/shared';
 import styles from './HeroSection.module.css';
 
 interface HeroSectionProps {
@@ -12,7 +12,7 @@ interface HeroSectionProps {
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
   merchant,
-  userAppUrl}) => {
+  userAppUrl }) => {
   return (
     <section className={styles.hero}>
       <div className={styles.heroContent}>
@@ -41,8 +41,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 </div>
                 <div className={styles.punchGrid}>
                   {[...Array(10)].map((_, i) => (
-                    <div 
-                      key={i} 
+                    <div
+                      key={i}
                       className={`${styles.punchHole} ${i < 7 ? styles.punched : ''}`}
                     >
                       {i < 7 ? '●' : '○'}
@@ -52,21 +52,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <div className={styles.cardFooter}>Collect 10 punches for free coffee</div>
               </div>
             </div>
-            
+
             <div className={styles.transformArrow}>
               <div className={styles.arrowHead}>→</div>
             </div>
-            
+
             <div className={styles.solutionCard}>
               <h4 className={styles.solutionTitle}>New Way</h4>
-              <div className={styles.phoneFrame}>
-                <div className={styles.statusBarArea}></div>
-                <iframe
-                  src={userAppUrl}
-                  className={styles.appIframe}
-                  title={`${merchant.name} Customer Experience`}
-                  loading="lazy"
-                />
+              <div className={styles.phoneWithEpunch}>
+                <div className={styles.regularPhoneContainer}>
+                  <PhoneWithUserApp src={userAppUrl} />
+                </div>
               </div>
             </div>
           </div>

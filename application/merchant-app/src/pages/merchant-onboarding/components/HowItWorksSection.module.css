@@ -221,7 +221,8 @@
   .phoneWithCamera,
   .resultPhone,
   .merchantScanningDemo {
-    width: 100%;
+    width: 80%;
+    max-width: 200px;
     justify-content: center;
     display: flex;
   }
@@ -280,6 +281,7 @@
 
 .phoneWithCamera {
   display: flex;
+  width: 200px;
   justify-content: center;
   align-items: center;
 }
@@ -476,6 +478,10 @@
   justify-content: center;
 }
 
+.regularPhoneContainer {
+  width: 300px;
+}
+
 .resultPhoneFrame {
   width: 280px;
   height: 500px;
@@ -524,8 +530,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 95%;
-  height: 90%;
+  width: 70%;
+  aspect-ratio: 375 / 667;
   z-index: 3;
 }
 
@@ -538,6 +544,8 @@
   position: relative;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   overflow: hidden;
+  transform: scale(0.7);
+  transform-origin: center;
 }
 
 .miniPhoneFrame::before {
@@ -1007,4 +1015,9 @@
     width: 85px;
     height: 85px;
   }
-} 
+}
+
+/* .phoneInCamera { */
+  /* transform: scale(0.45); */
+  /* transform-origin: center; */
+/* }  */
