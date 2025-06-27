@@ -1,10 +1,9 @@
-import React, { useMemo } from 'react';
-import { MerchantDto, PunchCardDto } from 'e-punch-common-core';
+import React, { useMemo, useState, useEffect } from 'react';
+import { MerchantDto, PunchCardDto, PunchCardStyleDto } from 'e-punch-common-core';
 import { WorkflowStep } from './WorkflowStep';
 import {
   PhoneFrame,
   PhoneFrameNew,
-  UserAppIframeView,
   MerchantAppMobileFrameMockup,
   MerchantScannerPageMockup,
   MerchantCustomerScanResult,
@@ -13,19 +12,78 @@ import {
   PhoneWithUserApp
 } from '../../../components/shared';
 import { dashboardPreviewService } from '../../../utils/dashboardPreviewService';
+import { generateOnboardingImage } from '../../../utils/onboardingImageUtil';
+import { apiClient, appColors } from 'e-punch-common-ui';
 import styles from './HowItWorksSection.module.css';
 
 interface HowItWorksSectionProps {
   merchant: MerchantDto;
   userAppUrl: string;
-  onboardingImageUrl: string | null;
 }
 
 export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
   merchant,
-  userAppUrl,
-  onboardingImageUrl
+  userAppUrl
 }) => {
+  const [onboardingImageUrl, setOnboardingImageUrl] = useState<string | null>(null);
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
+  const [merchantStyle, setMerchantStyle] = useState<PunchCardStyleDto | null>(null);
+
+  useEffect(() => {
+    if (merchant && !merchantStyle) {
+      fetchMerchantStyle();
+    }
+  }, [merchant]);
+
+  useEffect(() => {
+    if (merchant && merchantStyle && !onboardingImageUrl && !isGeneratingImage) {
+      generateOnboardingImagePreview();
+    }
+  }, [merchant, merchantStyle]);
+
+  const fetchMerchantStyle = async () => {
+    if (!merchant) return;
+
+    try {
+      const style = await apiClient.getMerchantDefaultPunchCardStyle(merchant.id);
+      setMerchantStyle(style);
+    } catch (error: any) {
+      console.error('Failed to fetch merchant style:', error);
+      setMerchantStyle({
+        primaryColor: appColors.epunchOrangeDark,
+        secondaryColor: appColors.epunchWhite,
+        logoUrl: null,
+        backgroundImageUrl: null,
+        punchIcons: null
+      });
+    }
+  };
+
+  const generateOnboardingImagePreview = async () => {
+    if (!merchant || !merchantStyle) return;
+
+    try {
+      setIsGeneratingImage(true);
+      const backgroundColor = appColors.epunchBrown;
+      const qrBackgroundColor = appColors.epunchWhite;
+      const titleColor = appColors.epunchWhite;
+      
+      const imageDataUrl = await generateOnboardingImage(
+        merchant,
+        backgroundColor,
+        qrBackgroundColor,
+        titleColor,
+        merchant.name,
+        `${merchant.name} Rewards`
+      );
+      setOnboardingImageUrl(imageDataUrl);
+    } catch (error: any) {
+      console.error('Failed to generate onboarding image:', error);
+    } finally {
+      setIsGeneratingImage(false);
+    }
+  };
+
   // Create mock punch card data with 7/10 punches for step 4
   const punchCardWith7Punches: PunchCardDto = useMemo(() => ({
     id: 'demo-card-1',
@@ -94,8 +152,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={1}
             role="you"
-            title="Put up QR code"
-            note="Print and display at checkout"
+            title="Print and display at checkout"
             showArrow={true}
           >
             <div className={styles.singleStep}>

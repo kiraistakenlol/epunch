@@ -105,14 +105,11 @@ export const MerchantOnboardingPage: React.FC = () => {
       <HeroSection
         merchant={merchant}
         userAppUrl={userAppUrl}
-        onboardingImageUrl={onboardingImageUrl}
-        isGeneratingImage={isGeneratingImage}
       />
 
       <HowItWorksSection
         merchant={merchant}
         userAppUrl={userAppUrl}
-        onboardingImageUrl={onboardingImageUrl}
       />
 
       <BenefitsSection merchant={merchant} />

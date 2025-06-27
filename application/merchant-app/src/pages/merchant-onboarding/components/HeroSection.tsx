@@ -6,8 +6,6 @@ import styles from './HeroSection.module.css';
 interface HeroSectionProps {
   merchant: MerchantDto;
   userAppUrl: string;
-  onboardingImageUrl: string | null;
-  isGeneratingImage: boolean;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
