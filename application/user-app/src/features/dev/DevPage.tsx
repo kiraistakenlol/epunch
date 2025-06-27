@@ -4,8 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { RootState } from '../../store/store';
 import { LOCAL_STORAGE_USER_ID_KEY, selectUserId, setUserId } from '../auth/authSlice';
 import { apiClient } from 'e-punch-common-ui';
-import { useWebSocket } from '../../hooks/useWebSocket';
-import { webSocketClient } from '../../api/websocketClient';
+
 import { useConsoleCapture, ConsoleMessage } from '../../hooks/useConsoleCapture';
 import type { MerchantDto, LoyaltyProgramDto, PunchCardDto } from 'e-punch-common-core';
 
@@ -155,7 +154,6 @@ const DevPage: React.FC = () => {
   const [scenarioStatus, setScenarioStatus] = useState<string>('');
   const [scenarioExecuting, setScenarioExecuting] = useState<boolean>(false);
   
-  const { connected, error: wsError, events, clearEvents } = useWebSocket();
   const { messages: consoleMessages, clearMessages: clearConsoleMessages } = useConsoleCapture();
 
   // Available scenarios
@@ -296,15 +294,7 @@ const DevPage: React.FC = () => {
     setApiStatus(`User ID set to "${customUserId}" in local storage and Redux. Current Redux User ID: ${customUserId}.`);
   };
 
-  const sendTestEvent = () => {
-    if (webSocketClient.isConnected()) {
-      webSocketClient['socket']?.emit('test', {
-        message: 'Test message from frontend',
-        userId: userId,
-        timestamp: new Date().toISOString(),
-      });
-    }
-  };
+
 
   const handlePunch = async () => {
     if (!userId) {
@@ -853,71 +843,7 @@ const DevPage: React.FC = () => {
         </div>
       </DevSection>
 
-      <DevSection title="WebSocket Connection">
-        <div style={styles.userInfo}>
-          <p><strong>Connection Status:</strong> 
-            <span style={{ 
-              color: connected ? 'green' : 'red', 
-              marginLeft: '10px' 
-            }}>
-              {connected ? 'Connected' : 'Disconnected'}
-            </span>
-          </p>
-          {wsError && (
-            <p><strong>Error:</strong> <span style={{ color: 'red' }}>{wsError}</span></p>
-          )}
-        </div>
-        <div>
-          <button 
-            style={styles.button} 
-            onClick={clearEvents}
-            disabled={loading}
-          >
-            Clear Events ({events.length})
-          </button>
-          <button 
-            style={styles.button} 
-            onClick={sendTestEvent}
-            disabled={loading || !connected}
-          >
-            Send Test Event
-          </button>
-        </div>
-        <div>
-          <h3>Real-time Events:</h3>
-          <div style={{ 
-            ...styles.statusBox, 
-            maxHeight: '300px', 
-            fontSize: '12px' 
-          }}>
-            {events.length === 0 ? (
-              <div style={{ color: '#666' }}>No events received yet...</div>
-            ) : (
-              events.slice().reverse().map((event, index) => (
-                <div key={index} style={{ 
-                  marginBottom: '10px', 
-                  padding: '8px', 
-                  backgroundColor: '#f0f0f0', 
-                  borderRadius: '4px',
-                  borderLeft: '4px solid #2196F3'
-                }}>
-                  <div style={{ fontWeight: 'bold', color: '#333' }}>
-                    {event.type} - {event.timestamp.toLocaleTimeString()}
-                  </div>
-                  <pre style={{ 
-                    margin: '4px 0 0 0', 
-                    fontSize: '10px', 
-                    color: '#444',
-                    whiteSpace: 'pre-wrap'
-                  }}>
-                    {JSON.stringify(event.data, null, 2)}
-                  </pre>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-      </DevSection>
+
 
       <DevSection title="Local Storage Debug">
         <div style={styles.userInfo}>

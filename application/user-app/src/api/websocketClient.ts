@@ -17,9 +17,17 @@ class WebSocketClient {
   private connectionCallbacks: Set<(status: WebSocketConnectionStatus) => void> = new Set();
   private eventCallbacks: Set<(event: WebSocketEvent) => void> = new Set();
   private registeredUserId: string | null = null;
+  private isInitialized: boolean = false;
 
   constructor() {
-    this.setupConnection();
+    
+  }
+
+  private ensureConnection() {
+    if (!this.isInitialized) {
+      this.setupConnection();
+      this.isInitialized = true;
+    }
   }
 
   private setupConnection() {
@@ -56,6 +64,7 @@ class WebSocketClient {
   }
 
   onConnectionChange(callback: (status: WebSocketConnectionStatus) => void): () => void {
+    this.ensureConnection();
     this.connectionCallbacks.add(callback);
     
     if (this.socket) {
@@ -71,6 +80,7 @@ class WebSocketClient {
   }
 
   onEvent(callback: (event: WebSocketEvent) => void): () => void {
+    this.ensureConnection();
     this.eventCallbacks.add(callback);
     
     return () => {
@@ -98,10 +108,14 @@ class WebSocketClient {
   }
 
   isConnected(): boolean {
+    if (!this.isInitialized) {
+      return false;
+    }
     return this.socket?.connected || false;
   }
 
   setUserId(userId: string): void {
+    this.ensureConnection();
     this.registeredUserId = userId;
     
     // If already connected, register immediately
