@@ -5,7 +5,7 @@ import { PunchCardDto } from 'e-punch-common-core';
 export const basicDashboardPreview = (): string => {
   const params: DashboardPreviewParams = {
     merchantSlug: 'test-merchant',
-    authState: 'authenticated'
+    loyaltyPrograms: []
   };
   
   return dashboardPreviewService.getPreviewUrl(params);
@@ -52,7 +52,7 @@ export const customCardsDashboardPreview = (): string => {
 
   const params: DashboardPreviewParams = {
     cards: mockCards,
-    authState: 'authenticated'
+    loyaltyPrograms: []
   };
   
   return dashboardPreviewService.getPreviewUrl(params);
@@ -100,7 +100,7 @@ export const selectedCardDashboardPreview = (): string => {
   const params: DashboardPreviewParams = {
     cards: mockCards,
     selectedCardId: 'card-2', // Card is selected (reward ready)
-    authState: 'authenticated'
+    loyaltyPrograms: []
   };
   
   return dashboardPreviewService.getPreviewUrl(params);
@@ -131,7 +131,7 @@ export const completionOverlayDashboardPreview = (): string => {
   const params: DashboardPreviewParams = {
     cards: mockCards,
     completionOverlayCardId: 'card-1', // Show completion overlay for this card
-    authState: 'authenticated'
+    loyaltyPrograms: []
   };
   
   return dashboardPreviewService.getPreviewUrl(params);
@@ -141,7 +141,7 @@ export const completionOverlayDashboardPreview = (): string => {
 export const unauthenticatedDashboardPreview = (): string => {
   const params: DashboardPreviewParams = {
     merchantSlug: 'test-merchant',
-    authState: 'unauthenticated'
+    loyaltyPrograms: []
   };
   
   return dashboardPreviewService.getPreviewUrl(params);

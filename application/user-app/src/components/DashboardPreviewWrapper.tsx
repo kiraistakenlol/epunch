@@ -11,7 +11,7 @@ import loyaltyProgramsReducer from '../features/loyaltyPrograms/loyaltyProgramsS
 import DashboardPage from '../features/dashboard/DashboardPage';
 import CompletionOverlay from '../features/dashboard/overlay/CompletionOverlay';
 import Alert from '../features/alert/Alert';
-import type { PunchCardDto, LoyaltyProgramDto, MerchantDto } from 'e-punch-common-core';
+import type { PunchCardDto, LoyaltyProgramDto } from 'e-punch-common-core';
 import { resolveCardStyles } from '../utils/cardStyles';
 import styles from './DashboardPreviewWrapper.module.css';
 
@@ -105,44 +105,7 @@ const createPreviewStore = (
   });
 };
 
-const createDefaultCards = (): PunchCardDto[] => {
-  return [
-    {
-      id: 'preview-card-1',
-      loyaltyProgramId: 'preview-loyalty-1',
-      shopName: 'Preview Coffee Shop',
-      shopAddress: '123 Preview Street, Preview City',
-      currentPunches: 3,
-      totalPunches: 10,
-      status: 'ACTIVE',
-      createdAt: new Date().toISOString(),
-      styles: {
-        primaryColor: '#8B4513',
-        secondaryColor: '#F4E4BC',
-        logoUrl: null,
-        backgroundImageUrl: null,
-        punchIcons: null
-      }
-    } as PunchCardDto,
-    {
-      id: 'preview-card-2',
-      loyaltyProgramId: 'preview-loyalty-2',
-      shopName: 'Preview Bakery',
-      shopAddress: '456 Preview Avenue, Preview City',
-      currentPunches: 9,
-      totalPunches: 10,
-      status: 'REWARD_READY',
-      createdAt: new Date().toISOString(),
-      styles: {
-        primaryColor: '#FF6B6B',
-        secondaryColor: '#FFE5E5',
-        logoUrl: null,
-        backgroundImageUrl: null,
-        punchIcons: null
-      }
-    } as PunchCardDto
-  ];
-};
+
 
 export const DashboardPreviewWrapper: React.FC<DashboardPreviewWrapperProps> = ({
   cards,

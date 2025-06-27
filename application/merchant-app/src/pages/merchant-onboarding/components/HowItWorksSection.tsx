@@ -1,5 +1,5 @@
 import React from 'react';
-import { MerchantDto, PunchCardDto, PunchCardStyleDto, LoyaltyProgramDto, emptyPunchCardStyle } from 'e-punch-common-core';
+import { MerchantDto, PunchCardDto, PunchCardStyleDto, LoyaltyProgramDto } from 'e-punch-common-core';
 import { WorkflowStep } from './WorkflowStep';
 import {
   PhoneFrame,
