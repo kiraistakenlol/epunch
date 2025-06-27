@@ -17,7 +17,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const primaryLoyaltyProgram = loyaltyPrograms[0];
   const requiredPunches = primaryLoyaltyProgram?.requiredPunches || 10;
   const currentPunches = Math.floor(requiredPunches * 0.7);
-  const rewardDescription = primaryLoyaltyProgram?.rewardDescription || 'Collect 10 punches for free coffee';
 
   return (
     <section className={styles.hero}>
@@ -40,20 +39,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div className={styles.problemCard}>
               <div className={styles.physicalCard}>
                 <div className={styles.cardHeader}>
-                  <span className={styles.merchantName}>{merchant.name}</span>
-                  <span className={styles.cardSubtitle}>Loyalty Card</span>
+                  <span className={styles.cardTitle}>{merchant.name}</span>
                 </div>
                 <div className={styles.punchGrid}>
                   {[...Array(requiredPunches)].map((_, i) => (
                     <div
                       key={i}
                       className={`${styles.punchHole} ${i < currentPunches ? styles.punched : ''}`}
-                    >
-                      {i < currentPunches ? '●' : '○'}
-                    </div>
+                    />
                   ))}
                 </div>
-                <div className={styles.cardFooter}>{rewardDescription}</div>
+                <div className={styles.cardFooter}>Buy 10 Get 1 Free</div>
               </div>
             </div>
 
