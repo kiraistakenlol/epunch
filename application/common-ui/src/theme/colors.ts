@@ -11,4 +11,5 @@ export const appColors = {
   epunchBeige: '#f5f5dc',
   epunchGray: '#666666',
   epunchGreen: '#47e64e',
+  epunchGreenDark: '#2db83a',
 } as const; 
