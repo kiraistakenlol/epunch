@@ -160,12 +160,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
             showArrow={true}
           >
             <div className={styles.singleStep}>
-              <div className={styles.cardProgressDemo}>
-                <div className={styles.resultPhone}>
-                  <div className={styles.regularPhoneContainer}>
-                    <PhoneWithUserApp src={step4PreviewUrl} />
-                  </div>
-                </div>
+              <div className={styles.commonPhoneContainer}>
+                <PhoneWithUserApp src={step4PreviewUrl} />
               </div>
             </div>
           </WorkflowStep>
@@ -178,12 +174,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
             showArrow={true}
           >
             <div className={styles.singleStep}>
-              <div className={styles.cardCompletionDemo}>
-                <div className={styles.resultPhone}>
-                <div className={styles.regularPhoneContainer}>
-                    <PhoneWithUserApp src={step5PreviewUrl} />
-                  </div>
-                </div>
+              <div className={styles.commonPhoneContainer}>
+                <PhoneWithUserApp src={step5PreviewUrl} />
               </div>
             </div>
           </WorkflowStep>

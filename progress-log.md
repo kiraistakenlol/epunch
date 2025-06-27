@@ -21,3 +21,9 @@ merchant.epunch.app/onboarding
 
 
 admin-app:
+
+
+onboarding page:
+
+- step contains timing (3 seconds)
+- simplify paper card

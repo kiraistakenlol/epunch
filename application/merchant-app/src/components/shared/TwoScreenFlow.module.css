@@ -8,7 +8,8 @@
   height: 100%;
 }
 
-.firstScreen {
+.firstScreen,
+.secondScreen {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -26,14 +27,6 @@
   justify-content: center;
 }
 
-.secondScreen {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-shrink: 0;
-  width: 300px;
-}
-
 @media (max-width: 768px) {
   .twoScreenFlow {
     flex-direction: column;
@@ -47,8 +40,7 @@
     margin: 0;
   }
   
-      /* max-width: 280px; */
-.firstScreen,
+  .firstScreen,
   .secondScreen {
     justify-content: center;
     display: flex;
