@@ -45,18 +45,25 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
     };
   };
 
-  const step4PreviewUrl = dashboardPreviewService.getPreviewUrl({
-    cards: [createMockPunchCard('demo-card-1', loyaltyProgram.id, 7)],
+  const partialPunches = Math.floor(loyaltyProgram.requiredPunches * 0.7);
+  const fullPunches = loyaltyProgram.requiredPunches;
+
+  const step4PartialPreviewUrl = dashboardPreviewService.getPreviewUrl({
+    cards: [createMockPunchCard('demo-card-partial', loyaltyProgram.id, partialPunches)],
     loyaltyPrograms: [loyaltyProgram],
     renderOnBackgroundColor: 'white',
   });
 
-
-
-  const step5PreviewUrl =  dashboardPreviewService.getPreviewUrl({
-    cards: [createMockPunchCard('demo-card-2', loyaltyProgram.id, loyaltyProgram.requiredPunches)],
+  const step4FullPreviewUrl = dashboardPreviewService.getPreviewUrl({
+    cards: [createMockPunchCard('demo-card-full', loyaltyProgram.id, fullPunches)],
     loyaltyPrograms: [loyaltyProgram],
-    selectedCardId: 'demo-card-2',
+    renderOnBackgroundColor: 'white',
+  });
+
+  const step5PreviewUrl = dashboardPreviewService.getPreviewUrl({
+    cards: [createMockPunchCard('demo-card-reward', loyaltyProgram.id, fullPunches)],
+    loyaltyPrograms: [loyaltyProgram],
+    selectedCardId: 'demo-card-reward',
     renderOnBackgroundColor: 'white',
   });
 
@@ -156,14 +163,19 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={4}
             role="customer"
-            title="Punch card fills up (7/10)"
-            note="Visual progress tracking"
+            title={`Card fills up over time (${partialPunches}/${fullPunches} → ${fullPunches}/${fullPunches})`}
+            note="Visual progress tracking with each visit"
             showArrow={true}
           >
             <div className={styles.singleStep}>
-              <div className={styles.commonPhoneContainer}>
-                <PhoneWithUserApp src={step4PreviewUrl} />
-              </div>
+              <TwoScreenFlow
+                firstScreen={
+                  <PhoneWithUserApp src={step4PartialPreviewUrl} />
+                }
+                secondScreen={
+                  <PhoneWithUserApp src={step4FullPreviewUrl} />
+                }
+              />
             </div>
           </WorkflowStep>
 
