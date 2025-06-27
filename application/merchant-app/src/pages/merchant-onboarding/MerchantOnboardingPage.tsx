@@ -9,7 +9,7 @@ import {
   TopContactBar,
   HeroSection,
   HowItWorksSection,
-  ReplacementHighlightSection,
+  PhysicalVSDigigalCoparisonSection,
   FeaturesSection,
   FuturePlansSection,
   BenefitsSection,
@@ -157,7 +157,7 @@ export const MerchantOnboardingPage: React.FC = () => {
         />
       )}
 
-      <ReplacementHighlightSection />
+      <PhysicalVSDigigalCoparisonSection />
 
       <FeaturesSection />
 

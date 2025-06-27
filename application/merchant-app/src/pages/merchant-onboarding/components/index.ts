@@ -1,7 +1,7 @@
 export { TopContactBar } from './TopContactBar';
 export { HeroSection } from './HeroSection';
 export { HowItWorksSection } from './HowItWorksSection';
-export { ReplacementHighlightSection } from './ReplacementHighlightSection';
+export { PhysicalVSDigigalCoparisonSection } from './PhysicalVSDigigalCoparisonSection';
 export { FeaturesSection } from './FeaturesSection';
 export { FuturePlansSection } from './FuturePlansSection';
 export { BenefitsSection } from './BenefitsSection';
