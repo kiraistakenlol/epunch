@@ -80,7 +80,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
                 <div className={styles.qrCodeImageContainer}>
                   <img
                     src={onboardingImageUrl}
-                    alt="Your QR Code for customers to scan"
+                    alt="Your QR Code for clients to scan"
                     className={styles.qrCodeImage}
                   />
                 </div>
@@ -95,7 +95,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={2}
             role="customer"
-            title="Customer scans your QR code"
+            title="Scans your QR code"
             note="Opens ePunch instantly, no app download"
             showArrow={true}
           >
@@ -134,7 +134,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
                   <PhoneFrame>
                     <MerchantAppMobileFrameMockup merchant={merchant}>
                       <MerchantScannerPageMockup frameSize={150} frameOffsetY={-35}>
-                        <div style={{width: '200px', aspectRatio: '375 / 667'}}>
+                        <div style={{width: '150px', aspectRatio: '375 / 667'}}>
                           <PhoneWithUserApp src={userAppUrl} />
                         </div>
                       </MerchantScannerPageMockup>
@@ -169,7 +169,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={5}
             role="customer"
-            title="Shows reward QR when ready"
+            title="Shows reward QR when card is full (10/10)"
             note="Special QR appears when card is full"
             showArrow={true}
           >
@@ -192,7 +192,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
                 firstScreen={
                   <PhoneFrame>
                     <MerchantAppMobileFrameMockup merchant={merchant}>
-                      <MerchantScannerPageMockup>
+                      <MerchantScannerPageMockup frameSize={150} frameOffsetY={-20} >
                         <div style={{width: '70%', height: '100%', paddingTop: '10%'}}>
                           <PhoneWithUserApp src={step5PreviewUrl} />
                         </div>
@@ -217,7 +217,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={7}
             role="customer"
-            title="Customer gets reward"
+            title="Client gets reward"
             note={primaryLoyaltyProgram.rewardDescription || "Free coffee, discount, or whatever you offer!"}
           >
             <div className={styles.singleStep}>
@@ -245,7 +245,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
               <h4>❌ Old Way</h4>
               <ul>
                 <li>Print thousands of cards</li>
-                <li>Customers lose cards</li>
+                <li>Client lose cards</li>
                 <li>Cards get damaged</li>
                 <li>Expensive to replace</li>
               </ul>

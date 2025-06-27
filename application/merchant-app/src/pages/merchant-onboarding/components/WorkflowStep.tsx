@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './WorkflowStep.module.css';
 
-export const CLIENT_NAME = 'your client';
+export const CLIENT_NAME = 'client';
 
 interface WorkflowStepProps {
   stepNumber: number;
