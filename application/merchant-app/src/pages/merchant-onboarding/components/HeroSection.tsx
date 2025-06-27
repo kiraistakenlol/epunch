@@ -17,7 +17,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     <section className={styles.hero}>
       <div className={styles.heroContent}>
         <div className={styles.heroText}>
-          <div className={styles.brandTitle}>ePunch</div>
           <h1 className={styles.heroTitle}>
             Digital Loyalty Cards<br />
             for <span className={styles.merchantName}>{merchant.name}</span>
@@ -33,7 +32,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         <div className={styles.heroDemo}>
           <div className={styles.problemSolution}>
             <div className={styles.problemCard}>
-              <h4 className={styles.problemTitle}>Old Way</h4>
               <div className={styles.physicalCard}>
                 <div className={styles.cardHeader}>
                   <span className={styles.merchantName}>{merchant.name}</span>
@@ -58,11 +56,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
 
             <div className={styles.solutionCard}>
-              <h4 className={styles.solutionTitle}>New Way</h4>
               <div className={styles.phoneWithEpunch}>
-                <div className={styles.regularPhoneContainer}>
-                  <PhoneWithUserApp src={userAppUrl} />
-                </div>
+                <PhoneWithUserApp src={userAppUrl} />
               </div>
             </div>
           </div>
