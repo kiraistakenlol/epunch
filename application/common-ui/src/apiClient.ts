@@ -288,6 +288,14 @@ export const apiClient = {
     return response.data;
   },
 
+  async getMerchantBySlug(slug: string): Promise<MerchantDto> {
+    if (!slug) {
+      return Promise.reject(new Error('Merchant slug is required.'));
+    }
+    const response = await instance.get<MerchantDto>(`/merchants/by-slug/${encodeURIComponent(slug)}`);
+    return response.data;
+  },
+
   async createPunchCard(userId: string, createPunchCardDto: CreatePunchCardDto): Promise<PunchCardDto> {
     if (!userId) {
       return Promise.reject(new Error('User ID is required.'));

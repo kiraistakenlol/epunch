@@ -24,13 +24,7 @@ export const useMerchantOnboarding = () => {
       window.history.replaceState({}, '', url.toString());
 
       try {
-        const merchants = await apiClient.getAllMerchants(merchantSlug);
-        if (merchants.length === 0) {
-          console.warn(`Merchant with slug ${merchantSlug} not found`);
-          return;
-        }
-
-        const merchant = merchants[0];
+        const merchant = await apiClient.getMerchantBySlug(merchantSlug);
         const loyaltyPrograms = await apiClient.getMerchantLoyaltyPrograms(merchant.id);
 
         for (const program of loyaltyPrograms) {

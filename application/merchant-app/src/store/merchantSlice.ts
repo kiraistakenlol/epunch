@@ -30,11 +30,8 @@ export const fetchMerchantBySlug = createAsyncThunk(
   'merchant/fetchMerchantBySlug',
   async (slug: string, { rejectWithValue }) => {
     try {
-      const merchants = await apiClient.getAllMerchants(slug);
-      if (merchants.length === 0) {
-        throw new Error(`Merchant with slug ${slug} not found`);
-      }
-      return merchants[0];
+      const merchant = await apiClient.getMerchantBySlug(slug);
+      return merchant;
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to fetch merchant data');
     }

@@ -15,6 +15,13 @@ export class MerchantController {
     return this.merchantService.getAllMerchants();
   }
 
+  @Get('by-slug/:slug')
+  async getMerchantBySlug(
+    @Param('slug') slug: string,
+  ): Promise<MerchantDto> {
+    return this.merchantService.getMerchantBySlug(slug);
+  }
+
   @Get(':merchantId')
   async getMerchantById(
     @Param('merchantId', ParseUUIDPipe) merchantId: string,
