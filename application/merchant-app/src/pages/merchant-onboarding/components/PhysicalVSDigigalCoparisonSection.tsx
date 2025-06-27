@@ -5,38 +5,40 @@ export const PhysicalVSDigigalCoparisonSection: React.FC = () => {
   return (
     <section className={styles.section}>
       <div className={styles.container}>
-        <h3>Physical vs Digital</h3>
-        <p className={styles.subtitle}>See the difference for your business</p>
+        <h2 className={styles.title}>Why Your Customers Don't Come Back</h2>
+        <p className={styles.subtitle}>Most businesses lose 70% of customers after the first visit</p>
         
-        <div className={styles.comparison}>
-          <div className={styles.physical}>
-            <div className={styles.header}>
-              <h4>Traditional Paper</h4>
-            </div>
-            <ul>
-              <li>Can be forgotten or lost</li>
-              <li>Costs to print and replace</li>
-              <li>No analytics</li>
-              <li>Takes up counter space</li>
-            </ul>
+        <div className={styles.problemsGrid}>
+          <div className={styles.problem}>
+            <div className={styles.problemIcon}>👻</div>
+            <h3 className={styles.problemTitle}>One & Done Customers</h3>
+            <p className={styles.problemDescription}>
+              They buy once, leave happy, but have no reason to choose you over competitors next time.
+            </p>
           </div>
           
-          <div className={styles.vsElement}>
-            <span>VS</span>
+          <div className={styles.problem}>
+            <div className={styles.problemIcon}>🔗</div>
+            <h3 className={styles.problemTitle}>No Ongoing Relationship</h3>
+            <p className={styles.problemDescription}>
+              After they leave, there's no connection. You can't communicate with them or encourage referrals – word-of-mouth happens by chance.
+            </p>
           </div>
           
-          <div className={styles.digital}>
-            <div className={styles.header}>
-              <h4>Digital Solution</h4>
-            </div>
-            <ul>
-              <li>Always in customer's phone</li>
-              <li>Zero printing costs</li>
-              <li>Real-time analytics</li>
-              <li>Instant customer engagement</li>
-            </ul>
-            <span className={styles.recommended}>Recommended</span>
+          <div className={styles.problem}>
+            <div className={styles.problemIcon}>📉</div>
+            <h3 className={styles.problemTitle}>Missing Revenue</h3>
+            <p className={styles.problemDescription}>
+              Without loyalty programs, you're leaving money on the table. Loyal customers are worth significantly more over time.
+            </p>
           </div>
+        </div>
+        
+        <div className={styles.solutionTeaser}>
+          <div className={styles.arrow}>↓</div>
+          <p className={styles.teaserText}>
+            <strong>What if you could turn every customer into a regular?</strong>
+          </p>
         </div>
       </div>
     </section>

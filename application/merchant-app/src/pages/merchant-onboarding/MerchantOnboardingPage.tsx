@@ -147,6 +147,10 @@ export const MerchantOnboardingPage: React.FC = () => {
         loyaltyPrograms={loyaltyPrograms}
       />
 
+      <PhysicalVSDigigalCoparisonSection />
+
+      <FeaturesSection />
+
       {!isLoadingLoyaltyPrograms && loyaltyPrograms.length > 0 && (
         <HowItWorksSection
           merchant={merchant}
@@ -157,15 +161,11 @@ export const MerchantOnboardingPage: React.FC = () => {
         />
       )}
 
-      <PhysicalVSDigigalCoparisonSection />
-
-      <FeaturesSection />
-
       <BenefitsSection merchant={merchant} />
 
-      <SocialProofSection />
-
       <FuturePlansSection />
+
+      <SocialProofSection />
 
       <CTASection merchant={merchant} />
     </div>

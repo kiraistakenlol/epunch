@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaWhatsapp, FaTelegram } from 'react-icons/fa';
+import { FaWhatsapp, FaTelegram, FaEnvelope } from 'react-icons/fa';
 import { MerchantDto } from 'e-punch-common-core';
 import styles from './CTASection.module.css';
 
@@ -22,9 +22,12 @@ export const CTASection: React.FC<CTASectionProps> = ({ merchant }) => {
           <a href="https://t.me/sobolevchelovek" className={styles.secondaryButton}>
             <FaTelegram /> Message on Telegram
           </a>
+          <a href="mailto:hello@epunch.app" className={styles.secondaryButton}>
+            <FaEnvelope /> Send Email
+          </a>
         </div>
         <div className={styles.contactInfo}>
-          <p>+7 925 041 9362 | @sobolevchelovek</p>
+          <p>+7 925 041 9362 | @sobolevchelovek | hello@epunch.app</p>
         </div>
       </div>
     </section>
