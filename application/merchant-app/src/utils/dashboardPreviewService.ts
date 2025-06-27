@@ -6,7 +6,6 @@ export interface DashboardPreviewParams {
   loyaltyPrograms: LoyaltyProgramDto[];
   selectedCardId?: string;
   completionOverlayCardId?: string;
-  authState?: 'authenticated' | 'unauthenticated' | 'loading';
   renderOnBackgroundColor?: string;
 }
 
@@ -33,11 +32,9 @@ class DashboardPreviewService {
       loyaltyPrograms,
       selectedCardId,
       completionOverlayCardId,
-      authState = 'authenticated',
       renderOnBackgroundColor = 'white'
     } = params;
 
-    previewUrl.searchParams.set('authState', authState);
     previewUrl.searchParams.set('renderOnBackgroundColor', renderOnBackgroundColor);
     previewUrl.searchParams.set('loyaltyPrograms', JSON.stringify(loyaltyPrograms));
 

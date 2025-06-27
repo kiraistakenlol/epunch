@@ -4,7 +4,7 @@ import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { fetchMerchantBySlug } from '../../store/merchantSlice';
 import { generateOnboardingImage } from '../../utils/onboardingImageUtil';
 import { apiClient, appColors } from 'e-punch-common-ui';
-import { PunchCardStyleDto, LoyaltyProgramDto } from 'e-punch-common-core';
+import { PunchCardStyleDto, LoyaltyProgramDto, emptyPunchCardStyle } from 'e-punch-common-core';
 import {
   TopContactBar,
   HeroSection,
@@ -44,7 +44,7 @@ export const MerchantOnboardingPage: React.FC = () => {
     if (merchant && merchantStyle && loyaltyPrograms.length > 0 && !onboardingImageUrl && !isGeneratingImage) {
       generateOnboardingImagePreview();
     }
-  }, [merchant, merchantStyle, loyaltyPrograms]);
+  }, [merchant, merchantStyle, loyaltyPrograms, onboardingImageUrl, isGeneratingImage]);
 
   const fetchMerchantData = async () => {
     if (!merchant) return;
@@ -144,11 +144,15 @@ export const MerchantOnboardingPage: React.FC = () => {
         loyaltyPrograms={loyaltyPrograms}
       />
 
-      <HowItWorksSection
-        merchant={merchant}
-        userAppUrl={userAppUrl}
-        loyaltyPrograms={loyaltyPrograms}
-      />
+      {!isLoadingLoyaltyPrograms && loyaltyPrograms.length > 0 && (
+        <HowItWorksSection
+          merchant={merchant}
+          userAppUrl={userAppUrl}
+          loyaltyPrograms={loyaltyPrograms}
+          punchCardStyle={merchantStyle || emptyPunchCardStyle}
+          onboardingImageUrl={onboardingImageUrl}
+        />
+      )}
 
       <BenefitsSection merchant={merchant} />
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { MerchantDto } from 'e-punch-common-core';
-import { appColors } from 'e-punch-common-ui';
+import { MerchantPageMockup } from './MerchantPageMockup';
+import { MerchantActionButton } from './MerchantActionButton';
 import styles from './MerchantCustomerScanResult.module.css';
 
 interface MerchantCustomerScanResultProps {
@@ -9,7 +10,6 @@ interface MerchantCustomerScanResultProps {
 }
 
 export const MerchantCustomerScanResult: React.FC<MerchantCustomerScanResultProps> = ({
-  merchant,
   className = ''
 }) => {
   const [selectedProgram, setSelectedProgram] = useState<'rewards' | 'vip'>('rewards');
@@ -28,7 +28,7 @@ export const MerchantCustomerScanResult: React.FC<MerchantCustomerScanResultProp
   ];
 
   return (
-    <div className={`${styles.scanResultContent} ${className}`}>
+    <MerchantPageMockup className={className}>
       <div className={styles.scanResultHeader}>
         <h3>Select Loyalty Program</h3>
       </div>
@@ -49,9 +49,7 @@ export const MerchantCustomerScanResult: React.FC<MerchantCustomerScanResultProp
           </div>
         ))}
       </div>
-      <div className={styles.actionButtonContainer}>
-        <div className={styles.punchButton}>PUNCH</div>
-      </div>
-    </div>
+      <MerchantActionButton>PUNCH</MerchantActionButton>
+    </MerchantPageMockup>
   );
 }; 

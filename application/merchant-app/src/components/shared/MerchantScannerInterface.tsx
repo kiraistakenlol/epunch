@@ -20,7 +20,7 @@ export const MerchantScannerPageMockup: React.FC<MerchantScannerPageMockupProps>
   return (
     <div className={`${styles.scannerInterface} ${className}`}>
       <div className={styles.scannerHeader}>
-        <h2 className={styles.scannerTitle}>QR Code Scanner</h2>
+        <h2 className={styles.scannerTitle}>Scanner</h2>
         <p className={styles.scannerSubtitle}>Point camera at customer QR code</p>
       </div>
       <div className={styles.scannerViewfinder}>

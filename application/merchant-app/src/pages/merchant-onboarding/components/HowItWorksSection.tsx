@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React from 'react';
 import { MerchantDto, PunchCardDto, PunchCardStyleDto, LoyaltyProgramDto, emptyPunchCardStyle } from 'e-punch-common-core';
 import { WorkflowStep } from './WorkflowStep';
 import {
@@ -12,129 +12,54 @@ import {
   CameraInterface
 } from '../../../components/shared';
 import { dashboardPreviewService } from '../../../utils/dashboardPreviewService';
-import { generateOnboardingImage } from '../../../utils/onboardingImageUtil';
-import { apiClient, appColors } from 'e-punch-common-ui';
 import styles from './HowItWorksSection.module.css';
 
 interface HowItWorksSectionProps {
   merchant: MerchantDto;
   userAppUrl: string;
   loyaltyPrograms: LoyaltyProgramDto[];
+  punchCardStyle: PunchCardStyleDto;
+  onboardingImageUrl: string | null;
 }
 
 export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
   merchant,
   userAppUrl,
-  loyaltyPrograms
+  loyaltyPrograms,
+  punchCardStyle,
+  onboardingImageUrl
 }) => {
-  const [onboardingImageUrl, setOnboardingImageUrl] = useState<string | null>(null);
-  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
-  const [merchantStyle, setMerchantStyle] = useState<PunchCardStyleDto | null>(null);
-
-  useEffect(() => {
-    if (merchant) {
-      fetchMerchantStyle();
-    }
-  }, [merchant]);
-
-  useEffect(() => {
-    if (merchant && merchantStyle && loyaltyPrograms.length > 0 && !onboardingImageUrl && !isGeneratingImage) {
-      generateOnboardingImagePreview();
-    }
-  }, [merchant, merchantStyle, loyaltyPrograms]);
-
-  const fetchMerchantStyle = async () => {
-    if (!merchant) return;
-
-    try {
-      const style = await apiClient.getMerchantDefaultPunchCardStyle(merchant.id);
-      setMerchantStyle(style);
-      return style;
-    } catch (error: any) {
-      console.error('Failed to fetch merchant style:', error);
-      const defaultStyle = {
-        primaryColor: appColors.epunchOrangeDark,
-        secondaryColor: appColors.epunchWhite,
-        logoUrl: null,
-        backgroundImageUrl: null,
-        punchIcons: null
-      };
-      setMerchantStyle(defaultStyle);
-      return defaultStyle;
-    }
-  };
-
-  const generateOnboardingImagePreview = async () => {
-    if (!merchant || !merchantStyle) return;
-
-    try {
-      setIsGeneratingImage(true);
-      const backgroundColor = appColors.epunchBrown;
-      const qrBackgroundColor = appColors.epunchWhite;
-      const titleColor = appColors.epunchWhite;
-      
-      const imageDataUrl = await generateOnboardingImage(
-        merchant,
-        backgroundColor,
-        qrBackgroundColor,
-        titleColor,
-        merchant.name,
-        loyaltyPrograms[0]?.name || `${merchant.name} Rewards`
-      );
-      setOnboardingImageUrl(imageDataUrl);
-    } catch (error: any) {
-      console.error('Failed to generate onboarding image:', error);
-    } finally {
-      setIsGeneratingImage(false);
-    }
-  };
 
   const createMockPunchCard = (id: string, loyaltyProgramId: string, currentPunches: number, totalPunches?: number): PunchCardDto => {
     const program = loyaltyPrograms[0];
+    const requiredPunches = totalPunches || program.requiredPunches;
     return {
       id,
       loyaltyProgramId,
       shopName: merchant.name,
       shopAddress: merchant.address || '',
       currentPunches,
-      totalPunches: totalPunches || program?.requiredPunches || 10,
-      status: currentPunches >= (totalPunches || program?.requiredPunches || 10) ? 'REWARD_READY' : 'ACTIVE',
+      totalPunches: requiredPunches,
+      status: currentPunches >= requiredPunches ? 'REWARD_READY' : 'ACTIVE',
       createdAt: new Date().toISOString(),
-      styles: merchantStyle || emptyPunchCardStyle
+      styles: punchCardStyle
     };
   };
 
-  if (loyaltyPrograms.length === 0) {
-    return (
-      <section className={styles.howItWorks}>
-        <div className={styles.sectionContent}>
-          <h2 className={styles.sectionTitle}>How It Works</h2>
-          <div className={styles.infoMessage}>
-            <h3>📋 Setup Required</h3>
-            <p>To see how ePunch works, you'll need to create at least one loyalty program first.</p>
-            <p>Go to your dashboard and set up your first loyalty program to see the complete customer experience.</p>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
   const primaryLoyaltyProgram = loyaltyPrograms[0];
 
-  const step4PreviewUrl = merchantStyle ? dashboardPreviewService.getPreviewUrl({
+  const step4PreviewUrl = dashboardPreviewService.getPreviewUrl({
     cards: [createMockPunchCard('demo-card-1', primaryLoyaltyProgram.id, 7)],
     loyaltyPrograms: [primaryLoyaltyProgram],
-    authState: 'authenticated',
     renderOnBackgroundColor: 'white',
-  }) : '';
+  });
 
-  const step5PreviewUrl = merchantStyle ? dashboardPreviewService.getPreviewUrl({
+  const step5PreviewUrl =  dashboardPreviewService.getPreviewUrl({
     cards: [createMockPunchCard('demo-card-2', primaryLoyaltyProgram.id, primaryLoyaltyProgram.requiredPunches)],
     loyaltyPrograms: [primaryLoyaltyProgram],
     selectedCardId: 'demo-card-2',
-    authState: 'authenticated',
     renderOnBackgroundColor: 'white',
-  }) : '';
+  });
 
   return (
     <section className={styles.howItWorks}>
@@ -286,7 +211,10 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
                 secondScreen={
                   <PhoneFrame>
                     <MerchantAppMobileFrameMockup merchant={merchant}>
-                      <MerchantPunchCardRedeemResult merchant={merchant} />
+                      <MerchantPunchCardRedeemResult 
+                        merchant={merchant} 
+                        loyaltyProgram={primaryLoyaltyProgram}
+                      />
                     </MerchantAppMobileFrameMockup>
                   </PhoneFrame>
                 }
