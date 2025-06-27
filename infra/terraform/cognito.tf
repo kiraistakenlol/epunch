@@ -58,69 +58,10 @@ resource "aws_cognito_user_pool_client" "main" {
   supported_identity_providers = ["COGNITO", "Google"]
 }
 
-# ACM Certificate for Cognito Custom Domain (must be in us-east-1)
-resource "aws_acm_certificate" "cognito_custom_domain" {
-  provider    = aws.us_east_1
-  domain_name = local.cognito_custom_domain
-  
-  validation_method = "DNS"
-  
-  lifecycle {
-    create_before_destroy = true
-  }
-  
-  tags = {
-    Name        = "epunch-${var.environment}-cognito-cert"
-    Environment = var.environment
-  }
-}
-
-# Certificate validation records
-resource "aws_route53_record" "cognito_cert_validation" {
-  for_each = {
-    for dvo in aws_acm_certificate.cognito_custom_domain.domain_validation_options : dvo.domain_name => {
-      name   = dvo.resource_record_name
-      record = dvo.resource_record_value
-      type   = dvo.resource_record_type
-    }
-  }
-
-  allow_overwrite = true
-  name            = each.value.name
-  records         = [each.value.record]
-  ttl             = 60
-  type            = each.value.type
-  zone_id         = local.zone_id
-}
-
-# Certificate validation
-resource "aws_acm_certificate_validation" "cognito_custom_domain" {
-  provider        = aws.us_east_1
-  certificate_arn = aws_acm_certificate.cognito_custom_domain.arn
-  validation_record_fqdns = [for record in aws_route53_record.cognito_cert_validation : record.fqdn]
-}
-
-# Cognito Custom Domain
+# Cognito Domain
 resource "aws_cognito_user_pool_domain" "main" {
-  depends_on      = [aws_acm_certificate_validation.cognito_custom_domain]
-  domain          = local.cognito_custom_domain
-  certificate_arn = aws_acm_certificate.cognito_custom_domain.arn
-  user_pool_id    = aws_cognito_user_pool.main.id
-}
-
-# Route53 record for custom domain
-resource "aws_route53_record" "cognito_custom_domain" {
-  depends_on = [aws_cognito_user_pool_domain.main]
-  
-  zone_id = local.zone_id
-  name    = local.cognito_custom_domain
-  type    = "A"
-  
-  alias {
-    name                   = aws_cognito_user_pool_domain.main.cloudfront_distribution_arn
-    zone_id                = "Z2FDTNDATAQYW2" # CloudFront hosted zone ID
-    evaluate_target_health = false
-  }
+  domain       = "epunch-${var.environment}"
+  user_pool_id = aws_cognito_user_pool.main.id
 }
 
 # Google Identity Provider

@@ -20,14 +20,3 @@ terraform {
     }
   }
 }
-
-# Default AWS provider
-provider "aws" {
-  region = var.aws_region
-}
-
-# AWS provider for us-east-1 (required for ACM certificates for Cognito)
-provider "aws" {
-  alias  = "us_east_1"
-  region = "us-east-1"
-}
