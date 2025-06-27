@@ -10,7 +10,6 @@ const DashboardPreviewPage: React.FC = () => {
   const cardsParam = searchParams.get('cards');
   const selectedCardId = searchParams.get('selectedCardId') || undefined;
   const completionOverlayCardId = searchParams.get('completionOverlayCardId') || undefined;
-  const authState = searchParams.get('authState') || 'authenticated';
   const renderOnBackgroundColor = searchParams.get('renderOnBackgroundColor') || 'white';
   
   // Parse cards JSON
@@ -29,7 +28,6 @@ const DashboardPreviewPage: React.FC = () => {
     cards,
     selectedCardId,
     completionOverlayCardId,
-    authState,
     renderOnBackgroundColor
   };
 

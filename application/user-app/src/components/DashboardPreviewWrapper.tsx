@@ -118,7 +118,7 @@ const createPreviewStore = (
   });
 };
 
-const createDefaultCards = (merchantSlug: string): PunchCardDto[] => {
+const createDefaultCards = (): PunchCardDto[] => {
   return [
     {
       id: 'preview-card-1',
@@ -158,7 +158,6 @@ const createDefaultCards = (merchantSlug: string): PunchCardDto[] => {
 };
 
 export const DashboardPreviewWrapper: React.FC<DashboardPreviewWrapperProps> = ({
-  merchantSlug,
   cards,
   selectedCardId,
   completionOverlayCardId,
@@ -166,8 +165,8 @@ export const DashboardPreviewWrapper: React.FC<DashboardPreviewWrapperProps> = (
   renderOnBackgroundColor = 'white'
 }) => {
   // Use provided cards or generate default ones
-  const previewCards = cards || (merchantSlug ? createDefaultCards(merchantSlug) : []);
-  
+  const previewCards = cards || createDefaultCards();
+
   // Resolve card styles for all cards
   const cardsWithResolvedStyles = previewCards.map(card => ({
     ...card,
@@ -175,15 +174,15 @@ export const DashboardPreviewWrapper: React.FC<DashboardPreviewWrapperProps> = (
   }));
 
   const store = createPreviewStore(
-    cardsWithResolvedStyles, 
-    selectedCardId, 
-    completionOverlayCardId, 
+    cardsWithResolvedStyles,
+    selectedCardId,
+    completionOverlayCardId,
     authState
   );
 
   return (
     <Provider store={store}>
-      <div 
+      <div
         className={styles.previewContainer}
         style={{ backgroundColor: renderOnBackgroundColor }}
       >

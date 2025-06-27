@@ -3,7 +3,6 @@ export { AppLayout } from './AppLayout';
 export { CameraInterface } from './CameraInterface';
 export { DeviceFrameset } from './DeviceFrameset';
 export { PhoneFrame } from './PhoneFrame';
-export { PhoneFrameNew } from './PhoneFrameNew';
 export { UserAppIframeView } from './UserAppIframeView';
 export { PhoneWithUserApp } from './PhoneWithUserApp';
 export { MerchantAppMobileFrameMockup } from './MerchantAppMobileFrameMockup';

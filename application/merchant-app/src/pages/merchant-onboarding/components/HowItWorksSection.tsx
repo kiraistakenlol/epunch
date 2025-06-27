@@ -3,7 +3,6 @@ import { MerchantDto, PunchCardDto, PunchCardStyleDto } from 'e-punch-common-cor
 import { WorkflowStep } from './WorkflowStep';
 import {
   PhoneFrame,
-  PhoneFrameNew,
   MerchantAppMobileFrameMockup,
   MerchantScannerPageMockup,
   MerchantCustomerScanResult,
@@ -183,7 +182,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
             <div className={styles.singleStep}>
               <TwoScreenFlow
                 firstScreen={
-                  <PhoneFrameNew>
+                  <PhoneFrame>
                     <CameraInterface frameOffsetX={-60} frameOffsetY={15} frameSize={100}>
                     {onboardingImageUrl && (
                           <img
@@ -193,7 +192,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
                           />
                         )}
                     </CameraInterface>
-                  </PhoneFrameNew>
+                  </PhoneFrame>
                 }
                 secondScreen={
                   <PhoneWithUserApp src={userAppUrl} />
