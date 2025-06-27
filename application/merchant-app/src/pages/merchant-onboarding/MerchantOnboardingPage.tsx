@@ -4,7 +4,7 @@ import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { fetchMerchantBySlug } from '../../store/merchantSlice';
 import { generateOnboardingImage } from '../../utils/onboardingImageUtil';
 import { apiClient, appColors } from 'e-punch-common-ui';
-import { PunchCardStyleDto } from 'e-punch-common-core';
+import { PunchCardStyleDto, LoyaltyProgramDto } from 'e-punch-common-core';
 import {
   TopContactBar,
   HeroSection,
@@ -25,6 +25,8 @@ export const MerchantOnboardingPage: React.FC = () => {
   const [onboardingImageUrl, setOnboardingImageUrl] = useState<string | null>(null);
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const [merchantStyle, setMerchantStyle] = useState<PunchCardStyleDto | null>(null);
+  const [loyaltyPrograms, setLoyaltyPrograms] = useState<LoyaltyProgramDto[]>([]);
+  const [isLoadingLoyaltyPrograms, setIsLoadingLoyaltyPrograms] = useState(true);
 
   useEffect(() => {
     if (merchantSlug) {
@@ -33,16 +35,29 @@ export const MerchantOnboardingPage: React.FC = () => {
   }, [merchantSlug, dispatch]);
 
   useEffect(() => {
-    if (merchant && !merchantStyle) {
-      fetchMerchantStyle();
+    if (merchant) {
+      fetchMerchantData();
     }
   }, [merchant]);
 
   useEffect(() => {
-    if (merchant && merchantStyle && !onboardingImageUrl && !isGeneratingImage) {
+    if (merchant && merchantStyle && loyaltyPrograms.length > 0 && !onboardingImageUrl && !isGeneratingImage) {
       generateOnboardingImagePreview();
     }
-  }, [merchant, merchantStyle]);
+  }, [merchant, merchantStyle, loyaltyPrograms]);
+
+  const fetchMerchantData = async () => {
+    if (!merchant) return;
+
+    try {
+      await Promise.all([
+        fetchMerchantStyle(),
+        fetchLoyaltyPrograms()
+      ]);
+    } catch (error: any) {
+      console.error('Failed to fetch merchant data:', error);
+    }
+  };
 
   const fetchMerchantStyle = async () => {
     if (!merchant) return;
@@ -50,15 +65,36 @@ export const MerchantOnboardingPage: React.FC = () => {
     try {
       const style = await apiClient.getMerchantDefaultPunchCardStyle(merchant.id);
       setMerchantStyle(style);
+      return style;
     } catch (error: any) {
       console.error('Failed to fetch merchant style:', error);
-      setMerchantStyle({
+      const defaultStyle = {
         primaryColor: appColors.epunchOrangeDark,
         secondaryColor: appColors.epunchWhite,
         logoUrl: null,
         backgroundImageUrl: null,
         punchIcons: null
-      });
+      };
+      setMerchantStyle(defaultStyle);
+      return defaultStyle;
+    }
+  };
+
+  const fetchLoyaltyPrograms = async () => {
+    if (!merchant) return;
+
+    try {
+      setIsLoadingLoyaltyPrograms(true);
+      const programs = await apiClient.getMerchantLoyaltyPrograms(merchant.id);
+      const sortedPrograms = [...programs].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+      setLoyaltyPrograms(sortedPrograms);
+      return programs;
+    } catch (error: any) {
+      console.error('Failed to fetch loyalty programs:', error);
+      setLoyaltyPrograms([]);
+      return [];
+    } finally {
+      setIsLoadingLoyaltyPrograms(false);
     }
   };
 
@@ -77,7 +113,7 @@ export const MerchantOnboardingPage: React.FC = () => {
         qrBackgroundColor,
         titleColor,
         merchant.name,
-        `${merchant.name} Rewards`
+        loyaltyPrograms[0]?.name || `${merchant.name} Rewards`
       );
       setOnboardingImageUrl(imageDataUrl);
     } catch (error: any) {
@@ -87,7 +123,7 @@ export const MerchantOnboardingPage: React.FC = () => {
     }
   };
 
-  if (merchantLoading) {
+  if (merchantLoading || isLoadingLoyaltyPrograms) {
     return <LoadingState />;
   }
 
@@ -105,11 +141,13 @@ export const MerchantOnboardingPage: React.FC = () => {
       <HeroSection
         merchant={merchant}
         userAppUrl={userAppUrl}
+        loyaltyPrograms={loyaltyPrograms}
       />
 
       <HowItWorksSection
         merchant={merchant}
         userAppUrl={userAppUrl}
+        loyaltyPrograms={loyaltyPrograms}
       />
 
       <BenefitsSection merchant={merchant} />

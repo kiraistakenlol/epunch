@@ -28,3 +28,11 @@ export interface FileUploadResponseDto {
   uploadUrl: string;
   publicUrl: string;
 } 
+
+export const emptyPunchCardStyle: PunchCardStyleDto = {
+  primaryColor: null,
+  secondaryColor: null,
+  logoUrl: null,
+  backgroundImageUrl: null,
+  punchIcons: null
+}

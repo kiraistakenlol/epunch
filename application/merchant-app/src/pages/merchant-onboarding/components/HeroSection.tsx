@@ -1,16 +1,24 @@
 import React from 'react';
-import { MerchantDto } from 'e-punch-common-core';
+import { MerchantDto, LoyaltyProgramDto } from 'e-punch-common-core';
 import { PhoneWithUserApp } from '../../../components/shared';
 import styles from './HeroSection.module.css';
 
 interface HeroSectionProps {
   merchant: MerchantDto;
   userAppUrl: string;
+  loyaltyPrograms: LoyaltyProgramDto[];
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
   merchant,
-  userAppUrl }) => {
+  userAppUrl,
+  loyaltyPrograms
+}) => {
+  const primaryLoyaltyProgram = loyaltyPrograms[0];
+  const requiredPunches = primaryLoyaltyProgram?.requiredPunches || 10;
+  const currentPunches = Math.floor(requiredPunches * 0.7);
+  const rewardDescription = primaryLoyaltyProgram?.rewardDescription || 'Collect 10 punches for free coffee';
+
   return (
     <section className={styles.hero}>
       <div className={styles.heroContent}>
@@ -36,16 +44,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   <span className={styles.cardSubtitle}>Loyalty Card</span>
                 </div>
                 <div className={styles.punchGrid}>
-                  {[...Array(10)].map((_, i) => (
+                  {[...Array(requiredPunches)].map((_, i) => (
                     <div
                       key={i}
-                      className={`${styles.punchHole} ${i < 7 ? styles.punched : ''}`}
+                      className={`${styles.punchHole} ${i < currentPunches ? styles.punched : ''}`}
                     >
-                      {i < 7 ? '●' : '○'}
+                      {i < currentPunches ? '●' : '○'}
                     </div>
                   ))}
                 </div>
-                <div className={styles.cardFooter}>Collect 10 punches for free coffee</div>
+                <div className={styles.cardFooter}>{rewardDescription}</div>
               </div>
             </div>
 

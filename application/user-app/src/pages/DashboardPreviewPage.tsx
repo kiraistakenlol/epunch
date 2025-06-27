@@ -8,6 +8,7 @@ const DashboardPreviewPage: React.FC = () => {
   // Parse URL parameters
   const merchantSlug = searchParams.get('merchantSlug');
   const cardsParam = searchParams.get('cards');
+  const loyaltyProgramsParam = searchParams.get('loyaltyPrograms');
   const selectedCardId = searchParams.get('selectedCardId') || undefined;
   const completionOverlayCardId = searchParams.get('completionOverlayCardId') || undefined;
   const renderOnBackgroundColor = searchParams.get('renderOnBackgroundColor') || 'white';
@@ -23,9 +24,22 @@ const DashboardPreviewPage: React.FC = () => {
     }
   }
 
+  let loyaltyPrograms;
+  if (loyaltyProgramsParam) {
+    try {
+      loyaltyPrograms = JSON.parse(loyaltyProgramsParam);
+    } catch (error) {
+      console.error('Failed to parse loyaltyPrograms parameter:', error);
+      throw new Error('Failed to parse loyalty programs parameter');
+    }
+  } else {
+    throw new Error('Loyalty programs parameter is required');
+  }
+
   const previewProps = {
     merchantSlug,
     cards,
+    loyaltyPrograms,
     selectedCardId,
     completionOverlayCardId,
     renderOnBackgroundColor

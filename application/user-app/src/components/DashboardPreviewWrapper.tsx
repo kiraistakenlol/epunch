@@ -18,6 +18,7 @@ import styles from './DashboardPreviewWrapper.module.css';
 interface DashboardPreviewWrapperProps {
   merchantSlug?: string | null;
   cards?: PunchCardDto[];
+  loyaltyPrograms: LoyaltyProgramDto[];
   selectedCardId?: string;
   completionOverlayCardId?: string;
   authState?: 'authenticated' | 'unauthenticated' | 'loading';
@@ -26,36 +27,22 @@ interface DashboardPreviewWrapperProps {
 
 const createPreviewStore = (
   cards: PunchCardDto[],
+  loyaltyPrograms: LoyaltyProgramDto[],
   selectedCardId?: string,
   completionOverlayCardId?: string,
   authState: 'authenticated' | 'unauthenticated' | 'loading' = 'authenticated'
 ) => {
-  // Create loyalty programs from cards
-  const loyaltyPrograms: { [key: string]: LoyaltyProgramDto } = {};
+  const loyaltyProgramsMap: { [key: string]: LoyaltyProgramDto } = {};
+  loyaltyPrograms.forEach(program => {
+    loyaltyProgramsMap[program.id] = program;
+  });
+
   cards.forEach(card => {
-    if (!loyaltyPrograms[card.loyaltyProgramId]) {
-      loyaltyPrograms[card.loyaltyProgramId] = {
-        id: card.loyaltyProgramId,
-        name: `${card.shopName} Rewards`,
-        description: null,
-        requiredPunches: card.totalPunches,
-        rewardDescription: `${card.totalPunches}th item is free!`,
-        isActive: true,
-        merchant: {
-          id: `merchant-${card.loyaltyProgramId}`,
-          name: card.shopName,
-          address: card.shopAddress,
-          slug: `${card.shopName.toLowerCase().replace(/\s+/g, '-')}`,
-          email: `contact@${card.shopName.toLowerCase().replace(/\s+/g, '')}.com`,
-          logoUrl: card.styles.logoUrl || '',
-          createdAt: new Date().toISOString()
-        } as MerchantDto,
-        createdAt: new Date().toISOString()
-      } as LoyaltyProgramDto;
+    if (!loyaltyProgramsMap[card.loyaltyProgramId]) {
+      throw new Error(`Loyalty program with id ${card.loyaltyProgramId} not found for card ${card.id}`);
     }
   });
 
-  // Mock user ID
   const mockUserId = 'preview-user-123';
 
   return configureStore({
@@ -87,7 +74,7 @@ const createPreviewStore = (
         initialized: true
       },
       loyaltyPrograms: {
-        programs: loyaltyPrograms,
+        programs: loyaltyProgramsMap,
         loading: false,
         error: null
       },
@@ -159,15 +146,14 @@ const createDefaultCards = (): PunchCardDto[] => {
 
 export const DashboardPreviewWrapper: React.FC<DashboardPreviewWrapperProps> = ({
   cards,
+  loyaltyPrograms,
   selectedCardId,
   completionOverlayCardId,
   authState = 'authenticated',
   renderOnBackgroundColor = 'white'
 }) => {
-  // Use provided cards or generate default ones
-  const previewCards = cards || createDefaultCards();
+  const previewCards = cards || [];
 
-  // Resolve card styles for all cards
   const cardsWithResolvedStyles = previewCards.map(card => ({
     ...card,
     resolvedStyles: resolveCardStyles(card.styles)
@@ -175,6 +161,7 @@ export const DashboardPreviewWrapper: React.FC<DashboardPreviewWrapperProps> = (
 
   const store = createPreviewStore(
     cardsWithResolvedStyles,
+    loyaltyPrograms,
     selectedCardId,
     completionOverlayCardId,
     authState

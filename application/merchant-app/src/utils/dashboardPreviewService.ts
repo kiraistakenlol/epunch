@@ -1,8 +1,9 @@
-import { PunchCardDto } from 'e-punch-common-core';
+import { PunchCardDto, LoyaltyProgramDto } from 'e-punch-common-core';
 
 export interface DashboardPreviewParams {
   merchantSlug?: string;
   cards?: PunchCardDto[];
+  loyaltyPrograms: LoyaltyProgramDto[];
   selectedCardId?: string;
   completionOverlayCardId?: string;
   authState?: 'authenticated' | 'unauthenticated' | 'loading';
@@ -29,6 +30,7 @@ class DashboardPreviewService {
     const {
       merchantSlug,
       cards,
+      loyaltyPrograms,
       selectedCardId,
       completionOverlayCardId,
       authState = 'authenticated',
@@ -37,6 +39,7 @@ class DashboardPreviewService {
 
     previewUrl.searchParams.set('authState', authState);
     previewUrl.searchParams.set('renderOnBackgroundColor', renderOnBackgroundColor);
+    previewUrl.searchParams.set('loyaltyPrograms', JSON.stringify(loyaltyPrograms));
 
     if (merchantSlug) previewUrl.searchParams.set('merchantSlug', merchantSlug);
     if (cards) previewUrl.searchParams.set('cards', JSON.stringify(cards));
