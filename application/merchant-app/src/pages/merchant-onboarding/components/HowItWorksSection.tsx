@@ -54,6 +54,12 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
     renderOnBackgroundColor: 'white',
   });
 
+  const step4FullPreviewUrl = dashboardPreviewService.getPreviewUrl({
+    cards: [createMockPunchCard('demo-card-1-full', primaryLoyaltyProgram.id, primaryLoyaltyProgram.requiredPunches)],
+    loyaltyPrograms: [primaryLoyaltyProgram],
+    renderOnBackgroundColor: 'white',
+  });
+
   const step5PreviewUrl =  dashboardPreviewService.getPreviewUrl({
     cards: [createMockPunchCard('demo-card-2', primaryLoyaltyProgram.id, primaryLoyaltyProgram.requiredPunches)],
     loyaltyPrograms: [primaryLoyaltyProgram],
@@ -160,9 +166,14 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
             showArrow={true}
           >
             <div className={styles.singleStep}>
-              <div className={styles.commonPhoneContainer}>
-                <PhoneWithUserApp src={step4PreviewUrl} />
-              </div>
+              <TwoScreenFlow
+                firstScreen={
+                  <PhoneWithUserApp src={step4PreviewUrl} />
+                }
+                secondScreen={
+                  <PhoneWithUserApp src={step4FullPreviewUrl} />
+                }
+              />
             </div>
           </WorkflowStep>
 
@@ -236,30 +247,6 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
               </div>
             </div>
           </WorkflowStep>
-        </div>
-
-        <div className={styles.replacementHighlight}>
-          <h3>🔄 No More Physical Cards</h3>
-          <div className={styles.comparison}>
-            <div className={styles.oldWay}>
-              <h4>❌ Old Way</h4>
-              <ul>
-                <li>Print thousands of cards</li>
-                <li>Client lose cards</li>
-                <li>Cards get damaged</li>
-                <li>Expensive to replace</li>
-              </ul>
-            </div>
-            <div className={styles.newWay}>
-              <h4>✅ ePunch Way</h4>
-              <ul>
-                <li>One QR code - print once</li>
-                <li>Never lose digital cards</li>
-                <li>Always perfect condition</li>
-                <li>Zero ongoing costs</li>
-              </ul>
-            </div>
-          </div>
         </div>
       </div>
     </section>

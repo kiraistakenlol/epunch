@@ -1,6 +1,9 @@
 export { TopContactBar } from './TopContactBar';
 export { HeroSection } from './HeroSection';
 export { HowItWorksSection } from './HowItWorksSection';
+export { ReplacementHighlightSection } from './ReplacementHighlightSection';
+export { FeaturesSection } from './FeaturesSection';
+export { FuturePlansSection } from './FuturePlansSection';
 export { BenefitsSection } from './BenefitsSection';
 export { SocialProofSection } from './SocialProofSection';
 export { CTASection } from './CTASection';

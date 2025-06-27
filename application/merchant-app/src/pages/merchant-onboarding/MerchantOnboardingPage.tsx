@@ -9,6 +9,9 @@ import {
   TopContactBar,
   HeroSection,
   HowItWorksSection,
+  ReplacementHighlightSection,
+  FeaturesSection,
+  FuturePlansSection,
   BenefitsSection,
   SocialProofSection,
   CTASection,
@@ -154,9 +157,15 @@ export const MerchantOnboardingPage: React.FC = () => {
         />
       )}
 
+      <ReplacementHighlightSection />
+
+      <FeaturesSection />
+
       <BenefitsSection merchant={merchant} />
 
       <SocialProofSection />
+
+      <FuturePlansSection />
 
       <CTASection merchant={merchant} />
     </div>
