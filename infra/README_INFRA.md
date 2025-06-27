@@ -12,6 +12,11 @@ sh infra/terraform/scripts/apply.sh {yourepunchawsprofile} {dev|prod}    # Apply
 
 ### 2. Deploy Backend
 ```bash
+sh deploy-backend.sh {yourepunchawsprofile} {dev|prod}    # Build & push to ECR (auto-deploys)
+```
+
+*Alternative (direct call):*
+```bash
 sh infra/backend/docker/build-and-push-ecr.sh {yourepunchawsprofile} {dev|prod}    # Build & push to ECR (auto-deploys)
 ```
 
