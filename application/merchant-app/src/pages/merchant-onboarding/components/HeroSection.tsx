@@ -6,16 +6,15 @@ import styles from './HeroSection.module.css';
 interface HeroSectionProps {
   merchant: MerchantDto;
   userAppUrl: string;
-  loyaltyPrograms: LoyaltyProgramDto[];
+  loyaltyProgram: LoyaltyProgramDto;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
   merchant,
   userAppUrl,
-  loyaltyPrograms
+  loyaltyProgram
 }) => {
-  const primaryLoyaltyProgram = loyaltyPrograms[0];
-  const requiredPunches = primaryLoyaltyProgram?.requiredPunches || 10;
+  const requiredPunches = loyaltyProgram.requiredPunches || 10;
   const currentPunches = Math.floor(requiredPunches * 0.7);
 
   return (

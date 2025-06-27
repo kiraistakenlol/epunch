@@ -17,22 +17,21 @@ import styles from './HowItWorksSection.module.css';
 interface HowItWorksSectionProps {
   merchant: MerchantDto;
   userAppUrl: string;
-  loyaltyPrograms: LoyaltyProgramDto[];
+  loyaltyProgram: LoyaltyProgramDto;
   punchCardStyle: PunchCardStyleDto;
-  onboardingImageUrl: string | null;
+  onboardingImageUrl: string | undefined;
 }
 
 export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
   merchant,
   userAppUrl,
-  loyaltyPrograms,
+  loyaltyProgram,
   punchCardStyle,
   onboardingImageUrl
 }) => {
 
   const createMockPunchCard = (id: string, loyaltyProgramId: string, currentPunches: number, totalPunches?: number): PunchCardDto => {
-    const program = loyaltyPrograms[0];
-    const requiredPunches = totalPunches || program.requiredPunches;
+    const requiredPunches = totalPunches || loyaltyProgram.requiredPunches;
     return {
       id,
       loyaltyProgramId,
@@ -46,23 +45,17 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
     };
   };
 
-  const primaryLoyaltyProgram = loyaltyPrograms[0];
-
   const step4PreviewUrl = dashboardPreviewService.getPreviewUrl({
-    cards: [createMockPunchCard('demo-card-1', primaryLoyaltyProgram.id, 7)],
-    loyaltyPrograms: [primaryLoyaltyProgram],
+    cards: [createMockPunchCard('demo-card-1', loyaltyProgram.id, 7)],
+    loyaltyPrograms: [loyaltyProgram],
     renderOnBackgroundColor: 'white',
   });
 
-  const step4FullPreviewUrl = dashboardPreviewService.getPreviewUrl({
-    cards: [createMockPunchCard('demo-card-1-full', primaryLoyaltyProgram.id, primaryLoyaltyProgram.requiredPunches)],
-    loyaltyPrograms: [primaryLoyaltyProgram],
-    renderOnBackgroundColor: 'white',
-  });
+
 
   const step5PreviewUrl =  dashboardPreviewService.getPreviewUrl({
-    cards: [createMockPunchCard('demo-card-2', primaryLoyaltyProgram.id, primaryLoyaltyProgram.requiredPunches)],
-    loyaltyPrograms: [primaryLoyaltyProgram],
+    cards: [createMockPunchCard('demo-card-2', loyaltyProgram.id, loyaltyProgram.requiredPunches)],
+    loyaltyPrograms: [loyaltyProgram],
     selectedCardId: 'demo-card-2',
     renderOnBackgroundColor: 'white',
   });
@@ -130,8 +123,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={3}
             role="you"
-            title="Scan client's QR and PUNCH"
-            note="Simple one-tap process"
+            title="Scan & punch their card"
+            note="Use your phone or tablet"
             showArrow={true}
           >
             <div className={styles.singleStep}>
@@ -139,8 +132,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
                 firstScreen={
                   <PhoneFrame>
                     <MerchantAppMobileFrameMockup merchant={merchant}>
-                      <MerchantScannerPageMockup frameSize={150} frameOffsetY={-35}>
-                        <div style={{width: '150px', aspectRatio: '375 / 667'}}>
+                      <MerchantScannerPageMockup frameSize={150} frameOffsetY={-20} >
+                        <div style={{width: '70%', height: '100%', paddingTop: '10%'}}>
                           <PhoneWithUserApp src={userAppUrl} />
                         </div>
                       </MerchantScannerPageMockup>
@@ -150,7 +143,9 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
                 secondScreen={
                   <PhoneFrame>
                     <MerchantAppMobileFrameMockup merchant={merchant}>
-                      <MerchantCustomerScanResult merchant={merchant} />
+                      <MerchantCustomerScanResult 
+                        merchant={merchant} 
+                      />
                     </MerchantAppMobileFrameMockup>
                   </PhoneFrame>
                 }
@@ -161,19 +156,14 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={4}
             role="customer"
-            title="Card fills up over time"
-            note="Each visit adds +1 punch automatically"
+            title="Punch card fills up (7/10)"
+            note="Visual progress tracking"
             showArrow={true}
           >
             <div className={styles.singleStep}>
-              <TwoScreenFlow
-                firstScreen={
-                  <PhoneWithUserApp src={step4PreviewUrl} />
-                }
-                secondScreen={
-                  <PhoneWithUserApp src={step4FullPreviewUrl} />
-                }
-              />
+              <div className={styles.commonPhoneContainer}>
+                <PhoneWithUserApp src={step4PreviewUrl} />
+              </div>
             </div>
           </WorkflowStep>
 
@@ -216,7 +206,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
                     <MerchantAppMobileFrameMockup merchant={merchant}>
                       <MerchantPunchCardRedeemResult 
                         merchant={merchant} 
-                        loyaltyProgram={primaryLoyaltyProgram}
+                        loyaltyProgram={loyaltyProgram}
                       />
                     </MerchantAppMobileFrameMockup>
                   </PhoneFrame>
@@ -229,7 +219,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
             stepNumber={7}
             role="customer"
             title="Client gets reward"
-            note={primaryLoyaltyProgram.rewardDescription || "Free coffee, discount, or whatever you offer!"}
+            note={loyaltyProgram.rewardDescription || "Free coffee, discount, or whatever you offer!"}
           >
             <div className={styles.singleStep}>
               <div className={styles.rewardSchema}>

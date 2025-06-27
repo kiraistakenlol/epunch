@@ -25,11 +25,12 @@ export const MerchantOnboardingPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { merchant, loading: merchantLoading, error: merchantError } = useAppSelector((state) => state.merchant);
   
-  const [onboardingImageUrl, setOnboardingImageUrl] = useState<string | null>(null);
+  const [onboardingImageUrl, setOnboardingImageUrl] = useState<string | undefined>(undefined);
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
-  const [merchantStyle, setMerchantStyle] = useState<PunchCardStyleDto | null>(null);
-  const [loyaltyPrograms, setLoyaltyPrograms] = useState<LoyaltyProgramDto[]>([]);
-  const [isLoadingLoyaltyPrograms, setIsLoadingLoyaltyPrograms] = useState(true);
+  const [merchantStyle, setMerchantStyle] = useState<PunchCardStyleDto | undefined>(undefined);
+  const [loyaltyProgram, setLoyaltyProgram] = useState<LoyaltyProgramDto | undefined>(undefined);
+  const [isLoadingLoyaltyProgram, setIsLoadingLoyaltyProgram] = useState(true);
+  const [loyaltyProgramError, setLoyaltyProgramError] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     if (merchantSlug) {
@@ -44,10 +45,10 @@ export const MerchantOnboardingPage: React.FC = () => {
   }, [merchant]);
 
   useEffect(() => {
-    if (merchant && merchantStyle && loyaltyPrograms.length > 0 && !onboardingImageUrl && !isGeneratingImage) {
+    if (merchant && merchantStyle && loyaltyProgram && !onboardingImageUrl && !isGeneratingImage) {
       generateOnboardingImagePreview();
     }
-  }, [merchant, merchantStyle, loyaltyPrograms, onboardingImageUrl, isGeneratingImage]);
+  }, [merchant, merchantStyle, loyaltyProgram, onboardingImageUrl, isGeneratingImage]);
 
   const fetchMerchantData = async () => {
     if (!merchant) return;
@@ -55,7 +56,7 @@ export const MerchantOnboardingPage: React.FC = () => {
     try {
       await Promise.all([
         fetchMerchantStyle(),
-        fetchLoyaltyPrograms()
+        fetchLoyaltyProgram()
       ]);
     } catch (error: any) {
       console.error('Failed to fetch merchant data:', error);
@@ -83,26 +84,35 @@ export const MerchantOnboardingPage: React.FC = () => {
     }
   };
 
-  const fetchLoyaltyPrograms = async () => {
+  const fetchLoyaltyProgram = async () => {
     if (!merchant) return;
 
     try {
-      setIsLoadingLoyaltyPrograms(true);
+      setIsLoadingLoyaltyProgram(true);
+      setLoyaltyProgramError(undefined);
       const programs = await apiClient.getMerchantLoyaltyPrograms(merchant.id);
+      
+      if (programs.length === 0) {
+        setLoyaltyProgramError('No loyalty programs found.');
+        setLoyaltyProgram(undefined);
+        return [];
+      }
+
       const sortedPrograms = [...programs].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-      setLoyaltyPrograms(sortedPrograms);
+      setLoyaltyProgram(sortedPrograms[0]);
       return programs;
     } catch (error: any) {
-      console.error('Failed to fetch loyalty programs:', error);
-      setLoyaltyPrograms([]);
+      console.error('Failed to fetch loyalty program:', error);
+      setLoyaltyProgramError('Failed to load loyalty program.');
+      setLoyaltyProgram(undefined);
       return [];
     } finally {
-      setIsLoadingLoyaltyPrograms(false);
+      setIsLoadingLoyaltyProgram(false);
     }
   };
 
   const generateOnboardingImagePreview = async () => {
-    if (!merchant || !merchantStyle) return;
+    if (!merchant || !merchantStyle || !loyaltyProgram) return;
 
     try {
       setIsGeneratingImage(true);
@@ -116,7 +126,7 @@ export const MerchantOnboardingPage: React.FC = () => {
         qrBackgroundColor,
         titleColor,
         merchant.name,
-        loyaltyPrograms[0]?.name || `${merchant.name} Rewards`
+        loyaltyProgram.name || `${merchant.name} Rewards`
       );
       setOnboardingImageUrl(imageDataUrl);
     } catch (error: any) {
@@ -126,12 +136,29 @@ export const MerchantOnboardingPage: React.FC = () => {
     }
   };
 
-  if (merchantLoading || isLoadingLoyaltyPrograms) {
+  if (merchantLoading || isLoadingLoyaltyProgram) {
     return <LoadingState />;
   }
 
   if (merchantError || !merchant) {
     return <ErrorState merchantSlug={merchantSlug || 'unknown'} />;
+  }
+
+  if (loyaltyProgramError || !loyaltyProgram) {
+    return (
+      <div className={styles.container}>
+        <TopContactBar />
+        <div className={styles.errorContainer}>
+          <h1>Loyalty Program Required</h1>
+          <p>
+            {loyaltyProgramError || 'This merchant needs to set up a loyalty program first.'}
+          </p>
+          <p>
+            Contact the merchant to create a loyalty program before accessing this page.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   const baseUrl = import.meta.env.VITE_USER_APP_URL || 'https://epunch.app';
@@ -144,22 +171,20 @@ export const MerchantOnboardingPage: React.FC = () => {
       <HeroSection
         merchant={merchant}
         userAppUrl={userAppUrl}
-        loyaltyPrograms={loyaltyPrograms}
+        loyaltyProgram={loyaltyProgram}
       />
 
       <PhysicalVSDigigalCoparisonSection />
 
       <FeaturesSection />
 
-      {!isLoadingLoyaltyPrograms && loyaltyPrograms.length > 0 && (
-        <HowItWorksSection
-          merchant={merchant}
-          userAppUrl={userAppUrl}
-          loyaltyPrograms={loyaltyPrograms}
-          punchCardStyle={merchantStyle || emptyPunchCardStyle}
-          onboardingImageUrl={onboardingImageUrl}
-        />
-      )}
+      <HowItWorksSection
+        merchant={merchant}
+        userAppUrl={userAppUrl}
+        loyaltyProgram={loyaltyProgram}
+        punchCardStyle={merchantStyle || emptyPunchCardStyle}
+        onboardingImageUrl={onboardingImageUrl}
+      />
 
       <BenefitsSection merchant={merchant} />
 
