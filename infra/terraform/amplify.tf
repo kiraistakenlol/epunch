@@ -9,7 +9,7 @@ locals {
         VITE_AWS_REGION                  = var.aws_region
         VITE_COGNITO_USER_POOL_ID        = aws_cognito_user_pool.main.id
         VITE_COGNITO_USER_POOL_CLIENT_ID = aws_cognito_user_pool_client.main.id
-        VITE_COGNITO_DOMAIN              = "${aws_cognito_user_pool_domain.main.domain}.auth.${var.aws_region}.amazoncognito.com"
+        VITE_COGNITO_DOMAIN              = "https://${local.cognito_custom_domain}"
       }
       custom_domain_prefix = var.environment == "prod" ? "" : "dev"
     }

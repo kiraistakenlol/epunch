@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combined: Customer Journey with Role-Based Workflow</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, sans-serif; line-height: 1.6; color: #333; background: #f5f5f5; }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        .hero { text-align: center; padding: 60px 20px; background: linear-gradient(135deg, #d7f9f4, #f0f8ff); }
+        .hero h1 { font-size: 3rem; margin-bottom: 1rem; color: #006b3d; }
+        .hero p { font-size: 1.2rem; color: #666; }
+        
+        .workflow-step { 
+            margin: 60px 0; 
+            background: white; 
+            border-radius: 16px; 
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        
+        .step-header {
+            background: linear-gradient(135deg, #006b3d, #004d2a);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .step-header h2 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .step-number { font-size: 3rem; font-weight: bold; opacity: 0.3; }
+        
+        .dual-view {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 400px;
+        }
+        
+        .merchant-view, .customer-view {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .merchant-view {
+            background: linear-gradient(135deg, #e8f5e8, #f0fdf4);
+            border-right: 3px solid #006b3d;
+        }
+        
+        .customer-view {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+        }
+        
+        .role-badge {
+            background: #006b3d;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .customer-view .role-badge {
+            background: #0ea5e9;
+        }
+        
+        .phone-mockup {
+            width: 240px;
+            height: 400px;
+            background: #000;
+            border-radius: 25px;
+            padding: 15px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .phone-mockup::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 3px;
+            background: #333;
+            border-radius: 2px;
+        }
+        
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            position: relative;
+        }
+        
+        .dashboard-mockup {
+            width: 280px;
+            height: 180px;
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .action-description {
+            background: rgba(0,0,0,0.05);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            max-width: 280px;
+        }
+        
+        .action-description h4 {
+            margin-bottom: 10px;
+            color: #006b3d;
+        }
+        
+        .customer-view .action-description h4 {
+            color: #0ea5e9;
+        }
+        
+        .single-role {
+            padding: 60px;
+            text-align: center;
+            background: white;
+        }
+        
+        .punch-counter {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .dual-view { grid-template-columns: 1fr; }
+            .merchant-view { border-right: none; border-bottom: 3px solid #006b3d; }
+            .phone-mockup, .dashboard-mockup { width: 200px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>Customer Journey with Role-Based Workflow</h1>
+        <p>See exactly what YOU do vs what your CUSTOMERS do at each step</p>
+    </div>
+
+    <div class="container">
+        <!-- Step 1: Setup -->
+        <div class="workflow-step">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <h2>Initial Setup</h2>
+                <p>You print & display QR code</p>
+            </div>
+            <div class="single-role">
+                <div class="role-badge">YOU (Merchant)</div>
+                <div class="dashboard-mockup">
+                    <div style="font-size: 1.5rem;">📊 ePunch Dashboard</div>
+                    <div style="margin-top: 10px; font-size: 0.9rem; color: #666;">
+                        Create loyalty program<br/>
+                        Download QR code<br/>
+                        Print & display
+                    </div>
+                </div>
+                <div class="action-description">
+                    <h4>What you do:</h4>
+                    <p>5-minute setup in our dashboard. Create your loyalty program, download the QR code, print it out and place it on your counter.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Customer Discovery -->
+        <div class="workflow-step">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <h2>Customer Discovery</h2>
+                <p>Customer scans QR code</p>
+            </div>
+            <div class="dual-view">
+                <div class="merchant-view">
+                    <div class="role-badge">YOU</div>
+                    <div style="font-size: 4rem; margin: 20px 0;">🖼️</div>
+                    <h3>QR Code on Counter</h3>
+                    <div class="action-description">
+                        <h4>What you do:</h4>
+                        <p>Nothing! Just keep the QR code visible on your counter. Customers will notice it naturally.</p>
+                    </div>
+                </div>
+                <div class="customer-view">
+                    <div class="role-badge">Customer</div>
+                    <div class="phone-mockup">
+                        <div class="phone-screen" style="background: linear-gradient(45deg, #333, #666); color: white;">
+                            📷
+                            <div style="position: absolute; bottom: 30px; font-size: 0.8rem;">
+                                Point camera at QR code
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-description">
+                        <h4>What they do:</h4>
+                        <p>Notice QR code, open phone camera to scan it. Camera shows "Open in Safari" notification.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Auto-Card Creation -->
+        <div class="workflow-step">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <h2>Automatic Card Creation</h2>
+                <p>ePunch creates digital cards automatically</p>
+            </div>
+            <div class="dual-view">
+                <div class="merchant-view">
+                    <div class="role-badge">YOU</div>
+                    <div style="font-size: 4rem; margin: 20px 0;">⚡</div>
+                    <h3>System Magic</h3>
+                    <div class="action-description">
+                        <h4>What happens:</h4>
+                        <p>Your ePunch system automatically creates punch cards for ALL your active loyalty programs. No manual work needed!</p>
+                    </div>
+                </div>
+                <div class="customer-view">
+                    <div class="role-badge">Customer</div>
+                    <div class="phone-mockup">
+                        <div class="phone-screen" style="background: linear-gradient(45deg, #d7f9f4, #c5f0eb);">
+                            ✨📱
+                            <div style="position: absolute; bottom: 30px; font-size: 0.8rem; color: #006b3d;">
+                                Creating your cards...
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-description">
+                        <h4>What they see:</h4>
+                        <p>ePunch opens in browser, instantly shows digital punch cards for Coffee Rewards, VIP Program, etc. - all your programs appear at once!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Purchase Decision -->
+        <div class="workflow-step">
+            <div class="step-header">
+                <div class="step-number">4</div>
+                <h2>Purchase Decision</h2>
+                <p>Customer makes purchase</p>
+            </div>
+            <div class="dual-view">
+                <div class="merchant-view">
+                    <div class="role-badge">YOU</div>
+                    <div style="font-size: 4rem; margin: 20px 0;">💰</div>
+                    <h3>Normal Transaction</h3>
+                    <div class="action-description">
+                        <h4>What you do:</h4>
+                        <p>Process their purchase normally - take their order, prepare their item, handle payment. Nothing changes in your workflow.</p>
+                    </div>
+                </div>
+                <div class="customer-view">
+                    <div class="role-badge">Customer</div>
+                    <div class="phone-mockup">
+                        <div class="phone-screen" style="background: linear-gradient(45deg, #f8f9fa, #e9ecef);">
+                            💳☕
+                            <div style="position: absolute; bottom: 30px; font-size: 0.8rem; color: #333;">
+                                Ready to purchase
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-description">
+                        <h4>What they do:</h4>
+                        <p>Make their purchase decision. Having the digital cards already makes them more likely to buy and return!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 5: Punch Transaction -->
+        <div class="workflow-step">
+            <div class="step-header">
+                <div class="step-number">5</div>
+                <h2>Punch Transaction</h2>
+                <p>You scan customer's QR code</p>
+            </div>
+            <div class="dual-view">
+                <div class="merchant-view">
+                    <div class="role-badge">YOU</div>
+                    <div class="phone-mockup">
+                        <div class="phone-screen" style="background: linear-gradient(45deg, #006b3d, #004d2a); color: white;">
+                            📷
+                            <div style="position: absolute; bottom: 30px; font-size: 0.8rem;">
+                                Scan customer QR
+                            </div>
+                            <div style="position: absolute; top: 30px; font-size: 0.8rem;">
+                                ePunch Scanner
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-description">
+                        <h4>What you do:</h4>
+                        <p>Customer shows their QR code. You scan it with our app, select which loyalty program, tap "PUNCH". Takes 2 seconds!</p>
+                    </div>
+                </div>
+                <div class="customer-view">
+                    <div class="role-badge">Customer</div>
+                    <div class="phone-mockup">
+                        <div class="phone-screen" style="background: linear-gradient(45deg, #d7f9f4, #c5f0eb);">
+                            📱
+                            <div style="position: absolute; bottom: 30px; font-size: 0.8rem; color: #006b3d;">
+                                Show QR to merchant
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-description">
+                        <h4>What they do:</h4>
+                        <p>Show QR code on their phone screen. Watch the magic happen as their punch appears instantly!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 6: Punch Received -->
+        <div class="workflow-step">
+            <div class="step-header">
+                <div class="step-number">6</div>
+                <h2>Punch Received</h2>
+                <p>Customer sees punch update in real-time</p>
+            </div>
+            <div class="dual-view">
+                <div class="merchant-view">
+                    <div class="role-badge">YOU</div>
+                    <div style="font-size: 4rem; margin: 20px 0;">✅</div>
+                    <h3>Transaction Complete</h3>
+                    <div class="action-description">
+                        <h4>What you see:</h4>
+                        <p>Confirmation that punch was added successfully. Customer is satisfied and impressed with the instant experience.</p>
+                    </div>
+                </div>
+                <div class="customer-view">
+                    <div class="role-badge">Customer</div>
+                    <div class="phone-mockup">
+                        <div class="phone-screen" style="background: linear-gradient(45deg, #006b3d, #004d2a); color: white;">
+                            ✨
+                            <div class="punch-counter">Punch 1/10</div>
+                            <div style="position: absolute; top: 40px; font-size: 1rem;">
+                                Coffee Rewards
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-description">
+                        <h4>What they see:</h4>
+                        <p>"Wow, that was so easy!" - instant satisfaction as their punch card updates with a new punch in real-time.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 7: Progress Building -->
+        <div class="workflow-step">
+            <div class="step-header">
+                <div class="step-number">7</div>
+                <h2>Progress Building</h2>
+                <p>Customer completes punch card over multiple visits</p>
+            </div>
+            <div class="dual-view">
+                <div class="merchant-view">
+                    <div class="role-badge">YOU</div>
+                    <div style="font-size: 4rem; margin: 20px 0;">🔄</div>
+                    <h3>Repeat Customers</h3>
+                    <div class="action-description">
+                        <h4>What you get:</h4>
+                        <p>Customers return more frequently because they're tracking their progress. Each visit is the same easy 2-second scan process.</p>
+                    </div>
+                </div>
+                <div class="customer-view">
+                    <div class="role-badge">Customer</div>
+                    <div class="phone-mockup">
+                        <div class="phone-screen" style="background: linear-gradient(45deg, #ffd700, #ffed4e);">
+                            🎯
+                            <div class="punch-counter">Punch 10/10</div>
+                            <div style="position: absolute; bottom: 60px; font-size: 0.9rem; color: #333;">
+                                Card Complete!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-description">
+                        <h4>What they experience:</h4>
+                        <p>After multiple visits, they complete their card! Celebration animation plays and they automatically get a NEW empty card for continued loyalty.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 8: Reward Redemption -->
+        <div class="workflow-step">
+            <div class="step-header">
+                <div class="step-number">8</div>
+                <h2>Reward Redemption</h2>
+                <p>Customer redeems their completed card</p>
+            </div>
+            <div class="dual-view">
+                <div class="merchant-view">
+                    <div class="role-badge">YOU</div>
+                    <div class="phone-mockup">
+                        <div class="phone-screen" style="background: linear-gradient(45deg, #ffd700, #ffed4e);">
+                            🎁
+                            <div style="position: absolute; bottom: 30px; font-size: 0.8rem; color: #333;">
+                                REDEEM REWARD
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-description">
+                        <h4>What you do:</h4>
+                        <p>Scan their reward QR code. See "REDEEM" button and loyalty program description. Give them their free item!</p>
+                    </div>
+                </div>
+                <div class="customer-view">
+                    <div class="role-badge">Customer</div>
+                    <div class="phone-mockup">
+                        <div class="phone-screen" style="background: linear-gradient(45deg, #ff6b6b, #ffa500); color: white;">
+                            🎉
+                            <div style="position: absolute; bottom: 30px; font-size: 0.8rem;">
+                                REDEEM REWARD
+                            </div>
+                            <div style="position: absolute; top: 40px; font-size: 0.8rem;">
+                                Tap to use reward
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-description">
+                        <h4>What they do:</h4>
+                        <p>Tap the completed card and show you the reward QR code. Get their free item and start the cycle again with a new card!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Business Impact Summary -->
+        <div style="background: linear-gradient(135deg, #006b3d, #004d2a); color: white; padding: 60px 40px; border-radius: 16px; text-align: center; margin-top: 60px;">
+            <h2 style="font-size: 2.5rem; margin-bottom: 2rem;">Your Role Summary</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-top: 40px;">
+                <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 12px;">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">⚙️</div>
+                    <div style="font-size: 1.2rem; font-weight: bold; margin-bottom: 0.5rem;">Setup</div>
+                    <div>5 minutes once</div>
+                </div>
+                <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 12px;">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">📷</div>
+                    <div style="font-size: 1.2rem; font-weight: bold; margin-bottom: 0.5rem;">Daily Use</div>
+                    <div>2 seconds per scan</div>
+                </div>
+                <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 12px;">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">📊</div>
+                    <div style="font-size: 1.2rem; font-weight: bold; margin-bottom: 0.5rem;">Results</div>
+                    <div>73% higher retention</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

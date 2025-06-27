@@ -1,32 +1,44 @@
 import React from 'react';
 import styles from './CameraInterface.module.css';
+import { ScanningFrame } from './ScanningFrame';
 
 interface CameraInterfaceProps {
   title?: string;
   className?: string;
   children?: React.ReactNode;
+  frameOffsetX?: number;
+  frameOffsetY?: number;
+  frameSize?: number;
 }
 
 export const CameraInterface: React.FC<CameraInterfaceProps> = ({
   title = 'Camera',
   className = '',
-  children
+  children,
+  frameOffsetX = 0,
+  frameOffsetY = 0,
+  frameSize = 200
 }) => {
+  const frameStyle = {
+    '--frame-offset-x': `${frameOffsetX}px`,
+    '--frame-offset-y': `${frameOffsetY}px`,
+    '--frame-size': `${frameSize}px`
+  } as React.CSSProperties;
+
   return (
     <div className={`${styles.cameraInterface} ${className}`}>
       <div className={styles.cameraTopBar}>
         <span className={styles.cameraTitle}>{title}</span>
         <div className={styles.cameraControls}>×</div>
       </div>
-      <div className={styles.cameraViewfinder}>
-        <div className={styles.scanningFrame}></div>
-        {children}
-        <div className={styles.scanningCorners}>
-          <div className={styles.corner} data-position="top-left"></div>
-          <div className={styles.corner} data-position="top-right"></div>
-          <div className={styles.corner} data-position="bottom-left"></div>
-          <div className={styles.corner} data-position="bottom-right"></div>
-        </div>
+      <div className={styles.cameraViewfinder} style={frameStyle}>
+        <ScanningFrame 
+          offsetX={frameOffsetX}
+          offsetY={frameOffsetY}
+          size={frameSize}
+        >
+          {children}
+        </ScanningFrame>
       </div>
       <div className={styles.cameraBottomBar}>
         <div className={styles.cameraButton}></div>

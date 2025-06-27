@@ -45,7 +45,7 @@ output "cognito_user_pool_client_id" {
 
 output "cognito_domain" {
   description = "Cognito domain URL"
-  value       = "${aws_cognito_user_pool_domain.main.domain}.auth.${var.aws_region}.amazoncognito.com"
+  value       = "https://${local.cognito_custom_domain}"
 }
 
 # S3 outputs
@@ -83,6 +83,7 @@ output "custom_domains" {
     merchant_app = var.environment == "prod" ? "merchant.epunch.app" : "dev-merchant.epunch.app"
     admin_app    = var.environment == "prod" ? "admin.epunch.app" : "dev-admin.epunch.app"
     api          = local.api_domain
+    auth         = local.cognito_custom_domain
   }
 }
 
@@ -100,7 +101,7 @@ output "environment_variables" {
     VITE_AWS_REGION                  = var.aws_region
     VITE_COGNITO_USER_POOL_ID        = aws_cognito_user_pool.main.id
     VITE_COGNITO_USER_POOL_CLIENT_ID = aws_cognito_user_pool_client.main.id
-    VITE_COGNITO_DOMAIN              = "https://${aws_cognito_user_pool_domain.main.domain}.auth.${var.aws_region}.amazoncognito.com"
+    VITE_COGNITO_DOMAIN              = "https://${local.cognito_custom_domain}"
     VITE_S3_BUCKET_NAME              = aws_s3_bucket.merchant_files.id
   }
 } 

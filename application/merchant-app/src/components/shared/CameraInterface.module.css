@@ -39,60 +39,12 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  --frame-offset-x: 0px;
+  --frame-offset-y: 0px;
+  --frame-size: 200px;
 }
 
-.scanningFrame {
-  position: absolute;
-  width: 200px;
-  height: 200px;
-  border: 2px solid #00ff00;
-  border-radius: 8px;
-  z-index: 5;
-  opacity: 0.8;
-  animation: scanPulse 2s infinite;
-}
 
-.scanningCorners {
-  position: absolute;
-  width: 200px;
-  height: 200px;
-  z-index: 6;
-}
-
-.corner {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  border: 3px solid #00ff00;
-}
-
-.corner[data-position="top-left"] {
-  top: -3px;
-  left: -3px;
-  border-right: none;
-  border-bottom: none;
-}
-
-.corner[data-position="top-right"] {
-  top: -3px;
-  right: -3px;
-  border-left: none;
-  border-bottom: none;
-}
-
-.corner[data-position="bottom-left"] {
-  bottom: -3px;
-  left: -3px;
-  border-right: none;
-  border-top: none;
-}
-
-.corner[data-position="bottom-right"] {
-  bottom: -3px;
-  right: -3px;
-  border-left: none;
-  border-top: none;
-}
 
 .cameraBottomBar {
   height: 80px;
@@ -116,25 +68,8 @@
   transform: scale(0.95);
 }
 
-@keyframes scanPulse {
-  0%, 100% {
-    opacity: 0.8;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.02);
-  }
-}
-
 @media (max-width: 768px) {
-  .scanningFrame {
-    width: 150px;
-    height: 150px;
-  }
-  
-  .scanningCorners {
-    width: 150px;
-    height: 150px;
+  .cameraViewfinder {
+    --frame-size: 150px;
   }
 } 

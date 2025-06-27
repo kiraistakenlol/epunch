@@ -39,58 +39,7 @@
   min-height: 60%;
 }
 
-.scanningFrame {
-  position: absolute;
-  width: min(50%, 12em);
-  height: min(50%, 12em);
-  border: 0.15em solid #00ff00;
-  border-radius: 4%;
-  z-index: 5;
-  opacity: 0.8;
-  animation: scanPulse 2s infinite;
-}
 
-.scanningCorners {
-  position: absolute;
-  width: min(50%, 12em);
-  height: min(50%, 12em);
-  z-index: 6;
-}
-
-.corner {
-  position: absolute;
-  width: 8%;
-  height: 8%;
-  border: 0.2em solid #00ff00;
-}
-
-.corner[data-position="top-left"] {
-  top: -0.2em;
-  left: -0.2em;
-  border-right: none;
-  border-bottom: none;
-}
-
-.corner[data-position="top-right"] {
-  top: -0.2em;
-  right: -0.2em;
-  border-left: none;
-  border-bottom: none;
-}
-
-.corner[data-position="bottom-left"] {
-  bottom: -0.2em;
-  left: -0.2em;
-  border-right: none;
-  border-top: none;
-}
-
-.corner[data-position="bottom-right"] {
-  bottom: -0.2em;
-  right: -0.2em;
-  border-left: none;
-  border-top: none;
-}
 
 .scannerBottomBar {
   height: 15%;
@@ -115,13 +64,4 @@
   transform: scale(0.95);
 }
 
-@keyframes scanPulse {
-  0%, 100% {
-    opacity: 0.8;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.02);
-  }
-} 
+ 

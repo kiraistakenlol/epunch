@@ -11,9 +11,13 @@ qr code expansion make smoother. the surrounding area chagens it's size when exp
 
 merchant-app:
 
-1. add qr code from admin-app
-2. fix it to point to dev/prod not to vercel
+similar to /for-merchants
+
+create a page that renders a simple landing 
+with image qr -> punch card
+
+
+merchant.epunch.app/onboarding
+
 
 admin-app:
-
-admin-app fix merchant's qr to point to dev/prod not to vercel

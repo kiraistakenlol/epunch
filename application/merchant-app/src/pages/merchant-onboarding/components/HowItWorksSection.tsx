@@ -9,7 +9,8 @@ import {
   MerchantCustomerScanResult,
   MerchantPunchCardRedeemResult,
   TwoScreenFlow,
-  PhoneWithUserApp
+  PhoneWithUserApp,
+  CameraInterface
 } from '../../../components/shared';
 import { dashboardPreviewService } from '../../../utils/dashboardPreviewService';
 import { generateOnboardingImage } from '../../../utils/onboardingImageUtil';
@@ -183,17 +184,15 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
               <TwoScreenFlow
                 firstScreen={
                   <PhoneFrameNew>
-                    <MerchantAppMobileFrameMockup merchant={merchant}>
-                      <MerchantScannerPageMockup>
-                        {onboardingImageUrl && (
+                    <CameraInterface frameOffsetX={-60} frameOffsetY={15} frameSize={100}>
+                    {onboardingImageUrl && (
                           <img
                             src={onboardingImageUrl}
                             alt="QR Code being scanned"
                             className={styles.qrCodeInCamera}
                           />
                         )}
-                      </MerchantScannerPageMockup>
-                    </MerchantAppMobileFrameMockup>
+                    </CameraInterface>
                   </PhoneFrameNew>
                 }
                 secondScreen={
@@ -215,7 +214,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
                 firstScreen={
                   <PhoneFrame>
                     <MerchantAppMobileFrameMockup merchant={merchant}>
-                      <MerchantScannerPageMockup>
+                      <MerchantScannerPageMockup frameSize={150} frameOffsetY={-35}>
                         <div style={{width: '200px', aspectRatio: '375 / 667'}}>
                           <PhoneWithUserApp src={userAppUrl} />
                         </div>
