@@ -4,7 +4,6 @@ import { ScanningFrame } from './ScanningFrame';
 
 interface CameraInterfaceProps {
   title?: string;
-  className?: string;
   children?: React.ReactNode;
   frameOffsetX?: number;
   frameOffsetY?: number;
@@ -13,7 +12,6 @@ interface CameraInterfaceProps {
 
 export const CameraInterface: React.FC<CameraInterfaceProps> = ({
   title = 'Camera',
-  className = '',
   children,
   frameOffsetX = 0,
   frameOffsetY = 0,
@@ -26,7 +24,7 @@ export const CameraInterface: React.FC<CameraInterfaceProps> = ({
   } as React.CSSProperties;
 
   return (
-    <div className={`${styles.cameraInterface} ${className}`}>
+    <div className={styles.cameraInterface}>
       <div className={styles.cameraTopBar}>
         <span className={styles.cameraTitle}>{title}</span>
         <div className={styles.cameraControls}>×</div>
