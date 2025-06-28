@@ -1,13 +1,13 @@
 .topContact {
   background: rgba(215, 249, 244, 0.3);
   text-align: center;
-  padding: 0.5rem 0;
+  padding: 0.2rem 0;
   margin-bottom: 2rem;
   border-radius: 8px;
   font-size: 0.9rem;
   color: #333;
   max-width: 1200px;
-  margin: 0 auto 0.5rem auto;
+  margin: 0 auto 0.2rem auto;
 }
 
 .topContactContent {
@@ -35,8 +35,8 @@
 
 @media (max-width: 768px) {
   .topContact {
-    margin-bottom: 0.25rem;
-    margin-top: 0.5rem;
-    padding: 0.5rem 0;
+    margin-bottom: 0.1rem;
+    margin-top: 0.1rem;
+    padding: 0.2rem 0;
   }
 } 

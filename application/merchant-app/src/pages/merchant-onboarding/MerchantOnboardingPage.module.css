@@ -2,7 +2,7 @@
   min-height: 100vh;
   background: linear-gradient(135deg, #d7f9f4 0%, #f0f8ff 100%);
   color: #333;
-  padding-top: 50px;
+  padding-top: 0.5rem;
 }
 
 .loadingContainer {
@@ -733,7 +733,7 @@
 
 @media (max-width: 768px) {
   .container {
-    padding-top: 30px;
+    padding-top: 0.3rem;
   }
   
   .hero {
