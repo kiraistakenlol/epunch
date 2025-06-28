@@ -11,12 +11,6 @@
   box-sizing: border-box;
   container-type: size;
   contain: layout style;
-  
-  /* Ensure proper height calculation on mobile devices */
-  min-height: 0;
-  
-  /* Add safe area support for iPhone */
-  padding-bottom: max(3%, env(safe-area-inset-bottom));
 }
 
 .phoneFrame::before {
@@ -30,30 +24,4 @@
   background: #333;
   border-radius: 3%;
   z-index: 10;
-}
-
-/* Mobile-specific adjustments */
-@media screen and (max-width: 768px) {
-  .phoneFrame {
-    /* Ensure the aspect ratio is maintained on mobile */
-    height: auto;
-    max-width: 100%;
-    
-    /* Add extra padding for better visual separation */
-    margin-bottom: 1rem;
-  }
-}
-
-/* iPhone-specific adjustments */
-@supports (-webkit-touch-callout: none) and (max-device-width: 430px) {
-  .phoneFrame {
-    /* Adjust for iPhone viewport characteristics */
-    padding-bottom: max(3%, 0.5rem);
-    
-    /* Ensure content doesn't get clipped */
-    overflow: visible;
-    
-    /* Add a subtle border to maintain visual frame */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
 } 
