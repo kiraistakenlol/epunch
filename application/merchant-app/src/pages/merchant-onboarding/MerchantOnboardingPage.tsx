@@ -9,7 +9,7 @@ import {
   TopContactBar,
   HeroSection,
   HowItWorksSection,
-  PhysicalVSDigigalCoparisonSection,
+  ProblemStatementSection,
   FeaturesSection,
   FuturePlansSection,
   BenefitsSection,
@@ -199,7 +199,7 @@ export const MerchantOnboardingPage: React.FC = () => {
       </div>
 
       <div ref={comparisonRef} id="comparison">
-        <PhysicalVSDigigalCoparisonSection />
+        <ProblemStatementSection />
       </div>
 
       <div ref={featuresRef} id="features">

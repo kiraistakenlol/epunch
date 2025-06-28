@@ -11,67 +11,26 @@
   text-align: center;
 }
 
-.title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #2d3748;
-  margin-bottom: 1rem;
-}
-
-.subtitle {
-  font-size: 1.25rem;
-  color: #e53e3e;
-  margin-bottom: 3rem;
-  font-weight: 600;
-}
-
-.problemsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  margin-bottom: 3rem;
-}
-
-.problem {
-  background: white;
-  border-radius: 16px;
-  padding: 2rem;
+.problemStatement {
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  border: 1px solid #e2e8f0;
-  position: relative;
+  margin-bottom: 4rem;
 }
 
-.problem:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(229, 62, 62, 0.15);
-  border-color: #fed7d7;
-}
-
-.problemIcon {
-  font-size: 3rem;
-  margin-bottom: 1.5rem;
-  display: block;
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0.8;
+.problemLabel {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #e53e3e;
+  letter-spacing: 0.1em;
+  margin: 0 0 1rem 0;
+  text-transform: uppercase;
 }
 
 .problemTitle {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: 3.5rem;
+  font-weight: 900;
   color: #2d3748;
-  margin: 0 0 1rem 0;
-}
-
-.problemDescription {
-  font-size: 1rem;
-  color: #4a5568;
-  line-height: 1.6;
   margin: 0;
+  line-height: 1.1;
 }
 
 .solutionTeaser {
@@ -141,37 +100,12 @@
     padding: 0 1rem;
   }
   
-  .title {
-    font-size: 2rem;
-  }
-  
-  .subtitle {
-    font-size: 1.125rem;
-    margin-bottom: 2rem;
-  }
-  
-  .problemsGrid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-  }
-  
-  .problem {
-    padding: 1.5rem;
-  }
-  
-  .problemIcon {
-    font-size: 2.5rem;
-    height: 60px;
-    margin-bottom: 1rem;
-  }
-  
-  .problemTitle {
+  .problemLabel {
     font-size: 1.25rem;
   }
   
-  .problemDescription {
-    font-size: 0.95rem;
+  .problemTitle {
+    font-size: 2.5rem;
   }
   
   .solutionTeaser {
@@ -189,16 +123,12 @@
     padding: 2rem 0;
   }
   
-  .title {
-    font-size: 1.75rem;
+  .problemLabel {
+    font-size: 1rem;
   }
   
-  .problemsGrid {
-    gap: 1rem;
-  }
-  
-  .problem {
-    padding: 1.25rem;
+  .problemTitle {
+    font-size: 2rem;
   }
   
   .solutionTeaser {
