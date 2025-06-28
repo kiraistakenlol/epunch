@@ -11,6 +11,8 @@
   box-sizing: border-box;
   container-type: size;
   contain: layout style;
+  /* DEBUG: Temporary bright border to see what's happening */
+  border: 5px solid red;
 }
 
 .phoneFrame::before {
