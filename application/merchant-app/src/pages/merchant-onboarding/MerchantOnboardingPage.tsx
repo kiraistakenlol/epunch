@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { fetchMerchantBySlug } from '../../store/merchantSlice';
@@ -17,7 +17,6 @@ import {
   LoadingState,
   ErrorState
 } from './components';
-import { MetroNavigation, MetroSection } from '../../components/shared/MetroNavigation';
 import styles from './MerchantOnboardingPage.module.css';
 
 export const MerchantOnboardingPage: React.FC = () => {
@@ -31,24 +30,6 @@ export const MerchantOnboardingPage: React.FC = () => {
   const [loyaltyProgram, setLoyaltyProgram] = useState<LoyaltyProgramDto | undefined>(undefined);
   const [isLoadingLoyaltyProgram, setIsLoadingLoyaltyProgram] = useState(true);
   const [loyaltyProgramError, setLoyaltyProgramError] = useState<string | undefined>(undefined);
-
-  const heroRef = useRef<HTMLDivElement>(null);
-  const comparisonRef = useRef<HTMLDivElement>(null);
-  const howItWorksRef = useRef<HTMLDivElement>(null);
-  const benefitsRef = useRef<HTMLDivElement>(null);
-  const futurePlansRef = useRef<HTMLDivElement>(null);
-  const socialProofRef = useRef<HTMLDivElement>(null);
-  const ctaRef = useRef<HTMLDivElement>(null);
-
-  const metroSections: MetroSection[] = [
-    { id: 'hero', label: 'Overview', elementRef: heroRef },
-    { id: 'comparison', label: 'Problem & Solution', elementRef: comparisonRef },
-    { id: 'how-it-works', label: 'How It Works', elementRef: howItWorksRef },
-    { id: 'benefits', label: 'Benefits', elementRef: benefitsRef },
-    { id: 'future', label: 'Future Plans', elementRef: futurePlansRef },
-    { id: 'social-proof', label: 'Social Proof', elementRef: socialProofRef },
-    { id: 'get-started', label: 'Get Started', elementRef: ctaRef },
-  ];
 
   useEffect(() => {
     if (merchantSlug) {
@@ -181,11 +162,9 @@ export const MerchantOnboardingPage: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <MetroNavigation sections={metroSections} />
-      
       <TopContactBar />
       
-      <div ref={heroRef} id="hero">
+      <div id="hero">
         {merchantStyle && (
           <HeroSection
             merchant={merchant}
@@ -195,15 +174,15 @@ export const MerchantOnboardingPage: React.FC = () => {
         )}
       </div>
 
-      <div ref={comparisonRef} id="comparison">
+      <div id="comparison">
         <ProblemSolutionSection />
       </div>
 
-      <div ref={benefitsRef} id="benefits">
+      <div id="benefits">
         <BenefitsSection merchant={merchant} />
       </div>
 
-      <div ref={howItWorksRef} id="how-it-works">
+      <div id="how-it-works">
         <HowItWorksSection
           merchant={merchant}
           loyaltyProgram={loyaltyProgram}
@@ -212,16 +191,15 @@ export const MerchantOnboardingPage: React.FC = () => {
         />
       </div>
 
-
-      <div ref={futurePlansRef} id="future">
+      <div id="future">
         <FuturePlansSection />
       </div>
 
-      <div ref={socialProofRef} id="social-proof">
+      <div id="social-proof">
         <SocialProofSection />
       </div>
 
-      <div ref={ctaRef} id="get-started">
+      <div id="get-started">
         <CTASection merchant={merchant} />
       </div>
     </div>
