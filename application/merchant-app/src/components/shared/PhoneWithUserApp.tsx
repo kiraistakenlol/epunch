@@ -39,7 +39,7 @@ export const PhoneWithUserApp: React.FC<PhoneWithUserAppProps> = ({
   }, []);
 
   return (
-    <div ref={containerRef} className={className}>
+    <div ref={containerRef} className={className} style={{width: '100%'}}>
       <PhoneFrame>
         <iframe
           src={src}
