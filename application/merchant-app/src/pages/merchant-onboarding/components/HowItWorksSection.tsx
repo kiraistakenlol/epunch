@@ -114,13 +114,13 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
                 firstScreen={
                   <PhoneFrame>
                     <CameraInterface frameOffsetX={-60} frameOffsetY={15} frameSize={100}>
-                    {onboardingImageUrl && (
-                          <img
-                            src={onboardingImageUrl}
-                            alt="QR Code being scanned"
-                            className={styles.qrCodeInCamera}
-                          />
-                        )}
+                      {onboardingImageUrl && (
+                        <img
+                          src={onboardingImageUrl}
+                          alt="QR Code being scanned"
+                          className={styles.qrCodeInCamera}
+                        />
+                      )}
                     </CameraInterface>
                   </PhoneFrame>
                 }
@@ -144,7 +144,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
                   <PhoneFrame>
                     <MerchantAppMobileFrameMockup merchant={merchant}>
                       <MerchantScannerPageMockup frameSize={150} frameOffsetY={-20} >
-                        <div style={{width: '70%', height: '100%', paddingTop: '10%'}}>
+                        <div style={{ width: '70%', height: '100%', paddingTop: '10%' }}>
                           <PhoneWithUserApp src={initialCustomerPreviewUrl} />
                         </div>
                       </MerchantScannerPageMockup>
@@ -154,9 +154,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
                 secondScreen={
                   <PhoneFrame>
                     <MerchantAppMobileFrameMockup merchant={merchant}>
-                      <MerchantCustomerScanResult 
-                        merchant={merchant} 
-                      />
+                      <MerchantCustomerScanResult loyaltyProgram={loyaltyProgram} />
                     </MerchantAppMobileFrameMockup>
                   </PhoneFrame>
                 }
@@ -210,7 +208,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
                   <PhoneFrame>
                     <MerchantAppMobileFrameMockup merchant={merchant}>
                       <MerchantScannerPageMockup frameSize={150} frameOffsetY={-20} >
-                        <div style={{width: '70%', height: '100%', paddingTop: '10%'}}>
+                        <div style={{ width: '70%', height: '100%', paddingTop: '10%' }}>
                           <PhoneWithUserApp src={step5PreviewUrl} />
                         </div>
                       </MerchantScannerPageMockup>
@@ -220,8 +218,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
                 secondScreen={
                   <PhoneFrame>
                     <MerchantAppMobileFrameMockup merchant={merchant}>
-                      <MerchantPunchCardRedeemResult 
-                        merchant={merchant} 
+                      <MerchantPunchCardRedeemResult
+                        merchant={merchant}
                         loyaltyProgram={loyaltyProgram}
                       />
                     </MerchantAppMobileFrameMockup>
