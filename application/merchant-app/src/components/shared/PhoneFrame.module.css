@@ -3,8 +3,8 @@
   aspect-ratio: 375 / 667;
   position: relative;
   margin: 0 auto;
-  border: 11.25px solid #1a1a1a;
-  border-radius: 18.75px;
+  border: 7px solid #1a1a1a;
+  border-radius: 18px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
   box-sizing: border-box;
   overflow: hidden;

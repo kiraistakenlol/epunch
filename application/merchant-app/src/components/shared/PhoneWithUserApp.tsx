@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { PhoneFrame } from './PhoneFrame';
 import styles from './PhoneWithUserApp.module.css';
 
 interface PhoneWithUserAppProps {
@@ -14,8 +15,6 @@ export const PhoneWithUserApp: React.FC<PhoneWithUserAppProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.5);
-  
-  const frameClasses = [styles.phoneFrame, className].filter(Boolean).join(' ');
 
   useEffect(() => {
     const calculateScale = () => {
@@ -40,17 +39,19 @@ export const PhoneWithUserApp: React.FC<PhoneWithUserAppProps> = ({
   }, []);
 
   return (
-    <div ref={containerRef} className={frameClasses}>
-      <iframe
-        src={src}
-        className={styles.iframe}
-        loading={loading}
-        style={{
-          width: '375px',
-          height: '667px',
-          transform: `translate(-50%, -50%) scale(${scale})`
-        }}
-      />
+    <div ref={containerRef} className={className}>
+      <PhoneFrame>
+        <iframe
+          src={src}
+          className={styles.iframe}
+          loading={loading}
+          style={{
+            width: '375px',
+            height: '667px',
+            transform: `translate(-50%, -50%) scale(${scale})`
+          }}
+        />
+      </PhoneFrame>
     </div>
   );
 }; 

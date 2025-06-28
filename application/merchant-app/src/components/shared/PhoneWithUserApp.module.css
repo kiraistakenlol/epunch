@@ -1,21 +1,11 @@
-.phoneFrame {
-  aspect-ratio: 375 / 667;
-  width: 100%;
-  position: relative;
-  margin: 0 auto;
-}
-
 .iframe {
   width: 375px;
   height: 667px;
-  border: 11.25px solid #1a1a1a;
-  border-radius: 18.75px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  border: none;
   background: transparent;
   display: block;
   position: absolute;
   top: 50%;
   left: 50%;
   transform-origin: center;
-  box-sizing: border-box;
 }
