@@ -134,7 +134,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={3}
             role="you"
-            title="Scan & punch their card"
+            title="Scan client's QR & PUNCH"
             note="Use your phone or tablet"
             showArrow={true}
           >
