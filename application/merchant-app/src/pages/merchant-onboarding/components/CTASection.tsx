@@ -27,7 +27,7 @@ export const CTASection: React.FC<CTASectionProps> = ({ merchant }) => {
           </a>
         </div>
         <div className={styles.contactInfo}>
-          <p>+7 925 041 9362 | @sobolevchelovek | hello@epunch.app</p>
+          <p>@sobolevchelovek | hello@epunch.app</p>
         </div>
       </div>
     </section>
