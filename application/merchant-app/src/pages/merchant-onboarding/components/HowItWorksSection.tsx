@@ -74,32 +74,34 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
   return (
     <section className={styles.howItWorks}>
       <div className={styles.sectionContent}>
-        <h2 className={styles.sectionTitle}>
-          How It Actually Works
-        </h2>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>How It Actually Works</h2>
+          <p className={styles.sectionSubtitle}>
+            Simple, fast, and works instantly with any smartphone
+          </p>
+        </div>
 
         <div className={styles.stepsContainer}>
           <WorkflowStep
             stepNumber={1}
             role="you"
             title="Put this QR code where people can see it"
+            note="Print it, frame it, or display it digitally"
             showArrow={true}
           >
-            <div className={styles.singleStep}>
-              {onboardingImageUrl ? (
-                <div className={styles.qrCodeImageContainer}>
-                  <img
-                    src={onboardingImageUrl}
-                    alt="Your QR Code for clients to scan"
-                    className={styles.qrCodeImage}
-                  />
-                </div>
-              ) : (
-                <div className={styles.qrCodePlaceholder}>
-                  <p>QR Code will appear here</p>
-                </div>
-              )}
-            </div>
+            {onboardingImageUrl ? (
+              <div className={styles.qrCodeContainer}>
+                <img
+                  src={onboardingImageUrl}
+                  alt="Your QR Code for clients to scan"
+                  className={styles.qrCodeImage}
+                />
+              </div>
+            ) : (
+              <div className={styles.qrCodePlaceholder}>
+                <p>QR Code will appear here</p>
+              </div>
+            )}
           </WorkflowStep>
 
           <WorkflowStep
@@ -109,7 +111,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
             note="No app downloads, no sign-ups, just works instantly"
             showArrow={true}
           >
-            <div className={styles.singleStep}>
+            <div className={styles.phoneFlowContainer}>
               <TwoScreenFlow
                 firstScreen={
                   <PhoneFrame>
@@ -138,7 +140,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
             note="Takes 2 seconds on your phone"
             showArrow={true}
           >
-            <div className={styles.singleStep}>
+            <div className={styles.phoneFlowContainer}>
               <TwoScreenFlow
                 firstScreen={
                   <PhoneFrame>
@@ -169,7 +171,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
             note="Instant gratification with every visit"
             showArrow={true}
           >
-            <div className={styles.singleStep}>
+            <div className={styles.phoneFlowContainer}>
               <TwoScreenFlow
                 firstScreen={
                   <PhoneWithUserApp src={step4PartialPreviewUrl} />
@@ -188,10 +190,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
             note="They know exactly when they've earned it"
             showArrow={true}
           >
-            <div className={styles.singleStep}>
-              <div className={styles.commonPhoneContainer}>
-                <PhoneWithUserApp src={step5PreviewUrl} />
-              </div>
+            <div className={styles.centeredPhone}>
+              <PhoneWithUserApp src={step5PreviewUrl} />
             </div>
           </WorkflowStep>
 
@@ -202,7 +202,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
             note="Card automatically resets for round 2"
             showArrow={true}
           >
-            <div className={styles.singleStep}>
+            <div className={styles.phoneFlowContainer}>
               <TwoScreenFlow
                 firstScreen={
                   <PhoneFrame>
@@ -235,18 +235,16 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
             title="Happy customer gets their reward"
             note={loyaltyProgram.rewardDescription || "And starts dreaming about their next free coffee"}
           >
-            <div className={styles.singleStep}>
-              <div className={styles.rewardSchema}>
-                <div className={styles.rewardIcon}>🎁</div>
-                <div className={styles.schemaArrow}>→</div>
-                <div className={styles.clientAvatar}>
-                  <div className={styles.avatarCircle}>
-                    <img
-                      src="/images/client.png"
-                      alt="Customer"
-                      className={styles.clientAvatarImage}
-                    />
-                  </div>
+            <div className={styles.rewardSchema}>
+              <div className={styles.rewardIcon}>🎁</div>
+              <div className={styles.schemaArrow}>→</div>
+              <div className={styles.clientAvatar}>
+                <div className={styles.avatarCircle}>
+                  <img
+                    src="/images/client.png"
+                    alt="Customer"
+                    className={styles.clientAvatarImage}
+                  />
                 </div>
               </div>
             </div>

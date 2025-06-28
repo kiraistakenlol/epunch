@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './WorkflowStep.module.css';
 
 export const CLIENT_NAME = 'client';
@@ -20,35 +20,69 @@ export const WorkflowStep: React.FC<WorkflowStepProps> = ({
   note,
   showArrow = false
 }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleExpanded = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  const roleBadgeText = role === 'you' ? 'YOU' : 'CUSTOMER';
+  const roleColor = role === 'you' ? 'merchant' : 'customer';
+
   return (
-    <>
-      <div className={styles.step}>
-        <div className={styles.stepNumber}>{stepNumber}.</div>
-        <div className={styles.stepContent}>
-          <div className={styles.stepHeader}>
-            <div className={styles.stepAvatarContainer} data-role={role}>
-              <img 
-                src={role === 'you' ? '/images/worker.png' : '/images/client.png'} 
-                alt={role === 'you' ? 'Business Owner' : 'Customer'}
-                className={styles.stepAvatar}
-              />
-              <div className={styles.stepRoleLabel}>
-                {role === 'you' ? 'YOU' : CLIENT_NAME.toUpperCase()}
-              </div>
-            </div>
-            <h3>{title}</h3>
+    <div className={styles.stepContainer}>
+      <div className={`${styles.step} ${isExpanded ? styles.expanded : ''}`}>
+        
+        {/* Role Badge - Outside Frame */}
+        <div className={`${styles.roleBadge} ${styles[roleColor]} ${isExpanded ? styles.badgeExpanded : styles.badgeCollapsed}`}>
+          <span className={styles.roleText}>{roleBadgeText}</span>
+        </div>
+
+        {/* Step Header - Always Visible */}
+        <div className={styles.stepHeader} onClick={toggleExpanded}>
+          <div className={styles.stepMeta}>
+            <div className={styles.stepNumber}>{stepNumber}</div>
           </div>
-          <div className={styles.stepVisual}>
-            {children}
-            {note && <p className={styles.stepNote}>{note}</p>}
+          
+          <div className={styles.stepContent}>
+            <h3 className={styles.stepTitle}>{title}</h3>
+            {note && !isExpanded && (
+              <p className={styles.stepPreview}>{note}</p>
+            )}
+          </div>
+          
+          <div className={styles.expandToggle}>
+            <div className={`${styles.expandIcon} ${isExpanded ? styles.expanded : ''}`}>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <path d="M7 10l5 5 5-5z"/>
+              </svg>
+            </div>
           </div>
         </div>
+
+        {/* Step Details - Expandable */}
+        {isExpanded && (
+          <div className={styles.stepDetails}>
+            <div className={styles.stepVisual}>
+              {children}
+            </div>
+            {note && (
+              <div className={styles.stepNote}>
+                <span className={styles.noteIcon}>💡</span>
+                <p>{note}</p>
+              </div>
+            )}
+          </div>
+        )}
       </div>
+      
+      {/* Connection Line */}
       {showArrow && (
-        <div className={styles.stepArrow}>
-          <div className={styles.arrowDown}>↓</div>
+        <div className={styles.stepConnection}>
+          <div className={styles.connectionLine}></div>
+          <div className={styles.connectionArrow}>↓</div>
         </div>
       )}
-    </>
+    </div>
   );
 }; 
