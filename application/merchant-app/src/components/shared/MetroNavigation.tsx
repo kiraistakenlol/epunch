@@ -20,7 +20,9 @@ export const MetroNavigation: React.FC<MetroNavigationProps> = ({
 }) => {
   const [currentSection, setCurrentSection] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
+  const [isDragging, setIsDragging] = useState(false);
   const lastScrollY = useRef(0);
+  const progressTrackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const observerOptions = {
@@ -55,7 +57,7 @@ export const MetroNavigation: React.FC<MetroNavigationProps> = ({
     const handleScroll = () => {
       const scrollY = window.scrollY;
 
-      if (hideOnScroll) {
+      if (hideOnScroll && !isDragging) {
         if (scrollY > lastScrollY.current && scrollY > 100) {
           setIsVisible(false);
         } else {
@@ -67,9 +69,91 @@ export const MetroNavigation: React.FC<MetroNavigationProps> = ({
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [hideOnScroll]);
+  }, [hideOnScroll, isDragging]);
+
+  const calculateScrollPosition = (clientX: number) => {
+    if (!progressTrackRef.current) return;
+
+    const rect = progressTrackRef.current.getBoundingClientRect();
+    const relativeX = clientX - rect.left;
+    const percentage = Math.max(0, Math.min(1, relativeX / rect.width));
+    
+    const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
+    const targetScrollY = percentage * maxScrollY;
+    
+    window.scrollTo({
+      top: targetScrollY,
+      behavior: 'instant'
+    });
+  };
+
+  const handleDragStart = (clientX: number) => {
+    setIsDragging(true);
+    calculateScrollPosition(clientX);
+  };
+
+  const handleDragMove = (clientX: number) => {
+    if (isDragging) {
+      calculateScrollPosition(clientX);
+    }
+  };
+
+  const handleDragEnd = () => {
+    setIsDragging(false);
+  };
+
+  // Mouse events
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    handleDragStart(e.clientX);
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    handleDragMove(e.clientX);
+  };
+
+  const handleMouseUp = () => {
+    handleDragEnd();
+  };
+
+  // Touch events
+  const handleTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    handleDragStart(touch.clientX);
+  };
+
+  const handleTouchMove = (e: TouchEvent) => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    handleDragMove(touch.clientX);
+  };
+
+  const handleTouchEnd = (e: TouchEvent) => {
+    e.preventDefault();
+    handleDragEnd();
+  };
+
+  // Global event listeners for drag
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener('touchmove', handleTouchMove, { passive: false });
+      document.addEventListener('touchend', handleTouchEnd, { passive: false });
+      
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+        document.removeEventListener('touchmove', handleTouchMove);
+        document.removeEventListener('touchend', handleTouchEnd);
+      };
+    }
+  }, [isDragging]);
 
   const scrollToSection = (index: number) => {
+    if (isDragging) return;
+    
     const section = sections[index];
     if (section.elementRef?.current) {
       section.elementRef.current.scrollIntoView({
@@ -86,7 +170,13 @@ export const MetroNavigation: React.FC<MetroNavigationProps> = ({
       aria-label="Page sections navigation"
     >
       <div className={styles.container}>
-        <div className={styles.progressTrack}>
+        <div 
+          ref={progressTrackRef}
+          className={styles.progressTrack}
+          onMouseDown={handleMouseDown}
+          onTouchStart={handleTouchStart}
+          style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+        >
           <div 
             className={styles.progressFill}
             style={{ width: `${(currentSection / (sections.length - 1)) * 100}%` }}
