@@ -1,60 +1,89 @@
-.benefits {
-  background: #f8fafc;
-  padding: 5rem 2rem;
-  color: #333;
+.benefitsSection {
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
 }
 
-.sectionContent {
-  max-width: 1200px;
+.container {
+  max-width: 1000px;
   margin: 0 auto;
 }
 
-.sectionTitle {
+.title {
   font-size: 2.5rem;
   font-weight: 700;
   text-align: center;
   margin-bottom: 3rem;
-  color: #333;
+  color: white;
 }
 
-.benefitsList {
+.grid {
   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
   max-width: 800px;
   margin: 0 auto;
 }
 
-.benefit {
-  display: flex;
-  align-items: flex-start;
-  gap: 1.5rem;
-  padding: 1.5rem;
-  background: white;
-  border-radius: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+.card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 1.5rem;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  transition: transform 0.3s ease, background 0.3s ease;
 }
 
-.benefitIcon {
-  font-size: 2rem;
-  flex-shrink: 0;
+.card:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.15);
 }
 
-.benefitText h3 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.25rem;
+.icon {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.cardTitle {
+  font-size: 1.5rem;
   font-weight: 600;
+  margin: 0 0 1rem 0;
+  color: white;
 }
 
-.benefitText p {
-  margin: 0;
-  color: #666;
+.cardText {
+  font-size: 1rem;
   line-height: 1.6;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.cardText strong {
+  color: #fbbf24;
+  font-weight: 700;
 }
 
 @media (max-width: 768px) {
-  .benefit {
-    flex-direction: column;
-    text-align: center;
-    align-items: center;
+  .benefitsSection {
+    padding: 3rem 1rem;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+  
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .card {
+    padding: 2rem 1.5rem;
+  }
+  
+  .icon {
+    font-size: 3rem;
   }
 } 
