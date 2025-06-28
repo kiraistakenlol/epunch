@@ -16,7 +16,6 @@ import styles from './HowItWorksSection.module.css';
 
 interface HowItWorksSectionProps {
   merchant: MerchantDto;
-  userAppUrl: string;
   loyaltyProgram: LoyaltyProgramDto;
   punchCardStyle: PunchCardStyleDto;
   onboardingImageUrl: string | undefined;
@@ -24,7 +23,6 @@ interface HowItWorksSectionProps {
 
 export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
   merchant,
-  userAppUrl,
   loyaltyProgram,
   punchCardStyle,
   onboardingImageUrl
@@ -64,6 +62,12 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
     cards: [createMockPunchCard('demo-card-reward', loyaltyProgram.id, fullPunches)],
     loyaltyPrograms: [loyaltyProgram],
     selectedCardId: 'demo-card-reward',
+    renderOnBackgroundColor: 'white',
+  });
+
+  const initialCustomerPreviewUrl = dashboardPreviewService.getPreviewUrl({
+    cards: [createMockPunchCard('demo-card-initial', loyaltyProgram.id, 0)],
+    loyaltyPrograms: [loyaltyProgram],
     renderOnBackgroundColor: 'white',
   });
 
@@ -121,7 +125,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
                   </PhoneFrame>
                 }
                 secondScreen={
-                  <PhoneWithUserApp src={userAppUrl} />
+                  <PhoneWithUserApp src={initialCustomerPreviewUrl} />
                 }
               />
             </div>
@@ -141,7 +145,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
                     <MerchantAppMobileFrameMockup merchant={merchant}>
                       <MerchantScannerPageMockup frameSize={150} frameOffsetY={-20} >
                         <div style={{width: '70%', height: '100%', paddingTop: '10%'}}>
-                          <PhoneWithUserApp src={userAppUrl} />
+                          <PhoneWithUserApp src={initialCustomerPreviewUrl} />
                         </div>
                       </MerchantScannerPageMockup>
                     </MerchantAppMobileFrameMockup>

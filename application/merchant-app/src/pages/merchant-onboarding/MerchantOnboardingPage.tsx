@@ -161,18 +161,17 @@ export const MerchantOnboardingPage: React.FC = () => {
     );
   }
 
-  const baseUrl = import.meta.env.VITE_USER_APP_URL || 'https://epunch.app';
-  const userAppUrl = `${baseUrl}?merchant=${merchant.slug}`;
-
   return (
     <div className={styles.container}>
       <TopContactBar />
       
-      <HeroSection
-        merchant={merchant}
-        userAppUrl={userAppUrl}
-        loyaltyProgram={loyaltyProgram}
-      />
+      {merchantStyle && (
+        <HeroSection
+          merchant={merchant}
+          loyaltyProgram={loyaltyProgram}
+          punchCardStyle={merchantStyle}
+        />
+      )}
 
       <PhysicalVSDigigalCoparisonSection />
 
@@ -180,7 +179,6 @@ export const MerchantOnboardingPage: React.FC = () => {
 
       <HowItWorksSection
         merchant={merchant}
-        userAppUrl={userAppUrl}
         loyaltyProgram={loyaltyProgram}
         punchCardStyle={merchantStyle || emptyPunchCardStyle}
         onboardingImageUrl={onboardingImageUrl}

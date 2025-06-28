@@ -1,21 +1,42 @@
 import React from 'react';
-import { MerchantDto, LoyaltyProgramDto } from 'e-punch-common-core';
+import { MerchantDto, LoyaltyProgramDto, PunchCardDto, PunchCardStyleDto } from 'e-punch-common-core';
 import { PhoneWithUserApp } from '../../../components/shared';
+import { dashboardPreviewService } from '../../../utils/dashboardPreviewService';
 import styles from './HeroSection.module.css';
 
 interface HeroSectionProps {
   merchant: MerchantDto;
-  userAppUrl: string;
   loyaltyProgram: LoyaltyProgramDto;
+  punchCardStyle: PunchCardStyleDto;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
   merchant,
-  userAppUrl,
-  loyaltyProgram
+  loyaltyProgram,
+  punchCardStyle
 }) => {
   const requiredPunches = loyaltyProgram.requiredPunches || 10;
   const currentPunches = Math.floor(requiredPunches * 0.7);
+
+  const createMockPunchCard = (id: string, loyaltyProgramId: string, currentPunches: number): PunchCardDto => {
+    return {
+      id,
+      loyaltyProgramId,
+      shopName: merchant.name,
+      shopAddress: merchant.address || '',
+      currentPunches,
+      totalPunches: requiredPunches,
+      status: currentPunches >= requiredPunches ? 'REWARD_READY' : 'ACTIVE',
+      createdAt: new Date().toISOString(),
+      styles: punchCardStyle
+    };
+  };
+
+  const heroPreviewUrl = dashboardPreviewService.getPreviewUrl({
+    cards: [createMockPunchCard('hero-demo-card', loyaltyProgram.id, currentPunches)],
+    loyaltyPrograms: [loyaltyProgram],
+    renderOnBackgroundColor: 'white',
+  });
 
   return (
     <section className={styles.hero}>
@@ -27,7 +48,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </h1>
 
           <div className={styles.demoUrl}>
-            <a href={userAppUrl} target="_blank" rel="noopener noreferrer" className={styles.demoLink}>
+            <a href={heroPreviewUrl} target="_blank" rel="noopener noreferrer" className={styles.demoLink}>
               Try It Now! 🚀
             </a>
           </div>
@@ -58,7 +79,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
             <div className={styles.solutionCard}>
               <div className={styles.phoneWithEpunch}>
-                <PhoneWithUserApp src={userAppUrl} />
+                <PhoneWithUserApp src={heroPreviewUrl} />
               </div>
             </div>
           </div>
