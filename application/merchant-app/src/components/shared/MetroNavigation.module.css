@@ -93,11 +93,11 @@
 
 @media (max-width: 768px) {
   .metroNav {
-    padding: 16px;
+    padding: 24px 16px;
   }
   
   .station {
-    padding: 10px;
+    padding: 12px;
   }
   
   .stationDot {
@@ -108,11 +108,11 @@
 
 @media (max-width: 480px) {
   .metroNav {
-    padding: 12px;
+    padding: 20px 12px;
   }
   
   .station {
-    padding: 8px;
+    padding: 10px;
   }
   
   .stationDot {
