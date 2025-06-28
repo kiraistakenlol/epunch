@@ -40,19 +40,17 @@ export const PhoneWithUserApp: React.FC<PhoneWithUserAppProps> = ({
   }, []);
 
   return (
-    <div className={frameClasses}>
-      <div ref={containerRef} className={styles.iframeContainer}>
-        <iframe
-          src={src}
-          className={styles.iframe}
-          loading={loading}
-          style={{
-            width: '375px',
-            height: '667px',
-            transform: `translate(-50%, -50%) scale(${scale})`
-          }}
-        />
-      </div>
+    <div ref={containerRef} className={frameClasses}>
+      <iframe
+        src={src}
+        className={styles.iframe}
+        loading={loading}
+        style={{
+          width: '375px',
+          height: '667px',
+          transform: `translate(-50%, -50%) scale(${scale})`
+        }}
+      />
     </div>
   );
 }; 
