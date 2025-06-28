@@ -9,8 +9,7 @@ import {
   TopContactBar,
   HeroSection,
   HowItWorksSection,
-  ProblemStatementSection,
-  FeaturesSection,
+  ProblemSolutionSection,
   FuturePlansSection,
   BenefitsSection,
   SocialProofSection,
@@ -35,7 +34,6 @@ export const MerchantOnboardingPage: React.FC = () => {
 
   const heroRef = useRef<HTMLDivElement>(null);
   const comparisonRef = useRef<HTMLDivElement>(null);
-  const featuresRef = useRef<HTMLDivElement>(null);
   const howItWorksRef = useRef<HTMLDivElement>(null);
   const benefitsRef = useRef<HTMLDivElement>(null);
   const futurePlansRef = useRef<HTMLDivElement>(null);
@@ -44,8 +42,7 @@ export const MerchantOnboardingPage: React.FC = () => {
 
   const metroSections: MetroSection[] = [
     { id: 'hero', label: 'Overview', elementRef: heroRef },
-    { id: 'comparison', label: 'Digital vs Physical', elementRef: comparisonRef },
-    { id: 'features', label: 'Features', elementRef: featuresRef },
+    { id: 'comparison', label: 'Problem & Solution', elementRef: comparisonRef },
     { id: 'how-it-works', label: 'How It Works', elementRef: howItWorksRef },
     { id: 'benefits', label: 'Benefits', elementRef: benefitsRef },
     { id: 'future', label: 'Future Plans', elementRef: futurePlansRef },
@@ -199,11 +196,11 @@ export const MerchantOnboardingPage: React.FC = () => {
       </div>
 
       <div ref={comparisonRef} id="comparison">
-        <ProblemStatementSection />
+        <ProblemSolutionSection />
       </div>
 
-      <div ref={featuresRef} id="features">
-        <FeaturesSection />
+      <div ref={benefitsRef} id="benefits">
+        <BenefitsSection merchant={merchant} />
       </div>
 
       <div ref={howItWorksRef} id="how-it-works">
@@ -215,9 +212,6 @@ export const MerchantOnboardingPage: React.FC = () => {
         />
       </div>
 
-      <div ref={benefitsRef} id="benefits">
-        <BenefitsSection merchant={merchant} />
-      </div>
 
       <div ref={futurePlansRef} id="future">
         <FuturePlansSection />

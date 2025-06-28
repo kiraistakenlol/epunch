@@ -1,8 +1,7 @@
 export { TopContactBar } from './TopContactBar';
 export { HeroSection } from './HeroSection';
 export { HowItWorksSection } from './HowItWorksSection';
-export { ProblemStatementSection } from './ProblemStatementSection';
-export { FeaturesSection } from './FeaturesSection';
+export { ProblemSolutionSection } from './ProblemSolutionSection';
 export { FuturePlansSection } from './FuturePlansSection';
 export { BenefitsSection } from './BenefitsSection';
 export { SocialProofSection } from './SocialProofSection';

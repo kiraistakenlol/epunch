@@ -5,7 +5,7 @@
 }
 
 .container {
-  max-width: 1000px;
+  max-width: 800px;
   margin: 0 auto;
 }
 
@@ -17,73 +17,99 @@
   color: white;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  max-width: 800px;
-  margin: 0 auto;
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-.card {
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 1.5rem;
-  padding: 2.5rem 2rem;
-  text-align: center;
-  transition: transform 0.3s ease, background 0.3s ease;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
 }
 
-.card:hover {
-  transform: translateY(-5px);
+.item:hover {
   background: rgba(255, 255, 255, 0.15);
+  transform: translateX(10px);
 }
 
-.icon {
-  font-size: 3.5rem;
-  margin-bottom: 1rem;
-  display: block;
+.number {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
-.cardTitle {
-  font-size: 1.5rem;
+.content {
+  flex: 1;
+}
+
+.itemTitle {
+  font-size: 1.25rem;
   font-weight: 600;
-  margin: 0 0 1rem 0;
+  margin: 0 0 0.5rem 0;
   color: white;
 }
 
-.cardText {
+.itemText {
   font-size: 1rem;
-  line-height: 1.6;
+  line-height: 1.4;
   margin: 0;
   color: rgba(255, 255, 255, 0.9);
 }
 
-.cardText strong {
+.itemText strong {
   color: #fbbf24;
   font-weight: 700;
 }
 
 @media (max-width: 768px) {
   .benefitsSection {
-    padding: 3rem 1rem;
+    padding: 2rem 1rem;
   }
   
   .title {
-    font-size: 2rem;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
   }
   
-  .grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+  .list {
+    gap: 1rem;
   }
   
-  .card {
-    padding: 2rem 1.5rem;
+  .item {
+    padding: 1rem;
+    gap: 1rem;
   }
   
-  .icon {
-    font-size: 3rem;
+  .number {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+  }
+  
+  .itemTitle {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .itemText {
+    font-size: 0.85rem;
+    line-height: 1.3;
   }
 } 

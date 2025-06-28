@@ -10,27 +10,35 @@ export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ merchant }) =>
   return (
     <section className={styles.benefitsSection}>
       <div className={styles.container}>
-        <h2 className={styles.title}>Why {merchant.name} Should Use Digital Loyalty Cards</h2>
-        <div className={styles.grid}>
-          <div className={styles.card}>
-            <div className={styles.icon}>🔄</div>
-            <h3 className={styles.cardTitle}>Keep Customers</h3>
-            <p className={styles.cardText}><strong>73% higher retention</strong> with loyalty programs.</p>
+        <h2 className={styles.title}>Why {merchant.name} Needs This</h2>
+        <div className={styles.list}>
+          <div className={styles.item}>
+            <div className={styles.number}>1</div>
+            <div className={styles.content}>
+              <h3 className={styles.itemTitle}>Stop the Vanishing Act</h3>
+              <p className={styles.itemText}><strong>73% higher retention</strong> (no more ghosting customers)</p>
+            </div>
           </div>
-          <div className={styles.card}>
-            <div className={styles.icon}>💰</div>
-            <h3 className={styles.cardTitle}>Make More Money</h3>
-            <p className={styles.cardText}>Loyalty customers spend <strong>12-18% more</strong> each year.</p>
+          <div className={styles.item}>
+            <div className={styles.number}>2</div>
+            <div className={styles.content}>
+              <h3 className={styles.itemTitle}>Bigger Bills</h3>
+              <p className={styles.itemText}>Loyal customers spend <strong>18% more</strong> per visit</p>
+            </div>
           </div>
-          <div className={styles.card}>
-            <div className={styles.icon}>🏆</div>
-            <h3 className={styles.cardTitle}>Beat Competition</h3>
-            <p className={styles.cardText}><strong>84% of customers</strong> choose businesses with rewards.</p>
+          <div className={styles.item}>
+            <div className={styles.number}>3</div>
+            <div className={styles.content}>
+              <h3 className={styles.itemTitle}>Crush Competition</h3>
+              <p className={styles.itemText}><strong>84% choose</strong> businesses with rewards over boring ones</p>
+            </div>
           </div>
-          <div className={styles.card}>
-            <div className={styles.icon}>📊</div>
-            <h3 className={styles.cardTitle}>Track Results</h3>
-            <p className={styles.cardText}>Get <strong>real-time data</strong> on customer behavior.</p>
+          <div className={styles.item}>
+            <div className={styles.number}>4</div>
+            <div className={styles.content}>
+              <h3 className={styles.itemTitle}>Know Your People</h3>
+              <p className={styles.itemText}>Get <strong>real data</strong> (not just gut feelings)</p>
+            </div>
           </div>
         </div>
       </div>

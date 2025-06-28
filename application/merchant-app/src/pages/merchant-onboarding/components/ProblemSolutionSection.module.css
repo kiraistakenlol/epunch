@@ -1,0 +1,167 @@
+.section {
+  padding: 6rem 0;
+  background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+  position: relative;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: stretch;
+}
+
+/* Card Styles */
+.problemCard,
+.solutionCard {
+  background: white;
+  border-radius: 16px;
+  padding: 2.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f1f5f9;
+  transition: all 0.2s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.problemCard:hover,
+.solutionCard:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+.problemCard {
+  border-left: 4px solid #ef4444;
+}
+
+.solutionCard {
+  border-left: 4px solid #10b981;
+}
+
+/* Card Headers */
+.cardHeader {
+  margin-bottom: 1.5rem;
+}
+
+.problemBadge,
+.solutionBadge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.problemBadge {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.solutionBadge {
+  background: #d1fae5;
+  color: #059669;
+}
+
+/* Problem Card Content */
+.problemTitle {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #1f2937;
+  line-height: 1.2;
+  margin: 0 0 1rem 0;
+}
+
+.problemDescription {
+  font-size: 1.125rem;
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Solution Card Content */
+.brandReveal {
+  margin-bottom: 2rem;
+}
+
+.brandName {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #10b981;
+  margin: 0 0 0.5rem 0;
+  line-height: 1;
+}
+
+.brandTagline {
+  font-size: 1.25rem;
+  color: #4b5563;
+  margin: 0 0 1rem 0;
+  line-height: 1.4;
+}
+
+.brandDescription {
+  font-size: 1rem;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .section {
+    padding: 4rem 0;
+  }
+  
+  .container {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 0 1.5rem;
+  }
+  
+  .problemCard,
+  .solutionCard {
+    padding: 2rem;
+  }
+  
+  .problemTitle {
+    font-size: 1.5rem;
+  }
+  
+  .brandName {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 3rem 0;
+  }
+  
+  .container {
+    padding: 0 1rem;
+  }
+  
+  .problemCard,
+  .solutionCard {
+    padding: 1.5rem;
+  }
+  
+  .problemTitle {
+    font-size: 1.375rem;
+  }
+  
+  .brandName {
+    font-size: 2rem;
+  }
+  
+  .problemDescription,
+  .brandTagline,
+  .brandDescription {
+    font-size: 1rem;
+  }
+} 

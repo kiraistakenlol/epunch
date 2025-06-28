@@ -75,14 +75,14 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
     <section className={styles.howItWorks}>
       <div className={styles.sectionContent}>
         <h2 className={styles.sectionTitle}>
-          How It Works
+          How It Actually Works
         </h2>
 
         <div className={styles.stepsContainer}>
           <WorkflowStep
             stepNumber={1}
             role="you"
-            title="Print and display at checkout"
+            title="Put this QR code where people can see it"
             showArrow={true}
           >
             <div className={styles.singleStep}>
@@ -105,8 +105,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={2}
             role="customer"
-            title="Scans your QR code"
-            note="Opens ePunch instantly, no app download"
+            title="Customer scans with their phone"
+            note="No app downloads, no sign-ups, just works instantly"
             showArrow={true}
           >
             <div className={styles.singleStep}>
@@ -134,8 +134,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={3}
             role="you"
-            title="Scan client's QR & PUNCH"
-            note="Use your phone or tablet"
+            title="Scan their QR code back & hit PUNCH"
+            note="Takes 2 seconds on your phone"
             showArrow={true}
           >
             <div className={styles.singleStep}>
@@ -165,8 +165,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={4}
             role="customer"
-            title={`Card fills up over time (${partialPunches}/${fullPunches} → ${fullPunches}/${fullPunches})`}
-            note="Visual progress tracking with each visit"
+            title={`They watch their card fill up (${partialPunches}/${fullPunches} → ${fullPunches}/${fullPunches})`}
+            note="Instant gratification with every visit"
             showArrow={true}
           >
             <div className={styles.singleStep}>
@@ -184,8 +184,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={5}
             role="customer"
-            title="Shows reward QR when card is full (10/10)"
-            note="Special QR appears when card is full"
+            title="Card full = special reward QR appears"
+            note="They know exactly when they've earned it"
             showArrow={true}
           >
             <div className={styles.singleStep}>
@@ -198,8 +198,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={6}
             role="you"
-            title="Scan reward, hit 'REDEEM'"
-            note="Card resets automatically"
+            title="Scan reward QR, hit REDEEM, done"
+            note="Card automatically resets for round 2"
             showArrow={true}
           >
             <div className={styles.singleStep}>
@@ -232,8 +232,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={7}
             role="customer"
-            title="Client gets reward"
-            note={loyaltyProgram.rewardDescription || "Free coffee, discount, or whatever you offer!"}
+            title="Happy customer gets their reward"
+            note={loyaltyProgram.rewardDescription || "And starts dreaming about their next free coffee"}
           >
             <div className={styles.singleStep}>
               <div className={styles.rewardSchema}>
