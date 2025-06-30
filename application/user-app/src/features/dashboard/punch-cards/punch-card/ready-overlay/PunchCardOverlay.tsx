@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocalization } from 'e-punch-common-ui';
 import { useAppDispatch, useAppSelector } from '../../../../../store/hooks';
 import { selectSelectedCardId, setSelectedCardId, clearSelectedCard, scrollToCard } from '../../../../punchCards/punchCardsSlice';
 import styles from './PunchCardOverlay.module.css';
@@ -8,6 +9,7 @@ interface PunchCardOverlayProps {
 }
 
 const PunchCardOverlay: React.FC<PunchCardOverlayProps> = ({ cardId }) => {
+  const { t } = useLocalization();
   const dispatch = useAppDispatch();
   const selectedCardId = useAppSelector(selectSelectedCardId);
   const isSelected = selectedCardId === cardId;
@@ -27,7 +29,7 @@ const PunchCardOverlay: React.FC<PunchCardOverlayProps> = ({ cardId }) => {
   };
 
   const labelClass = isSelected ? styles.selected : styles.redeemable;
-  const text = isSelected ? 'SELECTED' : 'TAP TO REDEEM';
+  const text = isSelected ? t('reward.selected') : t('reward.tapToRedeem');
 
   return (
     <div 

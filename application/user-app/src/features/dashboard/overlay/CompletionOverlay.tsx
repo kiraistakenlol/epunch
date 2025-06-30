@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocalization } from 'e-punch-common-ui';
 import styles from './CompletionOverlay.module.css';
 import { handleEvent } from '../../animations/animationSlice';
 import { appColors } from '../../../theme';
@@ -11,6 +12,7 @@ import PunchCardItem from '../punch-cards/punch-card/PunchCardItem';
 import { resolveCardStyles } from '../../../utils/cardStyles';
 
 const CompletionOverlay: React.FC = () => {
+  const { t } = useLocalization();
   const dispatch = useDispatch<AppDispatch>();
   const completionOverlay = useAppSelector(selectCompletionOverlay);
   const punchCards = useAppSelector(selectPunchCards);
@@ -63,7 +65,7 @@ const CompletionOverlay: React.FC = () => {
           cursor: 'default'
         }}
       >
-        <h1 className={styles.completeText}>COMPLETE!!</h1>
+        <h1 className={styles.completeText}>{t('punchCards.completion.complete')}</h1>
 
         <div className={styles.cardContainer}>
           <PunchCardItem
@@ -76,7 +78,7 @@ const CompletionOverlay: React.FC = () => {
         </div>
 
         <button className={styles.okButton} onClick={handleOkClick}>
-          OK!
+          {t('punchCards.completion.ok')}
         </button>
       </div>
     </div>

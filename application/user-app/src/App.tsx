@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { configureApiClient } from 'e-punch-common-ui';
+import { configureApiClient, LocalizationProvider } from 'e-punch-common-ui';
 import DashboardPage from './features/dashboard/DashboardPage';
 import DevPage from './features/dev/DevPage';
 import CardPreviewPage from './pages/CardPreviewPage';
@@ -40,21 +40,23 @@ function App() {
   useGlobalAnimationEvents();
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<AppLayout />}>
-          <Route index element={<DashboardPage />} />
-          <Route path="dev" element={<DevPage />} />
-        </Route>
-        <Route path="merchant/card-preview" element={<CardPreviewPage />} />
-        <Route path="preview" element={<DashboardPreviewPage />} />
-        <Route path="for-merchants" element={<MerchantLandingPage />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-      <SignOutModal />
-      <CompletionOverlay />
-      <Alert />
-    </BrowserRouter>
+    <LocalizationProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<AppLayout />}>
+            <Route index element={<DashboardPage />} />
+            <Route path="dev" element={<DevPage />} />
+          </Route>
+          <Route path="merchant/card-preview" element={<CardPreviewPage />} />
+          <Route path="preview" element={<DashboardPreviewPage />} />
+          <Route path="for-merchants" element={<MerchantLandingPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+        <SignOutModal />
+        <CompletionOverlay />
+        <Alert />
+      </BrowserRouter>
+    </LocalizationProvider>
   );
 }
 

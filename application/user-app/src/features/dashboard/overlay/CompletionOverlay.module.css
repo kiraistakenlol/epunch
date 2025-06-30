@@ -29,6 +29,10 @@
   font-weight: 900;
   text-align: center;
   margin: 0;
+  padding: 0 calc(var(--overlay-card-height) * 0.08);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
   text-shadow: 
     0 0 calc(var(--overlay-card-height) * 0.04) rgba(245, 245, 220, 0.8),
     0 0 calc(var(--overlay-card-height) * 0.08) rgba(245, 245, 220, 0.6),

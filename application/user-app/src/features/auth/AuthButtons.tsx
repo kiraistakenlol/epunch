@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocalization } from 'e-punch-common-ui';
 import { appColors } from '../../theme';
 
 interface AuthButtonsProps {
@@ -37,20 +38,22 @@ const buttonContainerStyle: React.CSSProperties = {
 };
 
 const AuthButtons: React.FC<AuthButtonsProps> = ({ onSignInClick, onSignUpClick }) => {
+  const { t } = useLocalization();
+  
   return (
     <div style={buttonContainerStyle}>
       <button 
         style={signInButtonStyle}
         onClick={onSignInClick}
       >
-        Sign In
+        {t('auth.signIn')}
       </button>
-      <span style={{ color: appColors.epunchBlack, fontSize: '14px', alignSelf: 'center' }}>or</span>
+      <span style={{ color: appColors.epunchBlack, fontSize: '14px', alignSelf: 'center' }}>{t('auth.or')}</span>
       <button 
         style={signUpButtonStyle}
         onClick={onSignUpClick}
       >
-        Sign Up
+        {t('auth.signUp')}
       </button>
     </div>
   );

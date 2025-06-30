@@ -1,0 +1,3 @@
+- localization
+- more colors for cards
+- store welcome qr page settings 

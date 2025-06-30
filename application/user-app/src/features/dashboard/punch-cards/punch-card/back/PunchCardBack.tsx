@@ -1,5 +1,6 @@
 import React from 'react';
 import { PunchCardDto } from 'e-punch-common-core';
+import { useLocalization } from 'e-punch-common-ui';
 import { useAppSelector } from '../../../../../store/hooks';
 import { selectLoyaltyProgramById } from '../../../../loyaltyPrograms/loyaltyProgramsSlice';
 import { CustomizableCardStyles } from '../../../../../utils/cardStyles';
@@ -17,6 +18,7 @@ const PunchCardBack: React.FC<PunchCardBackProps> = ({
   totalPunches,
   resolvedStyles
 }) => {
+  const { t } = useLocalization();
   const loyaltyProgram = useAppSelector(state => selectLoyaltyProgramById(state, loyaltyProgramId));
 
   return (
@@ -38,7 +40,7 @@ const PunchCardBack: React.FC<PunchCardBackProps> = ({
           className={styles.headerTitle}
           style={{ color: resolvedStyles.colors.textColor }}
         >
-          Details
+          {t('punchCards.back.details')}
         </span>
       </div>
       <div 
@@ -48,8 +50,7 @@ const PunchCardBack: React.FC<PunchCardBackProps> = ({
         {loyaltyProgram && (
           <div className={`${styles.rewardMessage} ${styles.rewardText}`}>
             <div style={{ color: resolvedStyles.colors.textColor }}>
-              Collect <span className={styles.totalPunches}>{totalPunches}</span> punches
-             at <span className={styles.shopName} style={{ color: resolvedStyles.colors.textColor }}>{shopName}</span> and enjoy
+              {t('punchCards.back.collectMessage', { totalPunches, shopName })}
             </div>
             <div 
               className={styles.rewardName}

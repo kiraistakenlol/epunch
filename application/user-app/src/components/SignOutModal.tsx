@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useLocalization } from 'e-punch-common-ui';
 import EPunchModal from './EPunchModal';
 import type { RootState } from '../store/store';
 import { appColors } from '../theme';
@@ -39,6 +40,7 @@ const messageStyle: React.CSSProperties = {
 };
 
 const SignOutModal: React.FC = () => {
+  const { t } = useLocalization();
   const dispatch = useDispatch();
   const isOpen = useSelector((state: RootState) => selectSignOutModalOpen(state));
 
@@ -60,11 +62,11 @@ const SignOutModal: React.FC = () => {
     <EPunchModal
       isOpen={isOpen}
       onClose={handleClose}
-      title="Confirm Sign Out"
+      title={t('signOut.title')}
       maxWidth="350px"
     >
       <div style={messageStyle}>
-        Are you sure you want to sign out? You'll continue using the app with your anonymous account.
+        {t('signOut.message')}
       </div>
       
       <button
@@ -77,7 +79,7 @@ const SignOutModal: React.FC = () => {
           e.currentTarget.style.backgroundColor = appColors.epunchRedDanger;
         }}
       >
-        Sign Out
+        {t('signOut.confirm')}
       </button>
       
       <button
@@ -90,7 +92,7 @@ const SignOutModal: React.FC = () => {
           e.currentTarget.style.backgroundColor = appColors.epunchBeige;
         }}
       >
-        Cancel
+        {t('signOut.cancel')}
       </button>
     </EPunchModal>
   );

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useLocalization } from 'e-punch-common-ui';
 import AuthButtons from './AuthButtons';
 import AuthModal from './AuthModal';
 import { selectIsAuthenticated } from './authSlice';
 
 const AuthContainer: React.FC = () => {
+  const { t } = useLocalization();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'signin' | 'signup'>('signin');
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
@@ -106,7 +108,7 @@ const AuthContainer: React.FC = () => {
         {shouldShowMessage() && (
           <div style={{ textAlign: 'center', marginBottom: getTextContainerMarginBottom() }}>
             <small style={getTextStyle()}>
-              Sign in to sync your punch cards across devices and keep them secure
+              {t('auth.syncMessage')}
             </small>
           </div>
         )}

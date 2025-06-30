@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { signUp, confirmSignUp, signIn } from 'aws-amplify/auth';
+import { useLocalization } from 'e-punch-common-ui';
 import { appColors } from '../../theme';
 
 interface EmailAuthFormProps {
@@ -33,6 +34,7 @@ const buttonStyle: React.CSSProperties = {
 };
 
 const EmailAuthForm: React.FC<EmailAuthFormProps> = ({ mode, onSuccess, onError }) => {
+  const { t } = useLocalization();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmationCode, setConfirmationCode] = useState('');
@@ -53,7 +55,7 @@ const EmailAuthForm: React.FC<EmailAuthFormProps> = ({ mode, onSuccess, onError 
       });
       setNeedsConfirmation(true);
     } catch (error: any) {
-      onError(error.message || 'Sign up failed');
+      onError(error.message || t('auth.signUpFailed'));
     } finally {
       setIsLoading(false);
     }
@@ -75,7 +77,7 @@ const EmailAuthForm: React.FC<EmailAuthFormProps> = ({ mode, onSuccess, onError 
       
       onSuccess();
     } catch (error: any) {
-      onError(error.message || 'Confirmation failed');
+      onError(error.message || t('auth.confirmationFailed'));
     } finally {
       setIsLoading(false);
     }
@@ -90,7 +92,7 @@ const EmailAuthForm: React.FC<EmailAuthFormProps> = ({ mode, onSuccess, onError 
       });
       onSuccess();
     } catch (error: any) {
-      onError(error.message || 'Sign in failed');
+      onError(error.message || t('auth.signInFailed'));
     } finally {
       setIsLoading(false);
     }
@@ -111,15 +113,15 @@ const EmailAuthForm: React.FC<EmailAuthFormProps> = ({ mode, onSuccess, onError 
     return (
       <form onSubmit={handleSubmit} style={formStyle}>
         <div style={{ textAlign: 'center', marginBottom: '15px' }}>
-          <h3 style={{ margin: '0 0 10px 0', color: appColors.epunchBlack }}>Check Your Email</h3>
+          <h3 style={{ margin: '0 0 10px 0', color: appColors.epunchBlack }}>{t('auth.checkEmail')}</h3>
           <p style={{ margin: 0, color: appColors.epunchBlack, fontSize: '14px' }}>
-            We sent a verification code to {email}
+            {t('auth.verificationSent', { email })}
           </p>
         </div>
         
         <input
           type="text"
-          placeholder="Enter verification code"
+          placeholder={t('auth.enterCode')}
           value={confirmationCode}
           onChange={(e) => setConfirmationCode(e.target.value)}
           style={inputStyle}
@@ -131,7 +133,7 @@ const EmailAuthForm: React.FC<EmailAuthFormProps> = ({ mode, onSuccess, onError 
           style={buttonStyle}
           disabled={isLoading}
         >
-          {isLoading ? 'Verifying...' : 'Verify Email'}
+          {isLoading ? t('auth.verifying') : t('auth.verifyEmail')}
         </button>
       </form>
     );
@@ -141,7 +143,7 @@ const EmailAuthForm: React.FC<EmailAuthFormProps> = ({ mode, onSuccess, onError 
     <form onSubmit={handleSubmit} style={formStyle}>
       <input
         type="email"
-        placeholder="Email"
+        placeholder={t('auth.email')}
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         style={inputStyle}
@@ -150,7 +152,7 @@ const EmailAuthForm: React.FC<EmailAuthFormProps> = ({ mode, onSuccess, onError 
       
       <input
         type="password"
-        placeholder="Password"
+        placeholder={t('auth.password')}
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         style={inputStyle}
@@ -163,8 +165,8 @@ const EmailAuthForm: React.FC<EmailAuthFormProps> = ({ mode, onSuccess, onError 
         disabled={isLoading}
       >
         {isLoading 
-          ? (mode === 'signup' ? 'Creating Account...' : 'Signing In...') 
-          : (mode === 'signup' ? 'Create Account' : 'Sign In')
+          ? (mode === 'signup' ? t('auth.creatingAccount') : t('auth.signingIn')) 
+          : (mode === 'signup' ? t('auth.createAccount') : t('auth.signIn'))
         }
       </button>
     </form>

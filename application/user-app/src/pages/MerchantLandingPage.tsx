@@ -1,21 +1,25 @@
 import React from 'react';
 import { FaWhatsapp, FaTelegram } from 'react-icons/fa';
+import { useLocalization, LanguageSwitch } from 'e-punch-common-ui';
 import styles from './MerchantLandingPage.module.css';
 
 const MerchantLandingPage: React.FC = () => {
+  const { t } = useLocalization();
 
   return (
     <div className={styles.container}>
       <div className={styles.topContact}>
         <div className={styles.topContactContent}>
-          <span>Get started today: </span>
+          <span>{t('landing.getStarted')} </span>
           <a href="https://wa.me/79250419362" className={styles.topContactLink}>
-            <FaWhatsapp /> WhatsApp
+            <FaWhatsapp /> {t('landing.whatsapp')}
           </a>
           <span> | </span>
           <a href="https://t.me/sobolevchelovek" className={styles.topContactLink}>
-            <FaTelegram /> Telegram
+            <FaTelegram /> {t('landing.telegram')}
           </a>
+          <span> | </span>
+          <LanguageSwitch variant="landing" />
         </div>
       </div>
       <section className={styles.hero}>
@@ -23,17 +27,17 @@ const MerchantLandingPage: React.FC = () => {
           <div className={styles.heroText}>
             <div className={styles.brandTitle}>ePunch</div>
             <h1 className={styles.heroTitle}>
-              Digital Punch Cards
+              {t('landing.digitalPunchCards')}
             </h1>
             <div className={styles.heroSubtitle}>
-              <p className={styles.bulletPoint}>• No apps to download</p>
-              <p className={styles.bulletPoint}>• No accounts to create</p>
-              <p className={styles.bulletPoint}>• Just scan and collect</p>
+              <p className={styles.bulletPoint}>{t('landing.noApps')}</p>
+              <p className={styles.bulletPoint}>{t('landing.noAccounts')}</p>
+              <p className={styles.bulletPoint}>{t('landing.justScan')}</p>
             </div>
           </div>
                     <div className={styles.heroDemo}>
             <div className={styles.heroVideoDemo}>
-                             <h3 className={styles.demoTitle}>Watch How It Works</h3>
+                             <h3 className={styles.demoTitle}>{t('landing.watchDemo')}</h3>
               <div className={styles.heroVideoContainer}>
                 <video 
                   className={styles.heroDemoVideo}
@@ -47,7 +51,7 @@ const MerchantLandingPage: React.FC = () => {
                   <source src="/videos/card_completion_recording.mov" type="video/quicktime" />
                   Your browser does not support the video tag.
                 </video>
-                <p className={styles.stepLabel}>Customer completes card → Gets reward</p>
+                <p className={styles.stepLabel}>{t('landing.customerCompletes')}</p>
               </div>
             </div>
           </div>
@@ -58,63 +62,63 @@ const MerchantLandingPage: React.FC = () => {
 
       <section className={styles.customerJourney}>
         <div className={styles.sectionContent}>
-          <h2 className={styles.sectionTitle}>How Customers Use It</h2>
-          <p className={styles.journeySubtitle}>From first visit to free reward</p>
+          <h2 className={styles.sectionTitle}>{t('landing.howCustomersUse')}</h2>
+          <p className={styles.journeySubtitle}>{t('landing.firstVisitToReward')}</p>
           
           <div className={styles.journeyFlow}>
             <div className={styles.journeyStep}>
               <div className={styles.stepHeader}>
                 <div className={styles.stepNumber}>1</div>
-                <h3>Initial state</h3>
+                <h3>{t('landing.step1.title')}</h3>
               </div>
               <div className={styles.screenshotContainer}>
                 <img src="/images/card_completion_flow/1_initial_state.png" alt="Customer's initial app view" className={styles.journeyImage} />
               </div>
-              <p>Customer's QR code ready</p>
+              <p>{t('landing.step1.description')}</p>
             </div>
 
             <div className={styles.journeyStep}>
               <div className={styles.stepHeader}>
                 <div className={styles.stepNumber}>2</div>
-                <h3>First punch</h3>
+                <h3>{t('landing.step2.title')}</h3>
               </div>
               <div className={styles.screenshotContainer}>
                 <img src="/images/card_completion_flow/2_one_punch.png" alt="First punch collected" className={styles.journeyImage} />
               </div>
-              <p>First purchase → first punch</p>
+              <p>{t('landing.step2.description')}</p>
             </div>
 
             <div className={styles.journeyStep}>
               <div className={styles.stepHeader}>
                 <div className={styles.stepNumber}>3</div>
-                <h3>Building up</h3>
+                <h3>{t('landing.step3.title')}</h3>
               </div>
               <div className={styles.screenshotContainer}>
                 <img src="/images/card_completion_flow/4_six_punches.png" alt="Six punches collected" className={styles.journeyImage} />
               </div>
-              <p>Each purchase adds a punch</p>
+              <p>{t('landing.step3.description')}</p>
             </div>
 
             <div className={styles.journeyStep}>
               <div className={styles.stepHeader}>
                 <div className={styles.stepNumber}>4</div>
-                <h3>Card complete!</h3>
+                <h3>{t('landing.step4.title')}</h3>
               </div>
               <div className={styles.screenshotContainer}>
                 <img src="/images/card_completion_flow/5_completion_overlay.png" alt="Completion celebration overlay" className={styles.journeyImage} />
               </div>
-              <p>Celebration animation</p>
+              <p>{t('landing.step4.description')}</p>
             </div>
 
             <div className={styles.journeyStep}>
               <div className={styles.stepHeader}>
                 <div className={styles.stepNumber}>5</div>
-                <h3>Free reward</h3>
+                <h3>{t('landing.step5.title')}</h3>
               </div>
               <div className={styles.screenshotContainer}>
                 <img src="/images/card_completion_flow/7_selected_for_redemption.png" alt="Selected for redemption" className={styles.journeyImage} />
               </div>
-              <p>Customer claims their reward</p>
+              <p>{t('landing.step5.description')}</p>
             </div>
           </div>
         </div>
@@ -124,34 +128,34 @@ const MerchantLandingPage: React.FC = () => {
 
       <section className={styles.benefits}>
         <div className={styles.sectionContent}>
-          <h2 className={styles.sectionTitle}>Benefits to your business</h2>
+          <h2 className={styles.sectionTitle}>{t('landing.benefits.title')}</h2>
           <div className={styles.benefitsList}>
             <div className={styles.benefit}>
               <div className={styles.benefitIcon}>❤️</div>
               <div className={styles.benefitText}>
-                <h3>More loyal customers</h3>
-                <p>73% higher retention rates</p>
+                <h3>{t('landing.benefits.loyal.title')}</h3>
+                <p>{t('landing.benefits.loyal.description')}</p>
               </div>
             </div>
             <div className={styles.benefit}>
               <div className={styles.benefitIcon}>🔄</div>
               <div className={styles.benefitText}>
-                <h3>Frequent repeat visits</h3>
-                <p>20% increase in visit frequency</p>
+                <h3>{t('landing.benefits.visits.title')}</h3>
+                <p>{t('landing.benefits.visits.description')}</p>
               </div>
             </div>
             <div className={styles.benefit}>
               <div className={styles.benefitIcon}>⚡</div>
               <div className={styles.benefitText}>
-                <h3>Zero maintenance</h3>
-                <p>No physical cards to replace</p>
+                <h3>{t('landing.benefits.maintenance.title')}</h3>
+                <p>{t('landing.benefits.maintenance.description')}</p>
               </div>
             </div>
             <div className={styles.benefit}>
               <div className={styles.benefitIcon}>🎮</div>
               <div className={styles.benefitText}>
-                <h3>Gamification</h3>
-                <p>Visual progress drives engagement</p>
+                <h3>{t('landing.benefits.gamification.title')}</h3>
+                <p>{t('landing.benefits.gamification.description')}</p>
               </div>
             </div>
           </div>
@@ -160,16 +164,16 @@ const MerchantLandingPage: React.FC = () => {
 
       <section className={styles.cta}>
         <div className={styles.ctaContent}>
-          <h2 className={styles.ctaTitle}>Ready to Get Started?</h2>
+          <h2 className={styles.ctaTitle}>{t('landing.cta.title')}</h2>
           <p className={styles.ctaSubtitle}>
-            Contact us to start your digital loyalty program today
+            {t('landing.cta.subtitle')}
           </p>
           <div className={styles.contactButtons}>
             <a href="https://wa.me/79250419362" className={styles.primaryButton}>
-              <FaWhatsapp /> WhatsApp
+              <FaWhatsapp /> {t('landing.whatsapp')}
             </a>
             <a href="https://t.me/sobolevchelovek" className={styles.secondaryButton}>
-              <FaTelegram /> Telegram
+              <FaTelegram /> {t('landing.telegram')}
             </a>
           </div>
           <div className={styles.contactInfo}>
