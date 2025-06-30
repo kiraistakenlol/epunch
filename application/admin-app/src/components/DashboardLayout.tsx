@@ -33,7 +33,7 @@ const drawerWidth = 280;
 
 const menuItems = [
   { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
-  { text: 'Demo Setup', icon: <RocketIcon />, path: '/merchant-demo-setup' },
+  { text: 'Merchant Quick Setup', icon: <RocketIcon />, path: '/merchant-quick-setup' },
   { text: 'Merchants', icon: <StoreIcon />, path: '/merchants' },
   { text: 'Users', icon: <PeopleIcon />, path: '/users' },
 ];

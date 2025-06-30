@@ -11,7 +11,7 @@ import { Merchants } from './pages/Merchants';
 import { MerchantView } from './pages/MerchantView';
 import { MerchantCreate } from './pages/MerchantCreate';
 import { MerchantEdit } from './pages/MerchantEdit';
-import { MerchantDemoSetup } from './pages/MerchantDemoSetup';
+import { MerchantQuickSetup } from './pages/MerchantQuickSetup.tsx';
 import { Users } from './pages/Users';
 import { UserView } from './pages/UserView';
 import './styles/global.css';
@@ -98,7 +98,7 @@ function App() {
             <Route path="merchants/create" element={<MerchantCreate />} />
             <Route path="merchants/:id" element={<MerchantView />} />
             <Route path="merchants/:id/edit" element={<MerchantEdit />} />
-            <Route path="merchant-demo-setup" element={<MerchantDemoSetup />} />
+            <Route path="merchant-quick-setup" element={<MerchantQuickSetup />} />
             <Route path="users" element={<Users />} />
             <Route path="users/:id" element={<UserView />} />
           </Route>

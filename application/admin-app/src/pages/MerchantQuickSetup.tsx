@@ -113,7 +113,7 @@ const defaultUsers: UserTemplate[] = [
   },
 ];
 
-export const MerchantDemoSetup: React.FC = () => {
+export const MerchantQuickSetup: React.FC = () => {
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState<MerchantFormData>({
@@ -448,15 +448,15 @@ export const MerchantDemoSetup: React.FC = () => {
         await apiClient.createMerchantUser(newMerchant.id, userData);
       }
       
-      showSnackbar('Demo merchant setup completed successfully!', 'success');
+      showSnackbar('Merchant setup completed successfully!', 'success');
       
       setTimeout(() => {
         navigate(`/merchants/${newMerchant.id}`);
       }, 2000);
       
     } catch (err: any) {
-      console.error('Failed to setup demo merchant:', err);
-      showSnackbar(err.message || 'Failed to setup demo merchant', 'error');
+      console.error('Failed to setup merchant:', err);
+      showSnackbar(err.message || 'Failed to setup merchant', 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -473,7 +473,7 @@ export const MerchantDemoSetup: React.FC = () => {
             textShadow: '1px 1px 1px #3e2723',
           }}
         >
-          Merchant Demo Setup
+          Merchant Quick Setup
         </Typography>
         
         <Button
@@ -804,7 +804,7 @@ export const MerchantDemoSetup: React.FC = () => {
                   px: 4,
                 }}
               >
-                {isSubmitting ? 'Setting up...' : 'Create Demo Merchant'}
+                {isSubmitting ? 'Setting up...' : 'Create Merchant'}
               </Button>
             </Box>
           </CardContent>

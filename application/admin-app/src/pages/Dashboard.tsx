@@ -83,8 +83,8 @@ export const Dashboard: React.FC = () => {
     }
   };
 
-  const handleDemoSetup = () => {
-    navigate('/merchant-demo-setup');
+  const handleQuickSetup = () => {
+    navigate('/merchant-quick-setup');
   };
 
   const handleMerchantManagement = () => {
@@ -273,7 +273,7 @@ export const Dashboard: React.FC = () => {
                 boxShadow: '0 6px 16px rgba(0, 0, 0, 0.2)',
               },
             }}
-            onClick={handleDemoSetup}
+            onClick={handleQuickSetup}
           >
             <CardContent sx={{ p: 3 }}>
               <Box display="flex" alignItems="center" justifyContent="space-between">
@@ -281,10 +281,7 @@ export const Dashboard: React.FC = () => {
                   <RocketIcon sx={{ fontSize: 32, color: '#5d4037' }} />
                   <Box>
                     <Typography variant="h6" component="h2" sx={{ color: '#3e2723', fontWeight: 'bold' }}>
-                      Merchant Demo Setup
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: '#5d4037' }}>
-                      Quick setup for demos and presentations
+                      Merchant Quick Setup
                     </Typography>
                   </Box>
                 </Box>
