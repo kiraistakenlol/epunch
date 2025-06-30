@@ -98,6 +98,99 @@ type TranslationKeys = {
   'common.buttons.save': string;
   'common.buttons.cancel': string;
   'common.errors.networkError': string;
+  
+  // Merchant Onboarding
+  'merchantOnboarding.error.loyaltyProgramRequired': string;
+  'merchantOnboarding.error.loyaltyProgramSetupFirst': string;
+  'merchantOnboarding.error.contactMerchant': string;
+  'merchantOnboarding.error.merchantNotFound': string;
+  'merchantOnboarding.error.merchantNotFoundMessage': string;
+  'merchantOnboarding.loading.merchantInformation': string;
+
+  // Hero Section
+  'merchantOnboarding.hero.digitalLoyaltyCards': string;
+  'merchantOnboarding.hero.for': string;
+  'merchantOnboarding.hero.tryItNow': string;
+  'merchantOnboarding.hero.buyGetFree': string;
+
+  // Problem Solution
+  'merchantOnboarding.problemSolution.problem': string;
+  'merchantOnboarding.problemSolution.problemTitle': string;
+  'merchantOnboarding.problemSolution.problemDescription': string;
+  'merchantOnboarding.problemSolution.solution': string;
+  'merchantOnboarding.problemSolution.brandTagline': string;
+  'merchantOnboarding.problemSolution.brandDescription': string;
+
+  // Benefits
+  'merchantOnboarding.benefits.title': string;
+  'merchantOnboarding.benefits.retention.title': string;
+  'merchantOnboarding.benefits.retention.description': string;
+  'merchantOnboarding.benefits.spending.title': string;
+  'merchantOnboarding.benefits.spending.description': string;
+  'merchantOnboarding.benefits.competition.title': string;
+  'merchantOnboarding.benefits.competition.description': string;
+  'merchantOnboarding.benefits.data.title': string;
+  'merchantOnboarding.benefits.data.description': string;
+
+  // How It Works
+  'merchantOnboarding.howItWorks.title': string;
+  'merchantOnboarding.howItWorks.subtitle': string;
+  'merchantOnboarding.howItWorks.step1.title': string;
+  'merchantOnboarding.howItWorks.step1.note': string;
+  'merchantOnboarding.howItWorks.step2.title': string;
+  'merchantOnboarding.howItWorks.step2.note': string;
+  'merchantOnboarding.howItWorks.step3.title': string;
+  'merchantOnboarding.howItWorks.step3.note': string;
+  'merchantOnboarding.howItWorks.step4.title': string;
+  'merchantOnboarding.howItWorks.step4.note': string;
+  'merchantOnboarding.howItWorks.step5.title': string;
+  'merchantOnboarding.howItWorks.step5.note': string;
+  'merchantOnboarding.howItWorks.step6.title': string;
+  'merchantOnboarding.howItWorks.step6.note': string;
+  'merchantOnboarding.howItWorks.step7.title': string;
+  'merchantOnboarding.howItWorks.step7.note': string;
+  'merchantOnboarding.howItWorks.qrPlaceholder': string;
+  'merchantOnboarding.howItWorks.roleBadge.you': string;
+  'merchantOnboarding.howItWorks.roleBadge.customer': string;
+
+  // Future Plans
+  'merchantOnboarding.futurePlans.title': string;
+  'merchantOnboarding.futurePlans.subtitle': string;
+  'merchantOnboarding.futurePlans.availableNow': string;
+  'merchantOnboarding.futurePlans.comingSoon': string;
+  'merchantOnboarding.futurePlans.year2025': string;
+  'merchantOnboarding.futurePlans.multiplePrograms.title': string;
+  'merchantOnboarding.futurePlans.multiplePrograms.description': string;
+  'merchantOnboarding.futurePlans.customization.title': string;
+  'merchantOnboarding.futurePlans.customization.description': string;
+  'merchantOnboarding.futurePlans.analytics.title': string;
+  'merchantOnboarding.futurePlans.analytics.description': string;
+  'merchantOnboarding.futurePlans.targeting.title': string;
+  'merchantOnboarding.futurePlans.targeting.description': string;
+  'merchantOnboarding.futurePlans.bundles.title': string;
+  'merchantOnboarding.futurePlans.bundles.description': string;
+  'merchantOnboarding.futurePlans.behaviorAnalysis.title': string;
+  'merchantOnboarding.futurePlans.behaviorAnalysis.description': string;
+  'merchantOnboarding.futurePlans.aiSuggestions.title': string;
+  'merchantOnboarding.futurePlans.aiSuggestions.description': string;
+
+  // Social Proof
+  'merchantOnboarding.socialProof.title': string;
+  'merchantOnboarding.socialProof.retention.label': string;
+  'merchantOnboarding.socialProof.frequency.label': string;
+  'merchantOnboarding.socialProof.spending.label': string;
+
+  // CTA
+  'merchantOnboarding.cta.title': string;
+  'merchantOnboarding.cta.subtitle': string;
+  'merchantOnboarding.cta.whatsapp': string;
+  'merchantOnboarding.cta.telegram': string;
+  'merchantOnboarding.cta.email': string;
+
+  // Contact
+  'merchantOnboarding.contact.whatsapp': string;
+  'merchantOnboarding.contact.telegram': string;
+  'merchantOnboarding.contact.email': string;
 };
 
 const translations = {
@@ -196,7 +289,100 @@ const translations = {
     // Common
     'common.buttons.save': 'Save',
     'common.buttons.cancel': 'Cancel',
-    'common.errors.networkError': 'Network error occurred'
+    'common.errors.networkError': 'Network error occurred',
+    
+    // Merchant Onboarding
+    'merchantOnboarding.error.loyaltyProgramRequired': 'Loyalty Program Required',
+    'merchantOnboarding.error.loyaltyProgramSetupFirst': 'This merchant needs to set up a loyalty program first.',
+    'merchantOnboarding.error.contactMerchant': 'Contact the merchant to create a loyalty program before accessing this page.',
+    'merchantOnboarding.error.merchantNotFound': 'Merchant Not Found',
+    'merchantOnboarding.error.merchantNotFoundMessage': 'The merchant "{{merchantSlug}}" could not be found.',
+    'merchantOnboarding.loading.merchantInformation': 'Loading merchant information...',
+
+    // Hero Section
+    'merchantOnboarding.hero.digitalLoyaltyCards': 'Digital Loyalty Cards',
+    'merchantOnboarding.hero.for': 'for',
+    'merchantOnboarding.hero.tryItNow': 'Try It Now! 🚀',
+    'merchantOnboarding.hero.buyGetFree': 'Buy 10 Get 1 Free',
+
+    // Problem Solution
+    'merchantOnboarding.problemSolution.problem': 'Problem',
+    'merchantOnboarding.problemSolution.problemTitle': 'Customers visit once, then vanish forever',
+    'merchantOnboarding.problemSolution.problemDescription': 'Like Tinder dates, 70% never come back. They forget you exist and swipe right on your competitors.',
+    'merchantOnboarding.problemSolution.solution': 'Solution',
+    'merchantOnboarding.problemSolution.brandTagline': 'Turn one-time visitors into obsessed regulars',
+    'merchantOnboarding.problemSolution.brandDescription': 'Digital loyalty cards that actually work. No apps, no hassle, no "sorry we\'re out of paper cards." Just scan and watch them keep coming back.',
+
+    // Benefits
+    'merchantOnboarding.benefits.title': 'Why {{merchantName}} Needs This',
+    'merchantOnboarding.benefits.retention.title': 'Stop the Vanishing Act',
+    'merchantOnboarding.benefits.retention.description': '<strong>73% higher retention</strong> (no more ghosting customers)',
+    'merchantOnboarding.benefits.spending.title': 'Bigger Bills',
+    'merchantOnboarding.benefits.spending.description': 'Loyal customers spend <strong>18% more</strong> per visit',
+    'merchantOnboarding.benefits.competition.title': 'Crush Competition',
+    'merchantOnboarding.benefits.competition.description': '<strong>84% choose</strong> businesses with rewards over boring ones',
+    'merchantOnboarding.benefits.data.title': 'Know Your People',
+    'merchantOnboarding.benefits.data.description': 'Get <strong>real data</strong> (not just gut feelings)',
+
+    // How It Works
+    'merchantOnboarding.howItWorks.title': 'How It Actually Works',
+    'merchantOnboarding.howItWorks.subtitle': 'Simple, fast, and works instantly with any smartphone',
+    'merchantOnboarding.howItWorks.step1.title': 'Put this QR code where people can see it',
+    'merchantOnboarding.howItWorks.step1.note': 'Print it, frame it, or display it digitally',
+    'merchantOnboarding.howItWorks.step2.title': 'Customer scans with their phone',
+    'merchantOnboarding.howItWorks.step2.note': 'No app downloads, no sign-ups, just works instantly',
+    'merchantOnboarding.howItWorks.step3.title': 'Scan their QR code back & hit PUNCH',
+    'merchantOnboarding.howItWorks.step3.note': 'Takes 2 seconds on your phone',
+    'merchantOnboarding.howItWorks.step4.title': 'They watch their card fill up ({{partial}}/{{full}} → {{full}}/{{full}})',
+    'merchantOnboarding.howItWorks.step4.note': 'Instant gratification with every visit',
+    'merchantOnboarding.howItWorks.step5.title': 'Card full = special reward QR appears',
+    'merchantOnboarding.howItWorks.step5.note': 'They know exactly when they\'ve earned it',
+    'merchantOnboarding.howItWorks.step6.title': 'Scan reward QR, hit REDEEM, done',
+    'merchantOnboarding.howItWorks.step6.note': 'Card automatically resets for round 2',
+    'merchantOnboarding.howItWorks.step7.title': 'Happy customer gets their reward',
+    'merchantOnboarding.howItWorks.step7.note': 'And starts dreaming about their next free coffee',
+    'merchantOnboarding.howItWorks.qrPlaceholder': 'QR Code will appear here',
+    'merchantOnboarding.howItWorks.roleBadge.you': 'YOU',
+    'merchantOnboarding.howItWorks.roleBadge.customer': 'CUSTOMER',
+
+    // Future Plans
+    'merchantOnboarding.futurePlans.title': 'What\'s Coming',
+    'merchantOnboarding.futurePlans.subtitle': 'Start with the good stuff today. Unlock mind-blowing features later.',
+    'merchantOnboarding.futurePlans.availableNow': 'Available Now',
+    'merchantOnboarding.futurePlans.comingSoon': 'Coming Soon',
+    'merchantOnboarding.futurePlans.year2025': '2025',
+    'merchantOnboarding.futurePlans.multiplePrograms.title': 'Run Multiple Programs',
+    'merchantOnboarding.futurePlans.multiplePrograms.description': 'Coffee rewards, meal deals, service packages - all at once. Because why limit yourself?',
+    'merchantOnboarding.futurePlans.customization.title': 'Make It Yours',
+    'merchantOnboarding.futurePlans.customization.description': 'Upload your logo, pick your colors. Make cards so pretty customers want to show them off.',
+    'merchantOnboarding.futurePlans.analytics.title': 'See What Works',
+    'merchantOnboarding.futurePlans.analytics.description': 'Finally know which rewards actually work instead of guessing like everyone else.',
+    'merchantOnboarding.futurePlans.targeting.title': 'Hunt Down Lost Customers',
+    'merchantOnboarding.futurePlans.targeting.description': 'Send targeted promos via email/WhatsApp. Automatically stalk... er, re-engage inactive customers.',
+    'merchantOnboarding.futurePlans.bundles.title': 'Get Paid Upfront',
+    'merchantOnboarding.futurePlans.bundles.description': 'Sell $200 bundles, give discounts. Customers save money, you get cash flow. Win-win.',
+    'merchantOnboarding.futurePlans.behaviorAnalysis.title': 'Know Everything',
+    'merchantOnboarding.futurePlans.behaviorAnalysis.description': 'Deep behavior analysis, peak hours, seasonal trends. Become a mind reader.',
+    'merchantOnboarding.futurePlans.aiSuggestions.title': 'Let AI Do the Thinking',
+    'merchantOnboarding.futurePlans.aiSuggestions.description': 'Get personalized suggestions for pricing and targeting. Because robots are smarter than us.',
+
+    // Social Proof
+    'merchantOnboarding.socialProof.title': 'The Numbers Don\'t Lie',
+    'merchantOnboarding.socialProof.retention.label': 'Stop ghosting you',
+    'merchantOnboarding.socialProof.frequency.label': 'Come back more often',
+    'merchantOnboarding.socialProof.spending.label': 'Spend more money',
+
+    // CTA
+    'merchantOnboarding.cta.title': 'Ready to Make {{merchantName}} Addictive?',
+    'merchantOnboarding.cta.subtitle': 'Hit us up and let\'s turn those one-time visitors into obsessed regulars',
+    'merchantOnboarding.cta.whatsapp': 'Let\'s Chat on WhatsApp',
+    'merchantOnboarding.cta.telegram': 'Slide Into Our Telegram',
+    'merchantOnboarding.cta.email': 'Good Old Email',
+
+    // Contact
+    'merchantOnboarding.contact.whatsapp': 'WhatsApp',
+    'merchantOnboarding.contact.telegram': 'Telegram',
+    'merchantOnboarding.contact.email': 'Email'
   },
   es: {
     // Dashboard
@@ -293,7 +479,100 @@ const translations = {
     // Common
     'common.buttons.save': 'Guardar',
     'common.buttons.cancel': 'Cancelar',
-    'common.errors.networkError': 'Error de red'
+    'common.errors.networkError': 'Error de red',
+    
+    // Merchant Onboarding
+    'merchantOnboarding.error.loyaltyProgramRequired': 'Programa de Lealtad Requerido',
+    'merchantOnboarding.error.loyaltyProgramSetupFirst': 'Este comerciante necesita configurar un programa de lealtad primero.',
+    'merchantOnboarding.error.contactMerchant': 'Contacta al comerciante para crear un programa de lealtad antes de acceder a esta página.',
+    'merchantOnboarding.error.merchantNotFound': 'Comerciante No Encontrado',
+    'merchantOnboarding.error.merchantNotFoundMessage': 'El comerciante "{{merchantSlug}}" no pudo ser encontrado.',
+    'merchantOnboarding.loading.merchantInformation': 'Cargando información del comerciante...',
+
+    // Hero Section
+    'merchantOnboarding.hero.digitalLoyaltyCards': 'Tarjetas de Lealtad Digitales',
+    'merchantOnboarding.hero.for': 'para',
+    'merchantOnboarding.hero.tryItNow': '¡Pruébalo Ahora! 🚀',
+    'merchantOnboarding.hero.buyGetFree': 'Compra 10 Llévate 1 Gratis',
+
+    // Problem Solution
+    'merchantOnboarding.problemSolution.problem': 'Problema',
+    'merchantOnboarding.problemSolution.problemTitle': 'Los clientes visitan una vez, luego desaparecen para siempre',
+    'merchantOnboarding.problemSolution.problemDescription': 'Como las citas de Tinder, el 70% nunca regresa. Se olvidan de que existes y se van con la competencia.',
+    'merchantOnboarding.problemSolution.solution': 'Solución',
+    'merchantOnboarding.problemSolution.brandTagline': 'Convierte visitantes ocasionales en clientes obsesionados',
+    'merchantOnboarding.problemSolution.brandDescription': 'Tarjetas de lealtad digitales que realmente funcionan. Sin apps, sin complicaciones, sin "perdón, se nos acabaron las tarjetas de papel." Solo escanea y mira cómo siguen regresando.',
+
+    // Benefits
+    'merchantOnboarding.benefits.title': 'Por qué {{merchantName}} Necesita Esto',
+    'merchantOnboarding.benefits.retention.title': 'Detén las Desapariciones',
+    'merchantOnboarding.benefits.retention.description': '<strong>73% más retención</strong> (se acabaron los clientes fantasma)',
+    'merchantOnboarding.benefits.spending.title': 'Cuentas Más Grandes',
+    'merchantOnboarding.benefits.spending.description': 'Los clientes leales gastan <strong>18% más</strong> por visita',
+    'merchantOnboarding.benefits.competition.title': 'Aplasta la Competencia',
+    'merchantOnboarding.benefits.competition.description': '<strong>84% eligen</strong> negocios con recompensas sobre los aburridos',
+    'merchantOnboarding.benefits.data.title': 'Conoce a Tu Gente',
+    'merchantOnboarding.benefits.data.description': 'Obtén <strong>datos reales</strong> (no solo corazonadas)',
+
+    // How It Works
+    'merchantOnboarding.howItWorks.title': 'Cómo Funciona Realmente',
+    'merchantOnboarding.howItWorks.subtitle': 'Simple, rápido, y funciona instantáneamente con cualquier smartphone',
+    'merchantOnboarding.howItWorks.step1.title': 'Pon este código QR donde la gente pueda verlo',
+    'merchantOnboarding.howItWorks.step1.note': 'Imprímelo, enmárcalo, o muéstralo digitalmente',
+    'merchantOnboarding.howItWorks.step2.title': 'El cliente escanea con su teléfono',
+    'merchantOnboarding.howItWorks.step2.note': 'Sin descargas de apps, sin registros, funciona instantáneamente',
+    'merchantOnboarding.howItWorks.step3.title': 'Escanea su código QR de vuelta y presiona SELLAR',
+    'merchantOnboarding.howItWorks.step3.note': 'Toma 2 segundos en tu teléfono',
+    'merchantOnboarding.howItWorks.step4.title': 'Ven su tarjeta llenarse ({{partial}}/{{full}} → {{full}}/{{full}})',
+    'merchantOnboarding.howItWorks.step4.note': 'Gratificación instantánea con cada visita',
+    'merchantOnboarding.howItWorks.step5.title': 'Tarjeta llena = aparece QR de recompensa especial',
+    'merchantOnboarding.howItWorks.step5.note': 'Saben exactamente cuándo se la han ganado',
+    'merchantOnboarding.howItWorks.step6.title': 'Escanea QR de recompensa, presiona CANJEAR, listo',
+    'merchantOnboarding.howItWorks.step6.note': 'La tarjeta se reinicia automáticamente para la ronda 2',
+    'merchantOnboarding.howItWorks.step7.title': 'Cliente feliz obtiene su recompensa',
+    'merchantOnboarding.howItWorks.step7.note': 'Y empieza a soñar con su próximo café gratis',
+    'merchantOnboarding.howItWorks.qrPlaceholder': 'El Código QR aparecerá aquí',
+    'merchantOnboarding.howItWorks.roleBadge.you': 'TÚ',
+    'merchantOnboarding.howItWorks.roleBadge.customer': 'CLIENTE',
+
+    // Future Plans
+    'merchantOnboarding.futurePlans.title': 'Lo Que Viene',
+    'merchantOnboarding.futurePlans.subtitle': 'Empieza con lo bueno hoy. Desbloquea funciones increíbles después.',
+    'merchantOnboarding.futurePlans.availableNow': 'Disponible Ahora',
+    'merchantOnboarding.futurePlans.comingSoon': 'Próximamente',
+    'merchantOnboarding.futurePlans.year2025': '2025',
+    'merchantOnboarding.futurePlans.multiplePrograms.title': 'Maneja Múltiples Programas',
+    'merchantOnboarding.futurePlans.multiplePrograms.description': 'Recompensas de café, ofertas de comida, paquetes de servicios - todo a la vez. ¿Por qué limitarte?',
+    'merchantOnboarding.futurePlans.customization.title': 'Hazlo Tuyo',
+    'merchantOnboarding.futurePlans.customization.description': 'Sube tu logo, elige tus colores. Haz tarjetas tan bonitas que los clientes quieran presumirlas.',
+    'merchantOnboarding.futurePlans.analytics.title': 'Ve Qué Funciona',
+    'merchantOnboarding.futurePlans.analytics.description': 'Finalmente sabe qué recompensas realmente funcionan en lugar de adivinar como todos los demás.',
+    'merchantOnboarding.futurePlans.targeting.title': 'Caza Clientes Perdidos',
+    'merchantOnboarding.futurePlans.targeting.description': 'Envía promos dirigidas por email/WhatsApp. Automáticamente acosa... eh, re-engancha clientes inactivos.',
+    'merchantOnboarding.futurePlans.bundles.title': 'Cobra por Adelantado',
+    'merchantOnboarding.futurePlans.bundles.description': 'Vende paquetes de $200, da descuentos. Los clientes ahorran dinero, tú obtienes flujo de efectivo. Todos ganan.',
+    'merchantOnboarding.futurePlans.behaviorAnalysis.title': 'Saber Todo',
+    'merchantOnboarding.futurePlans.behaviorAnalysis.description': 'Análisis profundo de comportamiento, horas pico, tendencias estacionales. Conviértete en un lector de mentes.',
+    'merchantOnboarding.futurePlans.aiSuggestions.title': 'Deja que la IA Piense',
+    'merchantOnboarding.futurePlans.aiSuggestions.description': 'Obtén sugerencias personalizadas para precios y segmentación. Porque los robots son más inteligentes que nosotros.',
+
+    // Social Proof
+    'merchantOnboarding.socialProof.title': 'Los Números No Mienten',
+    'merchantOnboarding.socialProof.retention.label': 'Dejan de ignorarte',
+    'merchantOnboarding.socialProof.frequency.label': 'Regresan más seguido',
+    'merchantOnboarding.socialProof.spending.label': 'Gastan más dinero',
+
+    // CTA
+    'merchantOnboarding.cta.title': '¿Listo para Hacer {{merchantName}} Adictivo?',
+    'merchantOnboarding.cta.subtitle': 'Contáctanos y convirtamos esos visitantes ocasionales en clientes obsesionados',
+    'merchantOnboarding.cta.whatsapp': 'Charlemos por WhatsApp',
+    'merchantOnboarding.cta.telegram': 'Deslízate a Nuestro Telegram',
+    'merchantOnboarding.cta.email': 'Buen Viejo Email',
+
+    // Contact
+    'merchantOnboarding.contact.whatsapp': 'WhatsApp',
+    'merchantOnboarding.contact.telegram': 'Telegram',
+    'merchantOnboarding.contact.email': 'Email'
   }
 } as const;
 

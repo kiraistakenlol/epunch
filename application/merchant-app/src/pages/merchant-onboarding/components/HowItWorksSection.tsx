@@ -1,5 +1,6 @@
 import React from 'react';
 import { MerchantDto, PunchCardDto, PunchCardStyleDto, LoyaltyProgramDto } from 'e-punch-common-core';
+import { useLocalization } from 'e-punch-common-ui';
 import { WorkflowStep } from './WorkflowStep';
 import {
   PhoneFrame,
@@ -27,6 +28,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
   punchCardStyle,
   onboardingImageUrl
 }) => {
+  const { locale, t } = useLocalization();
 
   const createMockPunchCard = (id: string, loyaltyProgramId: string, currentPunches: number, totalPunches?: number): PunchCardDto => {
     const requiredPunches = totalPunches || loyaltyProgram.requiredPunches;
@@ -50,12 +52,14 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
     cards: [createMockPunchCard('demo-card-partial', loyaltyProgram.id, partialPunches)],
     loyaltyPrograms: [loyaltyProgram],
     renderOnBackgroundColor: 'white',
+    locale,
   });
 
   const step4FullPreviewUrl = dashboardPreviewService.getPreviewUrl({
     cards: [createMockPunchCard('demo-card-full', loyaltyProgram.id, fullPunches)],
     loyaltyPrograms: [loyaltyProgram],
     renderOnBackgroundColor: 'white',
+    locale,
   });
 
   const step5PreviewUrl = dashboardPreviewService.getPreviewUrl({
@@ -63,21 +67,23 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
     loyaltyPrograms: [loyaltyProgram],
     selectedCardId: 'demo-card-reward',
     renderOnBackgroundColor: 'white',
+    locale,
   });
 
   const initialCustomerPreviewUrl = dashboardPreviewService.getPreviewUrl({
     cards: [createMockPunchCard('demo-card-initial', loyaltyProgram.id, 0)],
     loyaltyPrograms: [loyaltyProgram],
     renderOnBackgroundColor: 'white',
+    locale,
   });
 
   return (
     <section className={styles.howItWorks}>
       <div className={styles.sectionContent}>
         <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>How It Actually Works</h2>
+          <h2 className={styles.sectionTitle}>{t('merchantOnboarding.howItWorks.title')}</h2>
           <p className={styles.sectionSubtitle}>
-            Simple, fast, and works instantly with any smartphone
+            {t('merchantOnboarding.howItWorks.subtitle')}
           </p>
         </div>
 
@@ -85,21 +91,21 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={1}
             role="you"
-            title="Put this QR code where people can see it"
-            note="Print it, frame it, or display it digitally"
+            title={t('merchantOnboarding.howItWorks.step1.title')}
+            note={t('merchantOnboarding.howItWorks.step1.note')}
             showArrow={true}
           >
             {onboardingImageUrl ? (
               <div className={styles.qrCodeContainer}>
                 <img
                   src={onboardingImageUrl}
-                  alt="Your QR Code for clients to scan"
+                  alt={t('merchantOnboarding.howItWorks.qrPlaceholder')}
                   className={styles.qrCodeImage}
                 />
               </div>
             ) : (
               <div className={styles.qrCodePlaceholder}>
-                <p>QR Code will appear here</p>
+                <p>{t('merchantOnboarding.howItWorks.qrPlaceholder')}</p>
               </div>
             )}
           </WorkflowStep>
@@ -107,8 +113,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={2}
             role="customer"
-            title="Customer scans with their phone"
-            note="No app downloads, no sign-ups, just works instantly"
+            title={t('merchantOnboarding.howItWorks.step2.title')}
+            note={t('merchantOnboarding.howItWorks.step2.note')}
             showArrow={true}
           >
             <div className={styles.phoneFlowContainer}>
@@ -119,7 +125,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
                       {onboardingImageUrl && (
                         <img
                           src={onboardingImageUrl}
-                          alt="QR Code being scanned"
+                          alt={t('merchantOnboarding.howItWorks.qrPlaceholder')}
                           className={styles.qrCodeInCamera}
                         />
                       )}
@@ -136,8 +142,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={3}
             role="you"
-            title="Scan their QR code back & hit PUNCH"
-            note="Takes 2 seconds on your phone"
+            title={t('merchantOnboarding.howItWorks.step3.title')}
+            note={t('merchantOnboarding.howItWorks.step3.note')}
             showArrow={true}
           >
             <div className={styles.phoneFlowContainer}>
@@ -167,8 +173,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={4}
             role="customer"
-            title={`They watch their card fill up (${partialPunches}/${fullPunches} → ${fullPunches}/${fullPunches})`}
-            note="Instant gratification with every visit"
+            title={t('merchantOnboarding.howItWorks.step4.title', { partial: partialPunches, full: fullPunches })}
+            note={t('merchantOnboarding.howItWorks.step4.note')}
             showArrow={true}
           >
             <div className={styles.phoneFlowContainer}>
@@ -186,8 +192,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={5}
             role="customer"
-            title="Card full = special reward QR appears"
-            note="They know exactly when they've earned it"
+            title={t('merchantOnboarding.howItWorks.step5.title')}
+            note={t('merchantOnboarding.howItWorks.step5.note')}
             showArrow={true}
           >
             <div className={styles.centeredPhone}>
@@ -198,8 +204,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={6}
             role="you"
-            title="Scan reward QR, hit REDEEM, done"
-            note="Card automatically resets for round 2"
+            title={t('merchantOnboarding.howItWorks.step6.title')}
+            note={t('merchantOnboarding.howItWorks.step6.note')}
             showArrow={true}
           >
             <div className={styles.phoneFlowContainer}>
@@ -232,8 +238,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={7}
             role="customer"
-            title="Happy customer gets their reward"
-            note={loyaltyProgram.rewardDescription || "And starts dreaming about their next free coffee"}
+            title={t('merchantOnboarding.howItWorks.step7.title')}
+            note={loyaltyProgram.rewardDescription || t('merchantOnboarding.howItWorks.step7.note')}
           >
             <div className={styles.rewardSchema}>
               <div className={styles.rewardIcon}>🎁</div>
@@ -242,7 +248,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
                 <div className={styles.avatarCircle}>
                   <img
                     src="/images/client.png"
-                    alt="Customer"
+                    alt={t('merchantOnboarding.howItWorks.roleBadge.customer')}
                     className={styles.clientAvatarImage}
                   />
                 </div>

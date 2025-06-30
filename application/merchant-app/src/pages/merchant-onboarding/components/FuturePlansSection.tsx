@@ -1,58 +1,61 @@
 import React from 'react';
+import { useLocalization } from 'e-punch-common-ui';
 import 'react-vertical-timeline-component/style.min.css';
 import styles from './FuturePlansSection.module.css';
 
 export const FuturePlansSection: React.FC = () => {
+  const { t } = useLocalization();
+  
   const timelineGroups = [
     {
-      status: 'Available Now',
+      status: t('merchantOnboarding.futurePlans.availableNow'),
       color: '#10b981',
       items: [
         {
-          title: 'Run Multiple Programs',
-          description: 'Coffee rewards, meal deals, service packages - all at once. Because why limit yourself?',
+          title: t('merchantOnboarding.futurePlans.multiplePrograms.title'),
+          description: t('merchantOnboarding.futurePlans.multiplePrograms.description'),
           icon: '⚡'
         },
         {
-          title: 'Make It Yours',
-          description: 'Upload your logo, pick your colors. Make cards so pretty customers want to show them off.',
+          title: t('merchantOnboarding.futurePlans.customization.title'),
+          description: t('merchantOnboarding.futurePlans.customization.description'),
           icon: '🎨'
         },
         {
-          title: 'See What Works',
-          description: 'Finally know which rewards actually work instead of guessing like everyone else.',
+          title: t('merchantOnboarding.futurePlans.analytics.title'),
+          description: t('merchantOnboarding.futurePlans.analytics.description'),
           icon: '📊'
         }
       ]
     },
     {
-      status: 'Coming Soon',
+      status: t('merchantOnboarding.futurePlans.comingSoon'),
       color: '#f59e0b',
       items: [
         {
-          title: 'Hunt Down Lost Customers',
-          description: 'Send targeted promos via email/WhatsApp. Automatically stalk... er, re-engage inactive customers.',
+          title: t('merchantOnboarding.futurePlans.targeting.title'),
+          description: t('merchantOnboarding.futurePlans.targeting.description'),
           icon: '💬'
         },
         {
-          title: 'Get Paid Upfront',
-          description: 'Sell $200 bundles, give discounts. Customers save money, you get cash flow. Win-win.',
+          title: t('merchantOnboarding.futurePlans.bundles.title'),
+          description: t('merchantOnboarding.futurePlans.bundles.description'),
           icon: '💰'
         }
       ]
     },
     {
-      status: '2025',
+      status: t('merchantOnboarding.futurePlans.year2025'),
       color: '#6366f1',
       items: [
         {
-          title: 'Know Everything',
-          description: 'Deep behavior analysis, peak hours, seasonal trends. Become a mind reader.',
+          title: t('merchantOnboarding.futurePlans.behaviorAnalysis.title'),
+          description: t('merchantOnboarding.futurePlans.behaviorAnalysis.description'),
           icon: '📈'
         },
         {
-          title: 'Let AI Do the Thinking',
-          description: 'Get personalized suggestions for pricing and targeting. Because robots are smarter than us.',
+          title: t('merchantOnboarding.futurePlans.aiSuggestions.title'),
+          description: t('merchantOnboarding.futurePlans.aiSuggestions.description'),
           icon: '🤖'
         }
       ]
@@ -62,9 +65,9 @@ export const FuturePlansSection: React.FC = () => {
   return (
     <section className={styles.section}>
       <div className={styles.sectionContent}>
-        <h2 className={styles.sectionTitle}>What's Coming</h2>
+        <h2 className={styles.sectionTitle}>{t('merchantOnboarding.futurePlans.title')}</h2>
         <p className={styles.sectionSubtitle}>
-          Start with the good stuff today. Unlock mind-blowing features later.
+          {t('merchantOnboarding.futurePlans.subtitle')}
         </p>
         
         <div className={styles.timelineContainer}>

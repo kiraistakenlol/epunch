@@ -1,7 +1,10 @@
 import React from 'react';
+import { useLocalization } from 'e-punch-common-ui';
 import styles from './ProblemSolutionSection.module.css';
 
 export const ProblemSolutionSection: React.FC = () => {
+  const { t } = useLocalization();
+  
   return (
     <section className={styles.section}>
       <div className={styles.container}>
@@ -9,25 +12,24 @@ export const ProblemSolutionSection: React.FC = () => {
         {/* Problem Card */}
         <div className={styles.problemCard}>
           <div className={styles.cardHeader}>
-            <span className={styles.problemBadge}>Problem</span>
+            <span className={styles.problemBadge}>{t('merchantOnboarding.problemSolution.problem')}</span>
           </div>
-          <h2 className={styles.problemTitle}>Customers visit once, then vanish forever</h2>
+          <h2 className={styles.problemTitle}>{t('merchantOnboarding.problemSolution.problemTitle')}</h2>
           <p className={styles.problemDescription}>
-            Like Tinder dates, 70% never come back. They forget you exist and swipe right on your competitors.
+            {t('merchantOnboarding.problemSolution.problemDescription')}
           </p>
         </div>
 
         {/* Solution Card */}
         <div className={styles.solutionCard}>
           <div className={styles.cardHeader}>
-            <span className={styles.solutionBadge}>Solution</span>
+            <span className={styles.solutionBadge}>{t('merchantOnboarding.problemSolution.solution')}</span>
           </div>
           <div className={styles.brandReveal}>
             <h1 className={styles.brandName}>ePunch</h1>
-            <p className={styles.brandTagline}>Turn one-time visitors into obsessed regulars</p>
+            <p className={styles.brandTagline}>{t('merchantOnboarding.problemSolution.brandTagline')}</p>
             <p className={styles.brandDescription}>
-              Digital loyalty cards that actually work. No apps, no hassle, no "sorry we're out of paper cards." 
-              Just scan and watch them keep coming back.
+              {t('merchantOnboarding.problemSolution.brandDescription')}
             </p>
           </div>
         </div>

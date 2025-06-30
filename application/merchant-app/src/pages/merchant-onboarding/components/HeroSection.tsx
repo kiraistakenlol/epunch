@@ -1,5 +1,6 @@
 import React from 'react';
 import { MerchantDto, LoyaltyProgramDto, PunchCardDto, PunchCardStyleDto } from 'e-punch-common-core';
+import { useLocalization } from 'e-punch-common-ui';
 import { PhoneWithUserApp } from '../../../components/shared';
 import { dashboardPreviewService } from '../../../utils/dashboardPreviewService';
 import styles from './HeroSection.module.css';
@@ -15,6 +16,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   loyaltyProgram,
   punchCardStyle
 }) => {
+  const { locale, t } = useLocalization();
   const requiredPunches = loyaltyProgram.requiredPunches || 10;
   const currentPunches = Math.floor(requiredPunches * 0.7);
 
@@ -36,6 +38,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     cards: [createMockPunchCard('hero-demo-card', loyaltyProgram.id, currentPunches)],
     loyaltyPrograms: [loyaltyProgram],
     renderOnBackgroundColor: 'white',
+    locale,
   });
 
   return (
@@ -43,13 +46,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       <div className={styles.heroContent}>
         <div className={styles.heroText}>
           <h1 className={styles.heroTitle}>
-            Digital Loyalty Cards<br />
-            for <span className={styles.merchantName}>{merchant.name}</span>
+            {t('merchantOnboarding.hero.digitalLoyaltyCards')}<br />
+            {t('merchantOnboarding.hero.for')} <span className={styles.merchantName}>{merchant.name}</span>
           </h1>
 
           <div className={styles.demoUrl}>
             <a href={heroPreviewUrl} target="_blank" rel="noopener noreferrer" className={styles.demoLink}>
-              Try It Now! 🚀
+              {t('merchantOnboarding.hero.tryItNow')}
             </a>
           </div>
         </div>
@@ -69,7 +72,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     />
                   ))}
                 </div>
-                <div className={styles.cardFooter}>Buy 10 Get 1 Free</div>
+                <div className={styles.cardFooter}>{t('merchantOnboarding.hero.buyGetFree')}</div>
               </div>
             </div>
 

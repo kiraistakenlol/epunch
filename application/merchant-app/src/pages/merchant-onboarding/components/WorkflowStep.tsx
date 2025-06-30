@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useLocalization } from 'e-punch-common-ui';
 import styles from './WorkflowStep.module.css';
 
 export const CLIENT_NAME = 'client';
@@ -20,13 +21,14 @@ export const WorkflowStep: React.FC<WorkflowStepProps> = ({
   note,
   showArrow = false
 }) => {
+  const { t } = useLocalization();
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleExpanded = () => {
     setIsExpanded(!isExpanded);
   };
 
-  const roleBadgeText = role === 'you' ? 'YOU' : 'CUSTOMER';
+  const roleBadgeText = role === 'you' ? t('merchantOnboarding.howItWorks.roleBadge.you') : t('merchantOnboarding.howItWorks.roleBadge.customer');
   const roleColor = role === 'you' ? 'merchant' : 'customer';
 
   return (

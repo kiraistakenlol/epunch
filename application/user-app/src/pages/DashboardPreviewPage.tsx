@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
 import html2canvas from 'html2canvas';
+import { useLocalization } from 'e-punch-common-ui';
 import { DashboardPreviewWrapper } from '../components/DashboardPreviewWrapper';
 
 const DashboardPreviewPage: React.FC = () => {
+  const { setLocale } = useLocalization();
   const searchParams = new URLSearchParams(window.location.search);
   
   // Parse URL parameters
@@ -12,6 +14,14 @@ const DashboardPreviewPage: React.FC = () => {
   const selectedCardId = searchParams.get('selectedCardId') || undefined;
   const completionOverlayCardId = searchParams.get('completionOverlayCardId') || undefined;
   const renderOnBackgroundColor = searchParams.get('renderOnBackgroundColor') || 'white';
+  const locale = searchParams.get('locale') || 'en';
+
+  // Set locale from URL parameter
+  useEffect(() => {
+    if (locale === 'en' || locale === 'es') {
+      setLocale(locale);
+    }
+  }, [locale, setLocale]);
   
   // Parse cards JSON
   let cards;

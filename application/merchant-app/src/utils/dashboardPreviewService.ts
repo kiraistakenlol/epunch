@@ -7,6 +7,7 @@ export interface DashboardPreviewParams {
   selectedCardId?: string;
   completionOverlayCardId?: string;
   renderOnBackgroundColor?: string;
+  locale?: string;
 }
 
 export interface DashboardPreviewConfig {
@@ -32,7 +33,8 @@ class DashboardPreviewService {
       loyaltyPrograms,
       selectedCardId,
       completionOverlayCardId,
-      renderOnBackgroundColor = 'white'
+      renderOnBackgroundColor = 'white',
+      locale
     } = params;
 
     previewUrl.searchParams.set('renderOnBackgroundColor', renderOnBackgroundColor);
@@ -42,6 +44,7 @@ class DashboardPreviewService {
     if (cards) previewUrl.searchParams.set('cards', JSON.stringify(cards));
     if (selectedCardId) previewUrl.searchParams.set('selectedCardId', selectedCardId);
     if (completionOverlayCardId) previewUrl.searchParams.set('completionOverlayCardId', completionOverlayCardId);
+    if (locale) previewUrl.searchParams.set('locale', locale);
 
     return previewUrl.toString();
   }

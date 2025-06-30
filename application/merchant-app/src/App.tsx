@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import { ToastContainer } from 'react-toastify';
-import { configureApiClient } from 'e-punch-common-ui';
+import { configureApiClient, LocalizationProvider } from 'e-punch-common-ui';
 import { ROLES } from 'e-punch-common-core';
 import { useAppSelector, useAppDispatch } from './store/hooks';
 import { fetchMerchant } from './store/merchantSlice';
@@ -131,66 +131,68 @@ function App() {
   }, [user?.merchantId, dispatch]);
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/onboarding/:merchantSlug" element={<MerchantOnboardingPage />} />
-          <Route path="test/user-app" element={<UserAppTestPage />} />
-          <Route path="/" element={
-            <ProtectedRoute>
-              <AppLayout />
-            </ProtectedRoute>
-          }>
-            <Route index element={<StaffRedirect />} />
-            <Route path="scanner" element={<ScannerPage />} />
-            <Route path="dashboard" element={
-              <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
-                <DashboardPage />
-              </RoleProtectedRoute>
-            } />
-            <Route path="loyalty-programs" element={
-              <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
-                <LoyaltyProgramsPage />
-              </RoleProtectedRoute>
-            } />
-            <Route path="loyalty-programs/create" element={
-              <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
-                <LoyaltyProgramCreate />
-              </RoleProtectedRoute>
-            } />
-            <Route path="loyalty-programs/:id/edit" element={
-              <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
-                <LoyaltyProgramEdit />
-              </RoleProtectedRoute>
-            } />
-            <Route path="design" element={
-              <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
-                <DesignPage />
-              </RoleProtectedRoute>
-            } />
-            <Route path="welcome-qr" element={
-              <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
-                <WelcomeQRPage />
-              </RoleProtectedRoute>
-            } />
-          </Route>
-        </Routes>
-      </Router>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-    </ThemeProvider>
+    <LocalizationProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Router>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/onboarding/:merchantSlug" element={<MerchantOnboardingPage />} />
+            <Route path="test/user-app" element={<UserAppTestPage />} />
+            <Route path="/" element={
+              <ProtectedRoute>
+                <AppLayout />
+              </ProtectedRoute>
+            }>
+              <Route index element={<StaffRedirect />} />
+              <Route path="scanner" element={<ScannerPage />} />
+              <Route path="dashboard" element={
+                <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+                  <DashboardPage />
+                </RoleProtectedRoute>
+              } />
+              <Route path="loyalty-programs" element={
+                <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+                  <LoyaltyProgramsPage />
+                </RoleProtectedRoute>
+              } />
+              <Route path="loyalty-programs/create" element={
+                <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+                  <LoyaltyProgramCreate />
+                </RoleProtectedRoute>
+              } />
+              <Route path="loyalty-programs/:id/edit" element={
+                <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+                  <LoyaltyProgramEdit />
+                </RoleProtectedRoute>
+              } />
+              <Route path="design" element={
+                <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+                  <DesignPage />
+                </RoleProtectedRoute>
+              } />
+              <Route path="welcome-qr" element={
+                <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+                  <WelcomeQRPage />
+                </RoleProtectedRoute>
+              } />
+            </Route>
+          </Routes>
+        </Router>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+      </ThemeProvider>
+    </LocalizationProvider>
   );
 }
 

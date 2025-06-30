@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { fetchMerchantBySlug } from '../../store/merchantSlice';
 import { generateOnboardingImage } from '../../utils/onboardingImageUtil';
-import { apiClient, appColors } from 'e-punch-common-ui';
+import { apiClient, appColors, useLocalization } from 'e-punch-common-ui';
 import { PunchCardStyleDto, LoyaltyProgramDto, emptyPunchCardStyle } from 'e-punch-common-core';
 import {
   TopContactBar,
@@ -20,6 +20,7 @@ import {
 import styles from './MerchantOnboardingPage.module.css';
 
 export const MerchantOnboardingPage: React.FC = () => {
+  const { t } = useLocalization();
   const { merchantSlug } = useParams<{ merchantSlug: string }>();
   const dispatch = useAppDispatch();
   const { merchant, loading: merchantLoading, error: merchantError } = useAppSelector((state) => state.merchant);
@@ -92,7 +93,7 @@ export const MerchantOnboardingPage: React.FC = () => {
       const programs = await apiClient.getMerchantLoyaltyPrograms(merchant.id);
       
       if (programs.length === 0) {
-        setLoyaltyProgramError('No loyalty programs found.');
+        setLoyaltyProgramError(t('merchantOnboarding.error.loyaltyProgramSetupFirst'));
         setLoyaltyProgram(undefined);
         return [];
       }
@@ -102,7 +103,7 @@ export const MerchantOnboardingPage: React.FC = () => {
       return programs;
     } catch (error: any) {
       console.error('Failed to fetch loyalty program:', error);
-      setLoyaltyProgramError('Failed to load loyalty program.');
+      setLoyaltyProgramError(t('merchantOnboarding.error.loyaltyProgramSetupFirst'));
       setLoyaltyProgram(undefined);
       return [];
     } finally {
@@ -148,12 +149,12 @@ export const MerchantOnboardingPage: React.FC = () => {
       <div className={styles.container}>
         <TopContactBar />
         <div className={styles.errorContainer}>
-          <h1>Loyalty Program Required</h1>
+          <h1>{t('merchantOnboarding.error.loyaltyProgramRequired')}</h1>
           <p>
-            {loyaltyProgramError || 'This merchant needs to set up a loyalty program first.'}
+            {loyaltyProgramError || t('merchantOnboarding.error.loyaltyProgramSetupFirst')}
           </p>
           <p>
-            Contact the merchant to create a loyalty program before accessing this page.
+            {t('merchantOnboarding.error.contactMerchant')}
           </p>
         </div>
       </div>
