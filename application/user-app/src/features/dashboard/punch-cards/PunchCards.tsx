@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useLocalization } from 'e-punch-common-ui';
+import { useTranslation } from 'react-i18next';
 import PunchCardItem from './punch-card/PunchCardItem';
 import { resolveCardStyles } from '../../../utils/cardStyles';
 import styles from './PunchCards.module.css';
@@ -22,7 +22,7 @@ import { useAppSelector } from '../../../store/hooks';
 
 
 const PunchCards = () => {
-  const { t } = useLocalization();
+  const { t } = useTranslation('punchCards');
   const dispatch = useDispatch<AppDispatch>();
   const isAuthLoading = useAppSelector(selectAuthLoading);
   const punchCards = useSelector((state: RootState) => selectPunchCards(state));
@@ -113,8 +113,8 @@ const PunchCards = () => {
       return (
         <div className={styles.emptyStateContainer}>
           <div className={styles.emptyStateContent}>
-            <h2 className={styles.emptyStateHeadline}>{t('punchCards.error.title')}</h2>
-            <p className={styles.emptyStateSubtext}>{t('punchCards.error.message', { error })}</p>
+            <h2 className={styles.emptyStateHeadline}>{t('error.title')}</h2>
+            <p className={styles.emptyStateSubtext}>{t('error.message', { error })}</p>
           </div>
         </div>
       );
@@ -123,8 +123,8 @@ const PunchCards = () => {
       return (
         <div className={styles.emptyStateContainer}>
           <div className={styles.emptyStateContent}>
-            <h2 className={styles.emptyStateHeadline}>{t('punchCards.empty.title')}</h2>
-            <p className={styles.emptyStateSubtext}>{t('punchCards.empty.message')}</p>
+            <h2 className={styles.emptyStateHeadline}>{t('empty.title')}</h2>
+            <p className={styles.emptyStateSubtext}>{t('empty.message')}</p>
           </div>
         </div>
       );

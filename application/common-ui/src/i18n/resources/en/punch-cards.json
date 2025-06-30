@@ -1,0 +1,18 @@
+{
+  "error": {
+    "title": "Oops!",
+    "message": "Error: {{error}}"
+  },
+  "empty": {
+    "title": "Your rewards await!",
+    "message": "Start collecting punches at your favorite spots and unlock amazing rewards"
+  },
+  "back": {
+    "details": "Details",
+    "collectMessage": "Collect {{totalPunches}} punches at {{shopName}} and enjoy"
+  },
+  "completion": {
+    "complete": "COMPLETE!!",
+    "ok": "OK!"
+  }
+} 

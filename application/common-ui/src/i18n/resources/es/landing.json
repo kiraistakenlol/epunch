@@ -1,0 +1,56 @@
+{
+  "getStarted": "Comenzá hoy:",
+  "whatsapp": "WhatsApp",
+  "telegram": "Telegram",
+  "digitalPunchCards": "Tarjetas de Sellos Digitales",
+  "noApps": "• Sin apps que descargar",
+  "noAccounts": "• Sin cuentas que crear",
+  "justScan": "• Solo escanea y colecciona",
+  "watchDemo": "Ve Cómo Funciona",
+  "customerCompletes": "Cliente completa tarjeta → Obtiene recompensa",
+  "howCustomersUse": "Cómo la Usan los Clientes",
+  "firstVisitToReward": "De la primera visita a la recompensa gratis",
+  "step1": {
+    "title": "Estado inicial",
+    "description": "Código QR del cliente listo"
+  },
+  "step2": {
+    "title": "Primer sello",
+    "description": "Primera compra → primer sello"
+  },
+  "step3": {
+    "title": "Acumulando",
+    "description": "Cada compra agrega un sello"
+  },
+  "step4": {
+    "title": "¡Tarjeta completa!",
+    "description": "Animación de celebración"
+  },
+  "step5": {
+    "title": "Recompensa gratis",
+    "description": "Cliente reclama su recompensa"
+  },
+  "benefits": {
+    "title": "Beneficios para tu negocio",
+    "loyal": {
+      "title": "Clientes más leales",
+      "description": "73% más retención"
+    },
+    "visits": {
+      "title": "Visitas más frecuentes",
+      "description": "20% más frecuencia de visita"
+    },
+    "maintenance": {
+      "title": "Cero mantenimiento",
+      "description": "Sin tarjetas físicas que reemplazar"
+    },
+    "gamification": {
+      "title": "Gamificación",
+      "description": "El progreso visual genera compromiso"
+    }
+  },
+  "cta": {
+    "title": "¿Listo para Comenzar?",
+    "subtitle": "Contáctanos para comenzar tu programa de lealtad digital hoy"
+  }
+} 

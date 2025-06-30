@@ -1,0 +1,28 @@
+{
+  "header": {
+    "appTitle": "ePunch",
+    "devLink": "dev",
+    "signOut": "Cerrar Sesión"
+  },
+  "buttons": {
+    "save": "Guardar",
+    "cancel": "Cancelar"
+  },
+  "errors": {
+    "networkError": "Error de red"
+  },
+  "signOut": {
+    "title": "Confirmar Cierre de Sesión",
+    "message": "¿Estás seguro de que querés cerrar sesión? Vas a continuar usando la app con tu cuenta anónima.",
+    "confirm": "Cerrar Sesión",
+    "cancel": "Cancelar"
+  },
+  "qr": {
+    "myCode": "Mi Código QR",
+    "showToGet": "Mostrá para obtener {{reward}}"
+  },
+  "reward": {
+    "selected": "SELECCIONADO",
+    "tapToRedeem": "TOCA PARA CANJEAR"
+  }
+} 

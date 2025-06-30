@@ -3,7 +3,8 @@ import { useParams } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { fetchMerchantBySlug } from '../../store/merchantSlice';
 import { generateOnboardingImage } from '../../utils/onboardingImageUtil';
-import { apiClient, appColors, useLocalization } from 'e-punch-common-ui';
+import { apiClient, appColors } from 'e-punch-common-ui';
+import { useTranslation } from 'react-i18next';
 import { PunchCardStyleDto, LoyaltyProgramDto, emptyPunchCardStyle } from 'e-punch-common-core';
 import {
   TopContactBar,
@@ -21,7 +22,7 @@ import {
 import styles from './MerchantOnboardingPage.module.css';
 
 export const MerchantOnboardingPage: React.FC = () => {
-  const { t } = useLocalization();
+  const { t } = useTranslation('merchantOnboarding');
   const { merchantSlug } = useParams<{ merchantSlug: string }>();
   const dispatch = useAppDispatch();
   const { merchant, loading: merchantLoading, error: merchantError } = useAppSelector((state) => state.merchant);
@@ -94,7 +95,7 @@ export const MerchantOnboardingPage: React.FC = () => {
       const programs = await apiClient.getMerchantLoyaltyPrograms(merchant.id);
       
       if (programs.length === 0) {
-        setLoyaltyProgramError(t('merchantOnboarding.error.loyaltyProgramSetupFirst'));
+        setLoyaltyProgramError(t('error.loyaltyProgramSetupFirst'));
         setLoyaltyProgram(undefined);
         return [];
       }
@@ -104,7 +105,7 @@ export const MerchantOnboardingPage: React.FC = () => {
       return programs;
     } catch (error: any) {
       console.error('Failed to fetch loyalty program:', error);
-      setLoyaltyProgramError(t('merchantOnboarding.error.loyaltyProgramSetupFirst'));
+      setLoyaltyProgramError(t('error.loyaltyProgramSetupFirst'));
       setLoyaltyProgram(undefined);
       return [];
     } finally {
@@ -150,12 +151,12 @@ export const MerchantOnboardingPage: React.FC = () => {
       <div className={styles.container}>
         <TopContactBar />
         <div className={styles.errorContainer}>
-          <h1>{t('merchantOnboarding.error.loyaltyProgramRequired')}</h1>
+          <h1>{t('error.loyaltyProgramRequired')}</h1>
           <p>
-            {loyaltyProgramError || t('merchantOnboarding.error.loyaltyProgramSetupFirst')}
+            {loyaltyProgramError || t('error.loyaltyProgramSetupFirst')}
           </p>
           <p>
-            {t('merchantOnboarding.error.contactMerchant')}
+            {t('error.contactMerchant')}
           </p>
         </div>
       </div>

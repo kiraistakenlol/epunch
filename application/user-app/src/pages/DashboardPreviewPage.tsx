@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import html2canvas from 'html2canvas';
-import { useLocalization } from 'e-punch-common-ui';
+import { useI18n } from 'e-punch-common-ui';
 import { DashboardPreviewWrapper } from '../components/DashboardPreviewWrapper';
 
 const DashboardPreviewPage: React.FC = () => {
-  const { setLocale } = useLocalization();
+  const { setLocale } = useI18n();
   const searchParams = new URLSearchParams(window.location.search);
   
   // Parse URL parameters

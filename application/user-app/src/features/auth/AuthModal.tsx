@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocalization } from 'e-punch-common-ui';
+import { useTranslation } from 'react-i18next';
 import EPunchModal from '../../components/EPunchModal';
 import EmailAuthForm from './EmailAuthForm';
 import { signInWithRedirect } from 'aws-amplify/auth';
@@ -57,7 +57,7 @@ const backLinkStyle: React.CSSProperties = {
 };
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode }) => {
-  const { t } = useLocalization();
+  const { t } = useTranslation('auth');
   const [mode, setMode] = useState<'signin' | 'signup'>(initialMode);
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -80,7 +80,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode }) =
       await signInWithRedirect({ provider: 'Google' });
     } catch (error) {
       console.error('Google auth error:', error);
-      setError(t('auth.googleFailed'));
+      setError(t('googleFailed'));
     }
   };
 
@@ -114,7 +114,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode }) =
     <EPunchModal
       isOpen={isOpen}
       onClose={onClose}
-      title={mode === 'signin' ? t('auth.signIn') : t('auth.signUp')}
+      title={mode === 'signin' ? t('signIn') : t('signUp')}
     >
       {error && (
         <div style={{
@@ -132,7 +132,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode }) =
       {showEmailForm ? (
         <>
           <div style={backLinkStyle} onClick={handleBackToOptions}>
-            {t('auth.back')}
+            {t('back')}
           </div>
           <EmailAuthForm
             mode={mode}
@@ -146,14 +146,14 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode }) =
             style={emailButtonStyle}
             onClick={handleEmailAuth}
           >
-            {t('auth.continueWithEmail')}
+                          {t('continueWithEmail')}
           </button>
 
           <button
             style={googleButtonStyle}
             onClick={handleGoogleAuth}
           >
-            {t('auth.continueWithGoogle')}
+                          {t('continueWithGoogle')}
           </button>
         </>
       )}
@@ -161,16 +161,16 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode }) =
       <div style={switchModeStyle}>
         {mode === 'signin' ? (
           <>
-            {t('auth.noAccount')}{' '}
+            {t('noAccount')}{' '}
             <span style={linkStyle} onClick={toggleMode}>
-              {t('auth.signUp')}
+              {t('signUp')}
             </span>
           </>
         ) : (
           <>
-            {t('auth.haveAccount')}{' '}
+            {t('haveAccount')}{' '}
             <span style={linkStyle} onClick={toggleMode}>
-              {t('auth.signIn')}
+              {t('signIn')}
             </span>
           </>
         )}

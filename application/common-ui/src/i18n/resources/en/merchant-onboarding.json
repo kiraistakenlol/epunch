@@ -1,0 +1,150 @@
+{
+  "error": {
+    "loyaltyProgramRequired": "Loyalty Program Required",
+    "loyaltyProgramSetupFirst": "This merchant needs to set up a loyalty program first.",
+    "contactMerchant": "Contact the merchant to create a loyalty program before accessing this page.",
+    "merchantNotFound": "Merchant Not Found",
+    "merchantNotFoundMessage": "The merchant \"{{merchantSlug}}\" could not be found."
+  },
+  "loading": {
+    "merchantInformation": "Loading merchant information..."
+  },
+  "hero": {
+    "digitalLoyaltyCards": "Digital Loyalty Cards",
+    "for": "for",
+    "tryItNow": "Try It Now! 🚀",
+    "buyGetFree": "Buy 10 Get 1 Free"
+  },
+  "problemSolution": {
+    "problem": "Problem",
+    "problemTitle": "Customers visit once, then vanish forever",
+    "problemDescription": "Like Tinder dates, 70% never come back. They forget you exist and swipe right on your competitors.",
+    "solution": "Solution",
+    "brandTagline": "Turn one-time visitors into obsessed regulars",
+    "brandDescription": "Digital loyalty cards that actually work. No apps, no hassle, no \"sorry we're out of paper cards.\" Just scan and watch them keep coming back."
+  },
+  "benefits": {
+    "title": "Why {{merchantName}} Needs This",
+    "retention": {
+      "title": "Stop the Vanishing Act",
+      "description": "<strong>73% higher retention</strong> (no more ghosting customers)"
+    },
+    "spending": {
+      "title": "Bigger Bills",
+      "description": "Loyal customers spend <strong>18% more</strong> per visit"
+    },
+    "competition": {
+      "title": "Crush Competition",
+      "description": "<strong>84% choose</strong> businesses with rewards over boring ones"
+    },
+    "data": {
+      "title": "Know Your People",
+      "description": "Get <strong>real data</strong> (not just gut feelings)"
+    }
+  },
+  "howItWorks": {
+    "title": "How It Actually Works",
+    "subtitle": "Simple, fast, and works instantly with any smartphone",
+    "step1": {
+      "title": "Put this QR code where people can see it",
+      "note": "Print it, frame it, or display it digitally"
+    },
+    "step2": {
+      "title": "Customer scans with their phone",
+      "note": "No app downloads, no sign-ups, just works instantly"
+    },
+    "step3": {
+      "title": "Scan their QR code back & hit PUNCH",
+      "note": "Takes 2 seconds on your phone"
+    },
+    "step4": {
+      "title": "They watch their card fill up ({{partial}}/{{full}} → {{full}}/{{full}})",
+      "note": "Instant gratification with every visit"
+    },
+    "step5": {
+      "title": "Card full = special reward QR appears",
+      "note": "They know exactly when they've earned it"
+    },
+    "step6": {
+      "title": "Scan reward QR, hit REDEEM, done",
+      "note": "Card automatically resets for round 2"
+    },
+    "step7": {
+      "title": "Happy customer gets their reward",
+      "note": "And starts dreaming about their next free coffee"
+    },
+    "qrPlaceholder": "QR Code will appear here",
+    "roleBadge": {
+      "you": "YOU",
+      "customer": "CUSTOMER"
+    },
+    "twoAppsNote": {
+      "prefix": " and your ",
+      "suffix": " have different apps"
+    }
+  },
+  "futurePlans": {
+    "title": "What's Coming",
+    "subtitle": "Start with the good stuff today. Unlock mind-blowing features later.",
+    "availableNow": "Available Now",
+    "comingSoon": "Coming Soon",
+    "year2025": "2025",
+    "multiplePrograms": {
+      "title": "Run Multiple Programs",
+      "description": "Coffee rewards, meal deals, service packages - all at once. Because why limit yourself?"
+    },
+    "customization": {
+      "title": "Make It Yours",
+      "description": "Upload your logo, pick your colors. Make cards so pretty customers want to show them off."
+    },
+    "analytics": {
+      "title": "See What Works",
+      "description": "Finally know which rewards actually work instead of guessing like everyone else."
+    },
+    "targeting": {
+      "title": "Hunt Down Lost Customers",
+      "description": "Send targeted promos via email/WhatsApp. Automatically stalk... er, re-engage inactive customers."
+    },
+    "bundles": {
+      "title": "Get Paid Upfront",
+      "description": "Sell $200 bundles, give discounts. Customers save money, you get cash flow. Win-win."
+    },
+    "behaviorAnalysis": {
+      "title": "Know Everything",
+      "description": "Deep behavior analysis, peak hours, seasonal trends. Become a mind reader."
+    },
+    "aiSuggestions": {
+      "title": "Let AI Do the Thinking",
+      "description": "Get personalized suggestions for pricing and targeting. Because robots are smarter than us."
+    }
+  },
+  "socialProof": {
+    "title": "The Numbers Don't Lie",
+    "retention": {
+      "label": "Stop ghosting you"
+    },
+    "frequency": {
+      "label": "Come back more often"
+    },
+    "spending": {
+      "label": "Spend more money"
+    }
+  },
+  "cta": {
+    "title": "Ready to Make {{merchantName}} Addictive?",
+    "subtitle": "Hit us up and let's turn those one-time visitors into obsessed regulars",
+    "whatsapp": "Let's Chat on WhatsApp",
+    "telegram": "Slide Into Our Telegram",
+    "email": "Good Old Email"
+  },
+  "contact": {
+    "whatsapp": "WhatsApp",
+    "telegram": "Telegram",
+    "email": "Email"
+  },
+  "teaser": {
+    "titlePrefix": "How",
+    "titleSuffix": "can make more money?",
+    "button": "Tell me"
+  }
+} 

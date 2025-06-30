@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { configureApiClient, LocalizationProvider } from 'e-punch-common-ui';
+import { configureApiClient, I18nProvider } from 'e-punch-common-ui';
 import DashboardPage from './features/dashboard/DashboardPage';
 import DevPage from './features/dev/DevPage';
 import CardPreviewPage from './pages/CardPreviewPage';
@@ -40,7 +40,7 @@ function App() {
   useGlobalAnimationEvents();
 
   return (
-    <LocalizationProvider>
+    <I18nProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<AppLayout />}>
@@ -56,7 +56,7 @@ function App() {
         <CompletionOverlay />
         <Alert />
       </BrowserRouter>
-    </LocalizationProvider>
+    </I18nProvider>
   );
 }
 

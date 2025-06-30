@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import { ToastContainer } from 'react-toastify';
-import { configureApiClient, LocalizationProvider } from 'e-punch-common-ui';
+import { configureApiClient, I18nProvider } from 'e-punch-common-ui';
 import { ROLES } from 'e-punch-common-core';
 import { useAppSelector, useAppDispatch } from './store/hooks';
 import { fetchMerchant } from './store/merchantSlice';
@@ -131,7 +131,7 @@ function App() {
   }, [user?.merchantId, dispatch]);
 
   return (
-    <LocalizationProvider>
+    <I18nProvider>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Router>
@@ -192,7 +192,7 @@ function App() {
           theme="light"
         />
       </ThemeProvider>
-    </LocalizationProvider>
+    </I18nProvider>
   );
 }
 

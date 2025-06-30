@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocalization } from '../localization';
+import { useI18n } from '../localization';
 
 interface LanguageSwitchProps {
   variant?: 'default' | 'landing';
@@ -12,7 +12,7 @@ const LanguageSwitch: React.FC<LanguageSwitchProps> = ({
   className = '',
   style = {}
 }) => {
-  const { locale, setLocale } = useLocalization();
+  const { locale, setLocale } = useI18n();
 
   const toggleLanguage = () => {
     setLocale(locale === 'en' ? 'es' : 'en');

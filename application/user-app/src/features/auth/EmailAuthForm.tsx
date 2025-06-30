@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { signUp, confirmSignUp, signIn } from 'aws-amplify/auth';
-import { useLocalization } from 'e-punch-common-ui';
+import { useTranslation } from 'react-i18next';
 import { appColors } from '../../theme';
 
 interface EmailAuthFormProps {
@@ -34,7 +34,7 @@ const buttonStyle: React.CSSProperties = {
 };
 
 const EmailAuthForm: React.FC<EmailAuthFormProps> = ({ mode, onSuccess, onError }) => {
-  const { t } = useLocalization();
+  const { t } = useTranslation('auth');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmationCode, setConfirmationCode] = useState('');
@@ -55,7 +55,7 @@ const EmailAuthForm: React.FC<EmailAuthFormProps> = ({ mode, onSuccess, onError 
       });
       setNeedsConfirmation(true);
     } catch (error: any) {
-      onError(error.message || t('auth.signUpFailed'));
+              onError(error.message || t('signUpFailed'));
     } finally {
       setIsLoading(false);
     }
@@ -77,7 +77,7 @@ const EmailAuthForm: React.FC<EmailAuthFormProps> = ({ mode, onSuccess, onError 
       
       onSuccess();
     } catch (error: any) {
-      onError(error.message || t('auth.confirmationFailed'));
+              onError(error.message || t('confirmationFailed'));
     } finally {
       setIsLoading(false);
     }
@@ -92,7 +92,7 @@ const EmailAuthForm: React.FC<EmailAuthFormProps> = ({ mode, onSuccess, onError 
       });
       onSuccess();
     } catch (error: any) {
-      onError(error.message || t('auth.signInFailed'));
+              onError(error.message || t('signInFailed'));
     } finally {
       setIsLoading(false);
     }
@@ -113,15 +113,15 @@ const EmailAuthForm: React.FC<EmailAuthFormProps> = ({ mode, onSuccess, onError 
     return (
       <form onSubmit={handleSubmit} style={formStyle}>
         <div style={{ textAlign: 'center', marginBottom: '15px' }}>
-          <h3 style={{ margin: '0 0 10px 0', color: appColors.epunchBlack }}>{t('auth.checkEmail')}</h3>
+          <h3 style={{ margin: '0 0 10px 0', color: appColors.epunchBlack }}>{t('checkEmail')}</h3>
           <p style={{ margin: 0, color: appColors.epunchBlack, fontSize: '14px' }}>
-            {t('auth.verificationSent', { email })}
+            {t('verificationSent', { email })}
           </p>
         </div>
         
         <input
           type="text"
-          placeholder={t('auth.enterCode')}
+          placeholder={t('enterCode')}
           value={confirmationCode}
           onChange={(e) => setConfirmationCode(e.target.value)}
           style={inputStyle}
@@ -133,7 +133,7 @@ const EmailAuthForm: React.FC<EmailAuthFormProps> = ({ mode, onSuccess, onError 
           style={buttonStyle}
           disabled={isLoading}
         >
-          {isLoading ? t('auth.verifying') : t('auth.verifyEmail')}
+          {isLoading ? t('verifying') : t('verifyEmail')}
         </button>
       </form>
     );
@@ -143,7 +143,7 @@ const EmailAuthForm: React.FC<EmailAuthFormProps> = ({ mode, onSuccess, onError 
     <form onSubmit={handleSubmit} style={formStyle}>
       <input
         type="email"
-        placeholder={t('auth.email')}
+        placeholder={t('email')}
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         style={inputStyle}
@@ -152,7 +152,7 @@ const EmailAuthForm: React.FC<EmailAuthFormProps> = ({ mode, onSuccess, onError 
       
       <input
         type="password"
-        placeholder={t('auth.password')}
+        placeholder={t('password')}
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         style={inputStyle}
@@ -165,8 +165,8 @@ const EmailAuthForm: React.FC<EmailAuthFormProps> = ({ mode, onSuccess, onError 
         disabled={isLoading}
       >
         {isLoading 
-          ? (mode === 'signup' ? t('auth.creatingAccount') : t('auth.signingIn')) 
-          : (mode === 'signup' ? t('auth.createAccount') : t('auth.signIn'))
+                  ? (mode === 'signup' ? t('creatingAccount') : t('signingIn'))
+        : (mode === 'signup' ? t('createAccount') : t('signIn'))
         }
       </button>
     </form>

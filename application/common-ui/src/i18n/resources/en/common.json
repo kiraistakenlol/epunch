@@ -1,0 +1,28 @@
+{
+  "header": {
+    "appTitle": "ePunch",
+    "devLink": "dev",
+    "signOut": "Sign Out"
+  },
+  "buttons": {
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "errors": {
+    "networkError": "Network error occurred"
+  },
+  "signOut": {
+    "title": "Confirm Sign Out",
+    "message": "Are you sure you want to sign out? You'll continue using the app with your anonymous account.",
+    "confirm": "Sign Out",
+    "cancel": "Cancel"
+  },
+  "qr": {
+    "myCode": "My QR Code",
+    "showToGet": "Show to get {{reward}}"
+  },
+  "reward": {
+    "selected": "SELECTED",
+    "tapToRedeem": "TAP TO REDEEM"
+  }
+} 

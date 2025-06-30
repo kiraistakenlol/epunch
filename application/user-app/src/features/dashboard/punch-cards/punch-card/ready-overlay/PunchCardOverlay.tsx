@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocalization } from 'e-punch-common-ui';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '../../../../../store/hooks';
 import { selectSelectedCardId, setSelectedCardId, clearSelectedCard, scrollToCard } from '../../../../punchCards/punchCardsSlice';
 import styles from './PunchCardOverlay.module.css';
@@ -9,7 +9,7 @@ interface PunchCardOverlayProps {
 }
 
 const PunchCardOverlay: React.FC<PunchCardOverlayProps> = ({ cardId }) => {
-  const { t } = useLocalization();
+  const { t } = useTranslation('common');
   const dispatch = useAppDispatch();
   const selectedCardId = useAppSelector(selectSelectedCardId);
   const isSelected = selectedCardId === cardId;

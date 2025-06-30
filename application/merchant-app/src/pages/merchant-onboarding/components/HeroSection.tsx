@@ -1,6 +1,6 @@
 import React from 'react';
 import { MerchantDto, LoyaltyProgramDto, PunchCardDto, PunchCardStyleDto } from 'e-punch-common-core';
-import { useLocalization } from 'e-punch-common-ui';
+import { useTranslation } from 'react-i18next';
 import { PhoneWithUserApp } from '../../../components/shared';
 import { dashboardPreviewService } from '../../../utils/dashboardPreviewService';
 import styles from './HeroSection.module.css';
@@ -16,7 +16,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   loyaltyProgram,
   punchCardStyle
 }) => {
-  const { locale, t } = useLocalization();
+  const { t, i18n } = useTranslation('merchantOnboarding');
+  const locale = i18n.language;
   const requiredPunches = loyaltyProgram.requiredPunches || 10;
   const currentPunches = Math.floor(requiredPunches * 0.7);
 
@@ -46,13 +47,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         <div className={styles.heroContent}>
           <div className={styles.heroText}>
             <h1 className={styles.heroTitle}>
-              {t('merchantOnboarding.hero.digitalLoyaltyCards')}<br />
-              {t('merchantOnboarding.hero.for')} <span className={styles.merchantName}>{merchant.name}</span>
+              {t('hero.digitalLoyaltyCards')}<br />
+              {t('hero.for')} <span className={styles.merchantName}>{merchant.name}</span>
             </h1>
 
             <div className={styles.demoUrl}>
               <a href={heroPreviewUrl} target="_blank" rel="noopener noreferrer" className={styles.demoLink}>
-                {t('merchantOnboarding.hero.tryItNow')}
+                {t('hero.tryItNow')}
               </a>
             </div>
           </div>
@@ -72,7 +73,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       />
                     ))}
                   </div>
-                  <div className={styles.cardFooter}>{t('merchantOnboarding.hero.buyGetFree')}</div>
+                  <div className={styles.cardFooter}>{t('hero.buyGetFree')}</div>
                 </div>
               </div>
 

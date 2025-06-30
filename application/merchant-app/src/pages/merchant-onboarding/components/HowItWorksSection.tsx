@@ -1,6 +1,6 @@
 import React from 'react';
 import { MerchantDto, PunchCardDto, PunchCardStyleDto, LoyaltyProgramDto } from 'e-punch-common-core';
-import { useLocalization } from 'e-punch-common-ui';
+import { useTranslation } from 'react-i18next';
 import { WorkflowStep } from './WorkflowStep';
 import {
   PhoneFrame,
@@ -28,7 +28,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
   punchCardStyle,
   onboardingImageUrl
 }) => {
-  const { locale, t } = useLocalization();
+  const { t, i18n } = useTranslation('merchantOnboarding');
+  const locale = i18n.language;
 
   const createMockPunchCard = (id: string, loyaltyProgramId: string, currentPunches: number, totalPunches?: number): PunchCardDto => {
     const requiredPunches = totalPunches || loyaltyProgram.requiredPunches;
@@ -81,17 +82,17 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
     <section className={styles.howItWorks}>
       <div className={styles.sectionContent}>
         <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>{t('merchantOnboarding.howItWorks.title')}</h2>
+          <h2 className={styles.sectionTitle}>{t('howItWorks.title')}</h2>
           <p className={styles.twoAppsNote}>
             <span className={styles.infoIcon}>
               <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
               </svg>
             </span>
-            <span className={styles.merchantApp}>{t('merchantOnboarding.howItWorks.roleBadge.you')}</span>
-            {t('merchantOnboarding.howItWorks.twoAppsNote.prefix')}
-            <span className={styles.userApp}>{t('merchantOnboarding.howItWorks.roleBadge.customer').toUpperCase()}</span>
-            {t('merchantOnboarding.howItWorks.twoAppsNote.suffix')}
+            <span className={styles.merchantApp}>{t('howItWorks.roleBadge.you')}</span>
+            {t('howItWorks.twoAppsNote.prefix')}
+            <span className={styles.userApp}>{t('howItWorks.roleBadge.customer').toUpperCase()}</span>
+            {t('howItWorks.twoAppsNote.suffix')}
           </p>
         </div>
 
@@ -99,21 +100,21 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={1}
             role="you"
-            title={t('merchantOnboarding.howItWorks.step1.title')}
-            note={t('merchantOnboarding.howItWorks.step1.note')}
+            title={t('howItWorks.step1.title')}
+            note={t('howItWorks.step1.note')}
             showArrow={true}
           >
             {onboardingImageUrl ? (
               <div className={styles.qrCodeContainer}>
                 <img
                   src={onboardingImageUrl}
-                  alt={t('merchantOnboarding.howItWorks.qrPlaceholder')}
+                  alt={t('howItWorks.qrPlaceholder')}
                   className={styles.qrCodeImage}
                 />
               </div>
             ) : (
               <div className={styles.qrCodePlaceholder}>
-                <p>{t('merchantOnboarding.howItWorks.qrPlaceholder')}</p>
+                <p>{t('howItWorks.qrPlaceholder')}</p>
               </div>
             )}
           </WorkflowStep>
@@ -121,8 +122,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={2}
             role="customer"
-            title={t('merchantOnboarding.howItWorks.step2.title')}
-            note={t('merchantOnboarding.howItWorks.step2.note')}
+            title={t('howItWorks.step2.title')}
+            note={t('howItWorks.step2.note')}
             showArrow={true}
           >
             <div className={styles.phoneFlowContainer}>
@@ -133,7 +134,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
                       {onboardingImageUrl && (
                         <img
                           src={onboardingImageUrl}
-                          alt={t('merchantOnboarding.howItWorks.qrPlaceholder')}
+                          alt={t('howItWorks.qrPlaceholder')}
                           className={styles.qrCodeInCamera}
                         />
                       )}
@@ -150,8 +151,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={3}
             role="you"
-            title={t('merchantOnboarding.howItWorks.step3.title')}
-            note={t('merchantOnboarding.howItWorks.step3.note')}
+            title={t('howItWorks.step3.title')}
+            note={t('howItWorks.step3.note')}
             showArrow={true}
           >
             <div className={styles.phoneFlowContainer}>
@@ -181,8 +182,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={4}
             role="customer"
-            title={t('merchantOnboarding.howItWorks.step4.title', { partial: partialPunches, full: fullPunches })}
-            note={t('merchantOnboarding.howItWorks.step4.note')}
+            title={t('howItWorks.step4.title', { partial: partialPunches, full: fullPunches })}
+            note={t('howItWorks.step4.note')}
             showArrow={true}
           >
             <div className={styles.phoneFlowContainer}>
@@ -200,8 +201,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={5}
             role="customer"
-            title={t('merchantOnboarding.howItWorks.step5.title')}
-            note={t('merchantOnboarding.howItWorks.step5.note')}
+            title={t('howItWorks.step5.title')}
+            note={t('howItWorks.step5.note')}
             showArrow={true}
           >
             <div className={styles.centeredPhone}>
@@ -212,8 +213,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={6}
             role="you"
-            title={t('merchantOnboarding.howItWorks.step6.title')}
-            note={t('merchantOnboarding.howItWorks.step6.note')}
+            title={t('howItWorks.step6.title')}
+            note={t('howItWorks.step6.note')}
             showArrow={true}
           >
             <div className={styles.phoneFlowContainer}>
@@ -246,8 +247,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
           <WorkflowStep
             stepNumber={7}
             role="customer"
-            title={t('merchantOnboarding.howItWorks.step7.title')}
-            note={loyaltyProgram.rewardDescription || t('merchantOnboarding.howItWorks.step7.note')}
+            title={t('howItWorks.step7.title')}
+            note={loyaltyProgram.rewardDescription || t('howItWorks.step7.note')}
           >
             <div className={styles.rewardSchema}>
               <div className={styles.rewardIcon}>🎁</div>
@@ -256,7 +257,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
                 <div className={styles.avatarCircle}>
                   <img
                     src="/images/client.png"
-                    alt={t('merchantOnboarding.howItWorks.roleBadge.customer')}
+                    alt={t('howItWorks.roleBadge.customer')}
                     className={styles.clientAvatarImage}
                   />
                 </div>

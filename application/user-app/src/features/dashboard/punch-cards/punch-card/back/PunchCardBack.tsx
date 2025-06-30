@@ -1,6 +1,6 @@
 import React from 'react';
 import { PunchCardDto } from 'e-punch-common-core';
-import { useLocalization } from 'e-punch-common-ui';
+import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '../../../../../store/hooks';
 import { selectLoyaltyProgramById } from '../../../../loyaltyPrograms/loyaltyProgramsSlice';
 import { CustomizableCardStyles } from '../../../../../utils/cardStyles';
@@ -18,7 +18,7 @@ const PunchCardBack: React.FC<PunchCardBackProps> = ({
   totalPunches,
   resolvedStyles
 }) => {
-  const { t } = useLocalization();
+  const { t } = useTranslation('punchCards');
   const loyaltyProgram = useAppSelector(state => selectLoyaltyProgramById(state, loyaltyProgramId));
 
   return (
@@ -40,7 +40,7 @@ const PunchCardBack: React.FC<PunchCardBackProps> = ({
           className={styles.headerTitle}
           style={{ color: resolvedStyles.colors.textColor }}
         >
-          {t('punchCards.back.details')}
+          {t('back.details')}
         </span>
       </div>
       <div 
@@ -50,7 +50,7 @@ const PunchCardBack: React.FC<PunchCardBackProps> = ({
         {loyaltyProgram && (
           <div className={`${styles.rewardMessage} ${styles.rewardText}`}>
             <div style={{ color: resolvedStyles.colors.textColor }}>
-              {t('punchCards.back.collectMessage', { totalPunches, shopName })}
+              {t('back.collectMessage', { totalPunches, shopName })}
             </div>
             <div 
               className={styles.rewardName}

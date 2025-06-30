@@ -1,0 +1,150 @@
+{
+  "error": {
+    "loyaltyProgramRequired": "Programa de Lealtad Requerido",
+    "loyaltyProgramSetupFirst": "Este comerciante necesita configurar un programa de lealtad primero.",
+    "contactMerchant": "Contacta al comerciante para crear un programa de lealtad antes de acceder a esta página.",
+    "merchantNotFound": "Comerciante No Encontrado",
+    "merchantNotFoundMessage": "El comerciante \"{{merchantSlug}}\" no pudo ser encontrado."
+  },
+  "loading": {
+    "merchantInformation": "Cargando información del comerciante..."
+  },
+  "hero": {
+    "digitalLoyaltyCards": "Tarjetas de Lealtad Digitales",
+    "for": "para",
+    "tryItNow": "¡Pruébalo Ahora! 🚀",
+    "buyGetFree": "Compra 10 Llévate 1 Gratis"
+  },
+  "problemSolution": {
+    "problem": "Problema",
+    "problemTitle": "Los clientes visitan una vez, luego desaparecen para siempre",
+    "problemDescription": "Como las citas de Tinder, el 70% nunca regresa. Se olvidan de que existes y se van con la competencia.",
+    "solution": "Solución",
+    "brandTagline": "Convierte visitantes ocasionales en clientes obsesionados",
+    "brandDescription": "Tarjetas de lealtad digitales que realmente funcionan. Sin apps, sin complicaciones, sin \"perdón, se nos acabaron las tarjetas de papel.\" Solo escanea y mira cómo siguen regresando."
+  },
+  "benefits": {
+    "title": "Por qué {{merchantName}} Necesita Esto",
+    "retention": {
+      "title": "Detén las Desapariciones",
+      "description": "<strong>73% más retención</strong> (se acabaron los clientes fantasma)"
+    },
+    "spending": {
+      "title": "Cuentas Más Grandes",
+      "description": "Los clientes leales gastan <strong>18% más</strong> por visita"
+    },
+    "competition": {
+      "title": "Aplasta la Competencia",
+      "description": "<strong>84% eligen</strong> negocios con recompensas sobre los aburridos"
+    },
+    "data": {
+      "title": "Conoce a Tu Gente",
+      "description": "Obtén <strong>datos reales</strong> (no solo corazonadas)"
+    }
+  },
+  "howItWorks": {
+    "title": "Cómo Funciona Realmente",
+    "subtitle": "Simple, rápido, y funciona instantáneamente con cualquier smartphone",
+    "step1": {
+      "title": "Poné este código QR donde la gente pueda verlo",
+      "note": "Imprimilo, enmarcalo, o mostralo digitalmente"
+    },
+    "step2": {
+      "title": "El cliente escanea con su teléfono",
+      "note": "Sin descargas de apps, sin registros, funciona instantáneamente"
+    },
+    "step3": {
+      "title": "Escaneá su código QR de vuelta y presioná SELLAR",
+      "note": "Toma 2 segundos en tu teléfono"
+    },
+    "step4": {
+      "title": "Ven su tarjeta llenarse ({{partial}}/{{full}} → {{full}}/{{full}})",
+      "note": "Gratificación instantánea con cada visita"
+    },
+    "step5": {
+      "title": "Tarjeta llena = aparece QR de recompensa especial",
+      "note": "Saben exactamente cuándo se la han ganado"
+    },
+    "step6": {
+      "title": "Escaneá QR de recompensa, presioná CANJEAR, listo",
+      "note": "La tarjeta se reinicia automáticamente para la ronda 2"
+    },
+    "step7": {
+      "title": "Cliente feliz obtiene su recompensa",
+      "note": "Y empieza a soñar con su próximo café gratis"
+    },
+    "qrPlaceholder": "El Código QR aparecerá aquí",
+    "roleBadge": {
+      "you": "TÚ",
+      "customer": "CLIENTE"
+    },
+    "twoAppsNote": {
+      "prefix": " y tu ",
+      "suffix": " tienen aplicaciones diferentes"
+    }
+  },
+  "futurePlans": {
+    "title": "Lo Que Viene",
+    "subtitle": "Empieza con lo bueno hoy. Desbloquea funciones increíbles después.",
+    "availableNow": "Disponible Ahora",
+    "comingSoon": "Próximamente",
+    "year2025": "2025",
+    "multiplePrograms": {
+      "title": "Maneja Múltiples Programas",
+      "description": "Recompensas de café, ofertas de comida, paquetes de servicios - todo a la vez. ¿Por qué limitarte?"
+    },
+    "customization": {
+      "title": "Hacelo Tuyo",
+      "description": "Subí tu logo, elegí tus colores. Hacé tarjetas tan bonitas que los clientes quieran presumirlas."
+    },
+    "analytics": {
+      "title": "Mirá Qué Funciona",
+      "description": "Finalmente sabés qué recompensas realmente funcionan en lugar de adivinar como todos los demás."
+    },
+    "targeting": {
+      "title": "Caza Clientes Perdidos",
+      "description": "Enviá promos dirigidas por email/WhatsApp. Automáticamente acosa... eh, re-engancha clientes inactivos."
+    },
+    "bundles": {
+      "title": "Cobra por Adelantado",
+      "description": "Vendé paquetes de $200, dá descuentos. Los clientes ahorran dinero, vos obtenés flujo de efectivo. Todos ganan."
+    },
+    "behaviorAnalysis": {
+      "title": "Saber Todo",
+      "description": "Análisis profundo de comportamiento, horas pico, tendencias estacionales. Convertite en un lector de mentes."
+    },
+    "aiSuggestions": {
+      "title": "Dejá que la IA Piense",
+      "description": "Obtené sugerencias personalizadas para precios y segmentación. Porque los robots son más inteligentes que nosotros."
+    }
+  },
+  "socialProof": {
+    "title": "Los Números No Mienten",
+    "retention": {
+      "label": "Dejan de ignorarte"
+    },
+    "frequency": {
+      "label": "Regresan más seguido"
+    },
+    "spending": {
+      "label": "Gastan más dinero"
+    }
+  },
+  "cta": {
+    "title": "¿Listo para Hacer {{merchantName}} Adictivo?",
+    "subtitle": "Contáctanos y convirtamos esos visitantes ocasionales en clientes obsesionados",
+    "whatsapp": "Charlemos por WhatsApp",
+    "telegram": "Deslízate a Nuestro Telegram",
+    "email": "Buen Viejo Email"
+  },
+  "contact": {
+    "whatsapp": "WhatsApp",
+    "telegram": "Telegram",
+    "email": "Email"
+  },
+  "teaser": {
+    "titlePrefix": "¿Cómo",
+    "titleSuffix": "puede ganar más dinero?",
+    "button": "Dime cómo"
+  }
+} 

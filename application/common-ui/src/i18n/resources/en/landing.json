@@ -1,0 +1,56 @@
+{
+  "getStarted": "Get started today:",
+  "whatsapp": "WhatsApp",
+  "telegram": "Telegram",
+  "digitalPunchCards": "Digital Punch Cards",
+  "noApps": "• No apps to download",
+  "noAccounts": "• No accounts to create",
+  "justScan": "• Just scan and collect",
+  "watchDemo": "Watch How It Works",
+  "customerCompletes": "Customer completes card → Gets reward",
+  "howCustomersUse": "How Customers Use It",
+  "firstVisitToReward": "From first visit to free reward",
+  "step1": {
+    "title": "Initial state",
+    "description": "Customer's QR code ready"
+  },
+  "step2": {
+    "title": "First punch",
+    "description": "First purchase → first punch"
+  },
+  "step3": {
+    "title": "Building up",
+    "description": "Each purchase adds a punch"
+  },
+  "step4": {
+    "title": "Card complete!",
+    "description": "Celebration animation"
+  },
+  "step5": {
+    "title": "Free reward",
+    "description": "Customer claims their reward"
+  },
+  "benefits": {
+    "title": "Benefits to your business",
+    "loyal": {
+      "title": "More loyal customers",
+      "description": "73% higher retention rates"
+    },
+    "visits": {
+      "title": "Frequent repeat visits",
+      "description": "20% increase in visit frequency"
+    },
+    "maintenance": {
+      "title": "Zero maintenance",
+      "description": "No physical cards to replace"
+    },
+    "gamification": {
+      "title": "Gamification",
+      "description": "Visual progress drives engagement"
+    }
+  },
+  "cta": {
+    "title": "Ready to Get Started?",
+    "subtitle": "Contact us to start your digital loyalty program today"
+  }
+} 

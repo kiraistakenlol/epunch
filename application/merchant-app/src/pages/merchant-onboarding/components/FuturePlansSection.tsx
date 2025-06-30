@@ -1,61 +1,61 @@
 import React from 'react';
-import { useLocalization } from 'e-punch-common-ui';
+import { useTranslation } from 'react-i18next';
 import 'react-vertical-timeline-component/style.min.css';
 import styles from './FuturePlansSection.module.css';
 
 export const FuturePlansSection: React.FC = () => {
-  const { t } = useLocalization();
+  const { t } = useTranslation('merchantOnboarding');
   
   const timelineGroups = [
     {
-      status: t('merchantOnboarding.futurePlans.availableNow'),
+      status: t('futurePlans.availableNow'),
       color: '#10b981',
       items: [
         {
-          title: t('merchantOnboarding.futurePlans.multiplePrograms.title'),
-          description: t('merchantOnboarding.futurePlans.multiplePrograms.description'),
+          title: t('futurePlans.multiplePrograms.title'),
+          description: t('futurePlans.multiplePrograms.description'),
           icon: '⚡'
         },
         {
-          title: t('merchantOnboarding.futurePlans.customization.title'),
-          description: t('merchantOnboarding.futurePlans.customization.description'),
+          title: t('futurePlans.customization.title'),
+          description: t('futurePlans.customization.description'),
           icon: '🎨'
         },
         {
-          title: t('merchantOnboarding.futurePlans.analytics.title'),
-          description: t('merchantOnboarding.futurePlans.analytics.description'),
+          title: t('futurePlans.analytics.title'),
+          description: t('futurePlans.analytics.description'),
           icon: '📊'
         }
       ]
     },
     {
-      status: t('merchantOnboarding.futurePlans.comingSoon'),
+      status: t('futurePlans.comingSoon'),
       color: '#f59e0b',
       items: [
         {
-          title: t('merchantOnboarding.futurePlans.targeting.title'),
-          description: t('merchantOnboarding.futurePlans.targeting.description'),
+          title: t('futurePlans.targeting.title'),
+          description: t('futurePlans.targeting.description'),
           icon: '💬'
         },
         {
-          title: t('merchantOnboarding.futurePlans.bundles.title'),
-          description: t('merchantOnboarding.futurePlans.bundles.description'),
+          title: t('futurePlans.bundles.title'),
+          description: t('futurePlans.bundles.description'),
           icon: '💰'
         }
       ]
     },
     {
-      status: t('merchantOnboarding.futurePlans.year2025'),
+      status: t('futurePlans.year2025'),
       color: '#6366f1',
       items: [
         {
-          title: t('merchantOnboarding.futurePlans.behaviorAnalysis.title'),
-          description: t('merchantOnboarding.futurePlans.behaviorAnalysis.description'),
+          title: t('futurePlans.behaviorAnalysis.title'),
+          description: t('futurePlans.behaviorAnalysis.description'),
           icon: '📈'
         },
         {
-          title: t('merchantOnboarding.futurePlans.aiSuggestions.title'),
-          description: t('merchantOnboarding.futurePlans.aiSuggestions.description'),
+          title: t('futurePlans.aiSuggestions.title'),
+          description: t('futurePlans.aiSuggestions.description'),
           icon: '🤖'
         }
       ]
@@ -65,9 +65,9 @@ export const FuturePlansSection: React.FC = () => {
   return (
     <section className={styles.section}>
       <div className={styles.sectionContent}>
-        <h2 className={styles.sectionTitle}>{t('merchantOnboarding.futurePlans.title')}</h2>
+        <h2 className={styles.sectionTitle}>{t('futurePlans.title')}</h2>
         <p className={styles.sectionSubtitle}>
-          {t('merchantOnboarding.futurePlans.subtitle')}
+          {t('futurePlans.subtitle')}
         </p>
         
         <div className={styles.timelineContainer}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocalization } from 'e-punch-common-ui';
+import { useTranslation } from 'react-i18next';
 import styles from './ErrorState.module.css';
 
 interface ErrorStateProps {
@@ -7,12 +7,12 @@ interface ErrorStateProps {
 }
 
 export const ErrorState: React.FC<ErrorStateProps> = ({ merchantSlug }) => {
-  const { t } = useLocalization();
+  const { t } = useTranslation('merchantOnboarding');
   
   return (
     <div className={styles.errorContainer}>
-      <h1>{t('merchantOnboarding.error.merchantNotFound')}</h1>
-      <p>{t('merchantOnboarding.error.merchantNotFoundMessage', { merchantSlug })}</p>
+      <h1>{t('error.merchantNotFound')}</h1>
+      <p>{t('error.merchantNotFoundMessage', { merchantSlug })}</p>
     </div>
   );
 }; 

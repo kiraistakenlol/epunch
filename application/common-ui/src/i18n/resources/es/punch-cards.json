@@ -1,0 +1,18 @@
+{
+  "error": {
+    "title": "¡Ups!",
+    "message": "Error: {{error}}"
+  },
+  "empty": {
+    "title": "¡Tus recompensas te esperan!",
+    "message": "Comenzá a coleccionar sellos en tus lugares favoritos y desbloqueá recompensas increíbles"
+  },
+  "back": {
+    "details": "Detalles",
+    "collectMessage": "Coleccioná {{totalPunches}} sellos en {{shopName}} y disfrutá"
+  },
+  "completion": {
+    "complete": "Completado!",
+    "ok": "¡OK!"
+  }
+} 

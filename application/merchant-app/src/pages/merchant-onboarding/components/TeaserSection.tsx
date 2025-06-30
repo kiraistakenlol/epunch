@@ -1,6 +1,6 @@
 import React from 'react';
 import { MerchantDto } from 'e-punch-common-core';
-import { useLocalization } from 'e-punch-common-ui';
+import { useTranslation } from 'react-i18next';
 import styles from './TeaserSection.module.css';
 
 interface TeaserSectionProps {
@@ -8,7 +8,7 @@ interface TeaserSectionProps {
 }
 
 export const TeaserSection: React.FC<TeaserSectionProps> = ({ merchant }) => {
-  const { t } = useLocalization();
+  const { t } = useTranslation('merchantOnboarding');
   
   const scrollToDemo = () => {
     const demoElement = document.getElementById('hero-demo');
@@ -32,10 +32,10 @@ export const TeaserSection: React.FC<TeaserSectionProps> = ({ merchant }) => {
     <section className={styles.teaser}>
       <div className={styles.teaserContent}>
         <h1 className={styles.teaserTitle}>
-          {t('merchantOnboarding.teaser.titlePrefix')} <span className={styles.merchantName}>{merchant.name}</span> {t('merchantOnboarding.teaser.titleSuffix')}
+          {t('teaser.titlePrefix')} <span className={styles.merchantName}>{merchant.name}</span> {t('teaser.titleSuffix')}
         </h1>
         <button className={styles.tellMeButton} onClick={scrollToDemo}>
-          {t('merchantOnboarding.teaser.button')}
+          {t('teaser.button')}
         </button>
         <div className={styles.scrollArrow}>
           <div className={styles.arrowDown} onClick={scrollToDemo}>↓</div>
