@@ -152,6 +152,8 @@ type TranslationKeys = {
   'merchantOnboarding.howItWorks.qrPlaceholder': string;
   'merchantOnboarding.howItWorks.roleBadge.you': string;
   'merchantOnboarding.howItWorks.roleBadge.customer': string;
+  'merchantOnboarding.howItWorks.twoAppsNote.prefix': string;
+  'merchantOnboarding.howItWorks.twoAppsNote.suffix': string;
 
   // Future Plans
   'merchantOnboarding.futurePlans.title': string;
@@ -349,6 +351,8 @@ const translations = {
     'merchantOnboarding.howItWorks.qrPlaceholder': 'QR Code will appear here',
     'merchantOnboarding.howItWorks.roleBadge.you': 'YOU',
     'merchantOnboarding.howItWorks.roleBadge.customer': 'CUSTOMER',
+    'merchantOnboarding.howItWorks.twoAppsNote.prefix': ' and your ',
+    'merchantOnboarding.howItWorks.twoAppsNote.suffix': ' have different apps',
 
     // Future Plans
     'merchantOnboarding.futurePlans.title': 'What\'s Coming',
@@ -407,15 +411,15 @@ const translations = {
     'auth.signIn': 'Iniciar Sesión',
     'auth.signUp': 'Registrarse',
     'auth.or': 'o',
-    'auth.syncMessage': 'Inicia sesión para sincronizar tus tarjetas en todos tus dispositivos y mantenerlas seguras',
+    'auth.syncMessage': 'Iniciá sesión para sincronizar tus tarjetas en todos tus dispositivos y mantenerlas seguras',
     'auth.continueWithEmail': 'Continuar con Email',
     'auth.continueWithGoogle': 'Continuar con Google',
-    'auth.noAccount': '¿No tienes una cuenta?',
-    'auth.haveAccount': '¿Ya tienes una cuenta?',
+    'auth.noAccount': '¿No tenés una cuenta?',
+    'auth.haveAccount': '¿Ya tenés una cuenta?',
     'auth.back': '← Atrás',
-    'auth.checkEmail': 'Revisa tu Email',
+    'auth.checkEmail': 'Revisá tu Email',
     'auth.verificationSent': 'Enviamos un código de verificación a {{email}}',
-    'auth.enterCode': 'Ingresa el código de verificación',
+    'auth.enterCode': 'Ingresá el código de verificación',
     'auth.verifying': 'Verificando...',
     'auth.verifyEmail': 'Verificar Email',
     'auth.email': 'Email',
@@ -430,7 +434,7 @@ const translations = {
     
     // Sign Out Modal
     'signOut.title': 'Confirmar Cierre de Sesión',
-    'signOut.message': '¿Estás seguro de que quieres cerrar sesión? Continuarás usando la app con tu cuenta anónima.',
+    'signOut.message': '¿Estás seguro de que querés cerrar sesión? Vas a continuar usando la app con tu cuenta anónima.',
     'signOut.confirm': 'Cerrar Sesión',
     'signOut.cancel': 'Cancelar',
     
@@ -438,22 +442,22 @@ const translations = {
     'punchCards.error.title': '¡Ups!',
     'punchCards.error.message': 'Error: {{error}}',
     'punchCards.empty.title': '¡Tus recompensas te esperan!',
-    'punchCards.empty.message': 'Comienza a coleccionar sellos en tus lugares favoritos y desbloquea recompensas increíbles',
+    'punchCards.empty.message': 'Comenzá a coleccionar sellos en tus lugares favoritos y desbloqueá recompensas increíbles',
     'punchCards.back.details': 'Detalles',
-    'punchCards.back.collectMessage': 'Colecciona {{totalPunches}} sellos en {{shopName}} y disfruta',
+    'punchCards.back.collectMessage': 'Coleccioná {{totalPunches}} sellos en {{shopName}} y disfrutá',
     'punchCards.completion.complete': 'Completado!',
     'punchCards.completion.ok': '¡OK!',
     
     // QR Code
     'qr.myCode': 'Mi Código QR',
-    'qr.showToGet': 'Muestra para obtener {{reward}}',
+    'qr.showToGet': 'Mostrá para obtener {{reward}}',
     
     // Reward Overlay
     'reward.selected': 'SELECCIONADO',
     'reward.tapToRedeem': 'TOCA PARA CANJEAR',
     
     // Landing Page
-    'landing.getStarted': 'Comienza hoy:',
+    'landing.getStarted': 'Comenzá hoy:',
     'landing.whatsapp': 'WhatsApp',
     'landing.telegram': 'Telegram',
     'landing.digitalPunchCards': 'Tarjetas de Sellos Digitales',
@@ -527,23 +531,25 @@ const translations = {
     // How It Works
     'merchantOnboarding.howItWorks.title': 'Cómo Funciona Realmente',
     'merchantOnboarding.howItWorks.subtitle': 'Simple, rápido, y funciona instantáneamente con cualquier smartphone',
-    'merchantOnboarding.howItWorks.step1.title': 'Pon este código QR donde la gente pueda verlo',
-    'merchantOnboarding.howItWorks.step1.note': 'Imprímelo, enmárcalo, o muéstralo digitalmente',
+    'merchantOnboarding.howItWorks.step1.title': 'Poné este código QR donde la gente pueda verlo',
+    'merchantOnboarding.howItWorks.step1.note': 'Imprimilo, enmarcalo, o mostralo digitalmente',
     'merchantOnboarding.howItWorks.step2.title': 'El cliente escanea con su teléfono',
     'merchantOnboarding.howItWorks.step2.note': 'Sin descargas de apps, sin registros, funciona instantáneamente',
-    'merchantOnboarding.howItWorks.step3.title': 'Escanea su código QR de vuelta y presiona SELLAR',
+    'merchantOnboarding.howItWorks.step3.title': 'Escaneá su código QR de vuelta y presioná SELLAR',
     'merchantOnboarding.howItWorks.step3.note': 'Toma 2 segundos en tu teléfono',
     'merchantOnboarding.howItWorks.step4.title': 'Ven su tarjeta llenarse ({{partial}}/{{full}} → {{full}}/{{full}})',
     'merchantOnboarding.howItWorks.step4.note': 'Gratificación instantánea con cada visita',
     'merchantOnboarding.howItWorks.step5.title': 'Tarjeta llena = aparece QR de recompensa especial',
     'merchantOnboarding.howItWorks.step5.note': 'Saben exactamente cuándo se la han ganado',
-    'merchantOnboarding.howItWorks.step6.title': 'Escanea QR de recompensa, presiona CANJEAR, listo',
+    'merchantOnboarding.howItWorks.step6.title': 'Escaneá QR de recompensa, presioná CANJEAR, listo',
     'merchantOnboarding.howItWorks.step6.note': 'La tarjeta se reinicia automáticamente para la ronda 2',
     'merchantOnboarding.howItWorks.step7.title': 'Cliente feliz obtiene su recompensa',
     'merchantOnboarding.howItWorks.step7.note': 'Y empieza a soñar con su próximo café gratis',
     'merchantOnboarding.howItWorks.qrPlaceholder': 'El Código QR aparecerá aquí',
     'merchantOnboarding.howItWorks.roleBadge.you': 'TÚ',
     'merchantOnboarding.howItWorks.roleBadge.customer': 'CLIENTE',
+    'merchantOnboarding.howItWorks.twoAppsNote.prefix': ' y tu ',
+    'merchantOnboarding.howItWorks.twoAppsNote.suffix': ' tienen aplicaciones diferentes',
 
     // Future Plans
     'merchantOnboarding.futurePlans.title': 'Lo Que Viene',
@@ -553,18 +559,18 @@ const translations = {
     'merchantOnboarding.futurePlans.year2025': '2025',
     'merchantOnboarding.futurePlans.multiplePrograms.title': 'Maneja Múltiples Programas',
     'merchantOnboarding.futurePlans.multiplePrograms.description': 'Recompensas de café, ofertas de comida, paquetes de servicios - todo a la vez. ¿Por qué limitarte?',
-    'merchantOnboarding.futurePlans.customization.title': 'Hazlo Tuyo',
-    'merchantOnboarding.futurePlans.customization.description': 'Sube tu logo, elige tus colores. Haz tarjetas tan bonitas que los clientes quieran presumirlas.',
-    'merchantOnboarding.futurePlans.analytics.title': 'Ve Qué Funciona',
-    'merchantOnboarding.futurePlans.analytics.description': 'Finalmente sabe qué recompensas realmente funcionan en lugar de adivinar como todos los demás.',
+    'merchantOnboarding.futurePlans.customization.title': 'Hacelo Tuyo',
+    'merchantOnboarding.futurePlans.customization.description': 'Subí tu logo, elegí tus colores. Hacé tarjetas tan bonitas que los clientes quieran presumirlas.',
+    'merchantOnboarding.futurePlans.analytics.title': 'Mirá Qué Funciona',
+    'merchantOnboarding.futurePlans.analytics.description': 'Finalmente sabés qué recompensas realmente funcionan en lugar de adivinar como todos los demás.',
     'merchantOnboarding.futurePlans.targeting.title': 'Caza Clientes Perdidos',
-    'merchantOnboarding.futurePlans.targeting.description': 'Envía promos dirigidas por email/WhatsApp. Automáticamente acosa... eh, re-engancha clientes inactivos.',
+    'merchantOnboarding.futurePlans.targeting.description': 'Enviá promos dirigidas por email/WhatsApp. Automáticamente acosa... eh, re-engancha clientes inactivos.',
     'merchantOnboarding.futurePlans.bundles.title': 'Cobra por Adelantado',
-    'merchantOnboarding.futurePlans.bundles.description': 'Vende paquetes de $200, da descuentos. Los clientes ahorran dinero, tú obtienes flujo de efectivo. Todos ganan.',
+    'merchantOnboarding.futurePlans.bundles.description': 'Vendé paquetes de $200, dá descuentos. Los clientes ahorran dinero, vos obtenés flujo de efectivo. Todos ganan.',
     'merchantOnboarding.futurePlans.behaviorAnalysis.title': 'Saber Todo',
-    'merchantOnboarding.futurePlans.behaviorAnalysis.description': 'Análisis profundo de comportamiento, horas pico, tendencias estacionales. Conviértete en un lector de mentes.',
-    'merchantOnboarding.futurePlans.aiSuggestions.title': 'Deja que la IA Piense',
-    'merchantOnboarding.futurePlans.aiSuggestions.description': 'Obtén sugerencias personalizadas para precios y segmentación. Porque los robots son más inteligentes que nosotros.',
+    'merchantOnboarding.futurePlans.behaviorAnalysis.description': 'Análisis profundo de comportamiento, horas pico, tendencias estacionales. Convertite en un lector de mentes.',
+    'merchantOnboarding.futurePlans.aiSuggestions.title': 'Dejá que la IA Piense',
+    'merchantOnboarding.futurePlans.aiSuggestions.description': 'Obtené sugerencias personalizadas para precios y segmentación. Porque los robots son más inteligentes que nosotros.',
 
     // Social Proof
     'merchantOnboarding.socialProof.title': 'Los Números No Mienten',
@@ -624,7 +630,7 @@ export const LocalizationProvider: React.FC<{ children: ReactNode }> = ({ childr
     
     if (params) {
       Object.entries(params).forEach(([param, value]) => {
-        translation = translation.replace(`{{${param}}}`, String(value));
+        translation = translation.replaceAll(`{{${param}}}`, String(value));
       });
     }
     

@@ -82,8 +82,16 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
       <div className={styles.sectionContent}>
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle}>{t('merchantOnboarding.howItWorks.title')}</h2>
-          <p className={styles.sectionSubtitle}>
-            {t('merchantOnboarding.howItWorks.subtitle')}
+          <p className={styles.twoAppsNote}>
+            <span className={styles.infoIcon}>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
+              </svg>
+            </span>
+            <span className={styles.merchantApp}>{t('merchantOnboarding.howItWorks.roleBadge.you')}</span>
+            {t('merchantOnboarding.howItWorks.twoAppsNote.prefix')}
+            <span className={styles.userApp}>{t('merchantOnboarding.howItWorks.roleBadge.customer').toUpperCase()}</span>
+            {t('merchantOnboarding.howItWorks.twoAppsNote.suffix')}
           </p>
         </div>
 
