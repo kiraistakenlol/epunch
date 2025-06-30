@@ -1,5 +1,5 @@
 import { Controller, Get, Param, ParseUUIDPipe, Post, Body, HttpException, HttpStatus, Put, Delete, Query } from '@nestjs/common';
-import { LoyaltyProgramDto, MerchantLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreateMerchantDto, UpdateMerchantDto, PunchCardStyleDto, FileUploadUrlDto, FileUploadResponseDto } from 'e-punch-common-core';
+import { LoyaltyProgramDto, MerchantLoginDto, MerchantUserLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreateMerchantDto, UpdateMerchantDto, PunchCardStyleDto, FileUploadUrlDto, FileUploadResponseDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto } from 'e-punch-common-core';
 import { MerchantService } from './merchant.service';
 
 @Controller('merchants')
@@ -48,9 +48,10 @@ export class MerchantController {
   }
 
   @Post('auth')
-  async login(@Body() loginDto: MerchantLoginDto): Promise<MerchantLoginResponse> {
+  async login(@Body() loginDto: MerchantUserLoginDto): Promise<MerchantLoginResponse> {
     try {
       const result = await this.merchantService.validateMerchant(
+        loginDto.merchantSlug,
         loginDto.login,
         loginDto.password
       );
@@ -106,6 +107,38 @@ export class MerchantController {
     @Body() fileUploadDto: FileUploadUrlDto,
   ): Promise<FileUploadResponseDto> {
     return this.merchantService.generateFileUploadUrl(merchantId, fileUploadDto);
+  }
+
+  @Get(':merchantId/users')
+  async getMerchantUsers(
+    @Param('merchantId', ParseUUIDPipe) merchantId: string,
+  ): Promise<MerchantUserDto[]> {
+    return this.merchantService.getMerchantUsers(merchantId);
+  }
+
+  @Post(':merchantId/users')
+  async createMerchantUser(
+    @Param('merchantId', ParseUUIDPipe) merchantId: string,
+    @Body() createDto: CreateMerchantUserDto,
+  ): Promise<MerchantUserDto> {
+    return this.merchantService.createMerchantUser(merchantId, createDto);
+  }
+
+  @Put(':merchantId/users/:userId')
+  async updateMerchantUser(
+    @Param('merchantId', ParseUUIDPipe) merchantId: string,
+    @Param('userId', ParseUUIDPipe) userId: string,
+    @Body() updateDto: UpdateMerchantUserDto,
+  ): Promise<MerchantUserDto> {
+    return this.merchantService.updateMerchantUser(merchantId, userId, updateDto);
+  }
+
+  @Delete(':merchantId/users/:userId')
+  async deleteMerchantUser(
+    @Param('merchantId', ParseUUIDPipe) merchantId: string,
+    @Param('userId', ParseUUIDPipe) userId: string,
+  ): Promise<void> {
+    return this.merchantService.deleteMerchantUser(merchantId, userId);
   }
 
 } 

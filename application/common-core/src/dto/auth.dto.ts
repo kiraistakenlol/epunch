@@ -1,5 +1,5 @@
 export interface AuthRequestDto {
-  authToken: string;
+  authToken: string; // JWT token from cognito
   userId: string;
 }
 

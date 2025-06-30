@@ -32,6 +32,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { apiClient, SystemStatistics } from 'e-punch-common-ui';
 import { MerchantDto, LoyaltyProgramDto } from 'e-punch-common-core';
 import { generateMerchantQRPDF } from '../utils/pdfGenerator';
+import { MerchantUsersManager } from '../components/MerchantUsersManager';
 
 export const MerchantView: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -452,6 +453,9 @@ export const MerchantView: React.FC = () => {
           </Card>
         </>
       )}
+
+      {/* Merchant Users */}
+      <MerchantUsersManager merchantId={merchant.id} />
 
       <Snackbar
         open={snackbar.open}

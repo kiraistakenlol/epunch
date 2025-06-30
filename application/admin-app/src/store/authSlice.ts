@@ -1,34 +1,32 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { apiClient } from 'e-punch-common-ui';
 
-interface AdminUser {
-  id: string;
-  email: string;
-  firstName?: string;
-  lastName?: string;
-}
+const ADMIN_TOKEN_KEY = 'admin_token';
 
 interface AuthState {
-  adminUser: AdminUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
 }
 
-const getInitialState = (): AuthState => {
-  const adminData = localStorage.getItem('admin_data');
-  
-  let adminUser = null;
-  if (adminData) {
+export const loginAsync = createAsyncThunk(
+  'auth/loginAsync',
+  async ({ login, password }: { login: string; password: string }, { rejectWithValue }) => {
     try {
-      adminUser = JSON.parse(adminData);
-    } catch (error) {
-      localStorage.removeItem('admin_data');
+      const response = await apiClient.authenticateAdmin(login, password);
+      localStorage.setItem(ADMIN_TOKEN_KEY, response.token);
+      return response.token;
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Authentication failed');
     }
   }
+);
+
+const getInitialState = (): AuthState => {
+  const adminToken = localStorage.getItem(ADMIN_TOKEN_KEY);
   
   return {
-    adminUser,
-    isAuthenticated: !!adminUser,
+    isAuthenticated: !!adminToken,
     isLoading: false,
     error: null,
   };
@@ -40,43 +38,36 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    loginStart: (state) => {
-      state.isLoading = true;
-      state.error = null;
-    },
-    loginSuccess: (state, action: PayloadAction<AdminUser>) => {
-      state.isLoading = false;
-      state.adminUser = action.payload;
-      state.isAuthenticated = true;
-      state.error = null;
-      localStorage.setItem('admin_data', JSON.stringify(action.payload));
-    },
-    loginFailure: (state, action: PayloadAction<string>) => {
-      state.isLoading = false;
-      state.adminUser = null;
-      state.isAuthenticated = false;
-      state.error = action.payload;
-      localStorage.removeItem('admin_data');
-    },
     logout: (state) => {
-      state.adminUser = null;
       state.isAuthenticated = false;
       state.isLoading = false;
       state.error = null;
-      localStorage.removeItem('admin_data');
+      localStorage.removeItem(ADMIN_TOKEN_KEY);
     },
     clearError: (state) => {
       state.error = null;
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(loginAsync.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(loginAsync.fulfilled, (state) => {
+        state.isLoading = false;
+        state.isAuthenticated = true;
+        state.error = null;
+      })
+      .addCase(loginAsync.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isAuthenticated = false;
+        state.error = action.payload as string;
+        localStorage.removeItem(ADMIN_TOKEN_KEY);
+      });
+  },
 });
 
-export const {
-  loginStart,
-  loginSuccess,
-  loginFailure,
-  logout,
-  clearError,
-} = authSlice.actions;
+export const { logout, clearError } = authSlice.actions;
 
 export default authSlice.reducer; 

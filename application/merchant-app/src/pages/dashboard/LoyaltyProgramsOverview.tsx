@@ -10,7 +10,7 @@ import { DashboardCard } from './DashboardCard';
 
 export const LoyaltyProgramsOverview: React.FC = () => {
   const navigate = useNavigate();
-  const merchantId = useAppSelector(state => state.auth.merchant?.id);
+  const merchantId = useAppSelector(state => state.merchant.merchant?.id);
 
   const [loyaltyPrograms, setLoyaltyPrograms] = useState<LoyaltyProgramDto[]>([]);
   const [isLoading, setIsLoading] = useState(true);

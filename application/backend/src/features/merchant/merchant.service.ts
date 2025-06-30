@@ -1,7 +1,8 @@
 import { Injectable, Logger, NotFoundException, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { LoyaltyProgramDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreateMerchantDto, UpdateMerchantDto, FileUploadUrlDto, FileUploadResponseDto } from 'e-punch-common-core';
+import { LoyaltyProgramDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreateMerchantDto, UpdateMerchantDto, FileUploadUrlDto, FileUploadResponseDto, JwtPayloadDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto } from 'e-punch-common-core';
 import { MerchantRepository } from './merchant.repository';
+import { MerchantUserRepository } from '../merchant-user/merchant-user.repository';
 import { FileUploadService } from './file-upload.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -13,6 +14,7 @@ export class MerchantService {
 
   constructor(
     private readonly merchantRepository: MerchantRepository,
+    private readonly merchantUserRepository: MerchantUserRepository,
     private readonly fileUploadService: FileUploadService,
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService
@@ -71,35 +73,44 @@ export class MerchantService {
     }
   }
 
-  async validateMerchant(login: string, password: string): Promise<MerchantLoginResponse | null> {
-    this.logger.log(`Validating merchant with login: ${login}`);
+  async validateMerchant(merchantSlug: string, login: string, password: string): Promise<MerchantLoginResponse | null> {
+    this.logger.log(`Validating merchant user with slug: ${merchantSlug}, login: ${login}`);
 
     try {
-      const merchant = await this.merchantRepository.findMerchantByLogin(login);
+      const user = await this.merchantUserRepository.findUserByMerchantSlugAndLogin(merchantSlug, login);
 
-      if (!merchant || !merchant.password_hash || !merchant.login) {
-        this.logger.warn(`Merchant not found or missing auth fields with login: ${login}`);
+      if (!user) {
+        this.logger.warn(`User not found with slug: ${merchantSlug}, login: ${login}`);
         return null;
       }
 
-      const isPasswordValid = await bcrypt.compare(password, merchant.password_hash);
+      const isPasswordValid = await bcrypt.compare(password, user.password_hash);
 
       if (!isPasswordValid) {
-        this.logger.warn(`Invalid password for merchant: ${login}`);
+        this.logger.warn(`Invalid password for user: ${login}`);
         return null;
       }
 
-      const payload = { sub: merchant.id, login: merchant.login };
+      const role = await this.merchantUserRepository.getUserRole(user.id);
+
+      if (!role) {
+        this.logger.warn(`User ${user.id} has no role assigned`);
+        return null;
+      }
+
+      const payload = {
+        userId: user.id,
+        merchantId: user.merchant_id,
+        role
+      } as JwtPayloadDto;
+      
       const token = this.jwtService.sign(payload);
 
-      this.logger.log(`Merchant authenticated successfully: ${login}`);
+      this.logger.log(`User authenticated successfully: ${merchantSlug}/${login}`);
 
-      return {
-        token,
-        merchant: MerchantMapper.toDto(merchant),
-      };
+      return { token };
     } catch (error: any) {
-      this.logger.error(`Error validating merchant ${login}: ${error.message}`, error.stack);
+      this.logger.error(`Error validating user ${merchantSlug}/${login}: ${error.message}`, error.stack);
       throw error;
     }
   }
@@ -291,6 +302,116 @@ export class MerchantService {
       return result;
     } catch (error: any) {
       this.logger.error(`Error generating file upload URL for merchant ${merchantId}: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  async getMerchantUsers(merchantId: string): Promise<MerchantUserDto[]> {
+    this.logger.log(`Fetching users for merchant: ${merchantId}`);
+
+    try {
+      const merchant = await this.merchantRepository.findMerchantById(merchantId);
+
+      if (!merchant) {
+        throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
+      }
+
+      const users = await this.merchantUserRepository.findUsersByMerchantId(merchantId);
+      this.logger.log(`Found ${users.length} users for merchant: ${merchantId}`);
+      return users;
+    } catch (error: any) {
+      this.logger.error(`Error fetching users for merchant ${merchantId}: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  async createMerchantUser(merchantId: string, data: CreateMerchantUserDto): Promise<MerchantUserDto> {
+    this.logger.log(`Creating user for merchant: ${merchantId}`);
+
+    try {
+      const merchant = await this.merchantRepository.findMerchantById(merchantId);
+
+      if (!merchant) {
+        throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
+      }
+
+      const existingUser = await this.merchantUserRepository.findUserByMerchantAndLogin(merchantId, data.login);
+      if (existingUser) {
+        throw new HttpException('User with this login already exists for this merchant', HttpStatus.CONFLICT);
+      }
+
+      if (data.password.length < 4) {
+        throw new HttpException('Password must be at least 4 characters', HttpStatus.BAD_REQUEST);
+      }
+
+      const hashedPassword = await bcrypt.hash(data.password, 10);
+
+      const user = await this.merchantUserRepository.createUser(merchantId, {
+        ...data,
+        passwordHash: hashedPassword
+      });
+
+      this.logger.log(`Created user ${user.id} for merchant: ${merchantId}`);
+      return user;
+    } catch (error: any) {
+      this.logger.error(`Error creating user for merchant ${merchantId}: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  async updateMerchantUser(merchantId: string, userId: string, data: UpdateMerchantUserDto): Promise<MerchantUserDto> {
+    this.logger.log(`Updating user ${userId} for merchant: ${merchantId}`);
+
+    try {
+      const merchant = await this.merchantRepository.findMerchantById(merchantId);
+
+      if (!merchant) {
+        throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
+      }
+
+      const updateData: any = { ...data };
+
+      if (data.password) {
+        if (data.password.length < 4) {
+          throw new HttpException('Password must be at least 4 characters', HttpStatus.BAD_REQUEST);
+        }
+        updateData.passwordHash = await bcrypt.hash(data.password, 10);
+        delete updateData.password;
+      }
+
+      const user = await this.merchantUserRepository.updateUser(userId, merchantId, updateData);
+
+      if (!user) {
+        throw new NotFoundException(`User with ID ${userId} not found for merchant ${merchantId}`);
+      }
+
+      this.logger.log(`Updated user ${userId} for merchant: ${merchantId}`);
+      return user;
+    } catch (error: any) {
+      this.logger.error(`Error updating user ${userId} for merchant ${merchantId}: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  async deleteMerchantUser(merchantId: string, userId: string): Promise<void> {
+    this.logger.log(`Deleting user ${userId} for merchant: ${merchantId}`);
+
+    try {
+      const merchant = await this.merchantRepository.findMerchantById(merchantId);
+
+      if (!merchant) {
+        throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
+      }
+
+      const deleted = await this.merchantUserRepository.deleteUser(userId, merchantId);
+
+      if (!deleted) {
+        throw new NotFoundException(`User with ID ${userId} not found for merchant ${merchantId} or already deleted`);
+      }
+
+      this.logger.log(`Deleted user ${userId} for merchant: ${merchantId}`);
+    } catch (error: any) {
+      this.logger.error(`Error deleting user ${userId} for merchant ${merchantId}: ${error.message}`, error.stack);
       throw error;
     }
   }

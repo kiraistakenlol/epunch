@@ -35,7 +35,7 @@ export const PunchCardPreview: React.FC<PunchCardPreviewProps> = ({
   showAnimations = false,
   renderOnBackgroundColor = colors.background.paper
 }) => {
-  const merchant = useAppSelector(state => state.auth.merchant);
+  const merchant = useAppSelector(state => state.merchant.merchant);
   const [animationKey, setAnimationKey] = useState(0);
 
   // Size configuration with responsive widths

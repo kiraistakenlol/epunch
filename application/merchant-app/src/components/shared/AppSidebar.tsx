@@ -20,14 +20,16 @@ import {
   QrCode as QrCodeIcon,
 } from '@mui/icons-material';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { ROLES } from 'e-punch-common-core';
+import { useAppSelector } from '../../store/hooks';
 import { colors } from '../../theme';
 
 const menuItems = [
-  { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
-  { text: 'QR Scanner', icon: <QrCodeScanner />, path: '/scanner' },
-  { text: 'Welcome QR', icon: <QrCodeIcon />, path: '/welcome-qr' },
-  { text: 'Loyalty Programs', icon: <Loyalty />, path: '/loyalty-programs' },
-  { text: 'DesignPage', icon: <Palette />, path: '/design' },
+  { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard', roles: [ROLES.ADMIN] },
+  { text: 'QR Scanner', icon: <QrCodeScanner />, path: '/scanner', roles: [ROLES.ADMIN, ROLES.STAFF] },
+  { text: 'Welcome QR', icon: <QrCodeIcon />, path: '/welcome-qr', roles: [ROLES.ADMIN] },
+  { text: 'Loyalty Programs', icon: <Loyalty />, path: '/loyalty-programs', roles: [ROLES.ADMIN] },
+  { text: 'Design', icon: <Palette />, path: '/design', roles: [ROLES.ADMIN] },
 ];
 
 interface AppSidebarProps {
@@ -43,6 +45,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
   const location = useLocation();
+  const user = useAppSelector((state) => state.auth.user);
 
   const handleNavigation = (path: string) => {
     navigate(path);
@@ -50,6 +53,10 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
       onDrawerToggle();
     }
   };
+
+  const filteredMenuItems = menuItems.filter(item => 
+    user?.role && item.roles.includes(user.role)
+  );
 
   const drawerContent = (
     <Box>
@@ -64,7 +71,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
       </Toolbar>
       
       <List className="app-nav-list">
-        {menuItems.map((item) => (
+        {filteredMenuItems.map((item) => (
           <ListItem key={item.text} disablePadding>
             <ListItemButton
               selected={location.pathname === item.path}

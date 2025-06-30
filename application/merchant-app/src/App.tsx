@@ -4,8 +4,10 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import { ToastContainer } from 'react-toastify';
 import { configureApiClient } from 'e-punch-common-ui';
+import { ROLES } from 'e-punch-common-core';
 import { useAppSelector, useAppDispatch } from './store/hooks';
 import { fetchMerchant } from './store/merchantSlice';
+import { selectIsAuthenticated } from './store/authSlice';
 import { LoginPage } from './pages/login/LoginPage';
 import { AppLayout } from './components/shared';
 import { DashboardPage } from './pages/dashboard/DashboardPage.tsx';
@@ -21,7 +23,6 @@ import { injectCSSVariables } from './styles/css-variables';
 import './styles/global.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { RootState } from './store/store';
-import { Auth } from './store/authSlice.ts';
 
 // Configure API client
 const API_BASE_URL = import.meta.env.VITE_API_URL;
@@ -81,18 +82,41 @@ const theme = createTheme({
 });
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const auth: Auth | null = useAppSelector((state: RootState) => state.auth.merchant);
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
   
-  if (!auth) {
+  if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
   
   return <>{children}</>;
 };
 
+const RoleProtectedRoute: React.FC<{ 
+  children: React.ReactNode;
+  allowedRoles: string[];
+}> = ({ children, allowedRoles }) => {
+  const user = useAppSelector((state: RootState) => state.auth.user);
+  
+  if (!user || !allowedRoles.includes(user.role)) {
+    return <Navigate to="/scanner" replace />;
+  }
+  
+  return <>{children}</>;
+};
+
+const StaffRedirect: React.FC = () => {
+  const user = useAppSelector((state: RootState) => state.auth.user);
+  
+  if (user?.role === ROLES.STAFF) {
+    return <Navigate to="/scanner" replace />;
+  }
+  
+  return <Navigate to="/" replace />;
+};
+
 function App() {
   const dispatch = useAppDispatch();
-  const authMerchant = useAppSelector((state: RootState) => state.auth.merchant);
+  const user = useAppSelector((state: RootState) => state.auth.user);
 
   // Inject CSS variables from constants
   React.useEffect(() => {
@@ -101,10 +125,10 @@ function App() {
 
   // Fetch merchant data when authenticated
   React.useEffect(() => {
-    if (authMerchant?.id) {
-      dispatch(fetchMerchant(authMerchant.id));
+    if (user?.merchantId) {
+      dispatch(fetchMerchant(user.merchantId));
     }
-  }, [authMerchant?.id, dispatch]);
+  }, [user?.merchantId, dispatch]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -119,13 +143,38 @@ function App() {
               <AppLayout />
             </ProtectedRoute>
           }>
-            <Route index element={<DashboardPage />} />
-            <Route path="loyalty-programs" element={<LoyaltyProgramsPage />} />
-            <Route path="loyalty-programs/create" element={<LoyaltyProgramCreate />} />
-            <Route path="loyalty-programs/:id/edit" element={<LoyaltyProgramEdit />} />
-            <Route path="design" element={<DesignPage />} />
+            <Route index element={<StaffRedirect />} />
             <Route path="scanner" element={<ScannerPage />} />
-            <Route path="welcome-qr" element={<WelcomeQRPage />} />
+            <Route path="dashboard" element={
+              <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+                <DashboardPage />
+              </RoleProtectedRoute>
+            } />
+            <Route path="loyalty-programs" element={
+              <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+                <LoyaltyProgramsPage />
+              </RoleProtectedRoute>
+            } />
+            <Route path="loyalty-programs/create" element={
+              <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+                <LoyaltyProgramCreate />
+              </RoleProtectedRoute>
+            } />
+            <Route path="loyalty-programs/:id/edit" element={
+              <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+                <LoyaltyProgramEdit />
+              </RoleProtectedRoute>
+            } />
+            <Route path="design" element={
+              <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+                <DesignPage />
+              </RoleProtectedRoute>
+            } />
+            <Route path="welcome-qr" element={
+              <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+                <WelcomeQRPage />
+              </RoleProtectedRoute>
+            } />
           </Route>
         </Routes>
       </Router>

@@ -1,7 +1,7 @@
 import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { PunchCardDto, UserDto } from 'e-punch-common-core';
-import { User } from '../../core/decorators/current-user.decorator';
-import { CurrentUser } from '../../core/types/current-user.interface';
+import { Auth, RequireEndUser, isEndUser } from '../../core/decorators/security.decorators';
+import { Authentication } from '../../core/types/authentication.interface';
 import { PunchCardsService } from '../punch-cards/punch-cards.service';
 import { UserRepository } from './user.repository';
 import { UserMapper } from '../../mappers';
@@ -20,11 +20,16 @@ export class UserController {
   }
 
   @Get('me')
-  async getCurrentUser(@User(true) user: CurrentUser): Promise<UserDto> {
+  @RequireEndUser()
+  async getCurrentUser(@Auth() auth: Authentication): Promise<UserDto> {
+    if (!isEndUser(auth)) {
+      throw new Error('End user authentication required');
+    }
+    
     return {
-      id: user.id,
-      email: user.email,
-      superAdmin: user.superAdmin
+      id: auth.endUser.id,
+      email: auth.endUser.email,
+      superAdmin: auth.endUser.superAdmin
     };
   }
 

@@ -12,7 +12,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { loginStart, loginSuccess, loginFailure, clearError } from '../store/authSlice';
+import { loginAsync, clearError } from '../store/authSlice';
 
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -25,24 +25,13 @@ export const LoginPage: React.FC = () => {
     e.preventDefault();
     
     if (!email || !password) {
-      dispatch(loginFailure('Please enter both email and password'));
       return;
     }
 
-    dispatch(loginStart());
-
-    // Hardcoded credentials - admin/0000
-    if (email === 'admin' && password === '0000') {
-      const adminUser = {
-        id: '1',
-        email: email,
-        firstName: 'Admin',
-        lastName: 'User',
-      };
-      dispatch(loginSuccess(adminUser));
+    const result = await dispatch(loginAsync({ login: email, password }));
+    
+    if (loginAsync.fulfilled.match(result)) {
       navigate('/');
-    } else {
-      dispatch(loginFailure('Invalid credentials. Use admin/0000'));
     }
   };
 

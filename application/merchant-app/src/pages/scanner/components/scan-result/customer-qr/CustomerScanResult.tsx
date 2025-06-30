@@ -15,7 +15,7 @@ interface UserPersonalQRProps {
 }
 
 export const CustomerScanResult: React.FC<UserPersonalQRProps> = ({ data, onPunch, onReset }) => {
-    const merchantId = useAppSelector(state => state.auth.merchant?.id);
+    const merchantId = useAppSelector(state => state.merchant.merchant?.id);
     const [loyaltyPrograms, setLoyaltyPrograms] = useState<LoyaltyProgramDto[]>([]);
     const [selectedLoyaltyProgramId, setSelectedLoyaltyProgramId] = useState<string>('');
     const [isLoading, setIsLoading] = useState(false);

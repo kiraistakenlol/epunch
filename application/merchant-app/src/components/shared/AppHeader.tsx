@@ -14,32 +14,38 @@ import { ProfileMenu } from './ProfileMenu';
 
 interface AppHeaderProps {
   onDrawerToggle: () => void;
+  showMenuButton?: boolean;
 }
 
-export const AppHeader: React.FC<AppHeaderProps> = ({ onDrawerToggle }) => {
+export const AppHeader: React.FC<AppHeaderProps> = ({ 
+  onDrawerToggle, 
+  showMenuButton = true 
+}) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const merchant = useAppSelector(state => state.auth.merchant);
+  const merchant = useAppSelector(state => state.merchant.merchant);
 
   return (
     <AppBar
       className={`app-header ${isMobile ? 'mobile' : 'desktop'}`}
       sx={{
         backgroundColor: colors.primary,
-        width: { md: 'calc(100% - 280px)' },
-        ml: { md: '280px' },
+        width: showMenuButton ? { md: 'calc(100% - 280px)' } : '100%',
+        ml: showMenuButton ? { md: '280px' } : 0,
       }}
     >
       <Toolbar className={`app-toolbar ${isMobile ? 'mobile' : 'desktop'}`}>
-        <IconButton
-          color="inherit"
-          aria-label="open drawer"
-          edge="start"
-          onClick={onDrawerToggle}
-          sx={{ mr: 2, display: { md: 'none' } }}
-        >
-          <MenuIcon />
-        </IconButton>
+        {showMenuButton && (
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={onDrawerToggle}
+            sx={{ mr: 2, display: { md: 'none' } }}
+          >
+            <MenuIcon />
+          </IconButton>
+        )}
         
         <Typography 
           variant="h6" 

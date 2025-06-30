@@ -33,5 +33,4 @@ export interface MerchantLoginDto {
 
 export interface MerchantLoginResponse {
   token: string;
-  merchant: MerchantDto;
 } 

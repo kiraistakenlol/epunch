@@ -16,6 +16,10 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@mui/material';
 import {
   ArrowBack as ArrowBackIcon,
@@ -29,7 +33,7 @@ import {
   Star as StarIcon,
 } from '@mui/icons-material';
 import { apiClient } from 'e-punch-common-ui';
-import { CreateMerchantDto, CreateLoyaltyProgramDto } from 'e-punch-common-core';
+import { CreateMerchantDto, CreateLoyaltyProgramDto, CreateMerchantUserDto, ROLES, Role } from 'e-punch-common-core';
 
 interface MerchantFormData {
   name: string;
@@ -62,6 +66,19 @@ interface LoyaltyProgramFormData {
   rewardDescription: string;
 }
 
+interface UserTemplate {
+  id: string;
+  login: string;
+  password: string;
+  role: Role;
+}
+
+interface UserFormData {
+  login: string;
+  password: string;
+  role: Role;
+}
+
 const defaultTemplates: LoyaltyProgramTemplate[] = [
   {
     id: '1',
@@ -81,6 +98,21 @@ const defaultTemplates: LoyaltyProgramTemplate[] = [
   },
 ];
 
+const defaultUsers: UserTemplate[] = [
+  {
+    id: '1',
+    login: 'admin',
+    password: 'admin',
+    role: ROLES.ADMIN,
+  },
+  {
+    id: '2',
+    login: 'staff',
+    password: 'password',
+    role: ROLES.STAFF,
+  },
+];
+
 export const MerchantDemoSetup: React.FC = () => {
   const navigate = useNavigate();
   
@@ -89,10 +121,11 @@ export const MerchantDemoSetup: React.FC = () => {
     address: '',
     slug: '',
     login: '',
-    password: '0000',
+    password: '',
   });
   
   const [loyaltyPrograms, setLoyaltyPrograms] = useState<LoyaltyProgramTemplate[]>(defaultTemplates);
+  const [users, setUsers] = useState<UserTemplate[]>(defaultUsers);
   
   const [errors, setErrors] = useState<MerchantFormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -104,6 +137,14 @@ export const MerchantDemoSetup: React.FC = () => {
     rewardDescription: '',
   });
   const [programFormErrors, setProgramFormErrors] = useState<Record<string, string>>({});
+  
+  const [editingUser, setEditingUser] = useState<string | null>(null);
+  const [userFormData, setUserFormData] = useState<UserFormData>({
+    login: '',
+    password: '',
+    role: ROLES.STAFF,
+  });
+  const [userFormErrors, setUserFormErrors] = useState<Record<string, string>>({});
   
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
@@ -267,6 +308,93 @@ export const MerchantDemoSetup: React.FC = () => {
     setProgramFormErrors({});
   };
 
+  const handleEditUser = (user: UserTemplate) => {
+    setUserFormData({
+      login: user.login,
+      password: user.password,
+      role: user.role,
+    });
+    setEditingUser(user.id);
+    setUserFormErrors({});
+  };
+
+  const handleAddUser = () => {
+    setUserFormData({
+      login: '',
+      password: '0000',
+      role: ROLES.STAFF,
+    });
+    setEditingUser('new');
+    setUserFormErrors({});
+  };
+
+  const handleDeleteUser = (userId: string) => {
+    if (users.length <= 1) {
+      showSnackbar('You must have at least one user', 'warning');
+      return;
+    }
+    
+    setUsers(prev => prev.filter(u => u.id !== userId));
+    showSnackbar('User removed', 'success');
+  };
+
+  const validateUserForm = (): boolean => {
+    const newErrors: Record<string, string> = {};
+
+    if (!userFormData.login.trim()) {
+      newErrors.login = 'Login is required';
+    }
+
+    if (!userFormData.password.trim()) {
+      newErrors.password = 'Password is required';
+    } else if (userFormData.password.length < 4) {
+      newErrors.password = 'Password must be at least 4 characters';
+    }
+
+    if (!userFormData.role) {
+      newErrors.role = 'Role is required';
+    }
+
+    setUserFormErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSaveUser = () => {
+    if (!validateUserForm()) return;
+
+    if (editingUser === 'new') {
+      const newUser: UserTemplate = {
+        id: Date.now().toString(),
+        login: userFormData.login.trim(),
+        password: userFormData.password,
+        role: userFormData.role,
+      };
+      setUsers(prev => [...prev, newUser]);
+      showSnackbar('User added', 'success');
+    } else {
+      setUsers(prev =>
+        prev.map(u =>
+          u.id === editingUser
+            ? {
+                ...u,
+                login: userFormData.login.trim(),
+                password: userFormData.password,
+                role: userFormData.role,
+              }
+            : u
+        )
+      );
+      showSnackbar('User updated', 'success');
+    }
+    
+    setEditingUser(null);
+  };
+
+  const handleCancelUserEdit = () => {
+    setEditingUser(null);
+    setUserFormErrors({});
+  };
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     
@@ -276,6 +404,11 @@ export const MerchantDemoSetup: React.FC = () => {
 
     if (loyaltyPrograms.length === 0) {
       showSnackbar('You must have at least one loyalty program', 'warning');
+      return;
+    }
+
+    if (users.length === 0) {
+      showSnackbar('You must have at least one user', 'warning');
       return;
     }
 
@@ -302,6 +435,17 @@ export const MerchantDemoSetup: React.FC = () => {
         };
         
         await apiClient.createLoyaltyProgram(newMerchant.id, loyaltyProgramData);
+      }
+
+      // Create configured users
+      for (const userTemplate of users) {
+        const userData: CreateMerchantUserDto = {
+          login: userTemplate.login,
+          password: userTemplate.password,
+          role: userTemplate.role,
+        };
+        
+        await apiClient.createMerchantUser(newMerchant.id, userData);
       }
       
       showSnackbar('Demo merchant setup completed successfully!', 'success');
@@ -524,11 +668,106 @@ export const MerchantDemoSetup: React.FC = () => {
           </CardContent>
         </Card>
 
+        <Card sx={{ backgroundColor: '#f5f5dc', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)', mb: 3 }}>
+          <CardContent sx={{ p: 4 }}>
+            <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+              <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#3e2723' }}>
+                Merchant Users ({users.length})
+              </Typography>
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={handleAddUser}
+                disabled={isSubmitting}
+                sx={{
+                  backgroundColor: '#5d4037',
+                  color: '#f5f5dc',
+                  '&:hover': { backgroundColor: '#6d4c41' },
+                }}
+              >
+                Add User
+              </Button>
+            </Box>
+            
+            <Typography variant="body2" color="text.secondary" mb={3}>
+              Configure the users that will be created for this merchant:
+            </Typography>
+
+            <Box display="flex" flexDirection="column" gap={2}>
+              {users.map((user) => (
+                <Card
+                  key={user.id}
+                  sx={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                    border: '1px solid rgba(93, 64, 55, 0.2)',
+                  }}
+                >
+                  <CardContent sx={{ p: 3 }}>
+                    <Box display="flex" alignItems="flex-start" gap={2}>
+                      <BusinessIcon sx={{ color: '#5d4037' }} />
+                      <Box flex={1}>
+                        <Box display="flex" alignItems="center" gap={2} mb={1}>
+                          <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#3e2723' }}>
+                            {user.login}
+                          </Typography>
+                          <Chip
+                            label={user.role}
+                            size="small"
+                            color={user.role === ROLES.ADMIN ? 'primary' : 'default'}
+                            sx={{ textTransform: 'capitalize' }}
+                          />
+                        </Box>
+                                                 <Typography variant="body2" color="text.secondary" mb={1}>
+                           Login: {user.login}
+                         </Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 'medium', color: '#5d4037' }}>
+                          Password: {user.password}
+                        </Typography>
+                      </Box>
+                      <Box display="flex" gap={1}>
+                        <IconButton
+                          size="small"
+                          onClick={() => handleEditUser(user)}
+                          disabled={isSubmitting}
+                          sx={{
+                            backgroundColor: 'rgba(93, 64, 55, 0.1)',
+                            color: '#5d4037',
+                            '&:hover': { backgroundColor: 'rgba(93, 64, 55, 0.2)' },
+                          }}
+                        >
+                          <EditIcon fontSize="small" />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          onClick={() => handleDeleteUser(user.id)}
+                          disabled={isSubmitting || users.length <= 1}
+                          sx={{
+                            backgroundColor: 'rgba(211, 47, 47, 0.1)',
+                            color: '#d32f2f',
+                            '&:hover': { backgroundColor: 'rgba(211, 47, 47, 0.2)' },
+                            '&:disabled': { 
+                              backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                              color: 'rgba(0, 0, 0, 0.26)',
+                            },
+                          }}
+                        >
+                          <DeleteIcon fontSize="small" />
+                        </IconButton>
+                      </Box>
+                    </Box>
+                  </CardContent>
+                </Card>
+              ))}
+            </Box>
+          </CardContent>
+        </Card>
+
         <Card sx={{ backgroundColor: '#f5f5dc', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)' }}>
           <CardContent sx={{ p: 4, textAlign: 'center' }}>
             <Typography variant="body2" color="text.secondary" mb={3}>
-              This will create a new merchant with login credentials (login: {formData.login.trim() || formData.slug || 'slug'}, password: {formData.password || '****'})
-              and set up the {loyaltyPrograms.length} loyalty program{loyaltyPrograms.length !== 1 ? 's' : ''} above.
+              This will create a new merchant with login credentials (login: {formData.login.trim() || formData.slug || 'slug'}, password: {formData.password || '****'}),
+              set up the {loyaltyPrograms.length} loyalty program{loyaltyPrograms.length !== 1 ? 's' : ''} above,
+              and create {users.length} user{users.length !== 1 ? 's' : ''}: {users.map(u => `${u.login} (${u.role})`).join(', ')}.
             </Typography>
 
             <Box display="flex" justifyContent="center" gap={2}>
@@ -553,7 +792,7 @@ export const MerchantDemoSetup: React.FC = () => {
                 onClick={handleSubmit}
                 variant="contained"
                 startIcon={isSubmitting ? <CircularProgress size={16} /> : <SaveIcon />}
-                disabled={isSubmitting || !formData.name.trim() || !formData.slug.trim() || !formData.password.trim() || loyaltyPrograms.length === 0}
+                disabled={isSubmitting || !formData.name.trim() || !formData.slug.trim() || !formData.password.trim() || loyaltyPrograms.length === 0 || users.length === 0}
                 sx={{
                   backgroundColor: '#5d4037',
                   color: '#f5f5dc',
@@ -658,6 +897,90 @@ export const MerchantDemoSetup: React.FC = () => {
             }}
           >
             {editingProgram === 'new' ? 'Add Program' : 'Save Changes'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Edit/Add User Dialog */}
+      <Dialog 
+        open={editingUser !== null} 
+        onClose={handleCancelUserEdit}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle sx={{ backgroundColor: '#f5f5dc', color: '#3e2723', fontWeight: 'bold' }}>
+          {editingUser === 'new' ? 'Add User' : 'Edit User'}
+        </DialogTitle>
+        <DialogContent sx={{ backgroundColor: '#f5f5dc', pt: 2 }}>
+          <Box display="flex" flexDirection="column" gap={2}>
+            <TextField
+              label="Login *"
+              variant="outlined"
+              fullWidth
+              value={userFormData.login}
+              onChange={(e) => {
+                setUserFormData(prev => ({ ...prev, login: e.target.value }));
+                if (userFormErrors.login) {
+                  setUserFormErrors(prev => ({ ...prev, login: '' }));
+                }
+              }}
+              error={!!userFormErrors.login}
+              helperText={userFormErrors.login}
+            />
+
+            <TextField
+              label="Password *"
+              variant="outlined"
+              fullWidth
+              type="password"
+              value={userFormData.password}
+              onChange={(e) => {
+                setUserFormData(prev => ({ ...prev, password: e.target.value }));
+                if (userFormErrors.password) {
+                  setUserFormErrors(prev => ({ ...prev, password: '' }));
+                }
+              }}
+              error={!!userFormErrors.password}
+              helperText={userFormErrors.password || 'Minimum 4 characters'}
+            />
+
+            <FormControl fullWidth error={!!userFormErrors.role}>
+              <InputLabel>Role *</InputLabel>
+              <Select
+                value={userFormData.role}
+                onChange={(e) => {
+                  setUserFormData(prev => ({ ...prev, role: e.target.value as Role }));
+                  if (userFormErrors.role) {
+                    setUserFormErrors(prev => ({ ...prev, role: '' }));
+                  }
+                }}
+                label="Role *"
+              >
+                <MenuItem value={ROLES.ADMIN}>Admin</MenuItem>
+                <MenuItem value={ROLES.STAFF}>Staff</MenuItem>
+              </Select>
+              {userFormErrors.role && (
+                <Typography variant="caption" color="error" sx={{ mt: 1, ml: 2 }}>
+                  {userFormErrors.role}
+                </Typography>
+              )}
+            </FormControl>
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ backgroundColor: '#f5f5dc', p: 2 }}>
+          <Button onClick={handleCancelUserEdit} color="primary">
+            Cancel
+          </Button>
+          <Button 
+            onClick={handleSaveUser} 
+            variant="contained"
+            sx={{
+              backgroundColor: '#5d4037',
+              color: '#f5f5dc',
+              '&:hover': { backgroundColor: '#6d4c41' },
+            }}
+          >
+            {editingUser === 'new' ? 'Add User' : 'Save Changes'}
           </Button>
         </DialogActions>
       </Dialog>

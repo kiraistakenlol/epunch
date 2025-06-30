@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, AuthResponseDto, UserDto, LoyaltyProgramDto, MerchantLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreatePunchCardDto, CreateMerchantDto, UpdateMerchantDto, PunchCardStyleDto, IconSearchResultDto, PunchIconsDto } from 'e-punch-common-core';
+import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, AuthResponseDto, UserDto, LoyaltyProgramDto, MerchantUserLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreatePunchCardDto, CreateMerchantDto, UpdateMerchantDto, PunchCardStyleDto, IconSearchResultDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto, AdminLoginDto, AdminLoginResponse } from 'e-punch-common-core';
 
 // The API URL will be set by the app using this client
 let API_BASE_URL: string;
@@ -264,12 +264,22 @@ export const apiClient = {
   },
 
   // Merchant authentication
-  async authenticateMerchant(login: string, password: string): Promise<MerchantLoginResponse> {
+  async authenticateMerchant(merchantSlug: string, login: string, password: string): Promise<MerchantLoginResponse> {
+    if (!merchantSlug || !login || !password) {
+      return Promise.reject(new Error('Merchant slug, login and password are required.'));
+    }
+    const payload: MerchantUserLoginDto = { merchantSlug, login, password };
+    const response = await instance.post<MerchantLoginResponse>('/merchants/auth', payload);
+    return response.data;
+  },
+
+  // Admin authentication
+  async authenticateAdmin(login: string, password: string): Promise<AdminLoginResponse> {
     if (!login || !password) {
       return Promise.reject(new Error('Login and password are required.'));
     }
-    const payload: MerchantLoginDto = { login, password };
-    const response = await instance.post<MerchantLoginResponse>('/merchants/auth', payload);
+    const payload: AdminLoginDto = { login, password };
+    const response = await instance.post<AdminLoginResponse>('/admin/auth', payload);
     return response.data;
   },
 
@@ -355,5 +365,36 @@ export const apiClient = {
     }
     const response = await instance.post<PunchCardStyleDto>(`/punch-card-styles/merchants/${merchantId}/default`, data);
     return response.data;
+  },
+
+  async getMerchantUsers(merchantId: string): Promise<MerchantUserDto[]> {
+    if (!merchantId) {
+      return Promise.reject(new Error('Merchant ID is required.'));
+    }
+    const response = await instance.get<MerchantUserDto[]>(`/merchants/${merchantId}/users`);
+    return response.data;
+  },
+
+  async createMerchantUser(merchantId: string, data: CreateMerchantUserDto): Promise<MerchantUserDto> {
+    if (!merchantId) {
+      return Promise.reject(new Error('Merchant ID is required.'));
+    }
+    const response = await instance.post<MerchantUserDto>(`/merchants/${merchantId}/users`, data);
+    return response.data;
+  },
+
+  async updateMerchantUser(merchantId: string, userId: string, data: UpdateMerchantUserDto): Promise<MerchantUserDto> {
+    if (!merchantId || !userId) {
+      return Promise.reject(new Error('Merchant ID and User ID are required.'));
+    }
+    const response = await instance.put<MerchantUserDto>(`/merchants/${merchantId}/users/${userId}`, data);
+    return response.data;
+  },
+
+  async deleteMerchantUser(merchantId: string, userId: string): Promise<void> {
+    if (!merchantId || !userId) {
+      return Promise.reject(new Error('Merchant ID and User ID are required.'));
+    }
+    await instance.delete(`/merchants/${merchantId}/users/${userId}`);
   },
 }; 

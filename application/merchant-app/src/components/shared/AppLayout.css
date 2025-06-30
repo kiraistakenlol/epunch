@@ -103,6 +103,10 @@
   padding: var(--spacing-lg);
 }
 
+.app-main-content.no-sidebar {
+  width: 100% !important;
+}
+
 .app-profile-button {
   border-radius: 50%;
   background-color: var(--color-primary-light);
@@ -124,5 +128,9 @@
   
   .app-main-content {
     width: calc(100% - 280px);
+  }
+
+  .app-main-content.no-sidebar {
+    width: 100% !important;
   }
 } 

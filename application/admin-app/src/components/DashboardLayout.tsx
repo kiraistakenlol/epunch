@@ -26,7 +26,7 @@ import {
   People as PeopleIcon,
   AccountCircle,
 } from '@mui/icons-material';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { useAppDispatch } from '../store/hooks';
 import { logout } from '../store/authSlice';
 
 const drawerWidth = 280;
@@ -46,7 +46,6 @@ export const DashboardLayout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useAppDispatch();
-  const adminUser = useAppSelector(state => state.auth.adminUser);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -155,21 +154,6 @@ export const DashboardLayout: React.FC = () => {
             }}
           >
             {isMobile ? 'E PUNCH ADMIN' : 'E PUNCH.IO ADMIN'}
-            {adminUser && (
-              <Typography
-                component="span"
-                sx={{
-                  display: 'block',
-                  fontSize: isMobile ? '0.7em' : '0.6em',
-                  fontWeight: 'normal',
-                  opacity: 0.9,
-                  lineHeight: 1,
-                  mt: isMobile ? 0.5 : 0.2,
-                }}
-              >
-                {adminUser.email}
-              </Typography>
-            )}
           </Typography>
           <IconButton
             size="large"

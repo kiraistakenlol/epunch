@@ -1,39 +1,57 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createSelector } from '@reduxjs/toolkit';
 import { apiClient } from 'e-punch-common-ui';
-import { MerchantLoginDto } from 'e-punch-common-core';
+import { MerchantUserLoginDto, JwtPayloadDto, Role } from 'e-punch-common-core';
 
-export interface Auth {
+export interface User {
   id: string;
-  name: string;
-  email: string;
-  logoUrl: string | null;
+  login: string;
+  merchantId: string;
+  role: Role;
 }
 
 interface AuthState {
-  isAuthenticated: boolean;
   token: string | null;
-  merchant: Auth | null;
+  user: User | null;
   loading: boolean;
   error: string | null;
 }
 
+const decodeJWT = (token: string): JwtPayloadDto | null => {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    console.log('Redux: payload', payload);
+    
+    return {
+      userId: payload.userId,
+      merchantId: payload.merchantId,
+      role: payload.role || ''
+    } as JwtPayloadDto;
+  } catch (error) {
+    console.error('Error decoding JWT:', error);
+    return null;
+  }
+};
+
 const getInitialState = (): AuthState => {
   const token = localStorage.getItem('merchant_token');
-  const merchantData = localStorage.getItem('merchant_data');
-  
-  let merchant = null;
-  if (merchantData) {
-    try {
-      merchant = JSON.parse(merchantData);
-    } catch (error) {
-      localStorage.removeItem('merchant_data');
+  let user = null;
+
+  if (token) {
+    const payload = decodeJWT(token);
+    if (payload) {
+      user = {
+        id: payload.userId,
+        login: '',
+        merchantId: payload.merchantId,
+        role: payload.role
+      } as User;
     }
   }
-  
+
   return {
-    isAuthenticated: !!token && !!merchant,
     token,
-    merchant,
+    user,
     loading: false,
     error: null,
   };
@@ -43,13 +61,44 @@ const initialState: AuthState = getInitialState();
 
 export const loginMerchant = createAsyncThunk(
   'auth/loginMerchant',
-  async (credentials: MerchantLoginDto, { rejectWithValue }) => {
+  async (credentials: MerchantUserLoginDto, { rejectWithValue, dispatch }) => {
     try {
-      const response = await apiClient.authenticateMerchant(credentials.login, credentials.password);
-      return response;
+      const response = await apiClient.authenticateMerchant(credentials.merchantSlug, credentials.login, credentials.password);
+      const payload: JwtPayloadDto | null = decodeJWT(response.token);
+
+      if (!payload) {
+        return rejectWithValue('Invalid token received');
+      }
+
+      const merchant = await apiClient.getMerchantById(payload.merchantId);
+      
+      // Store merchant data in merchant slice
+      dispatch({
+        type: 'merchant/fetchMerchant/fulfilled',
+        payload: merchant
+      });
+
+      return {
+        token: response.token,
+        user: {
+          id: payload.userId,
+          login: credentials.login,
+          merchantId: payload.merchantId,
+          role: payload.role
+        }
+      };
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || error.message || 'Login failed');
     }
+  }
+);
+
+export const logoutMerchant = createAsyncThunk(
+  'auth/logoutMerchant', 
+  async (_, { dispatch }) => {
+    // Clear merchant data
+    dispatch({ type: 'merchant/clearMerchant' });
+    return null;
   }
 );
 
@@ -62,49 +111,31 @@ const authSlice = createSlice({
       state.loading = true;
       state.error = null;
     },
-    loginSuccess: (state, action: PayloadAction<{ token: string; merchant: Auth }>) => {
-      console.log('Redux: loginSuccess', action.payload);
-      state.isAuthenticated = true;
+    loginSuccess: (state, action: PayloadAction<{ token: string; user: User }>) => {
       state.token = action.payload.token;
-      state.merchant = action.payload.merchant;
+      state.user = action.payload.user;
       state.loading = false;
       state.error = null;
       localStorage.setItem('merchant_token', action.payload.token);
-      localStorage.setItem('merchant_data', JSON.stringify(action.payload.merchant));
-      console.log('Redux: loginSuccess completed, isAuthenticated:', state.isAuthenticated);
     },
     loginFailure: (state, action: PayloadAction<string>) => {
-      console.log('Redux: loginFailure', action.payload);
-      state.isAuthenticated = false;
       state.token = null;
-      state.merchant = null;
+      state.user = null;
       state.loading = false;
       state.error = action.payload;
       localStorage.removeItem('merchant_token');
-      localStorage.removeItem('merchant_data');
     },
     logout: (state) => {
-      state.isAuthenticated = false;
       state.token = null;
-      state.merchant = null;
+      state.user = null;
       state.loading = false;
       state.error = null;
       localStorage.removeItem('merchant_token');
-      localStorage.removeItem('merchant_data');
     },
     clearError: (state) => {
       state.error = null;
     },
-    updateMerchantLogo: (state, action: PayloadAction<{ logoUrl: string | null }>) => {
-      if (state.merchant) {
-        state.merchant.logoUrl = action.payload.logoUrl;
-        localStorage.setItem('merchant_data', JSON.stringify(state.merchant));
-      }
-    },
-    updateMerchant: (state, action: PayloadAction<Auth>) => {
-      state.merchant = action.payload;
-      localStorage.setItem('merchant_data', JSON.stringify(action.payload));
-    },
+
   },
   extraReducers: (builder) => {
     builder
@@ -113,25 +144,36 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(loginMerchant.fulfilled, (state, action) => {
-        state.isAuthenticated = true;
         state.token = action.payload.token;
-        state.merchant = action.payload.merchant;
+        state.user = action.payload.user;
         state.loading = false;
         state.error = null;
         localStorage.setItem('merchant_token', action.payload.token);
-        localStorage.setItem('merchant_data', JSON.stringify(action.payload.merchant));
       })
       .addCase(loginMerchant.rejected, (state, action) => {
-        state.isAuthenticated = false;
         state.token = null;
-        state.merchant = null;
+        state.user = null;
         state.loading = false;
         state.error = action.payload as string;
         localStorage.removeItem('merchant_token');
-        localStorage.removeItem('merchant_data');
+      })
+      .addCase(logoutMerchant.fulfilled, (state) => {
+        state.token = null;
+        state.user = null;
+        state.loading = false;
+        state.error = null;
+        localStorage.removeItem('merchant_token');
       });
   },
 });
 
-export const { loginStart, loginSuccess, loginFailure, logout, clearError, updateMerchantLogo, updateMerchant } = authSlice.actions;
+// Selectors
+const selectAuthState = (state: { auth: AuthState }) => state.auth;
+
+export const selectIsAuthenticated = createSelector(
+  [selectAuthState],
+  (auth) => !!auth.token && !!auth.user
+);
+
+export const { loginStart, loginSuccess, loginFailure, logout, clearError } = authSlice.actions;
 export default authSlice.reducer; 

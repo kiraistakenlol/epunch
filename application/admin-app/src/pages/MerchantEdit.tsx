@@ -17,6 +17,7 @@ import {
 } from '@mui/icons-material';
 import { apiClient } from 'e-punch-common-ui';
 import { UpdateMerchantDto, MerchantDto } from 'e-punch-common-core';
+import { MerchantUsersManager } from '../components/MerchantUsersManager';
 
 interface FormData {
   name: string;
@@ -234,6 +235,9 @@ export const MerchantEdit: React.FC = () => {
           Back to Merchants
         </Button>
       </Box>
+
+      {/* Merchant Users - Collapsed View */}
+      {merchant && <MerchantUsersManager merchantId={merchant.id} collapsed />}
 
       <Card sx={{ backgroundColor: '#f5f5dc', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)' }}>
         <CardContent sx={{ p: 4 }}>

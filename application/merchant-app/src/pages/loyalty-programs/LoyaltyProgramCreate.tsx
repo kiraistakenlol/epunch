@@ -16,7 +16,7 @@ interface LoyaltyProgramFormData {
 
 export const LoyaltyProgramCreate: React.FC = () => {
   const navigate = useNavigate();
-  const merchantId = useAppSelector(state => state.auth.merchant?.id);
+  const merchantId = useAppSelector(state => state.merchant.merchant?.id);
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);

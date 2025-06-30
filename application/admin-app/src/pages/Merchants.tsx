@@ -5,13 +5,9 @@ import {
   Snackbar,
   Alert,
 } from '@mui/material';
-import {
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-} from '@mui/icons-material';
 import { apiClient } from 'e-punch-common-ui';
 import { MerchantDto } from 'e-punch-common-core';
-import { Table, TableColumn, TableAction } from '../components/Table';
+import { Table, TableColumn } from '../components/Table';
 
 export const Merchants: React.FC = () => {
   const navigate = useNavigate();
@@ -65,22 +61,7 @@ export const Merchants: React.FC = () => {
     navigate(`/merchants/${merchant.id}`);
   };
 
-  const handleEdit = (id: string) => {
-    navigate(`/merchants/${id}/edit`);
-  };
 
-  const handleDelete = async (id: string, name: string) => {
-    if (window.confirm(`Are you sure you want to delete "${name}"? This will also delete all associated loyalty programs.`)) {
-      try {
-        await apiClient.deleteMerchant(id);
-        await fetchMerchants();
-        showSnackbar(`Merchant "${name}" deleted successfully`, 'success');
-      } catch (err: any) {
-        console.error('Failed to delete merchant:', err);
-        showSnackbar(err.message || 'Failed to delete merchant', 'error');
-      }
-    }
-  };
 
   const columns: TableColumn<MerchantDto>[] = [
     {
@@ -132,27 +113,11 @@ export const Merchants: React.FC = () => {
     },
   ];
 
-  const actions: TableAction<MerchantDto>[] = [
-    {
-      label: 'Edit',
-      onClick: (merchant) => handleEdit(merchant.id),
-      variant: 'edit',
-      icon: <EditIcon />,
-    },
-    {
-      label: 'Delete',
-      onClick: (merchant) => handleDelete(merchant.id, merchant.name),
-      variant: 'delete',
-      icon: <DeleteIcon />,
-    },
-  ];
-
   return (
     <Box>
       <Table
         data={merchants}
         columns={columns}
-        actions={actions}
         isLoading={isLoading}
         title="Merchants"
         onRowClick={handleView}

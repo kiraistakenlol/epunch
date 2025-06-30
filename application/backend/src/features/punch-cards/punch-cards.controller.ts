@@ -7,6 +7,7 @@ export class PunchCardsController {
   constructor(private readonly punchCardsService: PunchCardsService) {}
 
   @Post()
+  // todo we need to protect is somehow from overflooding database + clreading multiple similar punch cards
   async createPunchCard(@Body() createPunchCardDto: CreatePunchCardDto): Promise<PunchCardDto> {
     return this.punchCardsService.createPunchCard(createPunchCardDto.userId, createPunchCardDto.loyaltyProgramId);
   }

@@ -14,7 +14,7 @@ import {
 } from './components';
 
 export const DesignPage: React.FC = () => {
-  const merchant = useAppSelector(state => state.auth.merchant);
+  const merchant = useAppSelector(state => state.merchant.merchant);
   
   const [currentStyle, setCurrentStyle] = useState<PunchCardStyleDto>({
     primaryColor: null,

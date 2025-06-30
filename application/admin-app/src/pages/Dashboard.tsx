@@ -33,11 +33,9 @@ import {
   Refresh as RefreshIcon,
 } from '@mui/icons-material';
 import { apiClient, SystemStatistics } from 'e-punch-common-ui';
-import { useAppSelector } from '../store/hooks';
 
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
-  const adminUser = useAppSelector((state) => state.auth.adminUser);
   
   const [systemStats, setSystemStats] = useState<SystemStatistics | null>(null);
   const [statsLoading, setStatsLoading] = useState(true);
@@ -185,9 +183,6 @@ export const Dashboard: React.FC = () => {
         <Box>
           <Typography variant="h4" component="h1" gutterBottom sx={{ color: '#f5f5dc', fontWeight: 'bold', mb: 1 }}>
             Admin Dashboard
-          </Typography>
-          <Typography variant="h6" sx={{ color: '#f5f5dc', opacity: 0.9 }}>
-            Welcome back, {adminUser?.firstName || adminUser?.email}!
           </Typography>
         </Box>
         

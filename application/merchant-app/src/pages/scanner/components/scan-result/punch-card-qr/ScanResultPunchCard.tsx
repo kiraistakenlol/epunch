@@ -15,7 +15,7 @@ interface PunchCardQRProps {
 }
 
 export const ScanResultPunchCard: React.FC<PunchCardQRProps> = ({ data, onRedeem, onReset }) => {
-    const merchantId = useAppSelector(state => state.auth.merchant?.id);
+    const merchantId = useAppSelector(state => state.merchant.merchant?.id);
     const [punchCardDetails, setPunchCardDetails] = useState<PunchCardDto | null>(null);
     const [loyaltyProgramDetails, setLoyaltyProgramDetails] = useState<LoyaltyProgramDto | null>(null);
     const [isLoadingPunchCard, setIsLoadingPunchCard] = useState(false);
