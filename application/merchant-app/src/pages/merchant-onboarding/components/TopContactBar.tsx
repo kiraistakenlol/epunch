@@ -1,27 +1,27 @@
 import React from 'react';
-import { FaWhatsapp, FaTelegram, FaEnvelope } from 'react-icons/fa';
-import { LanguageSwitch, useLocalization } from 'e-punch-common-ui';
+import { FaWhatsapp, FaEnvelope } from 'react-icons/fa';
+import { LanguageSwitch } from 'e-punch-common-ui';
 import styles from './TopContactBar.module.css';
 
 export const TopContactBar: React.FC = () => {
-  const { t } = useLocalization();
-  
   return (
-    <div className={styles.topContact}>
+    <div id="top-contact-bar" className={styles.topContact}>
       <div className={styles.topContactContent}>
-        <a href="https://wa.me/79250419362" className={styles.topContactLink}>
-          <FaWhatsapp /> {t('merchantOnboarding.contact.whatsapp')}
-        </a>
-        <span> | </span>
-        <a href="https://t.me/sobolevchelovek" className={styles.topContactLink}>
-          <FaTelegram /> {t('merchantOnboarding.contact.telegram')}
-        </a>
-        <span> | </span>
-        <a href="mailto:hello@epunch.app" className={styles.topContactLink}>
-          <FaEnvelope /> {t('merchantOnboarding.contact.email')}
-        </a>
-        <span> | </span>
-        <LanguageSwitch variant="landing" />
+        <div className={styles.brandSection}>
+          <span className={styles.brandName}>ePunch</span>
+        </div>
+        <div className={styles.contactSection}>
+          <span className={styles.workWithUs}>Work with us:</span>
+          <a href="https://wa.me/79250419362" className={styles.topContactLink}>
+            <FaWhatsapp />
+          </a>
+          <a href="mailto:hello@epunch.app" className={styles.topContactLink}>
+            <FaEnvelope />
+          </a>
+          <div className={styles.languageSwitch}>
+            <LanguageSwitch variant="landing" />
+          </div>
+        </div>
       </div>
     </div>
   );

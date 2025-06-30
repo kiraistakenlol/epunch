@@ -42,52 +42,52 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   });
 
   return (
-    <section className={styles.hero}>
-      <div className={styles.heroContent}>
-        <div className={styles.heroText}>
-          <h1 className={styles.heroTitle}>
-            {t('merchantOnboarding.hero.digitalLoyaltyCards')}<br />
-            {t('merchantOnboarding.hero.for')} <span className={styles.merchantName}>{merchant.name}</span>
-          </h1>
+    <section id="hero-demo" className={styles.hero}>
+        <div className={styles.heroContent}>
+          <div className={styles.heroText}>
+            <h1 className={styles.heroTitle}>
+              {t('merchantOnboarding.hero.digitalLoyaltyCards')}<br />
+              {t('merchantOnboarding.hero.for')} <span className={styles.merchantName}>{merchant.name}</span>
+            </h1>
 
-          <div className={styles.demoUrl}>
-            <a href={heroPreviewUrl} target="_blank" rel="noopener noreferrer" className={styles.demoLink}>
-              {t('merchantOnboarding.hero.tryItNow')}
-            </a>
-          </div>
-        </div>
-
-        <div className={styles.heroDemo}>
-          <div className={styles.problemSolution}>
-            <div className={styles.problemCard}>
-              <div className={styles.physicalCard}>
-                <div className={styles.cardHeader}>
-                  <span className={styles.cardTitle}>{merchant.name}</span>
-                </div>
-                <div className={styles.punchGrid}>
-                  {[...Array(requiredPunches)].map((_, i) => (
-                    <div
-                      key={i}
-                      className={`${styles.punchHole} ${i < currentPunches ? styles.punched : ''}`}
-                    />
-                  ))}
-                </div>
-                <div className={styles.cardFooter}>{t('merchantOnboarding.hero.buyGetFree')}</div>
-              </div>
-            </div>
-
-            <div className={styles.transformArrow}>
-              <div className={styles.arrowHead}>→</div>
-            </div>
-
-            <div className={styles.solutionCard}>
-              <div className={styles.phoneWithEpunch}>
-                <PhoneWithUserApp src={heroPreviewUrl} />
-              </div>
+            <div className={styles.demoUrl}>
+              <a href={heroPreviewUrl} target="_blank" rel="noopener noreferrer" className={styles.demoLink}>
+                {t('merchantOnboarding.hero.tryItNow')}
+              </a>
             </div>
           </div>
+
+          <div className={styles.heroDemo}>
+            <div className={styles.problemSolution}>
+              <div className={styles.problemCard}>
+                <div className={styles.physicalCard}>
+                  <div className={styles.cardHeader}>
+                    <span className={styles.cardTitle}>{merchant.name}</span>
+                  </div>
+                  <div className={styles.punchGrid}>
+                    {[...Array(requiredPunches)].map((_, i) => (
+                      <div
+                        key={i}
+                        className={`${styles.punchHole} ${i < currentPunches ? styles.punched : ''}`}
+                      />
+                    ))}
+                  </div>
+                  <div className={styles.cardFooter}>{t('merchantOnboarding.hero.buyGetFree')}</div>
+                </div>
+              </div>
+
+              <div className={styles.transformArrow}>
+                <div className={styles.arrowHead}>→</div>
+              </div>
+
+              <div className={styles.solutionCard}>
+                <div className={styles.phoneWithEpunch}>
+                  <PhoneWithUserApp src={heroPreviewUrl} />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
-  );
+      </section>
+    );
 }; 

@@ -191,6 +191,11 @@ type TranslationKeys = {
   'merchantOnboarding.contact.whatsapp': string;
   'merchantOnboarding.contact.telegram': string;
   'merchantOnboarding.contact.email': string;
+
+  // Teaser Section
+  'merchantOnboarding.teaser.titlePrefix': string;
+  'merchantOnboarding.teaser.titleSuffix': string;
+  'merchantOnboarding.teaser.button': string;
 };
 
 const translations = {
@@ -382,7 +387,12 @@ const translations = {
     // Contact
     'merchantOnboarding.contact.whatsapp': 'WhatsApp',
     'merchantOnboarding.contact.telegram': 'Telegram',
-    'merchantOnboarding.contact.email': 'Email'
+    'merchantOnboarding.contact.email': 'Email',
+
+    // Teaser Section
+    'merchantOnboarding.teaser.titlePrefix': 'How',
+    'merchantOnboarding.teaser.titleSuffix': 'can make more money?',
+    'merchantOnboarding.teaser.button': 'Tell me'
   },
   es: {
     // Dashboard
@@ -572,7 +582,12 @@ const translations = {
     // Contact
     'merchantOnboarding.contact.whatsapp': 'WhatsApp',
     'merchantOnboarding.contact.telegram': 'Telegram',
-    'merchantOnboarding.contact.email': 'Email'
+    'merchantOnboarding.contact.email': 'Email',
+
+    // Teaser Section
+    'merchantOnboarding.teaser.titlePrefix': '¿Cómo',
+    'merchantOnboarding.teaser.titleSuffix': 'puede ganar más dinero?',
+    'merchantOnboarding.teaser.button': 'Dime cómo'
   }
 } as const;
 

@@ -7,6 +7,7 @@ import { apiClient, appColors, useLocalization } from 'e-punch-common-ui';
 import { PunchCardStyleDto, LoyaltyProgramDto, emptyPunchCardStyle } from 'e-punch-common-core';
 import {
   TopContactBar,
+  TeaserSection,
   HeroSection,
   HowItWorksSection,
   ProblemSolutionSection,
@@ -164,6 +165,8 @@ export const MerchantOnboardingPage: React.FC = () => {
   return (
     <div className={styles.container}>
       <TopContactBar />
+      
+      <TeaserSection merchant={merchant} />
       
       <div id="hero">
         {merchantStyle && (

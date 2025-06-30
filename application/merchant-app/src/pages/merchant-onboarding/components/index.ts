@@ -1,4 +1,5 @@
 export { TopContactBar } from './TopContactBar';
+export { TeaserSection } from './TeaserSection';
 export { HeroSection } from './HeroSection';
 export { HowItWorksSection } from './HowItWorksSection';
 export { ProblemSolutionSection } from './ProblemSolutionSection';
