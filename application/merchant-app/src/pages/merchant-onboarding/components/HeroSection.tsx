@@ -34,12 +34,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     };
   };
 
-  const heroPreviewUrl = dashboardPreviewService.getPreviewUrl({
-    cards: [createMockPunchCard('hero-demo-card', loyaltyProgram.id, currentPunches)],
-    loyaltyPrograms: [loyaltyProgram],
-    renderOnBackgroundColor: 'white',
-    locale,
-  });
+  const heroPreviewUrl = `${import.meta.env.VITE_USER_APP_URL}?merchant=${merchant.slug}`;
 
   return (
     <section id="hero-demo" className={styles.hero}>
