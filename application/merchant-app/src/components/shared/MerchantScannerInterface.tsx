@@ -1,4 +1,5 @@
 import React from 'react';
+import { useI18n } from 'e-punch-common-ui';
 import styles from './MerchantScannerPageMockup.module.css';
 import { ScanningFrame } from './ScanningFrame';
 
@@ -17,11 +18,13 @@ export const MerchantScannerPageMockup: React.FC<MerchantScannerPageMockupProps>
   frameOffsetY = 0,
   frameSize = 200
 }) => {
+  const { t } = useI18n('merchantOnboarding');
+
   return (
     <div className={`${styles.scannerInterface} ${className}`}>
       <div className={styles.scannerHeader}>
-        <h2 className={styles.scannerTitle}>Scanner</h2>
-        <p className={styles.scannerSubtitle}>Point camera at customer QR code</p>
+        <h2 className={styles.scannerTitle}>{t('merchantInterface.scanner.title')}</h2>
+        <p className={styles.scannerSubtitle}>{t('merchantInterface.scanner.subtitle')}</p>
       </div>
       <div className={styles.scannerViewfinder}>
         <ScanningFrame 

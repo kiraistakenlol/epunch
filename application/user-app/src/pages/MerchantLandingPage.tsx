@@ -1,11 +1,11 @@
 import React from 'react';
 import { FaWhatsapp, FaTelegram } from 'react-icons/fa';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from 'e-punch-common-ui';
 import { LanguageSwitch } from 'e-punch-common-ui';
 import styles from './MerchantLandingPage.module.css';
 
 const MerchantLandingPage: React.FC = () => {
-  const { t } = useTranslation('landing');
+  const { t } = useI18n('landing');
 
   return (
     <div className={styles.container}>

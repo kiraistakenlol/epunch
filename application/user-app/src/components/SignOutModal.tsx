@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from 'e-punch-common-ui';
 import EPunchModal from './EPunchModal';
 import type { RootState } from '../store/store';
 import { appColors } from '../theme';
@@ -40,7 +40,7 @@ const messageStyle: React.CSSProperties = {
 };
 
 const SignOutModal: React.FC = () => {
-  const { t } = useTranslation('common');
+  const { t } = useI18n('common');
   const dispatch = useDispatch();
   const isOpen = useSelector((state: RootState) => selectSignOutModalOpen(state));
 

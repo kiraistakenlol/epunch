@@ -1,4 +1,5 @@
 import React from 'react';
+import { useI18n } from 'e-punch-common-ui';
 import { LoyaltyProgramDto } from 'e-punch-common-core';
 import { MerchantPageMockup } from './MerchantPageMockup';
 import { MerchantActionButton } from './MerchantActionButton';
@@ -13,6 +14,7 @@ export const MerchantCustomerScanResult: React.FC<MerchantCustomerScanResultProp
   loyaltyProgram,
   className = ''
 }) => {
+  const { t } = useI18n('merchantOnboarding');
   const currentPunches = Math.floor(loyaltyProgram.requiredPunches * 0.7);
   const totalPunches = loyaltyProgram.requiredPunches;
   
@@ -22,7 +24,7 @@ export const MerchantCustomerScanResult: React.FC<MerchantCustomerScanResultProp
   return (
     <MerchantPageMockup className={className}>
       <div className={styles.scanResultHeader}>
-        <h3>Select Loyalty Program</h3>
+        <h3>{t('merchantInterface.selectProgram.title')}</h3>
       </div>
       <div className={styles.loyaltyProgramsList}>
         <div className={`${styles.loyaltyProgram} ${styles.selected}`}>
@@ -35,7 +37,7 @@ export const MerchantCustomerScanResult: React.FC<MerchantCustomerScanResultProp
           </div>
         </div>
       </div>
-      <MerchantActionButton>PUNCH</MerchantActionButton>
+      <MerchantActionButton>{t('merchantInterface.selectProgram.punchButton')}</MerchantActionButton>
     </MerchantPageMockup>
   );
 }; 

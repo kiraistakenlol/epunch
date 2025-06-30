@@ -1,10 +1,10 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from 'e-punch-common-ui';
 import 'react-vertical-timeline-component/style.min.css';
 import styles from './FuturePlansSection.module.css';
 
 export const FuturePlansSection: React.FC = () => {
-  const { t } = useTranslation('merchantOnboarding');
+  const { t } = useI18n('merchantOnboarding');
   
   const timelineGroups = [
     {

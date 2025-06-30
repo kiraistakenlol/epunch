@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import QRCode from 'react-qr-code';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from 'e-punch-common-ui';
 import type { QRValueDto } from 'e-punch-common-core';
 import type { RootState } from '../../store/store';
 import { selectUserId } from '../auth/authSlice';
@@ -11,7 +11,7 @@ import styles from './QRCode.module.css';
 import { appColors } from '../../theme/constants';
 
 const QRCodeComponent: React.FC = () => {
-  const { t } = useTranslation('common');
+  const { t } = useI18n('common');
   const [isExpanded, setIsExpanded] = useState(false);
   const userId = useSelector((state: RootState) => selectUserId(state));
   const selectedCard = useSelector((state: RootState) => selectSelectedCard(state));

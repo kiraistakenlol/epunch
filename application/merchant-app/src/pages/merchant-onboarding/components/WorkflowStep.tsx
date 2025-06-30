@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from 'e-punch-common-ui';
 import styles from './WorkflowStep.module.css';
 
 export const CLIENT_NAME = 'client';
@@ -21,7 +21,7 @@ export const WorkflowStep: React.FC<WorkflowStepProps> = ({
   note,
   showArrow = false
 }) => {
-  const { t } = useTranslation('merchantOnboarding');
+  const { t } = useI18n('merchantOnboarding');
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleExpanded = () => {

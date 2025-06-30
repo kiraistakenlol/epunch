@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from 'e-punch-common-ui';
 import PunchCardItem from './punch-card/PunchCardItem';
 import { resolveCardStyles } from '../../../utils/cardStyles';
 import styles from './PunchCards.module.css';
@@ -22,7 +22,7 @@ import { useAppSelector } from '../../../store/hooks';
 
 
 const PunchCards = () => {
-  const { t } = useTranslation('punchCards');
+  const { t } = useI18n('punchCards');
   const dispatch = useDispatch<AppDispatch>();
   const isAuthLoading = useAppSelector(selectAuthLoading);
   const punchCards = useSelector((state: RootState) => selectPunchCards(state));

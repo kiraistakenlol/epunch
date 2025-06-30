@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from 'e-punch-common-ui';
 import EPunchModal from '../../components/EPunchModal';
 import EmailAuthForm from './EmailAuthForm';
 import { signInWithRedirect } from 'aws-amplify/auth';
@@ -57,7 +57,7 @@ const backLinkStyle: React.CSSProperties = {
 };
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode }) => {
-  const { t } = useTranslation('auth');
+  const { t } = useI18n('auth');
   const [mode, setMode] = useState<'signin' | 'signup'>(initialMode);
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [error, setError] = useState<string | null>(null);

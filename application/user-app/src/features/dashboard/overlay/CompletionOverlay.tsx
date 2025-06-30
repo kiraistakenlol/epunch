@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from 'e-punch-common-ui';
 import styles from './CompletionOverlay.module.css';
 import { handleEvent } from '../../animations/animationSlice';
 import { appColors } from '../../../theme';
@@ -12,7 +12,7 @@ import PunchCardItem from '../punch-cards/punch-card/PunchCardItem';
 import { resolveCardStyles } from '../../../utils/cardStyles';
 
 const CompletionOverlay: React.FC = () => {
-  const { t } = useTranslation('punchCards');
+  const { t } = useI18n('punchCards');
   const dispatch = useDispatch<AppDispatch>();
   const completionOverlay = useAppSelector(selectCompletionOverlay);
   const punchCards = useAppSelector(selectPunchCards);

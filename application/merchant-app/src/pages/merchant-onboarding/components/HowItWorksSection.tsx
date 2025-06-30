@@ -1,6 +1,6 @@
 import React from 'react';
 import { MerchantDto, PunchCardDto, PunchCardStyleDto, LoyaltyProgramDto } from 'e-punch-common-core';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from 'e-punch-common-ui';
 import { WorkflowStep } from './WorkflowStep';
 import {
   PhoneFrame,
@@ -28,8 +28,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
   punchCardStyle,
   onboardingImageUrl
 }) => {
-  const { t, i18n } = useTranslation('merchantOnboarding');
-  const locale = i18n.language;
+  const { t, locale } = useI18n('merchantOnboarding');
 
   const createMockPunchCard = (id: string, loyaltyProgramId: string, currentPunches: number, totalPunches?: number): PunchCardDto => {
     const requiredPunches = totalPunches || loyaltyProgram.requiredPunches;

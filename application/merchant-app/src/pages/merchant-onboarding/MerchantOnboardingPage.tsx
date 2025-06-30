@@ -4,7 +4,7 @@ import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { fetchMerchantBySlug } from '../../store/merchantSlice';
 import { generateOnboardingImage } from '../../utils/onboardingImageUtil';
 import { apiClient, appColors } from 'e-punch-common-ui';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from 'e-punch-common-ui';
 import { PunchCardStyleDto, LoyaltyProgramDto, emptyPunchCardStyle } from 'e-punch-common-core';
 import {
   TopContactBar,
@@ -22,7 +22,7 @@ import {
 import styles from './MerchantOnboardingPage.module.css';
 
 export const MerchantOnboardingPage: React.FC = () => {
-  const { t } = useTranslation('merchantOnboarding');
+  const { t } = useI18n('merchantOnboarding');
   const { merchantSlug } = useParams<{ merchantSlug: string }>();
   const dispatch = useAppDispatch();
   const { merchant, loading: merchantLoading, error: merchantError } = useAppSelector((state) => state.merchant);

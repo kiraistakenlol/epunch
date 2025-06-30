@@ -1,6 +1,6 @@
 import React from 'react';
 import { MerchantDto } from 'e-punch-common-core';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from 'e-punch-common-ui';
 import styles from './BenefitsSection.module.css';
 
 interface BenefitsSectionProps {
@@ -8,7 +8,7 @@ interface BenefitsSectionProps {
 }
 
 export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ merchant }) => {
-  const { t } = useTranslation('merchantOnboarding');
+  const { t } = useI18n('merchantOnboarding');
   
   return (
     <section className={styles.benefitsSection}>

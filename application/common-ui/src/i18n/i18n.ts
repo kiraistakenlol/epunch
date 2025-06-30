@@ -42,7 +42,8 @@ i18n
     resources,
     lng: 'en',
     fallbackLng: 'en',
-    debug: false,
+    defaultNS: 'common',
+    debug: true,
     
     detection: {
       order: ['localStorage', 'navigator'],

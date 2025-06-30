@@ -1,9 +1,9 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from 'e-punch-common-ui';
 import styles from './ProblemSolutionSection.module.css';
 
 export const ProblemSolutionSection: React.FC = () => {
-  const { t } = useTranslation('merchantOnboarding');
+  const { t } = useI18n('merchantOnboarding');
   
   return (
     <section className={styles.section}>

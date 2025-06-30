@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { signUp, confirmSignUp, signIn } from 'aws-amplify/auth';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from 'e-punch-common-ui';
 import { appColors } from '../../theme';
 
 interface EmailAuthFormProps {
@@ -34,7 +34,7 @@ const buttonStyle: React.CSSProperties = {
 };
 
 const EmailAuthForm: React.FC<EmailAuthFormProps> = ({ mode, onSuccess, onError }) => {
-  const { t } = useTranslation('auth');
+  const { t } = useI18n('auth');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmationCode, setConfirmationCode] = useState('');

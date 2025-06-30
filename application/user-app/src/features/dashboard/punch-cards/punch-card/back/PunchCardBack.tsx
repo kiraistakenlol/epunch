@@ -1,6 +1,6 @@
 import React from 'react';
 import { PunchCardDto } from 'e-punch-common-core';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from 'e-punch-common-ui';
 import { useAppSelector } from '../../../../../store/hooks';
 import { selectLoyaltyProgramById } from '../../../../loyaltyPrograms/loyaltyProgramsSlice';
 import { CustomizableCardStyles } from '../../../../../utils/cardStyles';
@@ -18,7 +18,7 @@ const PunchCardBack: React.FC<PunchCardBackProps> = ({
   totalPunches,
   resolvedStyles
 }) => {
-  const { t } = useTranslation('punchCards');
+  const { t } = useI18n('punchCards');
   const loyaltyProgram = useAppSelector(state => selectLoyaltyProgramById(state, loyaltyProgramId));
 
   return (

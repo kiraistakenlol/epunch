@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from 'e-punch-common-ui';
 import AuthButtons from './AuthButtons';
 import AuthModal from './AuthModal';
 import { selectIsAuthenticated } from './authSlice';
 
 const AuthContainer: React.FC = () => {
-  const { t } = useTranslation('auth');
+  const { t } = useI18n('auth');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'signin' | 'signup'>('signin');
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });

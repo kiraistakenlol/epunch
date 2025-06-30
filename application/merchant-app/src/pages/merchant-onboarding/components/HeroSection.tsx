@@ -1,6 +1,6 @@
 import React from 'react';
 import { MerchantDto, LoyaltyProgramDto, PunchCardDto, PunchCardStyleDto } from 'e-punch-common-core';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from 'e-punch-common-ui';
 import { PhoneWithUserApp } from '../../../components/shared';
 import { dashboardPreviewService } from '../../../utils/dashboardPreviewService';
 import styles from './HeroSection.module.css';
@@ -16,8 +16,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   loyaltyProgram,
   punchCardStyle
 }) => {
-  const { t, i18n } = useTranslation('merchantOnboarding');
-  const locale = i18n.language;
+  const { t, locale } = useI18n('merchantOnboarding');
   const requiredPunches = loyaltyProgram.requiredPunches || 10;
   const currentPunches = Math.floor(requiredPunches * 0.7);
 

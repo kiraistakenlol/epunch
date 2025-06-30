@@ -2,8 +2,8 @@ import { useTranslation } from 'react-i18next';
 
 type Locale = 'en' | 'es';
 
-export const useI18n = () => {
-  const { t, i18n } = useTranslation();
+export const useI18n = (namespace?: string) => {
+  const { t, i18n } = useTranslation(namespace);
   
   const setLocale = (locale: Locale) => {
     i18n.changeLanguage(locale);

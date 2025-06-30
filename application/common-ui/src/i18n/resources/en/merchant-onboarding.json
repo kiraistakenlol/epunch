@@ -146,5 +146,20 @@
     "titlePrefix": "How",
     "titleSuffix": "can make more money?",
     "button": "Tell me"
+  },
+  "merchantInterface": {
+    "scanner": {
+      "title": "Scanner",
+      "subtitle": "Point camera at customer QR code"
+    },
+    "reward": {
+      "title": "🎁 Reward",
+      "clientGets": "Client gets: {{reward}}",
+      "redeemButton": "REDEEM!"
+    },
+    "selectProgram": {
+      "title": "Select Loyalty Program",
+      "punchButton": "PUNCH"
+    }
   }
 } 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaWhatsapp, FaEnvelope } from 'react-icons/fa';
 import { MerchantDto } from 'e-punch-common-core';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from 'e-punch-common-ui';
 import styles from './CTASection.module.css';
 
 interface CTASectionProps {
@@ -9,7 +9,7 @@ interface CTASectionProps {
 }
 
 export const CTASection: React.FC<CTASectionProps> = ({ merchant }) => {
-  const { t } = useTranslation('merchantOnboarding');
+  const { t } = useI18n('merchantOnboarding');
   
   return (
     <section className={styles.cta}>

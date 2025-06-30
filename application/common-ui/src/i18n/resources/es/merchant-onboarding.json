@@ -146,5 +146,20 @@
     "titlePrefix": "¿Cómo",
     "titleSuffix": "puede ganar más dinero?",
     "button": "Dime cómo"
+  },
+  "merchantInterface": {
+    "scanner": {
+      "title": "Escáner",
+      "subtitle": "Apunta la cámara al código QR del cliente"
+    },
+    "reward": {
+      "title": "🎁 Recompensa",
+      "clientGets": "El cliente obtiene: {{reward}}",
+      "redeemButton": "¡CANJEAR!"
+    },
+    "selectProgram": {
+      "title": "Seleccionar Programa de Lealtad",
+      "punchButton": "SELLAR"
+    }
   }
 } 

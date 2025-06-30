@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { useI18n } from 'e-punch-common-ui';
 import { appColors } from '../../theme';
 
 interface AuthButtonsProps {
@@ -38,7 +38,7 @@ const buttonContainerStyle: React.CSSProperties = {
 };
 
 const AuthButtons: React.FC<AuthButtonsProps> = ({ onSignInClick, onSignUpClick }) => {
-  const { t } = useTranslation('auth');
+  const { t } = useI18n('auth');
   
   return (
     <div style={buttonContainerStyle}>

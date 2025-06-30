@@ -1,8 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Dropdown } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-import { LanguageSwitch } from 'e-punch-common-ui';
+import { LanguageSwitch, useI18n } from 'e-punch-common-ui';
 import { RootState } from '../store/store';
 import { selectIsAuthenticated, selectSuperAdmin } from '../features/auth/authSlice';
 import { openSignOutModal } from '../features/signOut/signOutSlice';
@@ -59,7 +58,7 @@ const devLinkStyle: React.CSSProperties = {
 
 const AppHeader: React.FC<AppHeaderProps> = () => {
   const dispatch = useDispatch();
-  const { t } = useTranslation('common');
+  const { t } = useI18n('common');
   const isAuthenticated = useSelector((state: RootState) => selectIsAuthenticated(state));
   const isSuperAdmin = useSelector((state: RootState) => selectSuperAdmin(state));
 
@@ -70,8 +69,6 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
   const handleSignOut = () => {
     dispatch(openSignOutModal());
   };
-
-
 
   return (
     <header style={headerStyle}>

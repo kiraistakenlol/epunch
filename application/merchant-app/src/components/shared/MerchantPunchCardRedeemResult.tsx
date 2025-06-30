@@ -1,4 +1,5 @@
 import React from 'react';
+import { useI18n } from 'e-punch-common-ui';
 import { MerchantDto, LoyaltyProgramDto } from 'e-punch-common-core';
 import { MerchantPageMockup } from './MerchantPageMockup';
 import { MerchantActionButton } from './MerchantActionButton';
@@ -15,19 +16,20 @@ export const MerchantPunchCardRedeemResult: React.FC<MerchantPunchCardRedeemResu
   loyaltyProgram,
   className = ''
 }) => {
+  const { t } = useI18n('merchantOnboarding');
   const programName = loyaltyProgram?.name || `${merchant.name} Rewards`;
   const rewardDescription = loyaltyProgram?.rewardDescription || 'Free coffee';
 
   return (
     <MerchantPageMockup className={className}>
       <div className={styles.header}>
-        <h3>🎁 Reward</h3>
+        <h3>{t('merchantInterface.reward.title')}</h3>
       </div>
       <div className={styles.rewardInfo}>
         <p className={styles.programName}>{programName}</p>
-        <p className={styles.rewardText}>Client gets: {rewardDescription}</p>
+        <p className={styles.rewardText}>{t('merchantInterface.reward.clientGets', { reward: rewardDescription })}</p>
       </div>
-      <MerchantActionButton>REDEEM!</MerchantActionButton>
+      <MerchantActionButton>{t('merchantInterface.reward.redeemButton')}</MerchantActionButton>
     </MerchantPageMockup>
   );
 }; 
