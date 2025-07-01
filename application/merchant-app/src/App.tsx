@@ -20,6 +20,11 @@ import { WelcomeQRPage } from './pages/welcome-qr/WelcomeQRPage';
 import { MerchantOnboardingPage } from './pages/merchant-onboarding/MerchantOnboardingPage';
 import UserAppTestPage from './pages/test/UserAppTestPage';
 import { DemoPage, FormsDemo, ScannerDemo, DesignDemo } from './components/v2/demo';
+import { V2Layout } from './components/v2/layout/V2Layout';
+import { V2DashboardPage } from './pages/v2/dashboard/DashboardPage';
+import { V2LoyaltyProgramsPage } from './pages/v2/loyalty-programs/LoyaltyProgramsPage';
+import { LoyaltyProgramCreatePage } from './pages/v2/loyalty-programs/LoyaltyProgramCreatePage';
+import { LoyaltyProgramEditPage } from './pages/v2/loyalty-programs/LoyaltyProgramEditPage';
 import { Toaster } from './components/ui/toaster';
 import { injectCSSVariables } from './styles/css-variables';
 import './styles/global.css';
@@ -139,12 +144,22 @@ function App() {
         <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/demo" element={<DemoPage />} />
-            <Route path="/forms-demo" element={<FormsDemo />} />
-            <Route path="/scanner-demo" element={<ScannerDemo />} />
-            <Route path="/design-demo" element={<DesignDemo />} />
             <Route path="/onboarding/:merchantSlug" element={<MerchantOnboardingPage />} />
             <Route path="test/user-app" element={<UserAppTestPage />} />
+
+            {/* V2 Routes */}
+            <Route path="/v2" element={<V2Layout />}>
+              <Route index element={<Navigate to="/v2/demo" replace />} />
+              <Route path="dashboard" element={<V2DashboardPage />} />
+              <Route path="loyalty-programs" element={<V2LoyaltyProgramsPage />} />
+              <Route path="loyalty-programs/create" element={<LoyaltyProgramCreatePage />} />
+              <Route path="loyalty-programs/:id/edit" element={<LoyaltyProgramEditPage />} />
+              <Route path="demo" element={<DemoPage />} />
+              <Route path="forms-demo" element={<FormsDemo />} />
+              <Route path="scanner-demo" element={<ScannerDemo />} />
+              <Route path="design-demo" element={<DesignDemo />} />
+            </Route>
+
             <Route path="/" element={
               <ProtectedRoute>
                 <AppLayout />

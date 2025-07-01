@@ -21,31 +21,32 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { V2_ROUTES } from "@/lib/routes";
 
 const navigationItems = [
   {
     title: "Dashboard",
-    url: "/dashboard",
+    url: V2_ROUTES.DASHBOARD,
     icon: Home,
   },
   {
     title: "Scanner",
-    url: "/scanner",
+    url: V2_ROUTES.SCANNER,
     icon: QrCode,
   },
   {
     title: "Loyalty Programs",
-    url: "/loyalty-programs",
+    url: V2_ROUTES.LOYALTY_PROGRAMS,
     icon: CreditCard,
   },
   {
     title: "Design",
-    url: "/design",
+    url: V2_ROUTES.DESIGN,
     icon: Palette,
   },
   {
     title: "Analytics", 
-    url: "/analytics",
+    url: V2_ROUTES.ANALYTICS,
     icon: BarChart3,
   },
 ]
@@ -53,12 +54,12 @@ const navigationItems = [
 const adminItems = [
   {
     title: "User Management",
-    url: "/admin/users",
+    url: V2_ROUTES.ADMIN_USERS,
     icon: Users,
   },
   {
     title: "Settings",
-    url: "/admin/settings", 
+    url: V2_ROUTES.ADMIN_SETTINGS, 
     icon: Settings,
   },
 ]

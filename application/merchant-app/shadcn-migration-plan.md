@@ -5,7 +5,7 @@
 **To:** shadcn/ui + Tailwind CSS (v2 Directory)  
 **Package Manager:** Yarn
 
-**Migration Strategy:** Create new `v2/` directory with optimal architecture, migrate pages gradually, then remove old code.
+**Migration Strategy:** Adopt a parallel, dual-version approach. The existing application will remain fully functional while a new version is built under a `/v2/` route prefix. Pages will be migrated one by one to the new shadcn/ui-based component library, allowing for incremental development and testing without disrupting the current user experience. Once the v2 version reaches feature parity, the legacy code will be deprecated and removed.
 
 ---
 
@@ -617,14 +617,59 @@ shadcn/ui provides a **full application layout system** that handles:
 
 ## **Phase 10: Page Migration**
 
-### Migrate Pages to New Structure
-- [ ] Update `LoginPage` to use new `LoginForm` component
-- [ ] Update `DashboardPage` to use new layout and card components
-- [ ] Update `ScannerPage` to use new scanner components
-- [ ] Update `LoyaltyProgramsPage` to use new data display components
-- [ ] Update `DesignPage` to use new design editor components
-- [ ] Update `WelcomeQRPage` to use new components
-- [ ] Update `MerchantOnboardingPage` to use new components
+### Migrate Pages to the /v2 Route Structure
+- [ ] **LoginPage**: `v1` at `/login`, new version at `/v2/login` using `v2/auth/LoginForm`.
+- [ ] **DashboardPage**: `v1` at `/dashboard`, new version at `/v2/dashboard` using `v2` layout and card components.
+- [ ] **ScannerPage**: `v1` at `/scanner`, new version at `/v2/scanner` using new scanner components.
+- [ ] **LoyaltyProgramsPage**: `v1` at `/loyalty-programs`, new version at `/v2/loyalty-programs` using new data display components.
+- [ ] **DesignPage**: `v1` at `/design`, new version at `/v2/design` using new design editor components.
+- [ ] **WelcomeQRPage**: `v1` at `/welcome-qr`, new version at `/v2/welcome-qr` using new components.
+- [ ] **MerchantOnboardingPage**: `v1` at `/onboarding/:merchantSlug`, new version at `/v2/onboarding/:merchantSlug` using new components.
+
+### **App.tsx Routing Strategy**
+
+To manage both versions, `src/App.tsx` will house both sets of routes. The new `v2` components will live under a shared layout component (`V2AppShell`) to ensure a consistent look and feel.
+
+```typescript
+// src/App.tsx Example Structure
+
+import { V2AppShell } from './components/v2/layout/AppShell';
+// Import new v2 pages...
+
+function App() {
+  // ... existing setup ...
+  
+  return (
+    // ... providers ...
+    <Router>
+      <Routes>
+        {/* V1 (Legacy) Routes */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
+          <Route index element={<StaffRedirect />} />
+          <Route path="dashboard" element={<DashboardPage />} />
+          {/* ... other v1 routes */}
+        </Route>
+        
+        {/* V2 (New shadcn/ui) Routes */}
+        <Route path="/v2" element={<V2AppShell />}>
+          {/* Add v2 pages here as they are developed */}
+          {/* <Route path="dashboard" element={<V2DashboardPage />} /> */}
+          {/* <Route path="login" element={<V2LoginPage />} /> */}
+        </Route>
+
+        {/* Demo routes for v2 components */}
+        <Route path="/demo" element={<DemoPage />} />
+        <Route path="/forms-demo" element={<FormsDemo />} />
+        <Route path="/scanner-demo" element={<ScannerDemo />} />
+        <Route path="/design-demo" element={<DesignDemo />} />
+        
+        {/* ... other routes ... */}
+      </Routes>
+    </Router>
+  );
+}
+```
 
 ---
 
@@ -645,6 +690,9 @@ shadcn/ui provides a **full application layout system** that handles:
 - [ ] Test role-based access control
 - [ ] Test accessibility with screen readers
 - [ ] Verify performance improvements and bundle size reduction
+- [ ] **v1 and v2 routes** can coexist without conflict
+- [ ] Bundle size decreases significantly
+- [ ] No regression in functionality 
 
 ---
 
