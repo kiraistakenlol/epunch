@@ -43,7 +43,6 @@ i18n
     lng: 'en',
     fallbackLng: 'en',
     defaultNS: 'common',
-    debug: true,
     
     detection: {
       order: ['localStorage', 'navigator'],

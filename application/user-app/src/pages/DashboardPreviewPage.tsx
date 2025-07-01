@@ -21,7 +21,7 @@ const DashboardPreviewPage: React.FC = () => {
     if (locale === 'en' || locale === 'es') {
       setLocale(locale);
     }
-  }, [locale, setLocale]);
+  }, [locale]);
   
   // Parse cards JSON
   let cards;
