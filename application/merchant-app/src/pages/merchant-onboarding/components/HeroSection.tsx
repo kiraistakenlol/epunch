@@ -41,6 +41,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     locale,
   });
 
+  const userAppUrl = `${import.meta.env.VITE_USER_APP_URL}?merchant=${merchant.slug}`;
+
   return (
     <section id="hero-demo" className={styles.hero}>
         <div className={styles.heroContent}>
@@ -51,7 +53,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </h1>
 
             <div className={styles.demoUrl}>
-              <a href={heroPreviewUrl} target="_blank" rel="noopener noreferrer" className={styles.demoLink}>
+              <a href={userAppUrl} target="_blank" rel="noopener noreferrer" className={styles.demoLink}>
                 {t('hero.tryItNow')}
               </a>
             </div>
