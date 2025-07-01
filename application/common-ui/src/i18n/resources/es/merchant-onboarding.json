@@ -6,9 +6,6 @@
     "merchantNotFound": "Comerciante No Encontrado",
     "merchantNotFoundMessage": "El comerciante \"{{merchantSlug}}\" no pudo ser encontrado."
   },
-  "loading": {
-    "merchantInformation": "Cargando información del comerciante..."
-  },
   "hero": {
     "digitalLoyaltyCards": "Tarjetas de Lealtad Digitales",
     "for": "para",
