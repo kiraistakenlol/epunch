@@ -33,7 +33,6 @@ export const useMerchantOnboarding = () => {
           );
 
           if (hasActiveCard) {
-            console.log(`User already has an active punch card for ${program.name}`);
             continue;
           }
 
@@ -45,7 +44,7 @@ export const useMerchantOnboarding = () => {
 
             dispatch(addPunchCard(newPunchCard));
           } catch (error) {
-            console.log(`Punch card for ${program.name} already exists or creation failed`, error);
+            console.error(`Punch card for ${program.name} already exists or creation failed`, error);
           }
         }
 

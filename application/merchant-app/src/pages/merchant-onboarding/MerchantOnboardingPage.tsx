@@ -139,11 +139,21 @@ export const MerchantOnboardingPage: React.FC = () => {
   };
 
   if (merchantLoading || isLoadingLoyaltyProgram) {
-    return <LoadingState />;
+    return (
+      <div className={styles.container}>
+        <TopContactBar />
+        <LoadingState />
+      </div>
+    );
   }
 
   if (merchantError || !merchant) {
-    return <ErrorState merchantSlug={merchantSlug || 'unknown'} />;
+    return (
+      <div className={styles.container}>
+        <TopContactBar />
+        <ErrorState merchantSlug={merchantSlug || 'unknown'} />
+      </div>
+    );
   }
 
   if (loyaltyProgramError || !loyaltyProgram) {

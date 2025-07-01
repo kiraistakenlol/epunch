@@ -36,7 +36,6 @@ const CardPreviewPage: React.FC = () => {
     const handleMessage = async (event: MessageEvent) => {
       if (event.data?.type === 'CAPTURE_CARD') {
         try {
-          console.log('CardPreviewPage - Taking full viewport screenshot...');
           
           const canvas = await html2canvas(document.body, {
             backgroundColor: null,
@@ -47,7 +46,6 @@ const CardPreviewPage: React.FC = () => {
 
           const imageDataURL = canvas.toDataURL('image/png');
           
-          console.log('CardPreviewPage - Screenshot captured successfully');
           
           if (event.source) {
             (event.source as Window).postMessage({
