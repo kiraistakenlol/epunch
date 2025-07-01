@@ -1,20 +1,38 @@
 import React from 'react';
-import { MerchantDto, LoyaltyProgramDto } from 'e-punch-common-core';
+import { MerchantDto, LoyaltyProgramDto, PunchCardDto, PunchCardStyleDto } from 'e-punch-common-core';
 import { useI18n } from 'e-punch-common-ui';
 import { PhoneWithUserApp } from '../../../components/shared';
+import { dashboardPreviewService } from '../../../utils/dashboardPreviewService';
 import styles from './HeroSection.module.css';
 
 interface HeroSectionProps {
   merchant: MerchantDto;
   loyaltyProgram: LoyaltyProgramDto;
+  punchCardStyle: PunchCardStyleDto;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
   merchant,
-  loyaltyProgram}) => {
-  const { t } = useI18n('merchantOnboarding');
+  loyaltyProgram,
+  punchCardStyle
+}) => {
+  const { t, locale } = useI18n('merchantOnboarding');
   const requiredPunches = loyaltyProgram.requiredPunches || 10;
   const currentPunches = Math.floor(requiredPunches * 0.7);
+
+  const createMockPunchCard = (id: string, loyaltyProgramId: string, currentPunches: number): PunchCardDto => {
+    return {
+      id,
+      loyaltyProgramId,
+      shopName: merchant.name,
+      shopAddress: merchant.address || '',
+      currentPunches,
+      totalPunches: requiredPunches,
+      status: currentPunches >= requiredPunches ? 'REWARD_READY' : 'ACTIVE',
+      createdAt: new Date().toISOString(),
+      styles: punchCardStyle
+    };
+  };
 
   const heroPreviewUrl = `${import.meta.env.VITE_USER_APP_URL}?merchant=${merchant.slug}`;
 

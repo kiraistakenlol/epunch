@@ -184,6 +184,7 @@ export const MerchantOnboardingPage: React.FC = () => {
           <HeroSection
             merchant={merchant}
             loyaltyProgram={loyaltyProgram}
+            punchCardStyle={merchantStyle}
           />
         )}
       </div>
