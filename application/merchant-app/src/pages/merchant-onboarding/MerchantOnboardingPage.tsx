@@ -61,7 +61,7 @@ export const MerchantOnboardingPage: React.FC = () => {
         fetchLoyaltyProgram()
       ]);
     } catch (error: any) {
-      console.error('Failed to fetch merchant data:', error);
+      
     }
   };
 
@@ -73,7 +73,6 @@ export const MerchantOnboardingPage: React.FC = () => {
       setMerchantStyle(style);
       return style;
     } catch (error: any) {
-      console.error('Failed to fetch merchant style:', error);
       const defaultStyle = {
         primaryColor: appColors.epunchOrangeDark,
         secondaryColor: appColors.epunchWhite,
@@ -104,7 +103,6 @@ export const MerchantOnboardingPage: React.FC = () => {
       setLoyaltyProgram(sortedPrograms[0]);
       return programs;
     } catch (error: any) {
-      console.error('Failed to fetch loyalty program:', error);
       setLoyaltyProgramError(t('error.loyaltyProgramSetupFirst'));
       setLoyaltyProgram(undefined);
       return [];
@@ -132,7 +130,7 @@ export const MerchantOnboardingPage: React.FC = () => {
       );
       setOnboardingImageUrl(imageDataUrl);
     } catch (error: any) {
-      console.error('Failed to generate onboarding image:', error);
+      
     } finally {
       setIsGeneratingImage(false);
     }
