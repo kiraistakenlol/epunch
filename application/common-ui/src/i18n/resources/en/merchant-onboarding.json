@@ -6,9 +6,6 @@
     "merchantNotFound": "Merchant Not Found",
     "merchantNotFoundMessage": "The merchant \"{{merchantSlug}}\" could not be found."
   },
-  "loading": {
-    "merchantInformation": "Loading merchant information..."
-  },
   "hero": {
     "digitalLoyaltyCards": "Digital Loyalty Cards",
     "for": "for",
