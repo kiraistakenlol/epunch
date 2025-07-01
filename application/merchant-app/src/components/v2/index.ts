@@ -51,3 +51,34 @@ export * from './demo';
 // export * from './dashboard';
 // export * from './forms';
 // export * from './data-display';
+
+// Demo components 
+export * from './demo'
+
+// Form components - explicit exports to avoid naming conflicts
+export { FormField as V2FormField } from './forms/FormField'
+export { FormActions } from './forms/FormActions'
+export { FormErrorDisplay } from './forms/FormErrorDisplay'
+export { LoginForm } from './forms/LoginForm'
+export { LoyaltyProgramForm } from './forms/LoyaltyProgramForm'
+export { useLoginForm, useLoyaltyProgramForm } from './forms/hooks/useForm'
+
+// Scanner components
+export { ScannerInterface } from './scanner/ScannerInterface'
+export { QRScanner } from './scanner/QRScanner'
+export { ScannerCamera } from './scanner/ScannerCamera'
+export { CustomerScanResult } from './scanner/CustomerScanResult'
+export { PunchCardScanResult } from './scanner/PunchCardScanResult'
+export { useScanner } from './scanner/hooks/useScanner'
+export type { ScannerState, QRScanResult } from './scanner/hooks/useScanner'
+
+// Design components
+export { ColorPicker } from './design/ColorPicker'
+export { LogoUpload } from './design/LogoUpload'
+export { IconSelector } from './design/IconSelector'
+export { StylePreview } from './design/StylePreview'
+export { DesignEditor } from './design/DesignEditor'
+export { useDesignEditor } from './design/hooks/useDesignEditor'
+export { useFileUpload } from './design/hooks/useFileUpload'
+export type { DesignState, UseDesignEditorOptions } from './design/hooks/useDesignEditor'
+export type { FileUploadState, UseFileUploadOptions } from './design/hooks/useFileUpload'

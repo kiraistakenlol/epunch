@@ -19,7 +19,7 @@ import ScannerPage from './pages/scanner/ScannerPage';
 import { WelcomeQRPage } from './pages/welcome-qr/WelcomeQRPage';
 import { MerchantOnboardingPage } from './pages/merchant-onboarding/MerchantOnboardingPage';
 import UserAppTestPage from './pages/test/UserAppTestPage';
-import { DemoPage } from './components/v2/demo/DemoPage';
+import { DemoPage, FormsDemo, ScannerDemo, DesignDemo } from './components/v2/demo';
 import { Toaster } from './components/ui/toaster';
 import { injectCSSVariables } from './styles/css-variables';
 import './styles/global.css';
@@ -140,6 +140,9 @@ function App() {
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/demo" element={<DemoPage />} />
+            <Route path="/forms-demo" element={<FormsDemo />} />
+            <Route path="/scanner-demo" element={<ScannerDemo />} />
+            <Route path="/design-demo" element={<DesignDemo />} />
             <Route path="/onboarding/:merchantSlug" element={<MerchantOnboardingPage />} />
             <Route path="test/user-app" element={<UserAppTestPage />} />
             <Route path="/" element={
