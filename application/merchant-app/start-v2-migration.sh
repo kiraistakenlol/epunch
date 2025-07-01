@@ -9,11 +9,23 @@ echo "📦 Installing shadcn/ui dependencies..."
 yarn add tailwindcss-animate class-variance-authority clsx tailwind-merge lucide-react
 yarn add -D tailwindcss postcss autoprefixer
 
+echo "📝 Installing form dependencies..."
+yarn add react-hook-form @hookform/resolvers zod
+
+echo "📂 Installing additional utilities..."
+yarn add react-dropzone react-image-crop html2canvas sonner
+
 echo "🎨 Initializing shadcn/ui..."
 npx shadcn-ui@latest init --yes --default --src-dir src --use-typescript
 
 echo "🧩 Installing core shadcn/ui components..."
 npx shadcn-ui@latest add button input card table form select switch dialog toast badge tabs sheet dropdown-menu separator skeleton progress alert avatar checkbox label scroll-area --yes
+
+echo "🏗️ Installing LAYOUT & NAVIGATION components (NEW!)..."
+npx shadcn-ui@latest add sidebar breadcrumb navigation-menu menubar collapsible --yes
+
+echo "🎯 Installing sidebar building block (sidebar-07 - icon collapsible)..."
+npx shadcn-ui@latest add sidebar-07 --yes || echo "⚠️ Building block might need manual installation"
 
 echo "📁 Creating v2 directory structure..."
 
@@ -55,10 +67,24 @@ export * from './ui/badge';
 export * from './ui/tabs';
 export * from './ui/sheet';
 export * from './ui/dropdown-menu';
+export * from './ui/separator';
+export * from './ui/skeleton';
+export * from './ui/progress';
+export * from './ui/alert';
+export * from './ui/avatar';
+export * from './ui/checkbox';
+export * from './ui/label';
+export * from './ui/scroll-area';
 
-// Layout components
-export * from './layout/AppLayout';
-export * from './layout/AppHeader';
+// Layout & Navigation Components (shadcn/ui)
+export * from './ui/sidebar';
+export * from './ui/breadcrumb';
+export * from './ui/navigation-menu';
+export * from './ui/menubar';
+export * from './ui/collapsible';
+
+// Custom Layout Components (minimal - most from shadcn/ui)
+export * from './layout/AppShell';
 export * from './layout/AppSidebar';
 export * from './layout/PageContainer';
 export * from './layout/ProfileMenu';
@@ -97,10 +123,11 @@ fi
 echo "✅ v2 Migration setup complete!"
 echo ""
 echo "📋 Next Steps:"
-echo "1. Start with Phase 1: Create layout components in src/components/v2/layout/"
-echo "2. Import from 'src/components/v2' instead of foundational/shared"
-echo "3. Use Tailwind classes + CSS Modules for styling"
-echo "4. Co-locate hooks with their components"
+echo "1. Phase 4: Create AppShell using SidebarProvider + Sidebar + SidebarInset"
+echo "2. Customize AppSidebar based on sidebar-07 building block"
+echo "3. Import from 'src/components/v2' instead of foundational/shared"
+echo "4. Use shadcn/ui layout system (90% less custom code!)"
+echo "5. Add role-based filtering to sidebar navigation"
 echo ""
 echo "🔍 Key Files:"
 echo "- src/components/v2/index.ts (main exports)"

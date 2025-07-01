@@ -19,6 +19,8 @@ import ScannerPage from './pages/scanner/ScannerPage';
 import { WelcomeQRPage } from './pages/welcome-qr/WelcomeQRPage';
 import { MerchantOnboardingPage } from './pages/merchant-onboarding/MerchantOnboardingPage';
 import UserAppTestPage from './pages/test/UserAppTestPage';
+import { DemoPage } from './components/v2/demo/DemoPage';
+import { Toaster } from './components/ui/toaster';
 import { injectCSSVariables } from './styles/css-variables';
 import './styles/global.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -137,6 +139,7 @@ function App() {
         <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/demo" element={<DemoPage />} />
             <Route path="/onboarding/:merchantSlug" element={<MerchantOnboardingPage />} />
             <Route path="test/user-app" element={<UserAppTestPage />} />
             <Route path="/" element={
@@ -191,6 +194,7 @@ function App() {
           pauseOnHover
           theme="light"
         />
+        <Toaster />
       </ThemeProvider>
     </I18nProvider>
   );
