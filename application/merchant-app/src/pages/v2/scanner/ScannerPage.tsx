@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScannerInterface } from '@/components/v2/scanner'
+import { ScannerInterface } from '@/components/v2/scanner/ScannerInterface'
 import { PageContainer } from '@/components/v2/layout/PageContainer'
 
 export const V2ScannerPage: React.FC = () => {

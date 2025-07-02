@@ -5,5 +5,10 @@
     "bootstrap": "^5.3.6",
     "react-bootstrap": "^2.10.10",
     "react-spinner": "^0.2.7"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.10",
+    "knip": "^5.61.3",
+    "typescript": "^5.8.3"
   }
 }

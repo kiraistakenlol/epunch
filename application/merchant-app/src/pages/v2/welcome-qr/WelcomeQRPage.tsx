@@ -7,7 +7,7 @@ import { Loader2, Download, RefreshCw, QrCode } from 'lucide-react'
 import { useAppSelector } from '../../../store/hooks'
 import { generateOnboardingImage, downloadImage } from '../../../utils/onboardingImageUtil'
 import { useToast } from '../../../hooks/use-toast'
-import { ColorPicker } from '../../../components/v2/forms/ColorPicker'
+import { ColorPicker } from '../../../components/v2/design/ColorPicker'
 
 export const WelcomeQRPage: React.FC = () => {
   const { merchant, loading: merchantLoading, error: merchantError } = useAppSelector((state) => state.merchant)
