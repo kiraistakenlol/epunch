@@ -83,7 +83,7 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
         const result: IconSearchResultDto = await apiClient.searchIcons(
           searchQuery || undefined,
           currentPage,
-          20
+          200
         )
 
         if (isNewSearch) {
@@ -203,7 +203,7 @@ export const IconsEditorModal: React.FC<IconsEditorModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl w-[90vw] h-[95vh] sm:h-[80vh] flex flex-col">
+      <DialogContent className="max-w-4xl w-[90vw] h-[85vh] sm:h-[80vh] flex flex-col">
 
         <DialogHeader >
           <DialogTitle>Choose Icons</DialogTitle>

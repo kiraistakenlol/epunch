@@ -16,9 +16,18 @@ export const IconsGrid: React.FC<IconsGridProps> = ({
   handlers,
   onScroll
 }) => {
-  const { availableIcons, loading, loadingMore } = searchState
+  const { availableIcons, loading, loadingMore, searchQuery } = searchState
   const { selectedFilled, selectedUnfilled, activeSlot } = selectionState
   const { onIconSelect } = handlers
+  
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null)
+
+  // Reset scroll position when search query changes
+  React.useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0
+    }
+  }, [searchQuery])
 
   const renderLoadingState = () => (
     <div className="flex flex-col items-center justify-center h-[50vh] space-y-3">
@@ -43,7 +52,11 @@ export const IconsGrid: React.FC<IconsGridProps> = ({
 
   return (
     <div className="flex-1 overflow-hidden">
-      <div className="h-[60vh] overflow-y-auto border rounded-md" onScroll={onScroll}>
+      <div 
+        ref={scrollContainerRef}
+        className="h-[50vh] overflow-y-auto border rounded-md" 
+        onScroll={onScroll}
+      >
         <div className="p-4">
           {loading ? renderLoadingState() : availableIcons.length === 0 ? renderEmptyState() : (
             <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-3 sm:gap-4">
