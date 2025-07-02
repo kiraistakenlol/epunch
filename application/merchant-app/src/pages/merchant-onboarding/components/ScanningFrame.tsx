@@ -19,7 +19,7 @@ export const ScanningFrame: React.FC<ScanningFrameProps> = ({
   return (
     <div className={cn("relative w-full h-full", className)}>
       <div 
-        className="absolute border-2 border-primary bg-transparent"
+        className="absolute border-2 border-primary bg-transparent z-10"
         style={{
           left: `calc(50% - ${size / 2}px + ${offsetX}px)`,
           top: `calc(50% - ${size / 2}px + ${offsetY}px)`,

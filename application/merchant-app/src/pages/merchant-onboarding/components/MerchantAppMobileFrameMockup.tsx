@@ -11,20 +11,28 @@ interface MerchantAppMobileFrameMockupProps {
 export const MerchantAppMobileFrameMockup: React.FC<MerchantAppMobileFrameMockupProps> = ({
   children,
   className = '',
-  merchant}) => {
+  merchant
+}) => {
   return (
     <div className={`${styles.merchantAppMockup} ${className}`}>
-      <div className={styles.appHeader}>
+      <header className={styles.appHeader}>
         <div className={styles.headerLeft}>
-          <div className={styles.hamburgerMenu}>☰</div>
+          <div className={styles.hamburgerMenu}>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+              <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+          </div>
+          <div className={styles.separator}></div>
         </div>
         <div className={styles.headerCenter}>
-          <div className={styles.appTitle}>ePunch {merchant?.name}</div>
+          <div className={styles.appTitle}>
+            ePunch {merchant?.name || 'Merchant'}
+          </div>
         </div>
-      </div>
-      <div className={styles.appContent}>
+      </header>
+      <main className={styles.appContent}>
         {children}
-      </div>
+      </main>
     </div>
   );
 }; 

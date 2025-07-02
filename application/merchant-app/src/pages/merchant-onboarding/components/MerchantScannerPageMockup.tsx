@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
 interface MerchantScannerPageMockupProps {
@@ -13,51 +13,49 @@ interface MerchantScannerPageMockupProps {
 export const MerchantScannerPageMockup: React.FC<MerchantScannerPageMockupProps> = ({
   children,
   className,
-  frameSize = 200,
+  frameSize = 60,
   frameOffsetX = 0,
   frameOffsetY = 0
 }) => {
   return (
-    <Card className={cn("w-full h-full bg-background border-2 overflow-hidden", className)}>
-      {/* Scanner header */}
-      <div className="bg-primary text-primary-foreground p-2 text-center">
-        <span className="text-sm font-medium">Scanner</span>
-      </div>
-      
-      {/* Scanner viewfinder area */}
-      <div className="relative flex-1 bg-muted/20 p-4 h-full flex items-center justify-center">
-        <div className="text-center text-muted-foreground text-sm mb-4 absolute top-4 left-0 right-0">
-          Scan customer QR code
-        </div>
-        
-        {/* Scanning frame */}
-        <div 
-          className="relative border-2 border-primary bg-transparent"
-          style={{
-            width: `${frameSize}px`,
-            height: `${frameSize}px`,
-            transform: `translate(${frameOffsetX}px, ${frameOffsetY}px)`
-          }}
-        >
-          {/* Corner indicators */}
-          <div className="absolute -top-1 -left-1 w-4 h-4 border-l-2 border-t-2 border-primary" />
-          <div className="absolute -top-1 -right-1 w-4 h-4 border-r-2 border-t-2 border-primary" />
-          <div className="absolute -bottom-1 -left-1 w-4 h-4 border-l-2 border-b-2 border-primary" />
-          <div className="absolute -bottom-1 -right-1 w-4 h-4 border-r-2 border-b-2 border-primary" />
-          
-          {/* Content inside frame */}
-          {children && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              {children}
+    <div className={cn("flex flex-col items-center justify-center space-y-3 p-2 h-full", className)}>
+      <Card className="w-full max-w-[280px] overflow-hidden">
+        <CardContent className="p-0 relative">
+          <div className="relative bg-muted" style={{ aspectRatio: '4/3' }}>
+            {/* Camera background simulation */}
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-600 to-gray-800"></div>
+            
+            {/* Children positioned in the middle of CardContent */}
+            {children && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                {children}
+              </div>
+            )}
+            
+            {/* Scanning Frame Overlay */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div 
+                className="relative border-2 border-primary/70 rounded-lg animate-pulse"
+                style={{
+                  width: `${frameSize}px`,
+                  height: `${frameSize}px`,
+                  transform: `translate(${frameOffsetX}px, ${frameOffsetY}px)`
+                }}
+              >
+                {/* Corner indicators */}
+                <div className="absolute -top-1 -left-1 w-4 h-4 border-t-4 border-l-4 border-primary rounded-tl-lg" />
+                <div className="absolute -top-1 -right-1 w-4 h-4 border-t-4 border-r-4 border-primary rounded-tr-lg" />
+                <div className="absolute -bottom-1 -left-1 w-4 h-4 border-b-4 border-l-4 border-primary rounded-bl-lg" />
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-4 border-r-4 border-primary rounded-br-lg" />
+              </div>
             </div>
-          )}
-        </div>
-        
-        {/* Scanner instructions */}
-        <div className="absolute bottom-4 left-0 right-0 text-center text-muted-foreground text-xs">
-          Hold steady for best results
-        </div>
+          </div>
+        </CardContent>
+      </Card>
+      
+      <div className="text-center text-xs text-muted-foreground max-w-[260px]">
+        <p>Position QR code within the frame</p>
       </div>
-    </Card>
+    </div>
   );
 }; 

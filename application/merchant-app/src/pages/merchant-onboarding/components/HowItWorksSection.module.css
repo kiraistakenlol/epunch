@@ -58,8 +58,11 @@
 }
 
 .infoIcon {
+  display: inline-flex;
+  align-items: center;
   margin-right: 0.5rem;
   font-size: 1.25rem;
+  vertical-align: middle;
 }
 
 .stepsContainer {

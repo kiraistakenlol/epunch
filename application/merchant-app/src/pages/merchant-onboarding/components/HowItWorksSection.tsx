@@ -134,7 +134,6 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
                         <img
                           src={onboardingImageUrl}
                           alt={t('howItWorks.qrPlaceholder')}
-                          className={styles.qrCodeInCamera}
                         />
                       )}
                     </CameraInterface>
@@ -159,8 +158,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
                 firstScreen={
                   <PhoneFrame>
                     <MerchantAppMobileFrameMockup merchant={merchant}>
-                      <MerchantScannerPageMockup frameSize={150} frameOffsetY={-20} >
-                        <div style={{ width: '70%', height: '100%', paddingTop: '10%' }}>
+                      <MerchantScannerPageMockup frameSize={150} >
+                        <div style={{ width: '50%', paddingTop: '10%' }}>
                           <PhoneWithUserApp src={initialCustomerPreviewUrl} />
                         </div>
                       </MerchantScannerPageMockup>
@@ -221,8 +220,8 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
                 firstScreen={
                   <PhoneFrame>
                     <MerchantAppMobileFrameMockup merchant={merchant}>
-                      <MerchantScannerPageMockup frameSize={150} frameOffsetY={-20} >
-                        <div style={{ width: '70%', height: '100%', paddingTop: '10%' }}>
+                      <MerchantScannerPageMockup frameSize={150} >
+                        <div style={{ width: '50%', paddingTop: '10%' }}>
                           <PhoneWithUserApp src={step5PreviewUrl} />
                         </div>
                       </MerchantScannerPageMockup>

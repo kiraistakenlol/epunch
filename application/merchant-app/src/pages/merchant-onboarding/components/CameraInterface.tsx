@@ -30,13 +30,18 @@ export const CameraInterface: React.FC<CameraInterfaceProps> = ({
         <div className={styles.cameraControls}>×</div>
       </div>
       <div className={styles.cameraViewfinder} style={frameStyle}>
+        {/* QR code content rendered in full viewfinder */}
+        {children && (
+          <div className={styles.qrCodeContainer}>
+            {children}
+          </div>
+        )}
+        {/* Scanning frame rendered as overlay */}
         <ScanningFrame 
           offsetX={frameOffsetX}
           offsetY={frameOffsetY}
           size={frameSize}
-        >
-          {children}
-        </ScanningFrame>
+        />
       </div>
       <div className={styles.cameraBottomBar}>
         <div className={styles.cameraButton}></div>

@@ -43,6 +43,27 @@
   --frame-size: 200px;
 }
 
+.qrCodeContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.qrCodeContainer img {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
 
 
 .cameraBottomBar {
