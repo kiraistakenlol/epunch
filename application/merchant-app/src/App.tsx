@@ -27,6 +27,7 @@ import { LoyaltyProgramCreatePage } from './pages/v2/loyalty-programs/LoyaltyPro
 import { LoyaltyProgramEditPage } from './pages/v2/loyalty-programs/LoyaltyProgramEditPage';
 import { V2DesignPage } from './pages/v2/design/DesignPage';
 import { V2ScannerPage } from './pages/v2/scanner/ScannerPage';
+import { WelcomeQRPage as V2WelcomeQRPage } from './pages/v2/welcome-qr';
 import { Toaster } from './components/ui/toaster';
 import { Toaster as SonnerToaster } from 'sonner';
 import { injectCSSVariables } from './styles/css-variables';
@@ -163,6 +164,7 @@ function App() {
               <Route path="forms-demo" element={<FormsDemo />} />
               <Route path="scanner-demo" element={<ScannerDemo />} />
               <Route path="design-demo" element={<DesignDemo />} />
+              <Route path="welcome-qr" element={<V2WelcomeQRPage />} />
             </Route>
 
             <Route path="/" element={

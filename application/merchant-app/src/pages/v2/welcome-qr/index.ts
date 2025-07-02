@@ -1,0 +1,1 @@
+export { WelcomeQRPage } from './WelcomeQRPage' 

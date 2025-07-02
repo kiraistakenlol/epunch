@@ -45,6 +45,11 @@ const navigationItems = [
     icon: Palette,
   },
   {
+    title: "Welcome QR",
+    url: V2_ROUTES.WELCOME_QR,
+    icon: QrCode,
+  },
+  {
     title: "Analytics", 
     url: V2_ROUTES.ANALYTICS,
     icon: BarChart3,

@@ -12,3 +12,4 @@ export { useLoginForm, useLoyaltyProgramForm } from './hooks/useForm'
 // Complete forms
 export { LoginForm } from './LoginForm'
 export { LoyaltyProgramForm } from './LoyaltyProgramForm'
+export { ColorPicker } from './ColorPicker'

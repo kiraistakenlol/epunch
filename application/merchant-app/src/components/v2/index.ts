@@ -61,6 +61,7 @@ export { FormActions } from './forms/FormActions'
 export { FormErrorDisplay } from './forms/FormErrorDisplay'
 export { LoginForm } from './forms/LoginForm'
 export { LoyaltyProgramForm } from './forms/LoyaltyProgramForm'
+export { ColorPicker } from './forms/ColorPicker'
 export { useLoginForm, useLoyaltyProgramForm } from './forms/hooks/useForm'
 
 // Scanner components
