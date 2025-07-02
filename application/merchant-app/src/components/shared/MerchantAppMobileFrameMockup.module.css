@@ -1,0 +1,75 @@
+.merchantAppMockup {
+  background: #afa7a7;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-width: 100%;
+  max-height: 100%;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.appHeader {
+  height: 10%;
+  background: #916730;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2%;
+  color: white;
+  position: relative;
+  z-index: 10;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.headerLeft,
+.headerRight {
+  width: 12%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.headerCenter {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.hamburgerMenu {
+  font-size: 1.5em;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.appTitle {
+  font-weight: 700;
+  font-size: 1em;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.1em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.appContent {
+  flex: 1;
+  background: #c5c0c0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-height: 90%;
+  box-sizing: border-box;
+  position: relative;
+}
