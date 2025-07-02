@@ -42,6 +42,7 @@
   "howItWorks": {
     "title": "How It Actually Works",
     "subtitle": "Simple, fast, and works instantly with any smartphone",
+    "moreDetails": "More details",
     "step1": {
       "title": "Put this QR code where people can see it",
       "note": "Print it, frame it, or display it digitally"
@@ -147,7 +148,8 @@
   "merchantInterface": {
     "scanner": {
       "title": "Scanner",
-      "subtitle": "Point camera at customer QR code"
+      "subtitle": "Point camera at customer QR code",
+      "frameInstructions": "Position QR code within the frame"
     },
     "reward": {
       "title": "🎁 Reward",

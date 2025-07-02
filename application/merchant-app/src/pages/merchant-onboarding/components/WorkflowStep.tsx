@@ -2,24 +2,20 @@ import React, { useState } from 'react';
 import { useI18n } from 'e-punch-common-ui';
 import styles from './WorkflowStep.module.css';
 
-export const CLIENT_NAME = 'client';
-
 interface WorkflowStepProps {
   stepNumber: number;
-  role: 'you' | 'customer';
   title: string;
-  children: React.ReactNode;
-  note?: string;
-  showArrow?: boolean;
+  description: string;
+  children?: React.ReactNode;
+  isLast?: boolean;
 }
 
 export const WorkflowStep: React.FC<WorkflowStepProps> = ({
   stepNumber,
-  role,
   title,
+  description,
   children,
-  note,
-  showArrow = false
+  isLast = false
 }) => {
   const { t } = useI18n('merchantOnboarding');
   const [isExpanded, setIsExpanded] = useState(false);
@@ -28,63 +24,39 @@ export const WorkflowStep: React.FC<WorkflowStepProps> = ({
     setIsExpanded(!isExpanded);
   };
 
-  const roleBadgeText = role === 'you' ? t('howItWorks.roleBadge.you') : t('howItWorks.roleBadge.customer');
-  const roleColor = role === 'you' ? 'merchant' : 'customer';
-
   return (
     <div className={styles.stepContainer}>
-      <div className={`${styles.step} ${isExpanded ? styles.expanded : ''}`}>
-        
-        {/* Role Badge - Outside Frame */}
-        <div className={`${styles.roleBadge} ${styles[roleColor]} ${isExpanded ? styles.badgeExpanded : styles.badgeCollapsed}`}>
-          <span className={styles.roleText}>{roleBadgeText}</span>
+      <div 
+        className={`${styles.step} ${children ? styles.clickable : ''}`}
+        onClick={children ? toggleExpanded : undefined}
+      >
+        <div className={styles.stepNumber}>{stepNumber}</div>
+        <div className={styles.stepContent}>
+          <h3 className={styles.stepTitle}>{title}</h3>
+          <p className={styles.stepDescription}>{description}</p>
         </div>
-
-        {/* Step Header - Always Visible */}
-        <div className={styles.stepHeader} onClick={toggleExpanded}>
-          <div className={styles.stepMeta}>
-            <div className={styles.stepNumber}>{stepNumber}</div>
-          </div>
-          
-          <div className={styles.stepContent}>
-            <h3 className={styles.stepTitle}>{title}</h3>
-            {note && !isExpanded && (
-              <p className={styles.stepPreview}>{note}</p>
-            )}
-          </div>
-          
-          <div className={styles.expandToggle}>
-            <div className={`${styles.expandIcon} ${isExpanded ? styles.expanded : ''}`}>
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                <path d="M7 10l5 5 5-5z"/>
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        {/* Step Details - Expandable */}
-        {isExpanded && (
-          <div className={styles.stepDetails}>
-            <div className={styles.stepVisual}>
-              {children}
-            </div>
-            {note && (
-              <div className={styles.stepNote}>
-                <span className={styles.noteIcon}>💡</span>
-                <p>{note}</p>
-              </div>
-            )}
-          </div>
+        {children && (
+          <button 
+            className={styles.moreDetailsButton}
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleExpanded();
+            }}
+            type="button"
+          >
+            {t('howItWorks.moreDetails')}
+            <span className={styles.arrowIcon}>
+              {isExpanded ? '↑' : '↓'}
+            </span>
+          </button>
         )}
       </div>
-      
-      {/* Connection Line */}
-      {showArrow && (
-        <div className={styles.stepConnection}>
-          <div className={styles.connectionLine}></div>
-          <div className={styles.connectionArrow}>↓</div>
+      {isExpanded && children && (
+        <div className={styles.expandedContent}>
+          {children}
         </div>
       )}
+      {!isLast && <div className={styles.stepSeparator} />}
     </div>
   );
 }; 

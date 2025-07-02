@@ -42,6 +42,7 @@
   "howItWorks": {
     "title": "Cómo Funciona Realmente",
     "subtitle": "Simple, rápido, y funciona instantáneamente con cualquier smartphone",
+    "moreDetails": "Más detalles",
     "step1": {
       "title": "Poné este código QR donde la gente pueda verlo",
       "note": "Imprimilo, enmarcalo, o mostralo digitalmente"
@@ -147,7 +148,8 @@
   "merchantInterface": {
     "scanner": {
       "title": "Escáner",
-      "subtitle": "Apunta la cámara al código QR del cliente"
+      "subtitle": "Apunta la cámara al código QR del cliente",
+      "frameInstructions": "Posiciona el código QR dentro del marco"
     },
     "reward": {
       "title": "🎁 Recompensa",

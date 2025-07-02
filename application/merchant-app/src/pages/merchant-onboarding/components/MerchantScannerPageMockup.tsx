@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { useI18n } from 'e-punch-common-ui';
 
 interface MerchantScannerPageMockupProps {
   children?: React.ReactNode;
@@ -17,8 +18,11 @@ export const MerchantScannerPageMockup: React.FC<MerchantScannerPageMockupProps>
   frameOffsetX = 0,
   frameOffsetY = 0
 }) => {
+  const { t } = useI18n('merchantOnboarding');
+
   return (
     <div className={cn("flex flex-col items-center justify-center space-y-3 p-2 h-full", className)}>
+      <h3 className="text-lg font-semibold text-center">{t('merchantInterface.scanner.title')}</h3>
       <Card className="w-full max-w-[280px] overflow-hidden">
         <CardContent className="p-0 relative">
           <div className="relative bg-muted" style={{ aspectRatio: '4/3' }}>
@@ -54,7 +58,7 @@ export const MerchantScannerPageMockup: React.FC<MerchantScannerPageMockupProps>
       </Card>
       
       <div className="text-center text-xs text-muted-foreground max-w-[260px]">
-        <p>Position QR code within the frame</p>
+        <p>{t('merchantInterface.scanner.frameInstructions')}</p>
       </div>
     </div>
   );
