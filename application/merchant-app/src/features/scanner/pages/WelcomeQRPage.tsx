@@ -6,12 +6,11 @@ import { Label } from '@/components/ui/label'
 import { Loader2, Download, RefreshCw, QrCode } from 'lucide-react'
 import { useAppSelector } from '../../../store/hooks'
 import { generateOnboardingImage, downloadImage } from '../../../services/imageUtils'
-import { useToast } from '../../../hooks/use-toast'
+import { toast } from 'sonner'
 import { ColorPicker } from '../../design/components/ColorPicker'
 
 export const WelcomeQRPage: React.FC = () => {
   const { merchant, loading: merchantLoading, error: merchantError } = useAppSelector((state) => state.merchant)
-  const { toast } = useToast()
   const [onboardingImageUrl, setOnboardingImageUrl] = useState<string | null>(null)
   const [isGeneratingImage, setIsGeneratingImage] = useState(false)
   const [loyaltyProgramName, setLoyaltyProgramName] = useState<string>('')
@@ -51,10 +50,8 @@ export const WelcomeQRPage: React.FC = () => {
       setOnboardingImageUrl(imageDataUrl)
     } catch (error: any) {
       console.error('Failed to generate onboarding image:', error)
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to generate image preview",
-        variant: "destructive",
       })
     } finally {
       setIsGeneratingImage(false)
@@ -67,16 +64,13 @@ export const WelcomeQRPage: React.FC = () => {
     try {
       const filename = `${merchant.name.replace(/[^a-zA-Z0-9]/g, '_')}_Welcome_QR.png`
       downloadImage(onboardingImageUrl, filename)
-      toast({
-        title: "Success",
+      toast.success("Success", {
         description: "Image downloaded successfully!",
       })
     } catch (error: any) {
       console.error('Failed to download image:', error)
-      toast({
-        title: "Error", 
+      toast.error("Error", {
         description: "Failed to download image",
-        variant: "destructive",
       })
     }
   }

@@ -21,7 +21,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { ROUTES } from "@/lib/cn";
+import { ROUTES } from "@/lib/cn"
+import { logoUrl } from 'e-punch-common-ui'
+import { useAppSelector } from '@/store/hooks'
 
 const navigationItems = [
   {
@@ -70,16 +72,22 @@ const adminItems = [
 ]
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { merchant } = useAppSelector((state) => state.merchant)
+  
   return (
-    <Sidebar variant="inset" {...props}>
-      <SidebarHeader>
-        <div className="flex items-center gap-2 px-4 py-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <QrCode className="h-4 w-4" />
-          </div>
+    <Sidebar variant="inset" {...props} >
+      <SidebarHeader className="border-b border-border pb-2 pt-4">
+        <div className="flex items-center">
+          <img 
+            src={logoUrl} 
+            alt="ePunch Logo" 
+            className="h-12 w-auto object-contain brightness-0"
+          />
           <div className="flex flex-col gap-0.5 leading-none">
-            <span className="font-semibold">ePunch</span>
-            <span className="text-xs text-muted-foreground">Merchant Portal</span>
+            <span className="font-semibold text-foreground">ePunch</span>
+            <span className="text-xs text-muted-foreground">
+              {merchant?.name}
+            </span>
           </div>
         </div>
       </SidebarHeader>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Dropdown } from 'react-bootstrap';
-import { LanguageSwitch, useI18n } from 'e-punch-common-ui';
+import { LanguageSwitch, useI18n, logoUrl } from 'e-punch-common-ui';
 import { RootState } from '../store/store';
 import { selectIsAuthenticated, selectSuperAdmin } from '../features/auth/authSlice';
 import { openSignOutModal } from '../features/signOut/signOutSlice';
@@ -26,9 +26,15 @@ const headerStyle: React.CSSProperties = {
 };
 
 const logoStyle: React.CSSProperties = {
-  fontSize: "1.8em",
   flex: 1,
-  textAlign: "center"
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center"
+};
+
+const logoImageStyle: React.CSSProperties = {
+  height: "40px",
+  width: "auto"
 };
 
 const profileIconStyle: React.CSSProperties = {
@@ -95,7 +101,13 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
       />
       
       <div style={{ width: showProfileMenu ? "40px" : "0" }}></div>
-      <div style={logoStyle}>{title}</div>
+      <div style={logoStyle}>
+        <img 
+          src={logoUrl} 
+          alt={title} 
+          style={logoImageStyle}
+        />
+      </div>
 
       {showProfileMenu && (
         <Dropdown align="end">

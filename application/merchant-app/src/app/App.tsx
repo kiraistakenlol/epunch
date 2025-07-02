@@ -15,8 +15,7 @@ import { LoyaltyProgramEditPage } from '../features/loyalty-programs/LoyaltyProg
 import { V2DesignPage } from '../features/design/pages/DesignPage';
 import { V2ScannerPage } from '../features/scanner/pages/ScannerPage';
 import { WelcomeQRPage as V2WelcomeQRPage } from '../features/scanner/pages';
-import { Toaster } from '../components/ui/toaster';
-import { Toaster as SonnerToaster } from 'sonner';
+import { Toaster } from '../components/ui/sonner';
 import '../styles/global.css';
 import { RootState } from '../store/store';
 
@@ -64,6 +63,8 @@ const AuthenticatedRedirect: React.FC = () => {
 function App() {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state: RootState) => state.auth.user);
+  
+
 
   // Fetch merchant data when authenticated
   React.useEffect(() => {
@@ -125,7 +126,6 @@ function App() {
         </Routes>
       </Router>
       <Toaster />
-      <SonnerToaster />
     </I18nProvider>
   );
 }
