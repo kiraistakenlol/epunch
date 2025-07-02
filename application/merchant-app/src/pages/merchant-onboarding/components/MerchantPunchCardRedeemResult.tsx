@@ -20,7 +20,7 @@ export const MerchantPunchCardRedeemResult: React.FC<MerchantPunchCardRedeemResu
 }) => {
   const { t } = useI18n('merchantOnboarding');
   const programName = loyaltyProgram?.name || `${merchant.name} Rewards`;
-  const rewardDescription = loyaltyProgram?.rewardDescription || 'Free coffee';
+  const rewardDescription = loyaltyProgram?.rewardDescription || t('merchantInterface.redeemResult.defaultReward');
 
   return (
     <div className={cn("p-2 h-full", className)}>
@@ -28,10 +28,10 @@ export const MerchantPunchCardRedeemResult: React.FC<MerchantPunchCardRedeemResu
         <CardHeader className="pb-3 px-3 py-3">
           <div className="flex items-center justify-center space-x-2 mb-2">
             <CreditCard className="h-4 w-4 text-primary" />
-            <Badge variant="default" className="text-xs px-2 py-0">Ready</Badge>
+            <Badge variant="default" className="text-xs px-2 py-0">{t('merchantInterface.redeemResult.badge')}</Badge>
           </div>
-          <CardTitle className="text-sm text-center">Punch Card</CardTitle>
-          <p className="text-xs text-center text-muted-foreground">ID: card123...</p>
+          <CardTitle className="text-sm text-center">{t('merchantInterface.redeemResult.title')}</CardTitle>
+          <p className="text-xs text-center text-muted-foreground">{t('merchantInterface.redeemResult.cardId', { cardId: 'card123...' })}</p>
         </CardHeader>
         
         <CardContent className="space-y-3 px-3 py-2">
@@ -46,7 +46,7 @@ export const MerchantPunchCardRedeemResult: React.FC<MerchantPunchCardRedeemResu
           <div className="p-3 bg-green-50 border border-green-200 rounded">
             <div className="flex items-center space-x-2 text-green-700">
               <Gift className="h-3 w-3" />
-              <span className="text-xs font-medium">Ready to redeem!</span>
+              <span className="text-xs font-medium">{t('merchantInterface.redeemResult.readyToRedeem')}</span>
             </div>
           </div>
 
@@ -56,14 +56,14 @@ export const MerchantPunchCardRedeemResult: React.FC<MerchantPunchCardRedeemResu
               className="flex-1 h-10 text-xs"
             >
               <ArrowLeft className="w-3 h-3 mr-1" />
-              Back
+              {t('merchantInterface.redeemResult.backButton')}
             </Button>
             
             <Button 
               className="flex-1 h-10 text-xs"
             >
               <Gift className="w-3 h-3 mr-1" />
-              Redeem
+              {t('merchantInterface.redeemResult.redeemButton')}
             </Button>
           </div>
         </CardContent>

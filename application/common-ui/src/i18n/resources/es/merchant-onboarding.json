@@ -159,6 +159,22 @@
     "selectProgram": {
       "title": "Seleccionar Programa de Lealtad",
       "punchButton": "SELLAR"
+    },
+    "customerScan": {
+      "badge": "Cliente",
+      "title": "Listo para Sellar",
+      "current": "Actual: {{current}}/{{total}}",
+      "backButton": "Atrás",
+      "punchButton": "Sellar"
+    },
+    "redeemResult": {
+      "badge": "Listo",
+      "title": "Tarjeta de Sellos",
+      "cardId": "ID: {{cardId}}",
+      "readyToRedeem": "¡Listo para canjear!",
+      "backButton": "Atrás",
+      "redeemButton": "Canjear",
+      "defaultReward": "Café gratis"
     }
   }
 } 

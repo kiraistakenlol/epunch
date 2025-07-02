@@ -159,6 +159,22 @@
     "selectProgram": {
       "title": "Select Loyalty Program",
       "punchButton": "PUNCH"
+    },
+    "customerScan": {
+      "badge": "Customer",
+      "title": "Ready to Punch",
+      "current": "Current: {{current}}/{{total}}",
+      "backButton": "Back",
+      "punchButton": "Punch"
+    },
+    "redeemResult": {
+      "badge": "Ready",
+      "title": "Punch Card",
+      "cardId": "ID: {{cardId}}",
+      "readyToRedeem": "Ready to redeem!",
+      "backButton": "Back",
+      "redeemButton": "Redeem",
+      "defaultReward": "Free coffee"
     }
   }
 } 
