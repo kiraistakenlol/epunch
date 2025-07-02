@@ -1,0 +1,196 @@
+.howItWorks {
+  background: #ffffff;
+  padding: 3rem 0;
+}
+
+.sectionContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.sectionTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #111827;
+}
+
+.sectionSubtitle {
+  font-size: 1rem;
+  color: #6b7280;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.stepsContainer {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* QR Code Display - Step 1 */
+.qrCodeContainer {
+  width: 100%;
+}
+
+.qrCodeImage {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: contain;
+}
+
+.qrCodePlaceholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  margin: 1rem 0;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.qrCodePlaceholder p {
+  color: #9ca3af;
+  font-style: italic;
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+/* Phone Flow Steps - Steps 2, 3, 4, 6 */
+.phoneFlowContainer {
+  padding: 1rem 0;
+  margin: 0.5rem 0;
+}
+
+/* Centered Phone Container - Step 5 */
+.centeredPhone {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0;
+  margin: 0.5rem 0;
+}
+
+.centeredPhone > * {
+  max-width: 280px;
+  width: 100%;
+}
+
+/* Reward Schema - Step 7 */
+.rewardSchema {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 1rem 0;
+  margin: 1rem 0;
+}
+
+.rewardIcon {
+  font-size: 4rem;
+}
+
+.schemaArrow {
+  font-size: 2rem;
+  color: #6b7280;
+  font-weight: bold;
+}
+
+.clientAvatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatarCircle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clientAvatarImage {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+@media (max-width: 768px) {
+  .howItWorks {
+    padding: 2rem 0;
+  }
+  
+  .sectionContent {
+    padding: 0 1rem;
+  }
+  
+  .sectionHeader {
+    margin-bottom: 2rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .sectionSubtitle {
+    font-size: 0.9rem;
+  }
+  
+  .qrCodeContainer {
+    padding: 1.5rem;
+  }
+  
+  .qrCodePlaceholder {
+    min-height: 250px;
+  }
+  
+  .phoneFlowContainer {
+    padding: 0.5rem 0;
+    margin: 0.25rem 0;
+  }
+  
+  .centeredPhone {
+    padding: 0.5rem 0;
+    margin: 0.25rem 0;
+  }
+  
+  .centeredPhone > * {
+    max-width: 240px;
+  }
+  
+  .rewardSchema {
+    gap: 1rem;
+    padding: 0.5rem 0;
+    margin: 0.75rem 0;
+  }
+  
+  .rewardIcon {
+    font-size: 3rem;
+  }
+  
+  .schemaArrow {
+    font-size: 1.5rem;
+  }
+  
+  .avatarCircle {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .clientAvatarImage {
+    width: 74px;
+    height: 74px;
+  }
+}

@@ -6,9 +6,6 @@
     "merchantNotFound": "Merchant Not Found",
     "merchantNotFoundMessage": "The merchant \"{{merchantSlug}}\" could not be found."
   },
-  "loading": {
-    "merchantInformation": "Loading merchant information..."
-  },
   "hero": {
     "digitalLoyaltyCards": "Digital Loyalty Cards",
     "for": "for",
@@ -45,6 +42,7 @@
   "howItWorks": {
     "title": "How It Actually Works",
     "subtitle": "Simple, fast, and works instantly with any smartphone",
+    "moreDetails": "More details",
     "step1": {
       "title": "Put this QR code where people can see it",
       "note": "Print it, frame it, or display it digitally"
@@ -150,7 +148,8 @@
   "merchantInterface": {
     "scanner": {
       "title": "Scanner",
-      "subtitle": "Point camera at customer QR code"
+      "subtitle": "Point camera at customer QR code",
+      "frameInstructions": "Position QR code within the frame"
     },
     "reward": {
       "title": "🎁 Reward",
@@ -160,6 +159,22 @@
     "selectProgram": {
       "title": "Select Loyalty Program",
       "punchButton": "PUNCH"
+    },
+    "customerScan": {
+      "badge": "Customer",
+      "title": "Ready to Punch",
+      "current": "Current: {{current}}/{{total}}",
+      "backButton": "Back",
+      "punchButton": "Punch"
+    },
+    "redeemResult": {
+      "badge": "Ready",
+      "title": "Punch Card",
+      "cardId": "ID: {{cardId}}",
+      "readyToRedeem": "Ready to redeem!",
+      "backButton": "Back",
+      "redeemButton": "Redeem",
+      "defaultReward": "Free coffee"
     }
   }
 } 

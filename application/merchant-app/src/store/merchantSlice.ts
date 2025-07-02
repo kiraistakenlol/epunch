@@ -41,15 +41,7 @@ export const fetchMerchantBySlug = createAsyncThunk(
 const merchantSlice = createSlice({
   name: 'merchant',
   initialState,
-  reducers: {
-    clearMerchant: (state) => {
-      state.merchant = null;
-      state.error = null;
-    },
-    clearError: (state) => {
-      state.error = null;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchMerchant.pending, (state) => {
@@ -81,5 +73,4 @@ const merchantSlice = createSlice({
   },
 });
 
-export const { clearMerchant, clearError } = merchantSlice.actions;
 export default merchantSlice.reducer; 

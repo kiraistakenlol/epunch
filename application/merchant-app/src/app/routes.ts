@@ -1,0 +1,13 @@
+export const ROUTES = {
+  DASHBOARD: '/dashboard',
+  SCANNER: '/scanner',
+  LOYALTY_PROGRAMS: '/loyalty-programs',
+  LOYALTY_PROGRAMS_CREATE: '/loyalty-programs/create',
+  LOYALTY_PROGRAMS_EDIT: '/loyalty-programs/:id/edit',
+  DESIGN: '/design',
+  WELCOME_QR: '/welcome-qr',
+  ANALYTICS: '/analytics',
+  ADMIN_USERS: '/admin/users',
+  ADMIN_SETTINGS: '/admin/settings',
+  DEMO: '/demo',
+}; 

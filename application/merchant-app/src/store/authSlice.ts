@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { createSelector } from '@reduxjs/toolkit';
 import { apiClient } from 'e-punch-common-ui';
 import { MerchantUserLoginDto, JwtPayloadDto, Role } from 'e-punch-common-core';
@@ -20,7 +20,6 @@ interface AuthState {
 const decodeJWT = (token: string): JwtPayloadDto | null => {
   try {
     const payload = JSON.parse(atob(token.split('.')[1]));
-    console.log('Redux: payload', payload);
     
     return {
       userId: payload.userId,
@@ -106,36 +105,7 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    loginStart: (state) => {
-      console.log('Redux: loginStart');
-      state.loading = true;
-      state.error = null;
-    },
-    loginSuccess: (state, action: PayloadAction<{ token: string; user: User }>) => {
-      state.token = action.payload.token;
-      state.user = action.payload.user;
-      state.loading = false;
-      state.error = null;
-      localStorage.setItem('merchant_token', action.payload.token);
-    },
-    loginFailure: (state, action: PayloadAction<string>) => {
-      state.token = null;
-      state.user = null;
-      state.loading = false;
-      state.error = action.payload;
-      localStorage.removeItem('merchant_token');
-    },
-    logout: (state) => {
-      state.token = null;
-      state.user = null;
-      state.loading = false;
-      state.error = null;
-      localStorage.removeItem('merchant_token');
-    },
-    clearError: (state) => {
-      state.error = null;
-    },
-
+    // Note: Login/logout functionality now handled by async thunks
   },
   extraReducers: (builder) => {
     builder
@@ -175,5 +145,5 @@ export const selectIsAuthenticated = createSelector(
   (auth) => !!auth.token && !!auth.user
 );
 
-export const { loginStart, loginSuccess, loginFailure, logout, clearError } = authSlice.actions;
+// No synchronous actions exported - all auth handled by async thunks
 export default authSlice.reducer; 

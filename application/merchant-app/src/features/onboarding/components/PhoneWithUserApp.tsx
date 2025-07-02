@@ -1,0 +1,59 @@
+import React, { useRef, useEffect, useState } from 'react';
+import { PhoneFrame } from './PhoneFrame';
+import styles from './PhoneWithUserApp.module.css';
+
+interface PhoneWithUserAppProps {
+  src: string;
+  loading?: 'lazy' | 'eager';
+  className?: string;
+}
+
+export const PhoneWithUserApp: React.FC<PhoneWithUserAppProps> = ({
+  src,
+  loading = 'lazy',
+  className = ''
+}) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(0.5);
+
+  useEffect(() => {
+    const calculateScale = () => {
+      if (!containerRef.current) return;
+      
+      const container = containerRef.current;
+      const containerRect = container.getBoundingClientRect();
+      const availableWidth = containerRect.width;
+      const finalScale = availableWidth / 375;
+      
+      setScale(finalScale);
+    };
+
+    calculateScale();
+    
+    const resizeObserver = new ResizeObserver(calculateScale);
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => resizeObserver.disconnect();
+  }, []);
+
+  return (
+    <div ref={containerRef} className={className} style={{width: '100%'}}>
+      <PhoneFrame>
+        <iframe
+          src={src}
+          className={styles.iframe}
+          loading={loading}
+          frameBorder="0"
+          title="User App Preview"
+          style={{
+            width: '375px',
+            height: '667px',
+            transform: `translate(-50%, -50%) scale(${scale})`
+          }}
+        />
+      </PhoneFrame>
+    </div>
+  );
+}; 

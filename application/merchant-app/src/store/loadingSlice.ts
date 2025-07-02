@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 interface LoadingState {
   isGlobalLoading: boolean;
@@ -14,16 +14,9 @@ const loadingSlice = createSlice({
   name: 'loading',
   initialState,
   reducers: {
-    setGlobalLoading: (state, action: PayloadAction<{ isLoading: boolean; message?: string }>) => {
-      state.isGlobalLoading = action.payload.isLoading;
-      state.loadingMessage = action.payload.message;
-    },
-    clearGlobalLoading: (state) => {
-      state.isGlobalLoading = false;
-      state.loadingMessage = undefined;
-    },
+    // Note: Global loading now handled at component level with individual loading states
   },
 });
 
-export const { setGlobalLoading, clearGlobalLoading } = loadingSlice.actions;
+// No actions exported - loading handled at component level
 export default loadingSlice.reducer; 
