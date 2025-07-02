@@ -12,7 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 import { useNavigate } from "react-router-dom"
-import { V2_ROUTES } from "@/lib/routes"
+import { ROUTES } from "@/lib/routes"
 
 export function V2LoyaltyProgramsPage() {
   const navigate = useNavigate()
@@ -69,7 +69,7 @@ export function V2LoyaltyProgramsPage() {
     <Card>
         <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Loyalty Programs</CardTitle>
-            <Button onClick={() => navigate(V2_ROUTES.LOYALTY_PROGRAMS_CREATE)}>
+            <Button onClick={() => navigate(ROUTES.LOYALTY_PROGRAMS_CREATE)}>
               Create Program
             </Button>
         </CardHeader>

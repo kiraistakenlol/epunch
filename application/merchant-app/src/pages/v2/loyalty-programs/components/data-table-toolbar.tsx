@@ -4,7 +4,7 @@ import { type Table } from "@tanstack/react-table"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useNavigate } from "react-router-dom"
-import { V2_ROUTES } from "@/lib/routes"
+import { ROUTES } from "@/lib/routes"
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
@@ -29,7 +29,7 @@ export function DataTableToolbar<TData>({
       </div>
       <div className="flex items-center space-x-2">
         <Button
-            onClick={() => navigate(V2_ROUTES.LOYALTY_PROGRAMS_CREATE)}
+            onClick={() => navigate(ROUTES.LOYALTY_PROGRAMS_CREATE)}
             className="h-8"
             size="sm"
         >

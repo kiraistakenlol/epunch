@@ -20,7 +20,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { V2_ROUTES } from "@/lib/routes"
+import { ROUTES } from "@/lib/routes"
 import { useNavigate } from "react-router-dom"
 import { LoyaltyProgramDto } from "e-punch-common-core"
 import { apiClient } from "e-punch-common-ui"
@@ -74,7 +74,7 @@ export function DataTableRowActions<TData>({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuItem
-            onClick={() => navigate(`${V2_ROUTES.LOYALTY_PROGRAMS}/${program.id}/edit`)}
+            onClick={() => navigate(`${ROUTES.LOYALTY_PROGRAMS}/${program.id}/edit`)}
           >
             Edit
           </DropdownMenuItem>

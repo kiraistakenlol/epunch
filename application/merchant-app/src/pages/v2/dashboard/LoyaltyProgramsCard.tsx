@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { CreditCard, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DashboardCard } from '@/components/v2/data-display/DashboardCard';
-import { V2_ROUTES } from '@/lib/routes';
+import { ROUTES } from '@/lib/routes';
 
 export function LoyaltyProgramsCard() {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ export function LoyaltyProgramsCard() {
       className="col-span-1"
       footer={
         <div className="flex justify-between w-full items-center">
-          <Button onClick={() => navigate(V2_ROUTES.LOYALTY_PROGRAMS)}>View All</Button>
+          <Button onClick={() => navigate(ROUTES.LOYALTY_PROGRAMS)}>View All</Button>
           <Button
             variant="outline"
             size="icon"

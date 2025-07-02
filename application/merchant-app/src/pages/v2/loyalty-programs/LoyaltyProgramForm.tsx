@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
-import { V2_ROUTES } from '@/lib/routes';
+import { ROUTES } from '@/lib/routes';
 
 const formSchema = z.object({
   name: z.string().min(1, 'Program name is required'),
@@ -64,7 +64,7 @@ export function LoyaltyProgramForm({ mode }: LoyaltyProgramFormProps) {
 
       if (!program) {
         toast.error('Loyalty program not found');
-        navigate(V2_ROUTES.LOYALTY_PROGRAMS);
+        navigate(ROUTES.LOYALTY_PROGRAMS);
         return;
       }
 
@@ -113,7 +113,7 @@ export function LoyaltyProgramForm({ mode }: LoyaltyProgramFormProps) {
         toast.success('Loyalty program updated successfully');
       }
       
-      navigate(V2_ROUTES.LOYALTY_PROGRAMS);
+      navigate(ROUTES.LOYALTY_PROGRAMS);
     } catch (error: any) {
       console.error(`Failed to ${mode} loyalty program:`, error);
       toast.error(error.message || `Failed to ${mode} loyalty program`);
@@ -258,7 +258,7 @@ export function LoyaltyProgramForm({ mode }: LoyaltyProgramFormProps) {
               <Button 
                 type="button" 
                 variant="outline" 
-                onClick={() => navigate(V2_ROUTES.LOYALTY_PROGRAMS)}
+                onClick={() => navigate(ROUTES.LOYALTY_PROGRAMS)}
                 disabled={isSubmitting}
               >
                 Cancel
