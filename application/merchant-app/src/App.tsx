@@ -25,7 +25,9 @@ import { V2DashboardPage } from './pages/v2/dashboard/DashboardPage';
 import { V2LoyaltyProgramsPage } from './pages/v2/loyalty-programs/LoyaltyProgramsPage';
 import { LoyaltyProgramCreatePage } from './pages/v2/loyalty-programs/LoyaltyProgramCreatePage';
 import { LoyaltyProgramEditPage } from './pages/v2/loyalty-programs/LoyaltyProgramEditPage';
+import { V2DesignPage } from './pages/v2/design/DesignPage';
 import { Toaster } from './components/ui/toaster';
+import { Toaster as SonnerToaster } from 'sonner';
 import { injectCSSVariables } from './styles/css-variables';
 import './styles/global.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -154,6 +156,7 @@ function App() {
               <Route path="loyalty-programs" element={<V2LoyaltyProgramsPage />} />
               <Route path="loyalty-programs/create" element={<LoyaltyProgramCreatePage />} />
               <Route path="loyalty-programs/:id/edit" element={<LoyaltyProgramEditPage />} />
+              <Route path="design" element={<V2DesignPage />} />
               <Route path="demo" element={<DemoPage />} />
               <Route path="forms-demo" element={<FormsDemo />} />
               <Route path="scanner-demo" element={<ScannerDemo />} />
@@ -213,6 +216,7 @@ function App() {
           theme="light"
         />
         <Toaster />
+        <SonnerToaster />
       </ThemeProvider>
     </I18nProvider>
   );

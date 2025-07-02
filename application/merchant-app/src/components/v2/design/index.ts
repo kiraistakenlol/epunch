@@ -1,16 +1,18 @@
-// design components
-// TODO: Add exports as components are created
-
-export { ColorPicker } from './ColorPicker'
-export { LogoUpload } from './LogoUpload'
-export { IconSelector } from './IconSelector'
-export { StylePreview } from './StylePreview'
+// Design components
 export { DesignEditor } from './DesignEditor'
+export { IconsEditorModal } from './IconsEditorModal'
+export { IconSelectionSlots } from './IconSelectionSlots'
+export { IconSearchInput } from './IconSearchInput'
+export { IconGridItem } from './IconGridItem'
+export { IconsGrid } from './IconsGrid'
 
-// Hooks
-export { useDesignEditor } from './hooks/useDesignEditor'
-export { useFileUpload } from './hooks/useFileUpload'
+export { LivePreview } from './LivePreview'
+export { QuickActions } from './QuickActions'
 
-// Types
-export type { DesignState, UseDesignEditorOptions } from './hooks/useDesignEditor'
-export type { FileUploadState, UseFileUploadOptions } from './hooks/useFileUpload'
+export { ColorEditorModal } from './ColorEditorModal'
+export { LogoEditorModal } from './LogoEditorModal'
+export { PunchCardPreview } from './PunchCardPreview'
+export * from './types'
+export * from './utils'
+
+// TODO: Add exports as components are created

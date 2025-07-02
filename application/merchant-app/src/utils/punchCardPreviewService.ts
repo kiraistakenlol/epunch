@@ -1,8 +1,8 @@
 import { PunchIconsDto } from 'e-punch-common-core';
 
 export interface PunchCardPreviewParams {
-  primaryColor?: string;
-  secondaryColor?: string;
+  primaryColor?: string | null;
+  secondaryColor?: string | null;
   logoUrl?: string | null;
   punchIcons?: PunchIconsDto | null;
   merchantName?: string;
