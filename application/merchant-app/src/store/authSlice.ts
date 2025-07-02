@@ -20,7 +20,6 @@ interface AuthState {
 const decodeJWT = (token: string): JwtPayloadDto | null => {
   try {
     const payload = JSON.parse(atob(token.split('.')[1]));
-    console.log('Redux: payload', payload);
     
     return {
       userId: payload.userId,
