@@ -127,13 +127,13 @@ export const ColorEditorModal: React.FC<ColorEditorModalProps> = ({
                   <Input
                     id="color-input"
                     type="color"
-                    value={editingColor === 'primary' ? tempPrimary : tempSecondary}
+                    value={editingColor === 'primary' ? (tempPrimary || '#000000') : (tempSecondary || '#000000')}
                     onChange={(e) => handleColorChange(e.target.value)}
                     className="w-16 h-10 p-1 border rounded"
                   />
                   <Input
                     type="text"
-                    value={editingColor === 'primary' ? tempPrimary : tempSecondary}
+                    value={editingColor === 'primary' ? (tempPrimary || '#000000') : (tempSecondary || '#000000')}
                     onChange={(e) => handleColorChange(e.target.value)}
                     placeholder="#000000"
                     className="flex-1"

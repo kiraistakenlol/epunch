@@ -1,7 +1,6 @@
 import React from 'react'
 import SVG from 'react-inlinesvg'
 import { PunchIconsDto, IconDto } from 'e-punch-common-core'
-import { appColors } from 'e-punch-common-ui'
 import { Button } from '@/components/ui/button'
 import { X, HelpCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'

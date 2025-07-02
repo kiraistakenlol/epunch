@@ -5,13 +5,6 @@ import { LoginForm } from '../LoginForm'
 import { LoyaltyProgramForm } from '../LoyaltyProgramForm'
 
 export const FormsDemo: React.FC = () => {
-  const handleLogin = async (data: any) => {
-    console.log('Login data:', data)
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    alert('Login successful! (Demo)')
-  }
-
   const handleLoyaltyProgram = async (data: any) => {
     console.log('Loyalty program data:', data)
     // Simulate API call

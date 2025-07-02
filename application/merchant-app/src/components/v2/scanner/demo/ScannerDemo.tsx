@@ -1,14 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { QrCode, Camera, Smartphone } from 'lucide-react'
+import { QrCode, Camera } from 'lucide-react'
 import { ScannerInterface } from '../ScannerInterface'
 
 export const ScannerDemo: React.FC = () => {
-  const [demoMode, setDemoMode] = useState<'camera' | 'mockup'>('mockup')
-
   const generateMockQR = (type: 'user' | 'punchcard') => {
     const mockData = type === 'user' 
       ? { type: 'user_id', user_id: 'demo-user-12345' }
@@ -87,10 +84,7 @@ export const ScannerDemo: React.FC = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <ScannerInterface 
-                title="Live Demo Scanner"
-                description="Scan any QR code to see the system in action"
-              />
+              <ScannerInterface />
             </CardContent>
           </Card>
         </TabsContent>

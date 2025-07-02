@@ -72,13 +72,5 @@ export { PunchCardScanResult } from './scanner/PunchCardScanResult'
 export { useScanner } from './scanner/hooks/useScanner'
 export type { ScannerState, QRScanResult } from './scanner/hooks/useScanner'
 
-// Design components
-export { ColorPicker } from './design/ColorPicker'
-export { LogoUpload } from './design/LogoUpload'
-export { IconSelector } from './design/IconSelector'
-export { StylePreview } from './design/StylePreview'
-export { DesignEditor } from './design/DesignEditor'
-export { useDesignEditor } from './design/hooks/useDesignEditor'
-export { useFileUpload } from './design/hooks/useFileUpload'
-export type { DesignState, UseDesignEditorOptions } from './design/hooks/useDesignEditor'
-export type { FileUploadState, UseFileUploadOptions } from './design/hooks/useFileUpload'
+// Design components - using actual existing components
+export * from './design'

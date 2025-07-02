@@ -110,7 +110,6 @@ export const PunchCardScanResult: React.FC<PunchCardScanResultProps> = ({
 
   const isComplete = punchCard.currentPunches >= loyaltyProgram.requiredPunches
   const isRedeemed = punchCard.status === 'REWARD_REDEEMED'
-  const progress = Math.min((punchCard.currentPunches / loyaltyProgram.requiredPunches) * 100, 100)
 
   const getStatusBadge = () => {
     if (isRedeemed) return <Badge variant="destructive" className="text-sm px-3 py-1">Redeemed</Badge>

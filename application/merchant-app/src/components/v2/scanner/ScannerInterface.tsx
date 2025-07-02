@@ -30,7 +30,6 @@ export const ScannerInterface: React.FC<ScannerInterfaceProps> = ({
       case 'userQR':
         return scanner.scanResult ? (
           <CustomerScanResult
-            data={scanner.scanResult}
             onPunch={scanner.handlePunch}
             onReset={scanner.handleReset}
           />

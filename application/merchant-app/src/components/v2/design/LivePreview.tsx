@@ -1,6 +1,6 @@
 import React from 'react'
 import { PunchCardStyleDto } from 'e-punch-common-core'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, Save, RotateCcw, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
