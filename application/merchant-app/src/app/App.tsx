@@ -8,7 +8,7 @@ import { selectIsAuthenticated } from '../store/authSlice';
 import { LoginPage } from '../features/auth/LoginPage';
 import { MerchantOnboardingPage } from '../features/onboarding/MerchantOnboardingPage';
 import { AppLayout } from '../components/shared/layout/AppLayout';
-import { V2DashboardPage } from '../features/dashboard/DashboardPage';
+import { DashboardPage } from '../features/dashboard/DashboardPage';
 import { V2LoyaltyProgramsPage } from '../features/loyalty-programs/LoyaltyProgramsPage';
 import { LoyaltyProgramCreatePage } from '../features/loyalty-programs/LoyaltyProgramCreatePage';
 import { LoyaltyProgramEditPage } from '../features/loyalty-programs/LoyaltyProgramEditPage';
@@ -89,7 +89,7 @@ function App() {
             <Route index element={<AuthenticatedRedirect />} />
             <Route path="dashboard" element={
               <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
-                <V2DashboardPage />
+                <DashboardPage />
               </RoleProtectedRoute>
             } />
             <Route path="scanner" element={<V2ScannerPage />} />

@@ -204,12 +204,11 @@ export const ScannerCamera: React.FC<ScannerCameraProps> = ({
           <video
             ref={videoRef}
             className={cn(
-              "w-full h-auto transition-opacity duration-300",
+              "w-full h-96 object-cover transition-opacity duration-300",
               isCameraInitialized ? "opacity-100" : "opacity-0"
             )}
             playsInline
             muted
-            style={{ aspectRatio: '4/3' }}
           />
           
           {!isCameraInitialized && (

@@ -93,10 +93,10 @@ export const LoginPage: React.FC = () => {
   return (
     <div className={styles.loginPage}>
       <div className={styles.loginContainer}>
-        <Card className="w-full max-w-md">
+        <Card className="w-full max-w-sm sm:max-w-md">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-bold">
-              E-PUNCH Merchant
+              ePunch Merchant
             </CardTitle>
             <p className="text-muted-foreground">
               Sign in to your merchant account
@@ -118,7 +118,7 @@ export const LoginPage: React.FC = () => {
                   type="text"
                   value={formData.merchantSlug}
                   onChange={handleFieldChange('merchantSlug')}
-                  placeholder="Enter merchant slug (e.g., cafe-central)"
+                  placeholder="Enter merchant slug"
                   autoCapitalize="none"
                   autoCorrect="off"
                   autoFocus
