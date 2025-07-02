@@ -29,12 +29,13 @@ const logoStyle: React.CSSProperties = {
   flex: 1,
   display: "flex",
   justifyContent: "center",
-  alignItems: "center"
+  alignItems: "center",
 };
 
 const logoImageStyle: React.CSSProperties = {
-  height: "40px",
-  width: "auto"
+  height: "50px",
+  width: "auto",
+  filter: "brightness(0)",
 };
 
 const profileIconStyle: React.CSSProperties = {
@@ -92,21 +93,43 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
           {t('header.devLink')}
         </a>
       )}
-      
-      <LanguageSwitch 
+
+      <LanguageSwitch
         style={{
           color: appColors.epunchBlack,
           marginRight: '10px'
         }}
       />
-      
+
       <div style={{ width: showProfileMenu ? "40px" : "0" }}></div>
       <div style={logoStyle}>
-        <img 
-          src={logoUrl} 
-          alt={title} 
-          style={logoImageStyle}
-        />
+        <div style={{
+          position: "relative",
+          display: "inline-block",
+          height: "50px",
+          width: "140px"
+        }}>
+          <img
+            src={logoUrl}
+            alt={title}
+            style={{
+              ...logoImageStyle,
+              position: "absolute",
+              left: "-28px",
+            }}
+          />
+                      <span style={{
+              position: "absolute",
+              top: "18px",
+              left: "28px",
+              fontSize: "32px",
+              fontWeight: "500",
+              color: appColors.epunchBlack,
+              lineHeight: "1",
+            }}>
+            unch
+          </span>
+        </div>
       </div>
 
       {showProfileMenu && (
