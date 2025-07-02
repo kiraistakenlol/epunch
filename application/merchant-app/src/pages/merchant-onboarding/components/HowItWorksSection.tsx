@@ -11,7 +11,7 @@ import {
   TwoScreenFlow,
   PhoneWithUserApp,
   CameraInterface
-} from '../../../components/shared';
+} from '.';
 import { dashboardPreviewService } from '../../../utils/dashboardPreviewService';
 import styles from './HowItWorksSection.module.css';
 

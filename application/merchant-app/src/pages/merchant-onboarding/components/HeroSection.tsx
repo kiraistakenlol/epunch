@@ -1,7 +1,7 @@
 import React from 'react';
 import { MerchantDto, LoyaltyProgramDto, PunchCardDto, PunchCardStyleDto } from 'e-punch-common-core';
 import { useI18n } from 'e-punch-common-ui';
-import { PhoneWithUserApp } from '../../../components/shared';
+import { PhoneWithUserApp } from '.';
 import { dashboardPreviewService } from '../../../utils/dashboardPreviewService';
 import styles from './HeroSection.module.css';
 
