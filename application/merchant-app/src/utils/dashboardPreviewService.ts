@@ -107,8 +107,4 @@ class DashboardPreviewService {
   }
 }
 
-export const dashboardPreviewService = new DashboardPreviewService();
-
-export const createDashboardPreviewService = (config?: DashboardPreviewConfig) => {
-  return new DashboardPreviewService(config);
-}; 
+export const dashboardPreviewService = new DashboardPreviewService(); 

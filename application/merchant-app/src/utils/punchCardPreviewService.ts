@@ -122,8 +122,4 @@ class PunchCardPreviewService {
   }
 }
 
-export const punchCardPreviewService = new PunchCardPreviewService();
-
-export const createPunchCardPreviewService = (config?: PunchCardPreviewConfig) => {
-  return new PunchCardPreviewService(config);
-}; 
+export const punchCardPreviewService = new PunchCardPreviewService(); 

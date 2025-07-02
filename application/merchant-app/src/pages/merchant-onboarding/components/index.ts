@@ -8,7 +8,6 @@ export { FuturePlansSection } from './FuturePlansSection';
 export { BenefitsSection } from './BenefitsSection';
 export { SocialProofSection } from './SocialProofSection';
 export { CTASection } from './CTASection';
-export { WorkflowStep } from './WorkflowStep';
 export { LoadingState } from './LoadingState';
 export { ErrorState } from './ErrorState';
 
@@ -20,7 +19,4 @@ export { MerchantScannerPageMockup } from './MerchantScannerPageMockup';
 export { MerchantCustomerScanResult } from './MerchantCustomerScanResult';
 export { MerchantPunchCardRedeemResult } from './MerchantPunchCardRedeemResult';
 export { TwoScreenFlow } from './TwoScreenFlow';
-export { CameraInterface } from './CameraInterface';
-export { ScanningFrame } from './ScanningFrame';
-export { MerchantPageMockup } from './MerchantPageMockup';
-export { MerchantActionButton } from './MerchantActionButton'; 
+export { CameraInterface } from './CameraInterface'; 
