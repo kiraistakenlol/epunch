@@ -7,8 +7,6 @@ import { fetchMerchant } from './store/merchantSlice';
 import { selectIsAuthenticated } from './store/authSlice';
 import { LoginPage } from './pages/login/LoginPage';
 import { MerchantOnboardingPage } from './pages/merchant-onboarding/MerchantOnboardingPage';
-import UserAppTestPage from './pages/test/UserAppTestPage';
-import { DemoPage, FormsDemo, ScannerDemo, DesignDemo } from './components/v2/demo';
 import { V2Layout } from './components/v2/layout/V2Layout';
 import { V2DashboardPage } from './pages/v2/dashboard/DashboardPage';
 import { V2LoyaltyProgramsPage } from './pages/v2/loyalty-programs/LoyaltyProgramsPage';
@@ -81,7 +79,6 @@ function App() {
           {/* Public Routes */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/onboarding/:merchantSlug" element={<MerchantOnboardingPage />} />
-          <Route path="test/user-app" element={<UserAppTestPage />} />
 
           {/* Protected Application Routes */}
           <Route path="/" element={
@@ -121,10 +118,6 @@ function App() {
                 <V2WelcomeQRPage />
               </RoleProtectedRoute>
             } />
-            <Route path="demo" element={<DemoPage />} />
-            <Route path="forms-demo" element={<FormsDemo />} />
-            <Route path="scanner-demo" element={<ScannerDemo />} />
-            <Route path="design-demo" element={<DesignDemo />} />
           </Route>
 
           {/* Catch all - redirect to root */}

@@ -1,6 +1,4 @@
-// v2 Components - Clean Architecture
 
-// Re-export all shadcn/ui components
 export * from '@/components/ui/button';
 export * from '@/components/ui/input';
 export * from '@/components/ui/card';
@@ -22,40 +20,16 @@ export * from '@/components/ui/avatar';
 export * from '@/components/ui/checkbox';
 export * from '@/components/ui/label';
 export * from '@/components/ui/scroll-area';
-
-// Layout & Navigation Components (shadcn/ui)
 export * from '@/components/ui/sidebar';
 export * from '@/components/ui/breadcrumb';
 export * from '@/components/ui/navigation-menu';
 export * from '@/components/ui/menubar';
 export * from '@/components/ui/collapsible';
 
-// Custom Layout Components (minimal - most from shadcn/ui)
 export * from './layout/AppShell';
 export * from './layout/AppSidebar';
 export * from './layout/PageContainer';
-// export * from './layout/ProfileMenu'; // TODO: Create this component
 
-// Auth components
-// export * from './auth/LoginForm'; // TODO: Create this component
-// export * from './auth/AuthGuard'; // TODO: Create this component  
-// export * from './auth/RoleGuard'; // TODO: Create this component
-
-// Demo components (for testing migration)
-export * from './demo';
-
-// Feature components (will be added during migration)
-// export * from './scanner';
-// export * from './loyalty';
-// export * from './design';
-// export * from './dashboard';
-// export * from './forms';
-// export * from './data-display';
-
-// Demo components 
-export * from './demo'
-
-// Form components - explicit exports to avoid naming conflicts
 export { FormField as V2FormField } from './forms/FormField'
 export { FormActions } from './forms/FormActions'
 export { FormErrorDisplay } from './forms/FormErrorDisplay'
@@ -75,3 +49,9 @@ export type { ScannerState, QRScanResult } from './scanner/hooks/useScanner'
 
 // Design components - using actual existing components
 export * from './design'
+
+// Data Display components
+export { StatusBadge } from './data-display/StatusBadge'
+
+// Hooks
+export { useDataTable } from './hooks/use-data-table'
