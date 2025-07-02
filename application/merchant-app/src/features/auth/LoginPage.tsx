@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { loginMerchant, selectIsAuthenticated } from '../../store/authSlice';
-import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -49,8 +48,6 @@ export const LoginPage: React.FC = () => {
     }
   }, [isAuthenticated]);
 
-
-
   React.useEffect(() => {
     if (isLoading) {
       const timer = setInterval(() => {
@@ -78,12 +75,7 @@ export const LoginPage: React.FC = () => {
       })).unwrap();
       
       setProgress(100);
-      
-      toast.success("Welcome back! 🎉", {
-        description: "Successfully signed in to your account",
-        duration: 3000,
-      });
-      
+        
       navigate('/');
     } catch (err: any) {
       setSubmitError(err.message || 'Login failed. Please check your credentials.');
