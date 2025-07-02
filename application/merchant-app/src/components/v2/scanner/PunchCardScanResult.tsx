@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { apiClient } from 'e-punch-common-ui'
 import { PunchCardDto, LoyaltyProgramDto } from 'e-punch-common-core'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Loader2, CreditCard, Gift, ArrowLeft, CheckCircle } from 'lucide-react'
+import { Loader2, CreditCard, Gift, ArrowLeft, CheckCircle, AlertCircle } from 'lucide-react'
 import { QRScanResult } from './hooks/useScanner'
 import { cn } from '@/lib/utils'
 
@@ -33,17 +33,16 @@ export const PunchCardScanResult: React.FC<PunchCardScanResultProps> = ({
       setIsLoading(true)
       setError(null)
 
-             try {
-         const cardData = await apiClient.getPunchCard(data.parsedData.punch_card_id)
-         setPunchCard(cardData)
-         // Assume we need to fetch loyalty program separately or it's included in cardData
-         if (cardData.loyaltyProgramId) {
-           const programData = await apiClient.getLoyaltyProgram(cardData.loyaltyProgramId)
-           setLoyaltyProgram(programData)
-         }
+      try {
+        const cardData = await apiClient.getPunchCard(data.parsedData.punch_card_id)
+        setPunchCard(cardData)
+        if (cardData.loyaltyProgramId) {
+          const programData = await apiClient.getLoyaltyProgram(cardData.loyaltyProgramId)
+          setLoyaltyProgram(programData)
+        }
       } catch (error: any) {
         console.error('Failed to fetch punch card data:', error)
-        setError(error.response?.data?.message || error.message || 'Failed to load punch card data')
+        setError(error.response?.data?.message || error.message || 'Failed to load card')
       } finally {
         setIsLoading(false)
       }
@@ -61,25 +60,28 @@ export const PunchCardScanResult: React.FC<PunchCardScanResultProps> = ({
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center space-y-4 p-8">
-        <Loader2 className="h-8 w-8 animate-spin" />
-        <p className="text-muted-foreground">Loading punch card details...</p>
+      <div className="flex flex-col items-center justify-center p-8">
+        <Loader2 className="h-6 w-6 animate-spin mb-2" />
+        <p className="text-sm text-muted-foreground">Loading card...</p>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className={cn("flex flex-col items-center space-y-6 p-4", className)}>
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <CardTitle className="text-xl text-destructive">Error</CardTitle>
-            <CardDescription>{error}</CardDescription>
+      <div className={cn("p-4", className)}>
+        <Card>
+          <CardHeader className="text-center pb-4">
+            <CardTitle className="text-lg text-destructive flex items-center justify-center space-x-2">
+              <AlertCircle className="h-4 w-4" />
+              <span>Error</span>
+            </CardTitle>
+            <p className="text-sm text-muted-foreground">{error}</p>
           </CardHeader>
           <CardContent>
-            <Button onClick={onReset} className="w-full">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Scanner
+            <Button onClick={onReset} className="w-full h-12">
+              <ArrowLeft className="w-4 h-4 mr-1" />
+              Back
             </Button>
           </CardContent>
         </Card>
@@ -89,16 +91,16 @@ export const PunchCardScanResult: React.FC<PunchCardScanResultProps> = ({
 
   if (!punchCard || !loyaltyProgram) {
     return (
-      <div className={cn("flex flex-col items-center space-y-6 p-4", className)}>
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <CardTitle className="text-xl">Punch Card Not Found</CardTitle>
-            <CardDescription>The scanned punch card could not be found.</CardDescription>
+      <div className={cn("p-4", className)}>
+        <Card>
+          <CardHeader className="text-center pb-4">
+            <CardTitle className="text-lg">Card Not Found</CardTitle>
+            <p className="text-sm text-muted-foreground">Scanned card not found</p>
           </CardHeader>
           <CardContent>
-            <Button onClick={onReset} className="w-full">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Scanner
+            <Button onClick={onReset} className="w-full h-12">
+              <ArrowLeft className="w-4 h-4 mr-1" />
+              Back
             </Button>
           </CardContent>
         </Card>
@@ -106,96 +108,73 @@ export const PunchCardScanResult: React.FC<PunchCardScanResultProps> = ({
     )
   }
 
-     const isComplete = punchCard.currentPunches >= loyaltyProgram.requiredPunches
-   const isRedeemed = punchCard.status === 'redeemed'
+  const isComplete = punchCard.currentPunches >= loyaltyProgram.requiredPunches
+  const isRedeemed = punchCard.status === 'REWARD_REDEEMED'
+  const progress = Math.min((punchCard.currentPunches / loyaltyProgram.requiredPunches) * 100, 100)
+
+  const getStatusBadge = () => {
+    if (isRedeemed) return <Badge variant="destructive" className="text-sm px-3 py-1">Redeemed</Badge>
+    if (isComplete) return <Badge variant="default" className="text-sm px-3 py-1">Ready</Badge>
+    return <Badge variant="secondary" className="text-sm px-3 py-1">In Progress</Badge>
+  }
 
   return (
-    <div className={cn("flex flex-col items-center space-y-6 p-4", className)}>
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="flex items-center justify-center space-x-2 mb-2">
-            <CreditCard className="h-5 w-5 text-primary" />
-            <Badge variant={isRedeemed ? "destructive" : isComplete ? "default" : "secondary"}>
-              {isRedeemed ? "Redeemed" : isComplete ? "Complete" : "In Progress"}
-            </Badge>
+    <div className={cn("p-4", className)}>
+      <Card>
+        <CardHeader className="pb-6">
+          <div className="flex items-center justify-center space-x-3 mb-3">
+            <CreditCard className="h-6 w-6 text-primary" />
+            {getStatusBadge()}
           </div>
-          <CardTitle className="text-xl">Punch Card Scan</CardTitle>
-          <CardDescription>
-            Card ID: {getPunchCardId()}
-          </CardDescription>
+          <CardTitle className="text-2xl text-center">Punch Card</CardTitle>
+          <p className="text-sm text-center text-muted-foreground">ID: {getPunchCardId()}</p>
         </CardHeader>
         
-        <CardContent className="space-y-4">
-          <div className="space-y-3">
-            <div className="p-3 bg-muted rounded-lg">
-              <h4 className="font-medium mb-2">{loyaltyProgram.name}</h4>
-              <p className="text-sm text-muted-foreground mb-2">
-                {loyaltyProgram.rewardDescription}
-              </p>
-              
+        <CardContent className="space-y-6">
+          <div className="p-4 bg-muted/50 rounded-lg">
+            <div className="space-y-2">
+              <h4 className="font-medium text-lg">{loyaltyProgram.name}</h4>
               <div className="flex items-center space-x-2">
-                <div className="flex-1 bg-background rounded-full h-2">
-                                     <div 
-                     className="bg-primary h-2 rounded-full transition-all duration-300"
-                     style={{ width: `${Math.min((punchCard.currentPunches / loyaltyProgram.requiredPunches) * 100, 100)}%` }}
-                   />
-                 </div>
-                 <span className="text-sm font-medium">
-                   {punchCard.currentPunches} / {loyaltyProgram.requiredPunches}
-                </span>
+                <span className="text-lg">🎁</span>
+                <p className="text-sm text-muted-foreground">{loyaltyProgram.rewardDescription}</p>
               </div>
             </div>
-
-            {isRedeemed && (
-              <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
-                <div className="flex items-center space-x-2 text-destructive">
-                  <CheckCircle className="h-4 w-4" />
-                  <span className="text-sm font-medium">Already Redeemed</span>
-                </div>
-                <p className="text-sm text-muted-foreground mt-1">
-                  This punch card has already been redeemed.
-                </p>
-              </div>
-            )}
-
-            {!isRedeemed && !isComplete && (
-              <div className="p-3 bg-warning/10 border border-warning/20 rounded-lg">
-                                 <p className="text-sm text-muted-foreground">
-                   This punch card is not yet complete. Customer needs {loyaltyProgram.requiredPunches - punchCard.currentPunches} more punch(es) to earn the reward.
-                 </p>
-              </div>
-            )}
-
-            {!isRedeemed && isComplete && (
-              <div className="p-3 bg-primary/10 border border-primary/20 rounded-lg">
-                <div className="flex items-center space-x-2 text-primary">
-                  <Gift className="h-4 w-4" />
-                  <span className="text-sm font-medium">Ready for Redemption!</span>
-                </div>
-                <p className="text-sm text-muted-foreground mt-1">
-                  This punch card is complete and ready to be redeemed.
-                </p>
-              </div>
-            )}
           </div>
-          
+
+          {isRedeemed && (
+            <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
+              <div className="flex items-center space-x-2 text-destructive">
+                <CheckCircle className="h-4 w-4" />
+                <span className="text-sm font-medium">Already redeemed</span>
+              </div>
+            </div>
+          )}
+
+          {!isRedeemed && !isComplete && (
+            <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+              <p className="text-sm text-amber-700">
+                Needs {loyaltyProgram.requiredPunches - punchCard.currentPunches} more punch(es)
+              </p>
+            </div>
+          )}
+
           <div className="flex space-x-3 pt-4">
             <Button 
               variant="outline" 
               onClick={onReset}
-              className="flex-1"
+              className="flex-1 h-14 text-base"
             >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Scanner
+              <ArrowLeft className="w-5 h-5 mr-2" />
+              Back
             </Button>
             
             <Button 
               onClick={onRedeem}
               disabled={isRedeemed || !isComplete}
-              className="flex-1"
+              className="flex-1 h-14 text-base"
             >
-              <Gift className="w-4 h-4 mr-2" />
-              Redeem Reward
+              <Gift className="w-5 h-5 mr-2" />
+              Redeem
             </Button>
           </div>
         </CardContent>

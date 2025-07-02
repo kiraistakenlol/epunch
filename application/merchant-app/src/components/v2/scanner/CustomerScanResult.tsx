@@ -2,23 +2,19 @@ import React, { useEffect, useState } from 'react'
 import { apiClient } from 'e-punch-common-ui'
 import { LoyaltyProgramDto } from 'e-punch-common-core'
 import { useAppSelector } from '../../../store/hooks'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 import { Loader2, User, Gift, ArrowLeft } from 'lucide-react'
-import { QRScanResult } from './hooks/useScanner'
 import { cn } from '@/lib/utils'
 
 interface CustomerScanResultProps {
-  data: QRScanResult
   onPunch: (loyaltyProgramId: string) => void
   onReset: () => void
   className?: string
 }
 
 export const CustomerScanResult: React.FC<CustomerScanResultProps> = ({
-  data,
   onPunch,
   onReset,
   className
@@ -57,108 +53,88 @@ export const CustomerScanResult: React.FC<CustomerScanResultProps> = ({
     }
   }
 
-  const getDisplayUserId = () => {
-    if (data.parsedData.type === 'user_id') {
-      return data.parsedData.user_id.substring(0, 8) + '...'
-    }
-    return 'Unknown'
-  }
-
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center space-y-4 p-8">
-        <Loader2 className="h-8 w-8 animate-spin" />
-        <p className="text-muted-foreground">Loading loyalty programs...</p>
+      <div className="flex flex-col items-center justify-center p-8">
+        <Loader2 className="h-6 w-6 animate-spin mb-2" />
+        <p className="text-sm text-muted-foreground">Loading...</p>
       </div>
     )
   }
 
   return (
-    <div className={cn("flex flex-col items-center space-y-6 p-4", className)}>
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="flex items-center justify-center space-x-2 mb-2">
-            <User className="h-5 w-5 text-primary" />
-            <Badge variant="secondary">Customer QR</Badge>
+    <div className={cn("p-2 sm:p-4 max-h-[90vh] flex flex-col w-full", className)}>
+      <Card className="flex-1 flex flex-col w-full">
+        <CardHeader className="pb-4 sm:pb-6 px-4 sm:px-6">
+          <div className="flex items-center justify-center space-x-3 mb-2 sm:mb-3">
+            <User className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+            <Badge variant="outline" className="text-xs sm:text-sm px-2 sm:px-3 py-1">Customer</Badge>
           </div>
-          <CardTitle className="text-xl">Customer Scan Success!</CardTitle>
-          <CardDescription>
-            User ID: {getDisplayUserId()}
-          </CardDescription>
+          <CardTitle className="text-xl sm:text-2xl text-center">Ready to Punch</CardTitle>
         </CardHeader>
         
-        <CardContent className="space-y-4">
+        <CardContent className="flex-1 flex flex-col space-y-4 sm:space-y-6 px-4 sm:px-6">
           {loyaltyPrograms.length === 0 ? (
-            <div className="text-center py-4">
-              <p className="text-muted-foreground">No active loyalty programs found.</p>
-              <p className="text-sm text-muted-foreground mt-2">
-                Create a loyalty program to start recording punches.
-              </p>
+            <div className="text-center py-4 sm:py-6">
+              <p className="text-sm sm:text-base text-muted-foreground">No active programs</p>
             </div>
           ) : (
-            <>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Select Loyalty Program</label>
-                <Select 
-                  value={selectedLoyaltyProgramId} 
-                  onValueChange={setSelectedLoyaltyProgramId}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Choose a program..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {loyaltyPrograms.map((program) => (
-                      <SelectItem key={program.id} value={program.id}>
-                        <div className="flex flex-col items-start">
-                          <span className="font-medium">{program.name}</span>
-                                                     <span className="text-xs text-muted-foreground">
-                             {program.requiredPunches} punches → {program.rewardDescription}
-                           </span>
+            <div className="flex-1 flex flex-col space-y-2 sm:space-y-3">
+              <p className="text-sm sm:text-base font-medium text-muted-foreground">Select a program:</p>
+              <div className="flex-1 max-h-[calc(90vh-280px)] min-h-[180px] sm:min-h-[200px] overflow-y-auto space-y-2 sm:space-y-3 pr-1 sm:pr-2">
+                {loyaltyPrograms.map((program) => (
+                  <div
+                    key={program.id}
+                    onClick={() => setSelectedLoyaltyProgramId(program.id)}
+                    className={cn(
+                      "p-3 sm:p-4 rounded-lg border-2 cursor-pointer transition-all duration-200",
+                      "hover:shadow-md active:scale-[0.98] min-h-[56px] sm:min-h-[60px]",
+                      selectedLoyaltyProgramId === program.id
+                        ? "border-primary bg-primary/5 shadow-sm"
+                        : "border-border bg-background hover:border-primary/50"
+                    )}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center space-x-2 mb-1 sm:mb-2">
+                          <span className="text-sm sm:text-base">🎁</span>
+                          <h3 className="font-medium text-sm sm:text-base leading-tight">{program.name}</h3>
                         </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {selectedLoyaltyProgramId && (
-                <div className="p-3 bg-muted rounded-lg">
-                  <div className="flex items-center space-x-2 mb-1">
-                    <Gift className="h-4 w-4 text-primary" />
-                    <span className="text-sm font-medium">Program Details</span>
-                  </div>
-                  {(() => {
-                    const program = loyaltyPrograms.find(p => p.id === selectedLoyaltyProgramId)
-                    return program ? (
-                      <div className="text-sm text-muted-foreground">
-                        <p><strong>{program.name}</strong></p>
-                        <p>Reward: {program.rewardDescription}</p>
-                                                 <p>Required punches: {program.requiredPunches}</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                          {program.requiredPunches} punches → {program.rewardDescription}
+                        </p>
                       </div>
-                    ) : null
-                  })()}
-                </div>
-              )}
-            </>
+                      {selectedLoyaltyProgramId === program.id && (
+                        <div className="flex-shrink-0 ml-2">
+                          <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-primary flex items-center justify-center">
+                            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white"></div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
           
-          <div className="flex space-x-3 pt-4">
+          <div className="flex space-x-2 sm:space-x-3 pt-3 sm:pt-4 mt-auto flex-shrink-0 px-4 sm:px-6">
             <Button 
               variant="outline" 
               onClick={onReset}
-              className="flex-1"
+              className="w-1/2 h-12 sm:h-14 text-sm sm:text-base flex items-center justify-center"
             >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Scanner
+              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
+              Back
             </Button>
             
             <Button 
               onClick={handlePunch}
               disabled={!selectedLoyaltyProgramId || loyaltyPrograms.length === 0}
-              className="flex-1"
+              className="w-1/2 h-12 sm:h-14 text-sm sm:text-base flex items-center justify-center"
             >
-              <Gift className="w-4 h-4 mr-2" />
-              Record Punch
+              <Gift className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
+              Punch
             </Button>
           </div>
         </CardContent>

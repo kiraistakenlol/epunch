@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 import { QRValueDto } from 'e-punch-common-core'
 import { apiClient } from 'e-punch-common-ui'
-import { toast } from 'sonner'
+import { useToast } from '@/hooks/use-toast'
 
 export type ScannerState = 'scanning' | 'userQR' | 'punchCardQR' | 'processing'
 
@@ -16,6 +16,7 @@ export interface UseScannerOptions {
 }
 
 export const useScanner = (options: UseScannerOptions = {}) => {
+  const { toast } = useToast()
   const [currentState, setCurrentState] = useState<ScannerState>('scanning')
   const [scanResult, setScanResult] = useState<QRScanResult | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
@@ -32,9 +33,14 @@ export const useScanner = (options: UseScannerOptions = {}) => {
 
   const handleError = useCallback((error: string) => {
     console.error('Scanner error:', error)
-    toast.error(error)
+    toast({
+      variant: "destructive",
+      title: "Scanner Error",
+      description: error,
+      duration: 4000,
+    })
     options.onError?.(error)
-  }, [options])
+  }, [options, toast])
 
   const handleReset = useCallback(() => {
     setCurrentState('scanning')
@@ -52,22 +58,30 @@ export const useScanner = (options: UseScannerOptions = {}) => {
       const result = await apiClient.recordPunch(scanResult.parsedData.user_id, loyaltyProgramId)
       const message = result.rewardAchieved ? "🎉 Reward Achieved!" : "✅ Punch recorded!"
       
-      toast.success(message)
+      toast({
+        title: "Success",
+        description: message,
+        duration: 3000,
+      })
       options.onSuccess?.(message)
-      
-      setTimeout(() => handleReset(), 2000)
+      handleReset()
     } catch (error: any) {
       console.error('Punch operation error:', error)
       const errorMessage = error.response?.data?.message || error.message || 'Punch operation failed.'
       
-      toast.error(errorMessage)
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: errorMessage,
+        duration: 4000,
+      })
       options.onError?.(errorMessage)
       
-      setTimeout(() => handleReset(), 3000)
+      setTimeout(() => handleReset(), 4500)
     } finally {
       setIsProcessing(false)
     }
-  }, [scanResult, options, handleReset])
+  }, [scanResult, options, handleReset, toast])
 
   const handleRedeem = useCallback(async () => {
     if (!scanResult?.parsedData || scanResult.parsedData.type !== 'redemption_punch_card_id') return
@@ -79,22 +93,30 @@ export const useScanner = (options: UseScannerOptions = {}) => {
       const result = await apiClient.redeemPunchCard(scanResult.parsedData.punch_card_id)
       const message = `🎉 Reward Redeemed! ${result.shopName}`
       
-      toast.success(message)
+      toast({
+        title: "Success",
+        description: message,
+        duration: 3000,
+      })
       options.onSuccess?.(message)
-      
-      setTimeout(() => handleReset(), 2000)
+      handleReset()
     } catch (error: any) {
       console.error('Redeem operation error:', error)
       const errorMessage = error.response?.data?.message || error.message || 'Redeem operation failed.'
       
-      toast.error(errorMessage)
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: errorMessage,
+        duration: 4000,
+      })
       options.onError?.(errorMessage)
       
-      setTimeout(() => handleReset(), 3000)
+      setTimeout(() => handleReset(), 4500)
     } finally {
       setIsProcessing(false)
     }
-  }, [scanResult, options, handleReset])
+  }, [scanResult, options, handleReset, toast])
 
   return {
     currentState,

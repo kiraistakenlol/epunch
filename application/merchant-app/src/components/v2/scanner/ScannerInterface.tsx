@@ -10,13 +10,10 @@ import { cn } from '@/lib/utils'
 interface ScannerInterfaceProps {
   className?: string
   title?: string
-  description?: string
 }
 
 export const ScannerInterface: React.FC<ScannerInterfaceProps> = ({
   className,
-  title,
-  description
 }) => {
   const scanner = useScanner()
 
@@ -27,8 +24,6 @@ export const ScannerInterface: React.FC<ScannerInterfaceProps> = ({
           <QRScanner
             onScanResult={scanner.handleScanResult}
             onError={scanner.handleError}
-            title={title}
-            description={description}
           />
         )
       

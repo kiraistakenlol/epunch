@@ -112,10 +112,6 @@ export const ScannerCamera: React.FC<ScannerCameraProps> = ({
 
   const startVideoStream = useCallback(async () => {
     if (streamRef.current || !isActive) {
-      console.log("Video stream start prevented. Current state:", {
-        hasStream: !!streamRef.current,
-        isActive
-      })
       return
     }
 
@@ -139,16 +135,14 @@ export const ScannerCamera: React.FC<ScannerCameraProps> = ({
         if (isActive) {
           requestRef.current = requestAnimationFrame(scanFrame)
         }
-      } else {
-        throw new Error("Video element not available.")
       }
     } catch (err: any) {
       console.error("Error starting video stream:", err)
       const errorMessage = `Camera error: ${err.name || err.message || err}`
       setError(errorMessage)
       setHasPermission(false)
-      onError(errorMessage)
       setIsCameraInitialized(false)
+      onError(errorMessage)
       
       if (streamRef.current) {
         streamRef.current.getTracks().forEach(track => track.stop())
@@ -158,17 +152,21 @@ export const ScannerCamera: React.FC<ScannerCameraProps> = ({
   }, [scanFrame, isActive, onError])
 
   useEffect(() => {
-    if (isActive) {
-      startVideoStream()
-    } else {
-      stopVideoStream()
-    }
+    // Add small delay to handle React StrictMode
+    const timeoutId = setTimeout(() => {
+      if (isActive) {
+        startVideoStream()
+      } else {
+        stopVideoStream()
+      }
+    }, 100)
     
     return () => {
+      clearTimeout(timeoutId)
       console.log("ScannerCamera unmounting, stopping video stream.")
       stopVideoStream()
     }
-  }, [isActive, startVideoStream, stopVideoStream])
+  }, [isActive])
 
   const handleRetry = () => {
     setError(null)
@@ -178,7 +176,7 @@ export const ScannerCamera: React.FC<ScannerCameraProps> = ({
 
   if (hasPermission === false || error) {
     return (
-      <Card className={cn("w-full max-w-md mx-auto", className)}>
+      <Card className={cn("w-full max-w-lg mx-auto", className)}>
         <CardContent className="p-6">
           <Alert variant="destructive">
             <Camera className="h-4 w-4" />
@@ -200,7 +198,7 @@ export const ScannerCamera: React.FC<ScannerCameraProps> = ({
   }
 
   return (
-    <Card className={cn("w-full max-w-md mx-auto overflow-hidden", className)}>
+    <Card className={cn("w-full max-w-lg mx-auto overflow-hidden", className)}>
       <CardContent className="p-0">
         <div className="relative">
           <video
@@ -226,8 +224,8 @@ export const ScannerCamera: React.FC<ScannerCameraProps> = ({
           {/* Scanning Frame Overlay */}
           {isCameraInitialized && (
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="relative">
-                <div className="w-48 h-48 border-2 border-primary/70 rounded-lg animate-pulse" />
+              <div className="relative w-3/4 h-3/4 max-w-80 max-h-80">
+                <div className="w-full h-full border-2 border-primary/70 rounded-lg animate-pulse" />
                 <div className="absolute -top-1 -left-1 w-6 h-6 border-t-4 border-l-4 border-primary rounded-tl-lg" />
                 <div className="absolute -top-1 -right-1 w-6 h-6 border-t-4 border-r-4 border-primary rounded-tr-lg" />
                 <div className="absolute -bottom-1 -left-1 w-6 h-6 border-b-4 border-l-4 border-primary rounded-bl-lg" />

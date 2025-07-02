@@ -26,6 +26,7 @@ import { V2LoyaltyProgramsPage } from './pages/v2/loyalty-programs/LoyaltyProgra
 import { LoyaltyProgramCreatePage } from './pages/v2/loyalty-programs/LoyaltyProgramCreatePage';
 import { LoyaltyProgramEditPage } from './pages/v2/loyalty-programs/LoyaltyProgramEditPage';
 import { V2DesignPage } from './pages/v2/design/DesignPage';
+import { V2ScannerPage } from './pages/v2/scanner/ScannerPage';
 import { Toaster } from './components/ui/toaster';
 import { Toaster as SonnerToaster } from 'sonner';
 import { injectCSSVariables } from './styles/css-variables';
@@ -153,6 +154,7 @@ function App() {
             <Route path="/v2" element={<V2Layout />}>
               <Route index element={<Navigate to="/v2/demo" replace />} />
               <Route path="dashboard" element={<V2DashboardPage />} />
+              <Route path="scanner" element={<V2ScannerPage />} />
               <Route path="loyalty-programs" element={<V2LoyaltyProgramsPage />} />
               <Route path="loyalty-programs/create" element={<LoyaltyProgramCreatePage />} />
               <Route path="loyalty-programs/:id/edit" element={<LoyaltyProgramEditPage />} />
