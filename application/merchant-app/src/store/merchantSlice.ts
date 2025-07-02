@@ -46,9 +46,6 @@ const merchantSlice = createSlice({
       state.merchant = null;
       state.error = null;
     },
-    clearError: (state) => {
-      state.error = null;
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -81,5 +78,5 @@ const merchantSlice = createSlice({
   },
 });
 
-export const { clearMerchant, clearError } = merchantSlice.actions;
+export const { clearMerchant } = merchantSlice.actions;
 export default merchantSlice.reducer; 
