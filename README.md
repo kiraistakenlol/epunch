@@ -51,41 +51,76 @@ Users have a personal QR code and digital punch cards for various businesses. Bu
 
 #### Features
 
-1. Loyalty program management
-2. QR code generation for user onboarding
-3. Scanner page that scans a QR code and automatically recognizes if it's user's personal QR code or it belongs to the card that can be redeemed. If user's QR, list of active loyalty programs apperas, once selected i can PUNCH it. If punch card's QR, program's loyalty program's description is shown and a button REDEEEM
-4. Merchants can  generate QR codes linking to `https://app.com/?merchant=merchantSlug`. When users scan these codes:
-* The app automatically fetches the merchant's active loyalty programs
-* Creates punch cards for all programs the user doesn't already have
-* Adds new cards to the user's dashboard immediately
-* Cleans the URL to show just the main app
+1. **Loyalty Program Management**
+   - Create, edit, and manage loyalty programs
+   - Track program performance and analytics
+   - Configure punch requirements and rewards
 
-This enables seamless onboarding without requiring users to manually search for or enroll in loyalty programs.
+2. **QR Code Scanner System**
+   - Advanced camera-based QR code scanning
+   - Automatic recognition of user QR codes vs. punch card QR codes
+   - For user QR codes: Display active loyalty programs, select and punch
+   - For punch card QR codes: Show program description with redeem button
 
-#### Architecture Principles
+3. **Customer Onboarding**
+   - Generate QR codes linking to `https://app.com/?merchant=merchantSlug`
+   - Automatic loyalty program enrollment for new users
+   - Seamless onboarding without manual program search
 
-**Design System First**
-- Use `foundational` components for all UI patterns
-- Design system components must be generic with zero business context
-- Pages become pure layout declarations using design system components
-- Extract business logic into focused, reusable components
+4. **Design Customization**
+   - Color theme editor with live preview
+   - Logo and icon customization
+   - Brand-specific punch card styling
+   - File upload for custom graphics
 
-**CSS-First Approach**
-- CSS Modules only - separate `.module.css` files with component-specific prefixes
-- CSS Variables mandatory - all styling must use `css-variables.ts` values
-- Theme Constants required - reference `constants.ts` for consistency
-- Zero inline styles - no `sx` props, no hardcoded colors/spacing
+5. **Role-Based Access Control**
+   - Admin access: Full dashboard, analytics, program management
+   - Staff access: Scanner functionality only
+   - Secure authentication with JWT tokens
 
-**Component Separation**
-- **Pages**: Layout-only using foundational components
-- **Business Components**: Data fetching, state management, event handlers
-- **Shared Components**: Reusable components using foundational + CSS modules
+6. **Analytics Dashboard**
+   - Real-time statistics and performance metrics
+   - Customer engagement tracking
+   - Program effectiveness analysis
+
+#### Architecture & Tech Stack
+
+**Modern Component Architecture**
+- **shadcn/ui + Tailwind CSS**: Complete migration from Material-UI
+- **Radix UI Primitives**: Accessible, unstyled components as foundation
+- **React Hook Form + Zod**: Type-safe form handling with validation
+- **TanStack React Table**: Advanced data table functionality
+- **Redux Toolkit**: Predictable state management
+
+**Design System**
+- **Component Library**: 23+ shadcn/ui components in `/components/ui/`
+- **Shared Components**: Reusable business logic in `/components/shared/`
+- **CSS Variables**: Consistent theming with CSS custom properties
+- **Responsive Design**: Mobile-first approach with breakpoint system
+- **Dark/Light Themes**: Complete theme switching support
+
+**Feature-Based Architecture**
+```
+src/
+├── features/           # Feature-specific code
+│   ├── auth/          # Authentication & login
+│   ├── dashboard/     # Analytics & overview
+│   ├── scanner/       # QR code scanning
+│   ├── loyalty-programs/ # Program management
+│   ├── design/        # Customization tools
+│   └── onboarding/    # Merchant landing pages
+├── components/
+│   ├── ui/           # shadcn/ui components
+│   └── shared/       # Reusable components
+└── lib/              # Utilities & helpers
+```
 
 **Code Quality Standards**
-- Zero Material-UI imports in business logic components
-- State machine pattern for complex flows (scanner, forms)
-- CSS module prefixes - consistent naming (`.componentName-element`)
-- React-toast for all notifications - eliminate custom alert components
+- **TypeScript**: Full type safety across the application
+- **Utility-First CSS**: Tailwind CSS with semantic class composition
+- **Component Composition**: Prefer composition over inheritance
+- **Accessibility**: WCAG compliant with Radix UI primitives
+- **Performance**: Optimized builds with Vite and code splitting
 
 ### Admin App
 
@@ -126,7 +161,7 @@ This enables seamless onboarding without requiring users to manually search for 
 
 ### Tech Stack
 * **User App (Frontend):** React, TypeScript, Vite, Redux
-* **Merchant App (Frontend):** React, TypeScript, Vite, Redux, Material UI
+* **Merchant App (Frontend):** React, TypeScript, Vite, Redux, shadcn/ui + Tailwind CSS, Radix UI
 * **Admin App (Frontend):** React, TypeScript, Vite, Redux, Material UI
 * **Backend:** NestJS (Node.js framework), TypeScript, PostgreSQL client (pg)
 * **Database:** PostgreSQL (via Supabase as database host)
@@ -237,24 +272,28 @@ application/
 │   │   └── config/
 ├── merchant-app/
 │   ├── src/
+│   │   ├── app/                # Main application setup
+│   │   │   ├── App.tsx
+│   │   │   ├── main.tsx
+│   │   │   └── routes.ts
 │   │   ├── components/
-│   │   │   ├── foundational/
-│   │   │   │   ├── layout/
-│   │   │   │   ├── actions/
-│   │   │   │   ├── inputs/
-│   │   │   │   ├── system/
-│   │   │   │   └── form/
-│   │   │   └── shared/
-│   │   ├── pages/
-│   │   │   ├── dashboard/
-│   │   │   ├── scanner/
-│   │   │   ├── loyalty-programs/
-│   │   │   ├── login/
-│   │   │   └── design/
-│   │   ├── store/
-│   │   ├── theme/
-│   │   ├── styles/
-│   │   └── utils/
+│   │   │   ├── ui/            # shadcn/ui components (29 components)
+│   │   │   └── shared/        # Reusable business components
+│   │   │       ├── layout/    # App layout components
+│   │   │       ├── data-display/ # Tables, cards, stats
+│   │   │       └── hooks/     # Custom hooks
+│   │   ├── features/          # Feature-based organization
+│   │   │   ├── auth/         # Authentication & login
+│   │   │   ├── dashboard/    # Analytics & overview
+│   │   │   ├── scanner/      # QR code scanning
+│   │   │   ├── loyalty-programs/ # Program management
+│   │   │   ├── design/       # Customization tools
+│   │   │   └── onboarding/   # Merchant landing pages
+│   │   ├── lib/              # Utilities (cn.ts for class merging)
+│   │   ├── services/         # Business logic services
+│   │   ├── store/            # Redux store & slices
+│   │   ├── styles/           # Global styles & themes
+│   │   └── hooks/            # Global custom hooks
 ├── admin-app/
 │   ├── src/
 │   │   ├── pages/
