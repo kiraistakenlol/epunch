@@ -1,5 +1,7 @@
 name: Deploy Backend
 
+run-name: Deploy Backend to ${{ inputs.environment }}
+
 on:
   workflow_dispatch:
     inputs:
