@@ -3,6 +3,8 @@ import { createSelector } from '@reduxjs/toolkit';
 import { apiClient } from 'e-punch-common-ui';
 import { MerchantUserLoginDto, JwtPayloadDto, Role } from 'e-punch-common-core';
 
+export const MERCHANT_TOKEN_KEY = 'merchant_token';
+
 export interface User {
   id: string;
   login: string;
@@ -33,7 +35,7 @@ const decodeJWT = (token: string): JwtPayloadDto | null => {
 };
 
 const getInitialState = (): AuthState => {
-  const token = localStorage.getItem('merchant_token');
+  const token = localStorage.getItem(MERCHANT_TOKEN_KEY);
   let user = null;
 
   if (token) {
@@ -118,21 +120,21 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         state.loading = false;
         state.error = null;
-        localStorage.setItem('merchant_token', action.payload.token);
+        localStorage.setItem(MERCHANT_TOKEN_KEY, action.payload.token);
       })
       .addCase(loginMerchant.rejected, (state, action) => {
         state.token = null;
         state.user = null;
         state.loading = false;
         state.error = action.payload as string;
-        localStorage.removeItem('merchant_token');
+        localStorage.removeItem(MERCHANT_TOKEN_KEY);
       })
       .addCase(logoutMerchant.fulfilled, (state) => {
         state.token = null;
         state.user = null;
         state.loading = false;
         state.error = null;
-        localStorage.removeItem('merchant_token');
+        localStorage.removeItem(MERCHANT_TOKEN_KEY);
       });
   },
 });

@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { configureApiClient, I18nProvider } from 'e-punch-common-ui';
+import { configureApiClient, setAuthTokenProvider, I18nProvider } from 'e-punch-common-ui';
 import { ROLES } from 'e-punch-common-core';
 import { useAppSelector, useAppDispatch } from '../store/hooks';
 import { fetchMerchant } from '../store/merchantSlice';
-import { selectIsAuthenticated } from '../store/authSlice';
+import { selectIsAuthenticated, MERCHANT_TOKEN_KEY } from '../store/authSlice';
 import { LoginPage } from '../features/auth/LoginPage';
 import { MerchantOnboardingPage } from '../features/onboarding/MerchantOnboardingPage';
 import { AppLayout } from '../components/shared/layout/AppLayout';
@@ -24,6 +24,10 @@ import { RootState } from '../store/store';
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 if (API_BASE_URL) {
   configureApiClient(API_BASE_URL);
+  
+  setAuthTokenProvider(() => {
+    return localStorage.getItem(MERCHANT_TOKEN_KEY);
+  });
 } else {
   console.error('(MerchantApp) VITE_API_URL is not set. API calls will fail.');
 }

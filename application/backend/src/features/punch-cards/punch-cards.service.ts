@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
 import { PunchCardsRepository } from './punch-cards.repository';
 import { PunchCardDto, CreatePunchDto, PunchOperationResultDto } from 'e-punch-common-core';
 import { EventService } from '../../events/event.service';
@@ -7,6 +7,7 @@ import { MerchantRepository } from '../merchant/merchant.repository';
 import { LoyaltyRepository } from '../loyalty/loyalty.repository';
 import { PunchCardMapper } from '../../mappers';
 import { PunchCardStyleService } from '../punch-card-style/punch-card-style.service';
+import { Authentication } from '../../core/types/authentication.interface';
 
 @Injectable()
 export class PunchCardsService {
@@ -19,15 +20,15 @@ export class PunchCardsService {
     private readonly merchantRepository: MerchantRepository,
     private readonly loyaltyRepository: LoyaltyRepository,
     private readonly punchCardStyleService: PunchCardStyleService
-  ) {}
+  ) { }
 
   async getUserPunchCards(userId: string): Promise<PunchCardDto[]> {
     this.logger.log(`Fetching punch cards for user: ${userId}`);
-    
+
     try {
       const punchCardDetails = await this.punchCardsRepository.findPunchCardDetailsByUserId(userId);
       this.logger.log(`Found ${punchCardDetails.length} punch cards for user: ${userId}`);
-      
+
       return punchCardDetails.map(detail => PunchCardMapper.detailToDto(detail));
     } catch (error: any) {
       this.logger.error(`Error fetching punch cards for user ${userId}: ${error.message}`, error.stack);
@@ -35,14 +36,40 @@ export class PunchCardsService {
     }
   }
 
-  async redeemPunchCard(punchCardId: string): Promise<PunchCardDto> {
+  async redeemPunchCard(punchCardId: string, auth: Authentication): Promise<PunchCardDto> {
     this.logger.log(`Attempting to redeem punch card: ${punchCardId}`);
-    
+
     try {
       const punchCard = await this.punchCardsRepository.findPunchCardById(punchCardId);
-      
+
       if (!punchCard) {
         throw new NotFoundException(`Punch card with ID ${punchCardId} not found`);
+      }
+
+      const loyaltyProgram = await this.loyaltyRepository.findLoyaltyProgramById(punchCard.loyalty_program_id);
+      if (!loyaltyProgram) {
+        throw new NotFoundException(`Loyalty program not found for punch card ${punchCardId}`);
+      }
+
+      const merchant = await this.merchantRepository.findMerchantById(loyaltyProgram.merchant_id);
+      if (!merchant) {
+        throw new NotFoundException(`Merchant not found for punch card ${punchCardId}`);
+      }
+
+      const userId = await this.punchCardsRepository.getUserIdFromPunchCard(punchCardId);
+
+      if (!userId) {
+        throw new NotFoundException(`User ID not found for punch card ${punchCardId}`);
+      }
+
+      if (!auth.superAdmin) {
+        if (!auth.merchantUser) {
+          throw new ForbiddenException('No merchant user found');
+        }
+
+        if (loyaltyProgram.merchant_id !== auth.merchantUser.merchantId) {
+          throw new ForbiddenException('Not authorized to redeem punch cards for this loyalty program');
+        }
       }
 
       if (punchCard.status !== 'REWARD_READY') {
@@ -50,17 +77,7 @@ export class PunchCardsService {
       }
 
       const updatedPunchCard = await this.punchCardsRepository.updatePunchCardStatus(punchCardId, 'REWARD_REDEEMED', new Date());
-      
-      const loyaltyProgram = await this.loyaltyRepository.findLoyaltyProgramById(updatedPunchCard.loyalty_program_id);
-      if (!loyaltyProgram) {
-        throw new NotFoundException(`Loyalty program not found for punch card ${punchCardId}`);
-      }
-      
-      const merchant = await this.merchantRepository.findMerchantById(loyaltyProgram.merchant_id);
-      if (!merchant) {
-        throw new NotFoundException(`Merchant not found for punch card ${punchCardId}`);
-      }
-      
+
       const styles = await this.punchCardStyleService.getPunchCardStyles(punchCardId, loyaltyProgram.id, merchant.id);
       const updatedPunchCardDto = PunchCardMapper.basicToDto(
         updatedPunchCard,
@@ -69,20 +86,14 @@ export class PunchCardsService {
         loyaltyProgram.required_punches,
         styles
       );
-      
-      const userId = await this.punchCardsRepository.getUserIdFromPunchCard(punchCardId);
-      
-      if (!userId) {
-        throw new NotFoundException(`User ID not found for punch card ${punchCardId}`);
-      }
-      
+
       this.logger.log(`Emitting REWARD_CLAIMED event for user ${userId}, card ${punchCardId}`);
       this.eventService.emitAppEvent({
         type: 'REWARD_CLAIMED',
         userId,
         card: updatedPunchCardDto,
       });
-      
+
       this.logger.log(`Successfully redeemed punch card: ${punchCardId}`);
       return updatedPunchCardDto;
     } catch (error: any) {
@@ -93,24 +104,24 @@ export class PunchCardsService {
 
   async getPunchCard(punchCardId: string): Promise<PunchCardDto> {
     this.logger.log(`Fetching punch card: ${punchCardId}`);
-    
+
     try {
       const punchCard = await this.punchCardsRepository.findPunchCardById(punchCardId);
-      
+
       if (!punchCard) {
         throw new NotFoundException(`Punch card with ID ${punchCardId} not found`);
       }
-      
+
       const loyaltyProgram = await this.loyaltyRepository.findLoyaltyProgramById(punchCard.loyalty_program_id);
       if (!loyaltyProgram) {
         throw new NotFoundException(`Loyalty program not found for punch card ${punchCardId}`);
       }
-      
+
       const merchant = await this.merchantRepository.findMerchantById(loyaltyProgram.merchant_id);
       if (!merchant) {
         throw new NotFoundException(`Merchant not found for punch card ${punchCardId}`);
       }
-      
+
       this.logger.log(`Found punch card: ${punchCardId}`);
       const styles = await this.punchCardStyleService.getPunchCardStyles(punchCardId, loyaltyProgram.id, merchant.id);
       return PunchCardMapper.basicToDto(
@@ -128,35 +139,35 @@ export class PunchCardsService {
 
   async createPunchCard(userId: string, loyaltyProgramId: string): Promise<PunchCardDto> {
     this.logger.log(`Creating punch card for user ${userId} and loyalty program ${loyaltyProgramId}`);
-    
+
     try {
       let user = await this.userRepository.findUserById(userId);
       if (!user) {
         user = await this.userRepository.createAnonymousUser(userId);
       }
 
-      const existingCard = await this.punchCardsRepository.findTop1PunchCardByUserIdAndLoyaltyProgramIdAndStatusOrderByCreatedAtDesc(
+      const existingActiveCard = await this.punchCardsRepository.findTop1PunchCardByUserIdAndLoyaltyProgramIdAndStatusOrderByCreatedAtDesc(
         userId,
         loyaltyProgramId,
         'ACTIVE'
       );
-      
-      if (existingCard) {
-        this.logger.log(`Active punch card already exists for user ${userId} and loyalty program ${loyaltyProgramId}: ${existingCard.id}`);
-        
+
+      if (existingActiveCard) {
+        this.logger.log(`Active punch card already exists for user ${userId} and loyalty program ${loyaltyProgramId}: ${existingActiveCard.id}`);
+
         const loyaltyProgram = await this.loyaltyRepository.findLoyaltyProgramById(loyaltyProgramId);
         if (!loyaltyProgram) {
           throw new NotFoundException(`Loyalty program not found: ${loyaltyProgramId}`);
         }
-        
+
         const merchant = await this.merchantRepository.findMerchantById(loyaltyProgram.merchant_id);
         if (!merchant) {
           throw new NotFoundException(`Merchant not found for loyalty program ${loyaltyProgramId}`);
         }
-        
-        const styles = await this.punchCardStyleService.getPunchCardStyles(existingCard.id, loyaltyProgram.id, merchant.id);
+
+        const styles = await this.punchCardStyleService.getPunchCardStyles(existingActiveCard.id, loyaltyProgram.id, merchant.id);
         return PunchCardMapper.basicToDto(
-          existingCard,
+          existingActiveCard,
           merchant.name,
           merchant.address,
           loyaltyProgram.required_punches,
@@ -165,17 +176,17 @@ export class PunchCardsService {
       }
 
       const createdCard = await this.punchCardsRepository.createPunchCard(userId, loyaltyProgramId);
-      
+
       const loyaltyProgram = await this.loyaltyRepository.findLoyaltyProgramById(loyaltyProgramId);
       if (!loyaltyProgram) {
         throw new NotFoundException(`Loyalty program not found: ${loyaltyProgramId}`);
       }
-      
+
       const merchant = await this.merchantRepository.findMerchantById(loyaltyProgram.merchant_id);
       if (!merchant) {
         throw new NotFoundException(`Merchant not found for loyalty program ${loyaltyProgramId}`);
       }
-      
+
       this.logger.log(`Successfully created punch card: ${createdCard.id}`);
       const styles = await this.punchCardStyleService.getPunchCardStyles(createdCard.id, loyaltyProgram.id, merchant.id);
       return PunchCardMapper.basicToDto(
@@ -198,7 +209,7 @@ export class PunchCardsService {
    * and a new, empty active card is created for the same loyalty program to allow continued punch accumulation.
    * Logs the punch and returns the new punch count and reward status for the punched card.
    */
-  async recordPunch(createPunchDto: CreatePunchDto): Promise<PunchOperationResultDto> {
+  async recordPunch(createPunchDto: CreatePunchDto, auth: Authentication): Promise<PunchOperationResultDto> {
     const { userId, loyaltyProgramId } = createPunchDto;
     this.logger.log(`Attempting to record punch for user ${userId} on loyalty program ${loyaltyProgramId}`);
 
@@ -214,6 +225,16 @@ export class PunchCardsService {
     const loyaltyProgram = await this.loyaltyRepository.findLoyaltyProgramById(loyaltyProgramId);
     if (!loyaltyProgram) {
       throw new BadRequestException(`Loyalty program ${loyaltyProgramId} not found.`);
+    }
+
+    if (!auth.superAdmin) {
+      if (!auth.merchantUser) {
+        throw new ForbiddenException('No merchant user found');
+      }
+
+      if (loyaltyProgram.merchant_id !== auth.merchantUser.merchantId) {
+        throw new ForbiddenException('You can only record punches for your own loyalty programs');
+      }
     }
 
     let activePunchCard = await this.punchCardsRepository.findTop1PunchCardByUserIdAndLoyaltyProgramIdAndStatusOrderByCreatedAtDesc(
@@ -287,7 +308,7 @@ export class PunchCardsService {
       `New punch count: ${newPunchCount}. Reward achieved: ${rewardAchieved}. ` +
       `New active card created: ${newPunchCardDto ? newPunchCardDto.id : 'No'}`
     );
-    
+
     const updatedCardStyles = await this.punchCardStyleService.getPunchCardStyles(updatedPunchCard.id, loyaltyProgram.id, merchant.id);
     const updatedPunchCardDto = PunchCardMapper.basicToDto(
       updatedPunchCard,
@@ -312,4 +333,4 @@ export class PunchCardsService {
       current_punches: newPunchCount
     };
   }
-} 
+}

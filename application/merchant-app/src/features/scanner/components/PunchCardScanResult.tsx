@@ -118,61 +118,63 @@ export const PunchCardScanResult: React.FC<PunchCardScanResultProps> = ({
   }
 
   return (
-    <div className={cn("p-4", className)}>
-      <Card>
-        <CardHeader className="pb-6">
-          <div className="flex items-center justify-center space-x-3 mb-3">
-            <CreditCard className="h-6 w-6 text-primary" />
+    <div className={cn("p-2 sm:p-4 max-h-[90vh] flex flex-col w-full", className)}>
+      <Card className="flex-1 flex flex-col w-full">
+        <CardHeader className="pb-4 sm:pb-6 px-4 sm:px-6">
+          <div className="flex items-center justify-center space-x-3 mb-2 sm:mb-3">
+            <CreditCard className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
             {getStatusBadge()}
           </div>
-          <CardTitle className="text-2xl text-center">Punch Card</CardTitle>
-          <p className="text-sm text-center text-muted-foreground">ID: {getPunchCardId()}</p>
+          <CardTitle className="text-xl sm:text-2xl text-center">Punch Card</CardTitle>
+          <p className="text-xs sm:text-sm text-center text-muted-foreground">ID: {getPunchCardId()}</p>
         </CardHeader>
         
-        <CardContent className="space-y-6">
-          <div className="p-4 bg-muted/50 rounded-lg">
-            <div className="space-y-2">
-              <h4 className="font-medium text-lg">{loyaltyProgram.name}</h4>
-              <div className="flex items-center space-x-2">
-                <span className="text-lg">🎁</span>
-                <p className="text-sm text-muted-foreground">{loyaltyProgram.rewardDescription}</p>
+        <CardContent className="flex-1 flex flex-col space-y-4 sm:space-y-6 px-4 sm:px-6">
+          <div className="flex-1 space-y-4 sm:space-y-6">
+            <div className="p-3 sm:p-4 bg-muted/50 rounded-lg">
+              <div className="space-y-2">
+                <h4 className="font-medium text-base sm:text-lg">{loyaltyProgram.name}</h4>
+                <div className="flex items-center space-x-2">
+                  <span className="text-base sm:text-lg">🎁</span>
+                  <p className="text-xs sm:text-sm text-muted-foreground">{loyaltyProgram.rewardDescription}</p>
+                </div>
               </div>
             </div>
+
+            {isRedeemed && (
+              <div className="p-3 sm:p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
+                <div className="flex items-center space-x-2 text-destructive">
+                  <CheckCircle className="h-4 w-4" />
+                  <span className="text-xs sm:text-sm font-medium">Already redeemed</span>
+                </div>
+              </div>
+            )}
+
+            {!isRedeemed && !isComplete && (
+              <div className="p-3 sm:p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                <p className="text-xs sm:text-sm text-amber-700">
+                  Needs {loyaltyProgram.requiredPunches - punchCard.currentPunches} more punch(es)
+                </p>
+              </div>
+            )}
           </div>
 
-          {isRedeemed && (
-            <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
-              <div className="flex items-center space-x-2 text-destructive">
-                <CheckCircle className="h-4 w-4" />
-                <span className="text-sm font-medium">Already redeemed</span>
-              </div>
-            </div>
-          )}
-
-          {!isRedeemed && !isComplete && (
-            <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
-              <p className="text-sm text-amber-700">
-                Needs {loyaltyProgram.requiredPunches - punchCard.currentPunches} more punch(es)
-              </p>
-            </div>
-          )}
-
-          <div className="flex space-x-3 pt-4">
+          <div className="flex space-x-2 sm:space-x-3 pt-3 sm:pt-4 mt-auto flex-shrink-0 px-4 sm:px-6">
             <Button 
               variant="outline" 
               onClick={onReset}
-              className="flex-1 h-14 text-base"
+              className="w-1/2 h-12 sm:h-14 text-sm sm:text-base flex items-center justify-center"
             >
-              <ArrowLeft className="w-5 h-5 mr-2" />
+              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
               Back
             </Button>
             
             <Button 
               onClick={onRedeem}
               disabled={isRedeemed || !isComplete}
-              className="flex-1 h-14 text-base"
+              className="w-1/2 h-12 sm:h-14 text-sm sm:text-base flex items-center justify-center"
             >
-              <Gift className="w-5 h-5 mr-2" />
+              <Gift className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
               Redeem
             </Button>
           </div>

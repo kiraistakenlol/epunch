@@ -4,10 +4,35 @@ import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, 
 // The API URL will be set by the app using this client
 let API_BASE_URL: string;
 
+// Authentication provider function - can be set by each app
+export type AuthTokenProvider = () => string | null;
+let authTokenProvider: AuthTokenProvider | undefined = undefined;
+
 const createInstance = (baseURL: string): AxiosInstance => {
   const instance: AxiosInstance = axios.create({
     baseURL,
   });
+
+  // Request interceptor to add Authorization header
+  instance.interceptors.request.use(
+    (config) => {
+      try {
+        const provider = authTokenProvider;
+        if (provider) {
+          const token = provider();
+          if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+          }
+        }
+      } catch (error) {
+        console.warn('Failed to get auth token:', error);
+      }
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
 
   instance.interceptors.response.use(
     (response: any) => {
@@ -16,7 +41,7 @@ const createInstance = (baseURL: string): AxiosInstance => {
           response.status >= 200 && response.status < 300 &&
           originalData && typeof originalData === 'object' &&
           Object.prototype.hasOwnProperty.call(originalData, 'data') &&
-          (Object.keys(originalData).length === 1 || Object.prototype.hasOwnProperty.call(originalData, 'error')); // Common for {data} or {data, error}
+          (Object.keys(originalData).length === 1 || Object.prototype.hasOwnProperty.call(originalData, 'error')); // Common for {data} or {error}
 
       if (isBackendWrapper) {
         if (originalData.error) {
@@ -72,6 +97,14 @@ let instance = createInstance('');
 export const configureApiClient = (baseURL: string) => {
   API_BASE_URL = baseURL;
   instance = createInstance(baseURL);
+};
+
+export const setAuthTokenProvider = (provider: AuthTokenProvider | undefined) => {
+  authTokenProvider = provider;
+  // Recreate instance to apply the new auth provider
+  if (API_BASE_URL) {
+    instance = createInstance(API_BASE_URL);
+  }
 };
 
 export const apiClient = {
