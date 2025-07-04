@@ -11,6 +11,9 @@ export interface PunchCardDto {
   totalPunches: number;
   status: PunchCardStatusDto;
   createdAt: string; // ISO string format
+  completedAt: string | null; // ISO string format
+  redeemedAt: string | null; // ISO string format
+  lastPunchAt: string | null; // ISO string format
   styles: PunchCardStyleDto;
 }
 

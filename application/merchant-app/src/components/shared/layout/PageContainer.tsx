@@ -8,7 +8,7 @@ interface PageContainerProps {
 
 export function PageContainer({ children, className }: PageContainerProps) {
   return (
-    <div className={cn('container mx-auto', className)}>
+    <div className={cn('container mx-auto p-4', className)}>
       {children}
     </div>
   )

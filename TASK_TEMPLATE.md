@@ -20,6 +20,3 @@
 ### Usage Instructions
 1. Replace `{}` placeholders with specific details
 2. Keep Problem statement under 2 sentences
-3. Make GOAL measurable and testable
-4. Specify exact file paths or component names in Target
-5. Follow the 4-step Plan process for complex tasks 

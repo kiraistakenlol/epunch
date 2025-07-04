@@ -13,6 +13,7 @@ import { MerchantModule } from './features/merchant/merchant.module';
 import { PunchCardStyleModule } from './features/punch-card-style/punch-card-style.module';
 import { IconsModule } from './features/icons/icons.module';
 import { AdminModule } from './features/admin/admin.module';
+import { AnalyticsModule } from './features/analytics/analytics.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { AdminModule } from './features/admin/admin.module';
     CoreModule,
     AuthModule,
     AdminModule,
+    AnalyticsModule,
     PunchCardsModule,
     PunchesModule,
     UserModule,

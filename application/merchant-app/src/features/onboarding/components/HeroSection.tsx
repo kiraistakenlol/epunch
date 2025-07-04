@@ -21,6 +21,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const currentPunches = Math.floor(requiredPunches * 0.7);
 
   const createMockPunchCard = (id: string, loyaltyProgramId: string, currentPunches: number): PunchCardDto => {
+    const isCompleted = currentPunches >= requiredPunches;
     return {
       id,
       loyaltyProgramId,
@@ -28,8 +29,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       shopAddress: merchant.address || '',
       currentPunches,
       totalPunches: requiredPunches,
-      status: currentPunches >= requiredPunches ? 'REWARD_READY' : 'ACTIVE',
+      status: isCompleted ? 'REWARD_READY' : 'ACTIVE',
       createdAt: new Date().toISOString(),
+      completedAt: isCompleted ? new Date().toISOString() : null,
+      redeemedAt: null,
+      lastPunchAt: currentPunches > 0 ? new Date().toISOString() : null,
       styles: punchCardStyle
     };
   };

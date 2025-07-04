@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, AuthResponseDto, UserDto, LoyaltyProgramDto, MerchantUserLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreatePunchCardDto, CreateMerchantDto, UpdateMerchantDto, PunchCardStyleDto, IconSearchResultDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto, AdminLoginDto, AdminLoginResponse } from 'e-punch-common-core';
+import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, AuthResponseDto, UserDto, LoyaltyProgramDto, MerchantUserLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreatePunchCardDto, CreateMerchantDto, UpdateMerchantDto, PunchCardStyleDto, IconSearchResultDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto, AdminLoginDto, AdminLoginResponse, QuickOverviewDto, UsersAnalyticsDto, CardsAnalyticsDto, GrowthTrendsDto, ActivityTrendsDto, DaysOfWeekAnalyticsDto, LoyaltyProgramAnalyticsDto } from 'e-punch-common-core';
 
 // The API URL will be set by the app using this client
 let API_BASE_URL: string;
@@ -396,5 +396,76 @@ export const apiClient = {
       return Promise.reject(new Error('Merchant ID and User ID are required.'));
     }
     await instance.delete(`/merchants/${merchantId}/users/${userId}`);
+  },
+
+  // Analytics endpoints
+  async getQuickOverview(merchantId: string): Promise<QuickOverviewDto> {
+    if (!merchantId) {
+      return Promise.reject(new Error('Merchant ID is required.'));
+    }
+    const response = await instance.get<QuickOverviewDto>(`/analytics/${merchantId}/quick-overview`);
+    return response.data;
+  },
+
+  async getUsersAnalytics(merchantId: string): Promise<UsersAnalyticsDto> {
+    if (!merchantId) {
+      return Promise.reject(new Error('Merchant ID is required.'));
+    }
+    const response = await instance.get<UsersAnalyticsDto>(`/analytics/${merchantId}/users`);
+    return response.data;
+  },
+
+  async getCardsAnalytics(merchantId: string): Promise<CardsAnalyticsDto> {
+    if (!merchantId) {
+      return Promise.reject(new Error('Merchant ID is required.'));
+    }
+    const response = await instance.get<CardsAnalyticsDto>(`/analytics/${merchantId}/cards`);
+    return response.data;
+  },
+
+  async getGrowthTrends(merchantId: string, timeUnit: 'days' | 'weeks' | 'months', programId?: string): Promise<GrowthTrendsDto> {
+    if (!merchantId) {
+      return Promise.reject(new Error('Merchant ID is required.'));
+    }
+    const params = new URLSearchParams();
+    params.append('timeUnit', timeUnit);
+    if (programId && programId !== 'all') {
+      params.append('programId', programId);
+    }
+    const response = await instance.get<GrowthTrendsDto>(`/analytics/${merchantId}/growth-trends?${params}`);
+    return response.data;
+  },
+
+  async getActivityTrends(merchantId: string, timeUnit: 'days' | 'weeks' | 'months', programId?: string): Promise<ActivityTrendsDto> {
+    if (!merchantId) {
+      return Promise.reject(new Error('Merchant ID is required.'));
+    }
+    const params = new URLSearchParams();
+    params.append('timeUnit', timeUnit);
+    if (programId && programId !== 'all') {
+      params.append('programId', programId);
+    }
+    const response = await instance.get<ActivityTrendsDto>(`/analytics/${merchantId}/activity-trends?${params}`);
+    return response.data;
+  },
+
+  async getDaysOfWeekAnalytics(merchantId: string, programId?: string): Promise<DaysOfWeekAnalyticsDto> {
+    if (!merchantId) {
+      return Promise.reject(new Error('Merchant ID is required.'));
+    }
+    const params = new URLSearchParams();
+    if (programId && programId !== 'all') {
+      params.append('programId', programId);
+    }
+    const response = await instance.get<DaysOfWeekAnalyticsDto>(`/analytics/${merchantId}/days-of-week?${params}`);
+    return response.data;
+  },
+
+  async getLoyaltyProgramAnalytics(merchantId: string): Promise<LoyaltyProgramAnalyticsDto> {
+    if (!merchantId) {
+      return Promise.reject(new Error('Merchant ID is required.'));
+    }
+    const response = await instance.get<LoyaltyProgramAnalyticsDto>(`/analytics/${merchantId}/loyalty-programs`);
+    return response.data;
   },
 }; 

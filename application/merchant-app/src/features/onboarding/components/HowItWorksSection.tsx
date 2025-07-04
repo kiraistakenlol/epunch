@@ -32,6 +32,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
 
   const createMockPunchCard = (id: string, loyaltyProgramId: string, currentPunches: number, totalPunches?: number): PunchCardDto => {
     const requiredPunches = totalPunches || loyaltyProgram.requiredPunches;
+    const isCompleted = currentPunches >= requiredPunches;
     return {
       id,
       loyaltyProgramId,
@@ -39,8 +40,11 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
       shopAddress: merchant.address || '',
       currentPunches,
       totalPunches: requiredPunches,
-      status: currentPunches >= requiredPunches ? 'REWARD_READY' : 'ACTIVE',
+      status: isCompleted ? 'REWARD_READY' : 'ACTIVE',
       createdAt: new Date().toISOString(),
+      completedAt: isCompleted ? new Date().toISOString() : null,
+      redeemedAt: null,
+      lastPunchAt: currentPunches > 0 ? new Date().toISOString() : null,
       styles: punchCardStyle
     };
   };

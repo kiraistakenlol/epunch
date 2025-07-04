@@ -1,5 +1,5 @@
 import { Controller, Get, Param, ParseUUIDPipe, Post, Body, HttpException, HttpStatus, Put, Delete, Query } from '@nestjs/common';
-import { LoyaltyProgramDto, MerchantLoginDto, MerchantUserLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreateMerchantDto, UpdateMerchantDto, PunchCardStyleDto, FileUploadUrlDto, FileUploadResponseDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto } from 'e-punch-common-core';
+import { LoyaltyProgramDto, MerchantUserLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreateMerchantDto, UpdateMerchantDto, FileUploadUrlDto, FileUploadResponseDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto } from 'e-punch-common-core';
 import { MerchantService } from './merchant.service';
 
 @Controller('merchants')

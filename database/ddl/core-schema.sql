@@ -58,6 +58,9 @@ CREATE TABLE punch_card (
     loyalty_program_id UUID NOT NULL REFERENCES loyalty_program(id) ON DELETE CASCADE,
     current_punches INTEGER NOT NULL DEFAULT 0 CHECK (current_punches >= 0),
     status punch_card_status NOT NULL DEFAULT 'ACTIVE',
+    completed_at TIMESTAMP NULL,
+    redeemed_at TIMESTAMP NULL,
+    last_punch_at TIMESTAMP NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 

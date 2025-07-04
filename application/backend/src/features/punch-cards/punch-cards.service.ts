@@ -49,7 +49,7 @@ export class PunchCardsService {
         throw new BadRequestException(`Punch card ${punchCardId} is not ready for redemption. Current status: ${punchCard.status}`);
       }
 
-      const updatedPunchCard = await this.punchCardsRepository.updatePunchCardStatus(punchCardId, 'REWARD_REDEEMED');
+      const updatedPunchCard = await this.punchCardsRepository.updatePunchCardStatus(punchCardId, 'REWARD_REDEEMED', new Date());
       
       const loyaltyProgram = await this.loyaltyRepository.findLoyaltyProgramById(updatedPunchCard.loyalty_program_id);
       if (!loyaltyProgram) {
@@ -240,11 +240,15 @@ export class PunchCardsService {
     const rewardAchieved = newPunchCount >= loyaltyProgram.required_punches;
 
     const newStatus = rewardAchieved ? 'REWARD_READY' : activePunchCard.status;
+    const now = new Date();
+    const completedAt = rewardAchieved ? now : undefined;
 
     const updatedPunchCard = await this.punchCardsRepository.updatePunchCardPunchesAndStatus(
       activePunchCard.id,
       newPunchCount,
-      newStatus
+      newStatus,
+      completedAt,
+      now // lastPunchAt
     );
 
     await this.punchCardsRepository.createPunchRecord(updatedPunchCard.id);

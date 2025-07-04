@@ -18,6 +18,9 @@ export class PunchCardMapper {
       totalPunches: requiredPunches,
       status: punchCard.status,
       createdAt: punchCard.created_at.toISOString(),
+      completedAt: punchCard.completed_at ? punchCard.completed_at.toISOString() : null,
+      redeemedAt: punchCard.redeemed_at ? punchCard.redeemed_at.toISOString() : null,
+      lastPunchAt: punchCard.last_punch_at ? punchCard.last_punch_at.toISOString() : null,
       styles: styles,
     };
   }
@@ -39,6 +42,9 @@ export class PunchCardMapper {
         punchIcons: detail.punch_icons,
       },
       createdAt: detail.created_at.toISOString(),
+      completedAt: detail.completed_at ? detail.completed_at.toISOString() : null,
+      redeemedAt: detail.redeemed_at ? detail.redeemed_at.toISOString() : null,
+      lastPunchAt: detail.last_punch_at ? detail.last_punch_at.toISOString() : null,
     };
   }
 } 

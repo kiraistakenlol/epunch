@@ -8,6 +8,9 @@ export interface PunchCard {
   loyalty_program_id: string;
   current_punches: number;
   status: 'ACTIVE' | 'REWARD_READY' | 'REWARD_REDEEMED';
+  completed_at: Date | null;
+  redeemed_at: Date | null;
+  last_punch_at: Date | null;
   created_at: Date;
 }
 
@@ -48,6 +51,9 @@ export interface PunchCardDetails {
   logo_url: string;
   background_image_url: string;
   punch_icons: PunchIconsDto | null;
+  completed_at: Date | null;
+  redeemed_at: Date | null;
+  last_punch_at: Date | null;
   created_at: Date;
 }
 
@@ -113,16 +119,24 @@ export class PunchCardsRepository {
   async updatePunchCardPunchesAndStatus(
     punchCardId: string,
     newPunchCount: number,
-    status: PunchCardStatus
+    status: PunchCardStatus,
+    completedAt?: Date,
+    lastPunchAt?: Date
   ): Promise<PunchCard> {
     const query = `
       UPDATE punch_card 
-      SET current_punches = $2, status = $3
+      SET current_punches = $2, status = $3, completed_at = $4, last_punch_at = $5
       WHERE id = $1
       RETURNING *
     `;
 
-    const result = await this.pool.query(query, [punchCardId, newPunchCount, status]);
+    const result = await this.pool.query(query, [
+      punchCardId, 
+      newPunchCount, 
+      status, 
+      completedAt || null,
+      lastPunchAt || null
+    ]);
 
     if (!result.rows[0]) {
       throw new Error('Failed to update punch card');
@@ -155,6 +169,9 @@ export class PunchCardsRepository {
         pc.loyalty_program_id,
         pc.current_punches,
         pc.status,
+        pc.completed_at,
+        pc.redeemed_at,
+        pc.last_punch_at,
         pc.created_at,
         m.name as merchant_name,
         m.address as merchant_address,
@@ -188,15 +205,15 @@ export class PunchCardsRepository {
     return result.rows[0] || null;
   }
 
-  async updatePunchCardStatus(punchCardId: string, status: PunchCardStatus): Promise<PunchCard> {
+  async updatePunchCardStatus(punchCardId: string, status: PunchCardStatus, redeemedAt?: Date): Promise<PunchCard> {
     const query = `
       UPDATE punch_card 
-      SET status = $2
+      SET status = $2, redeemed_at = $3
       WHERE id = $1
       RETURNING *
     `;
 
-    const result = await this.pool.query(query, [punchCardId, status]);
+    const result = await this.pool.query(query, [punchCardId, status, redeemedAt || null]);
 
     if (!result.rows[0]) {
       throw new Error('Failed to update punch card status');

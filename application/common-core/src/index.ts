@@ -13,4 +13,5 @@ export * from './dto/create-punch.dto';
 export * from './dto/api-response.dto';
 export * from './dto/icon.dto';
 export * from './dto/admin.dto';
+export * from './dto/analytics.dto';
 export * from './constants/roles'; 
