@@ -19,7 +19,7 @@ export const WelcomeBannerPreview: React.FC<WelcomeBannerPreviewProps> = ({ merc
   const [loyaltyProgramName, setLoyaltyProgramName] = useState<string>('')
   const [titleColor, setTitleColor] = useState<string>('#FFFFFF')
   const [title, setTitle] = useState<string>('')
-  const [backgroundColor, setBackgroundColor] = useState<string>('#FF6D00')
+  const [backgroundColor, setBackgroundColor] = useState<string>('#c4c2c0')
   const [qrCodeBackgroundColor, setQrCodeBackgroundColor] = useState<string>('#FFFFFF')
 
   useEffect(() => {
