@@ -46,6 +46,13 @@ export interface ActivityTrendsDto {
   data: ActivityTrendDataPoint[];
 }
 
+export interface DailyTrend {
+  date: string;
+  punches: number;
+  newCustomers: number;
+  rewardsRedeemed: number;
+}
+
 export interface DaysOfWeekDataPoint {
   day: string;
   newCustomers: number;
@@ -56,6 +63,18 @@ export interface DaysOfWeekDataPoint {
 
 export interface DaysOfWeekAnalyticsDto {
   data: DaysOfWeekDataPoint[];
+}
+
+export interface ProgramStats {
+  loyaltyProgramId: string;
+  name: string;
+  description: string;
+  totalCards: number;
+  activeCards: number;
+  completedCards: number;
+  completionRate: number;
+  averageTimeToComplete: number;
+  rewardsRedeemed: number;
 }
 
 export interface LoyaltyProgramAnalyticsDto {
