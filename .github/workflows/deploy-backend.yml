@@ -79,8 +79,6 @@ jobs:
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
-      with:
-        region: ${{ steps.ecr.outputs.aws_region }}
     
     - name: Build and push Docker image
       run: |
@@ -89,6 +87,7 @@ jobs:
         # Build the image
         docker buildx build \
           --platform linux/amd64 \
+          --load \
           -f infra/backend/docker/Dockerfile \
           -t "epunch-${{ steps.env.outputs.environment }}-backend:latest" \
           .
