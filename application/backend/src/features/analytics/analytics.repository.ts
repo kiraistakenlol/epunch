@@ -15,9 +15,11 @@ export class AnalyticsRepository {
         COUNT(DISTINCT pc.id) as total_cards,
         COUNT(DISTINCT CASE WHEN pc.status = 'REWARD_REDEEMED' THEN pc.id END) as rewards_redeemed
       FROM loyalty_program lp
-      LEFT JOIN punch_card pc ON lp.id = pc.loyalty_program_id
+      LEFT JOIN punch_card pc ON lp.id = pc.loyalty_program_id 
+        AND pc.created_at >= date_trunc('month', CURRENT_DATE)
       LEFT JOIN "user" u ON pc.user_id = u.id
-      LEFT JOIN punch p ON pc.id = p.punch_card_id
+      LEFT JOIN punch p ON pc.id = p.punch_card_id 
+        AND p.created_at >= date_trunc('month', CURRENT_DATE)
       WHERE lp.merchant_id = $1
     `;
 
@@ -29,9 +31,13 @@ export class AnalyticsRepository {
         COUNT(DISTINCT pc.id) as total_cards_last_month,
         COUNT(DISTINCT CASE WHEN pc.status = 'REWARD_REDEEMED' THEN pc.id END) as rewards_redeemed_last_month
       FROM loyalty_program lp
-      LEFT JOIN punch_card pc ON lp.id = pc.loyalty_program_id AND pc.created_at < date_trunc('month', CURRENT_DATE)
-      LEFT JOIN "user" u ON pc.user_id = u.id AND u.created_at < date_trunc('month', CURRENT_DATE)
-      LEFT JOIN punch p ON pc.id = p.punch_card_id AND p.created_at < date_trunc('month', CURRENT_DATE)
+      LEFT JOIN punch_card pc ON lp.id = pc.loyalty_program_id 
+        AND pc.created_at >= date_trunc('month', CURRENT_DATE) - INTERVAL '1 month'
+        AND pc.created_at < date_trunc('month', CURRENT_DATE)
+      LEFT JOIN "user" u ON pc.user_id = u.id
+      LEFT JOIN punch p ON pc.id = p.punch_card_id 
+        AND p.created_at >= date_trunc('month', CURRENT_DATE) - INTERVAL '1 month'
+        AND p.created_at < date_trunc('month', CURRENT_DATE)
       WHERE lp.merchant_id = $1
     `;
 
@@ -55,7 +61,9 @@ export class AnalyticsRepository {
 
     // Calculate growth percentages
     const calculateGrowth = (current: number, previous: number): number => {
-      if (previous === 0) return current > 0 ? 100 : 0;
+      if (previous === 0) {
+        return current > 0 ? current * 100 : 0;
+      }
       const growth = ((current - previous) / previous) * 100;
       return Math.round(growth * 10) / 10; // Round to 1 decimal place
     };
