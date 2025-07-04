@@ -1,0 +1,119 @@
+name: Deploy Backend
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - prod
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set environment
+      id: env
+      run: |
+        echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+    
+    - name: Setup Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: ~1.0
+    
+    - name: Get ECR repository URL
+      id: ecr
+      run: |
+        cd infra/terraform
+        
+        echo "🔄 Initializing Terraform..."
+        terraform init
+        
+        echo "📡 Switching to ${{ steps.env.outputs.environment }} terraform workspace..."
+        terraform workspace select "${{ steps.env.outputs.environment }}" || {
+          echo "❌ Terraform workspace '${{ steps.env.outputs.environment }}' not found."
+          echo "Please create the workspace first or ensure the infrastructure is deployed."
+          exit 1
+        }
+        
+        echo "📡 Getting ECR repository URL from Terraform..."
+        ECR_REPO_URL=$(terraform output -raw ecr_repository_url 2>/dev/null)
+        
+        if [ -z "$ECR_REPO_URL" ]; then
+          echo "❌ Could not get ECR repository URL from terraform output"
+          echo "Make sure the infrastructure is deployed first."
+          exit 1
+        fi
+        
+        echo "✅ ECR Repository: $ECR_REPO_URL"
+        echo "ecr_repo_url=$ECR_REPO_URL" >> $GITHUB_OUTPUT
+        
+        # Extract AWS region and account ID from ECR URL
+        AWS_REGION=$(echo "$ECR_REPO_URL" | cut -d'.' -f4)
+        AWS_ACCOUNT_ID=$(echo "$ECR_REPO_URL" | cut -d'.' -f1)
+        
+        echo "aws_region=$AWS_REGION" >> $GITHUB_OUTPUT
+        echo "aws_account_id=$AWS_ACCOUNT_ID" >> $GITHUB_OUTPUT
+    
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+      with:
+        region: ${{ steps.ecr.outputs.aws_region }}
+    
+    - name: Build and push Docker image
+      run: |
+        echo "🔨 Building Docker image for linux/amd64 platform..."
+        
+        # Build the image
+        docker buildx build \
+          --platform linux/amd64 \
+          -f infra/backend/docker/Dockerfile \
+          -t "epunch-${{ steps.env.outputs.environment }}-backend:latest" \
+          .
+        
+        echo "🏷️  Tagging image for ECR..."
+        TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+        docker tag "epunch-${{ steps.env.outputs.environment }}-backend:latest" "${{ steps.ecr.outputs.ecr_repo_url }}:latest"
+        docker tag "epunch-${{ steps.env.outputs.environment }}-backend:latest" "${{ steps.ecr.outputs.ecr_repo_url }}:$TIMESTAMP"
+        
+        echo "📤 Pushing to ECR..."
+        docker push "${{ steps.ecr.outputs.ecr_repo_url }}:latest"
+        docker push "${{ steps.ecr.outputs.ecr_repo_url }}:$TIMESTAMP"
+        
+        echo "✅ Successfully pushed Docker image to ECR!"
+        echo "📋 Image tags pushed:"
+        echo "   - ${{ steps.ecr.outputs.ecr_repo_url }}:latest"
+        echo "   - ${{ steps.ecr.outputs.ecr_repo_url }}:$TIMESTAMP"
+        echo ""
+        echo "🚀 App Runner will automatically deploy the new image."
+    
+    - name: Deployment summary
+      run: |
+        echo "## 🚀 Deployment Summary" >> $GITHUB_STEP_SUMMARY
+        echo "- **Environment**: ${{ steps.env.outputs.environment }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **ECR Repository**: ${{ steps.ecr.outputs.ecr_repo_url }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Timestamp**: $(date)" >> $GITHUB_STEP_SUMMARY
+        echo "- **Status**: ✅ Success" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "App Runner will automatically deploy the new image." >> $GITHUB_STEP_SUMMARY
+        echo "[Monitor deployment in AWS Console](https://console.aws.amazon.com/apprunner)" >> $GITHUB_STEP_SUMMARY 
