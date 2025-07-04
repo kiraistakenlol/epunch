@@ -6,7 +6,8 @@ import {
   BarChart3,
   Users,
   Settings,
-  Home
+  Home,
+  HelpCircle
 } from "lucide-react"
 
 import {
@@ -80,6 +81,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     ? navigationItems.filter(item => item.title === "Scanner")
     : navigationItems;
   
+  const onboardingItem = merchant?.slug ? {
+    title: "How it works",
+    url: `/onboarding/${merchant.slug}`,
+    icon: HelpCircle,
+  } : null;
+  
   return (
     <Sidebar variant="inset" {...props} >
       <SidebarHeader className="border-b border-border pb-2 pt-4">
@@ -112,6 +119,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              {onboardingItem && (
+                <SidebarMenuItem key={onboardingItem.title}>
+                  <SidebarMenuButton asChild>
+                    <a href={onboardingItem.url}>
+                      <onboardingItem.icon className="h-4 w-4" />
+                      <span>{onboardingItem.title}</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
