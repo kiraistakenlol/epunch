@@ -7,7 +7,6 @@ import { UserModule } from './features/user/user.module';
 import { DevModule } from './features/dev/dev.module';
 import { DatabaseModule } from './database/database.module';
 import { LoyaltyModule } from './features/loyalty/loyalty.module';
-import { PunchesModule } from './features/punches/punches.module';
 import { WebSocketModule } from './websocket/websocket.module';
 import { MerchantModule } from './features/merchant/merchant.module';
 import { PunchCardStyleModule } from './features/punch-card-style/punch-card-style.module';
@@ -24,7 +23,6 @@ import { AnalyticsModule } from './features/analytics/analytics.module';
     AdminModule,
     AnalyticsModule,
     PunchCardsModule,
-    PunchesModule,
     UserModule,
     DevModule,
     LoyaltyModule,

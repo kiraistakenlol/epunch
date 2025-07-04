@@ -1,5 +1,5 @@
-import { Controller, Get, Param, ParseUUIDPipe, Post, Body } from '@nestjs/common';
-import { PunchCardDto, CreatePunchCardDto } from 'e-punch-common-core';
+import { Controller, Get, Param, ParseUUIDPipe, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
+import { PunchCardDto, CreatePunchCardDto, CreatePunchDto, PunchOperationResultDto } from 'e-punch-common-core';
 import { PunchCardsService } from './punch-cards.service';
 
 @Controller('punch-cards')
@@ -10,6 +10,14 @@ export class PunchCardsController {
   // todo we need to protect is somehow from overflooding database + clreading multiple similar punch cards
   async createPunchCard(@Body() createPunchCardDto: CreatePunchCardDto): Promise<PunchCardDto> {
     return this.punchCardsService.createPunchCard(createPunchCardDto.userId, createPunchCardDto.loyaltyProgramId);
+  }
+
+  @Post('punch')
+  @HttpCode(HttpStatus.CREATED)
+  async recordPunch(
+    @Body() createPunchDto: CreatePunchDto,
+  ): Promise<PunchOperationResultDto> {
+    return this.punchCardsService.recordPunch(createPunchDto);
   }
 
   @Get(':punchCardId')

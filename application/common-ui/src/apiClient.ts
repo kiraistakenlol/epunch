@@ -151,13 +151,12 @@ export const apiClient = {
     return response.data; // After interceptor, this should be the { message: string } object
   },
 
-  // New method for Option 1 (POST /punches)
   async recordPunch(userId: string, loyaltyProgramId: string): Promise<PunchOperationResultDto> {
     if (!userId || !loyaltyProgramId) {
       return Promise.reject(new Error('User ID and Loyalty Program ID are required.'));
     }
     const payload: CreatePunchDto = { userId, loyaltyProgramId };
-    const response = await instance.post<PunchOperationResultDto>('/punches', payload);
+    const response = await instance.post<PunchOperationResultDto>('/punch-cards/punch', payload);
     return response.data;
   },
 
