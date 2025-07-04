@@ -65,40 +65,40 @@ export function QuickOverviewSection() {
       value: data.totalUsers.toLocaleString(),
       label: 'Total Users',
       colorClass: 'bg-gradient-to-br from-blue-50 to-blue-100 text-blue-700',
-      growth: {
-        percentage: Math.abs(data.totalUsersGrowth),
-        isPositive: data.totalUsersGrowth >= 0
-      }
+      growth: data.totalUsersGrowth > 0 ? {
+        percentage: data.totalUsersGrowth,
+        isPositive: true
+      } : undefined
     },
     {
       icon: <CreditCard className="h-6 w-6" />,
       value: data.totalCards.toLocaleString(),
       label: 'Total Cards',
       colorClass: 'bg-gradient-to-br from-purple-50 to-purple-100 text-purple-700',
-      growth: {
-        percentage: Math.abs(data.totalCardsGrowth),
-        isPositive: data.totalCardsGrowth >= 0
-      }
+      growth: data.totalCardsGrowth > 0 ? {
+        percentage: data.totalCardsGrowth,
+        isPositive: true
+      } : undefined
     },
     {
       icon: <Zap className="h-6 w-6" />,
       value: data.totalPunches.toLocaleString(),
       label: 'Total Punches',
       colorClass: 'bg-gradient-to-br from-orange-50 to-orange-100 text-orange-700',
-      growth: {
-        percentage: Math.abs(data.totalPunchesGrowth),
-        isPositive: data.totalPunchesGrowth >= 0
-      }
+      growth: data.totalPunchesGrowth > 0 ? {
+        percentage: data.totalPunchesGrowth,
+        isPositive: true
+      } : undefined
     },
     {
       icon: <Gift className="h-6 w-6" />,
       value: data.rewardsRedeemed.toLocaleString(),
       label: 'Rewards',
       colorClass: 'bg-gradient-to-br from-green-50 to-green-100 text-green-700',
-      growth: {
-        percentage: Math.abs(data.rewardsRedeemedGrowth),
-        isPositive: data.rewardsRedeemedGrowth >= 0
-      }
+      growth: data.rewardsRedeemedGrowth > 0 ? {
+        percentage: data.rewardsRedeemedGrowth,
+        isPositive: true
+      } : undefined
     }
   ];
 

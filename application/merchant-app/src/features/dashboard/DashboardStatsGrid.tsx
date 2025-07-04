@@ -100,9 +100,9 @@ export function DashboardStatsGrid() {
               <span className="text-xs font-medium">{stat.label}</span>
             </div>
             <div className="text-lg font-bold">{stat.value}</div>
-            {stat.growth !== 0 && (
-              <div className={`text-xs ${stat.growth > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                {stat.growth > 0 ? '↗' : '↘'} {Math.abs(stat.growth)}%
+            {stat.growth > 0 && (
+              <div className="text-xs text-green-600">
+                ↗ {stat.growth}%
               </div>
             )}
           </div>

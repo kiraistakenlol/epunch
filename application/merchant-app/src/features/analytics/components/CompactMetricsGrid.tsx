@@ -24,11 +24,9 @@ export function CompactMetricsGrid({ metrics }: CompactMetricsGridProps) {
           <div className="text-2xl mb-1 flex justify-center">{metric.icon}</div>
           <div className="text-lg font-bold">{metric.value}</div>
           <div className="text-xs opacity-90">{metric.label}</div>
-          {metric.growth && (
-            <div className={`text-xs mt-1 font-medium ${
-              metric.growth.isPositive ? 'text-green-700' : 'text-red-700'
-            }`}>
-              {metric.growth.isPositive ? '↗' : '↘'} {Math.abs(metric.growth.percentage)}%
+          {metric.growth && metric.growth.isPositive && (
+            <div className="text-xs mt-1 font-medium text-green-700">
+              ↗ {metric.growth.percentage}%
             </div>
           )}
         </div>
