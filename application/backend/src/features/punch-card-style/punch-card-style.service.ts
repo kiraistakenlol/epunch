@@ -3,6 +3,7 @@ import { PunchCardStyleDto, PunchIconsDto } from 'e-punch-common-core';
 import { PunchCardStyleRepository } from './punch-card-style.repository';
 import { PunchCardStyleMapper } from '../../mappers/punch-card-style.mapper';
 
+
 @Injectable()
 export class PunchCardStyleService {
   private readonly logger = new Logger(PunchCardStyleService.name);
@@ -44,8 +45,8 @@ export class PunchCardStyleService {
     this.logger.log('Getting default app-wide punch card style');
     
     return {
-      primaryColor: '#3e2723',
-      secondaryColor: '#5d4037',
+      primaryColor: null,
+      secondaryColor: null,
       logoUrl: null,
       backgroundImageUrl: null,
       punchIcons: null,

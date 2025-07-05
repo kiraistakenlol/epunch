@@ -77,7 +77,7 @@ function deriveCardColors(
   primaryColor?: string | null, 
   secondaryColor?: string | null
 ): CardColors {
-  const primary = primaryColor || appColors.epunchBrown;
+  const primary = primaryColor || appColors.epunchDarkCoffee;
   const secondary = secondaryColor || appColors.epunchWhite;
 
   return {
