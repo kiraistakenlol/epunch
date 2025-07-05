@@ -14,8 +14,6 @@ CREATE TABLE merchant (
     name TEXT NOT NULL,
     address TEXT,
     slug TEXT UNIQUE NOT NULL,
-    login TEXT UNIQUE,
-    password_hash TEXT,
     logo_url TEXT,
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );

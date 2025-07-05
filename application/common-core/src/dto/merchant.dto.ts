@@ -13,16 +13,12 @@ export interface CreateMerchantDto {
   name: string;
   address?: string;
   slug: string;
-  login: string;
-  password: string;
 }
 
 export interface UpdateMerchantDto {
   name?: string;
   address?: string;
   slug?: string;
-  login?: string;
-  password?: string;
   logoUrl?: string;
 }
 

@@ -23,16 +23,12 @@ interface FormData {
   name: string;
   address: string;
   slug: string;
-  login: string;
-  password: string;
 }
 
 interface FormErrors {
   name?: string;
   address?: string;
   slug?: string;
-  login?: string;
-  password?: string;
 }
 
 export const MerchantEdit: React.FC = () => {
@@ -44,8 +40,6 @@ export const MerchantEdit: React.FC = () => {
     name: '',
     address: '',
     slug: '',
-    login: '',
-    password: '',
   });
   
   const [errors, setErrors] = useState<FormErrors>({});
@@ -90,8 +84,6 @@ export const MerchantEdit: React.FC = () => {
         name: merchantData.name,
         address: merchantData.address || '',
         slug: merchantData.slug,
-        login: merchantData.email,
-        password: '',
       });
     } catch (err: any) {
       console.error('Failed to fetch merchant:', err);
@@ -127,14 +119,6 @@ export const MerchantEdit: React.FC = () => {
       newErrors.slug = 'Slug can only contain lowercase letters, numbers, and hyphens';
     }
 
-    if (!formData.login.trim()) {
-      newErrors.login = 'Login is required';
-    }
-
-    if (formData.password && formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -153,12 +137,7 @@ export const MerchantEdit: React.FC = () => {
         name: formData.name.trim(),
         address: formData.address.trim() || undefined,
         slug: formData.slug.trim(),
-        login: formData.login.trim(),
       };
-
-      if (formData.password.trim()) {
-        updateData.password = formData.password;
-      }
 
       await apiClient.updateMerchant(id, updateData);
       showSnackbar('Merchant updated successfully', 'success');
@@ -279,28 +258,7 @@ export const MerchantEdit: React.FC = () => {
                 inputProps={{ style: { fontFamily: 'monospace' } }}
               />
 
-              <TextField
-                label="Login *"
-                variant="outlined"
-                fullWidth
-                value={formData.login}
-                onChange={handleInputChange('login')}
-                error={!!errors.login}
-                helperText={errors.login || 'Used for merchant app authentication'}
-                disabled={isSubmitting}
-              />
 
-              <TextField
-                label="Password"
-                type="password"
-                variant="outlined"
-                fullWidth
-                value={formData.password}
-                onChange={handleInputChange('password')}
-                error={!!errors.password}
-                helperText={errors.password || 'Leave blank to keep current password (minimum 6 characters if changed)'}
-                disabled={isSubmitting}
-              />
 
               <Box display="flex" justifyContent="flex-end" gap={2} mt={2}>
                 <Button

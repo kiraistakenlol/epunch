@@ -8,8 +8,6 @@ export interface Merchant {
   name: string;
   address: string | null;
   slug: string;
-  login?: string;
-  password_hash?: string;
   created_at: Date;
   logo_url: string | null;
 }
@@ -52,15 +50,7 @@ export class MerchantRepository {
     return result.rows[0] || null;
   }
 
-  async findMerchantByLogin(login: string): Promise<Merchant | null> {
-    const query = `
-      SELECT * FROM merchant 
-      WHERE login = $1
-    `;
-    
-    const result = await this.pool.query(query, [login]);
-    return result.rows[0] || null;
-  }
+
 
   async findLoyaltyProgramsByMerchantId(merchantId: string): Promise<LoyaltyProgramDto[]> {
     const query = `
@@ -170,19 +160,17 @@ export class MerchantRepository {
     return result.rows.length > 0;
   }
 
-  async createMerchant(data: CreateMerchantDto & { password: string }): Promise<MerchantDto> {
+  async createMerchant(data: CreateMerchantDto): Promise<MerchantDto> {
     const query = `
-      INSERT INTO merchant (name, address, slug, login, password_hash)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO merchant (name, address, slug)
+      VALUES ($1, $2, $3)
       RETURNING *
     `;
     
     const values = [
       data.name,
       data.address || null,
-      data.slug,
-      data.login,
-      data.password
+      data.slug
     ];
     
     const result = await this.pool.query(query, values);
@@ -191,7 +179,7 @@ export class MerchantRepository {
     return MerchantMapper.toDto(row);
   }
 
-  async updateMerchant(merchantId: string, data: UpdateMerchantDto & { password?: string }): Promise<MerchantDto | null> {
+  async updateMerchant(merchantId: string, data: UpdateMerchantDto): Promise<MerchantDto | null> {
     const setParts: string[] = [];
     const values: any[] = [];
     let paramIndex = 1;
@@ -207,14 +195,6 @@ export class MerchantRepository {
     if (data.slug !== undefined) {
       setParts.push(`slug = $${paramIndex++}`);
       values.push(data.slug);
-    }
-    if (data.login !== undefined) {
-      setParts.push(`login = $${paramIndex++}`);
-      values.push(data.login);
-    }
-    if (data.password !== undefined) {
-      setParts.push(`password_hash = $${paramIndex++}`);
-      values.push(data.password);
     }
     if (data.logoUrl !== undefined) {
       setParts.push(`logo_url = $${paramIndex++}`);

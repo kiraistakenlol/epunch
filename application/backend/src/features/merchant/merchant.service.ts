@@ -222,12 +222,7 @@ export class MerchantService {
     this.logger.log(`Creating merchant: ${data.name}`);
 
     try {
-      const hashedPassword = await bcrypt.hash(data.password, 10);
-
-      const merchant = await this.merchantRepository.createMerchant({
-        ...data,
-        password: hashedPassword
-      });
+      const merchant = await this.merchantRepository.createMerchant(data);
 
       this.logger.log(`Created merchant: ${merchant.id}`);
       return merchant;
@@ -241,13 +236,7 @@ export class MerchantService {
     this.logger.log(`Updating merchant: ${merchantId}`);
 
     try {
-      const updateData = { ...data };
-
-      if (data.password) {
-        updateData.password = await bcrypt.hash(data.password, 10);
-      }
-
-      const merchant = await this.merchantRepository.updateMerchant(merchantId, updateData);
+      const merchant = await this.merchantRepository.updateMerchant(merchantId, data);
 
       if (!merchant) {
         throw new NotFoundException(`Merchant with ID ${merchantId} not found`);

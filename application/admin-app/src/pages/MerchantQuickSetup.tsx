@@ -39,15 +39,11 @@ interface MerchantFormData {
   name: string;
   address: string;
   slug: string;
-  login: string;
-  password: string;
 }
 
 interface MerchantFormErrors {
   name?: string;
   slug?: string;
-  login?: string;
-  password?: string;
 }
 
 interface LoyaltyProgramTemplate {
@@ -120,8 +116,6 @@ export const MerchantQuickSetup: React.FC = () => {
     name: '',
     address: '',
     slug: '',
-    login: '',
-    password: '',
   });
   
   const [loyaltyPrograms, setLoyaltyPrograms] = useState<LoyaltyProgramTemplate[]>(defaultTemplates);
@@ -202,16 +196,6 @@ export const MerchantQuickSetup: React.FC = () => {
       newErrors.slug = 'Slug is required';
     } else if (!/^[a-z0-9-]+$/.test(formData.slug)) {
       newErrors.slug = 'Slug can only contain lowercase letters, numbers, and hyphens';
-    }
-
-    if (formData.login.trim() && !/^[a-z0-9-_]+$/.test(formData.login)) {
-      newErrors.login = 'Login can only contain lowercase letters, numbers, hyphens, and underscores';
-    }
-
-    if (!formData.password.trim()) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.trim().length < 4) {
-      newErrors.password = 'Password must be at least 4 characters';
     }
 
     setErrors(newErrors);
@@ -419,8 +403,6 @@ export const MerchantQuickSetup: React.FC = () => {
         name: formData.name.trim(),
         address: formData.address.trim() || undefined,
         slug: formData.slug.trim(),
-        login: formData.login.trim() || formData.slug.trim(),
-        password: formData.password.trim(),
       };
 
       const newMerchant = await apiClient.createMerchant(createMerchantData);
@@ -536,36 +518,13 @@ export const MerchantQuickSetup: React.FC = () => {
                   value={formData.slug}
                   onChange={handleInputChange('slug')}
                   error={!!errors.slug}
-                  helperText={errors.slug || 'Used in URLs and for merchant login'}
+                  helperText={errors.slug || 'Used in URLs and must be unique'}
                   disabled={isSubmitting}
                   inputProps={{ style: { fontFamily: 'monospace' } }}
                   placeholder="joes-coffee-house"
                 />
 
-                <TextField
-                  label="Login Username"
-                  variant="outlined"
-                  fullWidth
-                  value={formData.login}
-                  onChange={handleInputChange('login')}
-                  error={!!errors.login}
-                  helperText={errors.login || 'Optional - will use slug if not provided'}
-                  disabled={isSubmitting}
-                  inputProps={{ style: { fontFamily: 'monospace' } }}
-                  placeholder={formData.slug || 'joes-coffee-house'}
-                />
 
-                <TextField
-                  label="Password *"
-                  variant="outlined"
-                  fullWidth
-                  value={formData.password}
-                  onChange={handleInputChange('password')}
-                  error={!!errors.password}
-                  helperText={errors.password || 'Password for merchant login'}
-                  disabled={isSubmitting}
-                  placeholder="0000"
-                />
               </Box>
             </form>
           </CardContent>
@@ -765,7 +724,7 @@ export const MerchantQuickSetup: React.FC = () => {
         <Card sx={{ backgroundColor: '#f5f5dc', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)' }}>
           <CardContent sx={{ p: 4, textAlign: 'center' }}>
             <Typography variant="body2" color="text.secondary" mb={3}>
-              This will create a new merchant with login credentials (login: {formData.login.trim() || formData.slug || 'slug'}, password: {formData.password || '****'}),
+              This will create a new merchant,
               set up the {loyaltyPrograms.length} loyalty program{loyaltyPrograms.length !== 1 ? 's' : ''} above,
               and create {users.length} user{users.length !== 1 ? 's' : ''}: {users.map(u => `${u.login} (${u.role})`).join(', ')}.
             </Typography>
@@ -792,7 +751,7 @@ export const MerchantQuickSetup: React.FC = () => {
                 onClick={handleSubmit}
                 variant="contained"
                 startIcon={isSubmitting ? <CircularProgress size={16} /> : <SaveIcon />}
-                disabled={isSubmitting || !formData.name.trim() || !formData.slug.trim() || !formData.password.trim() || loyaltyPrograms.length === 0 || users.length === 0}
+                disabled={isSubmitting || !formData.name.trim() || !formData.slug.trim() || loyaltyPrograms.length === 0 || users.length === 0}
                 sx={{
                   backgroundColor: '#5d4037',
                   color: '#f5f5dc',

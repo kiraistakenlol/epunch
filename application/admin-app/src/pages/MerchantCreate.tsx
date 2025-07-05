@@ -22,16 +22,12 @@ interface FormData {
   name: string;
   address: string;
   slug: string;
-  login: string;
-  password: string;
 }
 
 interface FormErrors {
   name?: string;
   address?: string;
   slug?: string;
-  login?: string;
-  password?: string;
 }
 
 export const MerchantCreate: React.FC = () => {
@@ -41,8 +37,6 @@ export const MerchantCreate: React.FC = () => {
     name: '',
     address: '',
     slug: '',
-    login: '',
-    password: '',
   });
   
   const [errors, setErrors] = useState<FormErrors>({});
@@ -105,16 +99,6 @@ export const MerchantCreate: React.FC = () => {
       newErrors.slug = 'Slug can only contain lowercase letters, numbers, and hyphens';
     }
 
-    if (!formData.login.trim()) {
-      newErrors.login = 'Login is required';
-    }
-
-    if (!formData.password.trim()) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -133,8 +117,6 @@ export const MerchantCreate: React.FC = () => {
         name: formData.name.trim(),
         address: formData.address.trim() || undefined,
         slug: formData.slug.trim(),
-        login: formData.login.trim(),
-        password: formData.password,
       };
 
       await apiClient.createMerchant(createData);
@@ -223,28 +205,7 @@ export const MerchantCreate: React.FC = () => {
                 inputProps={{ style: { fontFamily: 'monospace' } }}
               />
 
-              <TextField
-                label="Login *"
-                variant="outlined"
-                fullWidth
-                value={formData.login}
-                onChange={handleInputChange('login')}
-                error={!!errors.login}
-                helperText={errors.login || 'Used for merchant app authentication'}
-                disabled={isSubmitting}
-              />
 
-              <TextField
-                label="Password *"
-                type="password"
-                variant="outlined"
-                fullWidth
-                value={formData.password}
-                onChange={handleInputChange('password')}
-                error={!!errors.password}
-                helperText={errors.password || 'Minimum 6 characters'}
-                disabled={isSubmitting}
-              />
 
               <Box display="flex" justifyContent="flex-end" gap={2} mt={2}>
                 <Button
