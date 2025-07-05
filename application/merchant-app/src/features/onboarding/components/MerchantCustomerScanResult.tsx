@@ -21,49 +21,45 @@ export const MerchantCustomerScanResult: React.FC<MerchantCustomerScanResultProp
   const totalPunches = loyaltyProgram.requiredPunches;
 
   return (
-    <div className={cn("p-2 h-full flex flex-col", className)}>
-      <Card className="flex-1 flex flex-col text-xs">
-        <CardHeader className="pb-3 px-3 py-3">
-          <div className="flex items-center justify-center space-x-2 mb-2">
-            <User className="h-4 w-4 text-primary" />
-            <Badge variant="outline" className="text-xs px-2 py-0">{t('merchantInterface.customerScan.badge')}</Badge>
+    <div className={cn("p-2 sm:p-4 max-h-[90vh] flex flex-col w-full", className)}>
+      <Card className="flex-1 flex flex-col w-full">
+        <CardHeader className="pb-4 sm:pb-6 px-4 sm:px-6">
+          <div className="flex items-center justify-center space-x-3 mb-2 sm:mb-3">
+            <User className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+            <Badge variant="outline" className="text-xs sm:text-sm px-2 sm:px-3 py-1">{t('merchantInterface.customerScan.badge')}</Badge>
           </div>
-          <CardTitle className="text-sm text-center">{t('merchantInterface.customerScan.title')}</CardTitle>
+          <CardTitle className="text-xl sm:text-2xl text-center">{t('merchantInterface.customerScan.title')}</CardTitle>
         </CardHeader>
         
-        <CardContent className="flex-1 flex flex-col space-y-3 px-3 py-2">
-          <div className="flex-1">
-            <div
-              className={cn(
-                "p-3 rounded border-2 border-primary bg-primary/5"
-              )}
-            >
-              <div className="flex items-center space-x-2 mb-2">
-                <span className="text-sm">🎁</span>
-                <h3 className="font-medium text-xs">{loyaltyProgram.name}</h3>
+        <CardContent className="flex-1 flex flex-col space-y-4 sm:space-y-6 px-4 sm:px-6">
+          <div className="flex-1 flex flex-col space-y-2 sm:space-y-3">
+            <div className="p-3 sm:p-4 rounded-lg border-2 border-primary bg-primary/5">
+              <div className="flex items-center space-x-2 mb-1 sm:mb-2">
+                <span className="text-sm sm:text-base">🎁</span>
+                <h3 className="font-medium text-sm sm:text-base">{loyaltyProgram.name}</h3>
               </div>
-              <p className="text-xs text-muted-foreground mb-1">
+              <p className="text-xs sm:text-sm text-muted-foreground mb-1 sm:mb-2">
                 {loyaltyProgram.rewardDescription}
               </p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs sm:text-sm text-muted-foreground">
                 {t('merchantInterface.customerScan.current', { current: currentPunches, total: totalPunches })}
               </p>
             </div>
           </div>
           
-          <div className="flex space-x-2">
+          <div className="flex space-x-2 sm:space-x-3 pt-3 sm:pt-4 mt-auto flex-shrink-0">
             <Button 
               variant="outline" 
-              className="flex-1 h-10 text-xs"
+              className="w-1/2 h-12 sm:h-14 text-sm sm:text-base flex items-center justify-center"
             >
-              <ArrowLeft className="w-3 h-3 mr-1" />
+              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
               {t('merchantInterface.customerScan.backButton')}
             </Button>
             
             <Button 
-              className="flex-1 h-10 text-xs"
+              className="w-1/2 h-12 sm:h-14 text-sm sm:text-base flex items-center justify-center"
             >
-              <Gift className="w-3 h-3 mr-1" />
+              <Gift className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
               {t('merchantInterface.customerScan.punchButton')}
             </Button>
           </div>
