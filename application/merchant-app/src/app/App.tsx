@@ -12,6 +12,7 @@ import { DashboardPage } from '../features/dashboard/DashboardPage';
 import { V2LoyaltyProgramsPage } from '../features/loyalty-programs/LoyaltyProgramsPage';
 import { LoyaltyProgramCreatePage } from '../features/loyalty-programs/LoyaltyProgramCreatePage';
 import { LoyaltyProgramEditPage } from '../features/loyalty-programs/LoyaltyProgramEditPage';
+import { LoyaltyProgramPage } from '../features/loyalty-programs/LoyaltyProgramPage';
 import { V2DesignPage } from '../features/design/pages/DesignPage';
 import { V2ScannerPage } from '../features/scanner/pages/ScannerPage';
 import { WelcomeQRPage as V2WelcomeQRPage } from '../features/scanner/pages';
@@ -69,8 +70,6 @@ function App() {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state: RootState) => state.auth.user);
 
-
-
   // Fetch merchant data when authenticated
   React.useEffect(() => {
     if (user?.merchantId) {
@@ -107,6 +106,11 @@ function App() {
             <Route path="loyalty-programs/create" element={
               <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
                 <LoyaltyProgramCreatePage />
+              </RoleProtectedRoute>
+            } />
+            <Route path="loyalty-programs/:id" element={
+              <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+                <LoyaltyProgramPage />
               </RoleProtectedRoute>
             } />
             <Route path="loyalty-programs/:id/edit" element={

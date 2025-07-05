@@ -2,11 +2,10 @@
 
 import { LoyaltyProgramDto } from "e-punch-common-core"
 import { ColumnDef } from "@tanstack/react-table"
-import { DataTableRowActions } from "./data-table-row-actions"
 import { DataTableColumnHeader } from "@/components/shared/data-display/DataTableColumnHeader"
 import { StatusBadge } from "@/components/shared/data-display/StatusBadge"
 
-export const createColumns = (onDelete?: () => void): ColumnDef<LoyaltyProgramDto>[] => [
+export const createColumns = (): ColumnDef<LoyaltyProgramDto>[] => [
   {
     accessorKey: "name",
     header: ({ column }) => (
@@ -43,11 +42,6 @@ export const createColumns = (onDelete?: () => void): ColumnDef<LoyaltyProgramDt
         return value.includes(row.getValue(id))
     },
   },
-  {
-    id: "actions",
-    cell: ({ row }) => <DataTableRowActions row={row} onDelete={onDelete} />,
-  },
 ]
 
-// Default export for backward compatibility
 export const columns = createColumns() 

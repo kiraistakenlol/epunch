@@ -50,8 +50,6 @@ export class MerchantRepository {
     return result.rows[0] || null;
   }
 
-
-
   async findLoyaltyProgramsByMerchantId(merchantId: string): Promise<LoyaltyProgramDto[]> {
     const query = `
       SELECT 
@@ -63,7 +61,7 @@ export class MerchantRepository {
         m.created_at as merchant_created_at
       FROM loyalty_program lp
       JOIN merchant m ON lp.merchant_id = m.id
-      WHERE lp.merchant_id = $1 AND lp.is_active = true
+      WHERE lp.merchant_id = $1
       ORDER BY lp.created_at DESC
     `;
     

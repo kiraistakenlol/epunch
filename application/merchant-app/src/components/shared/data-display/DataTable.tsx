@@ -13,9 +13,10 @@ import {
 
 interface DataTableProps<TData> {
   table: TanstackTable<TData>
+  onRowClick?: (row: TData) => void
 }
 
-export function DataTable<TData>({ table }: DataTableProps<TData>) {
+export function DataTable<TData>({ table, onRowClick }: DataTableProps<TData>) {
   return (
     <div className="w-full overflow-hidden rounded-md border">
       <Table>
@@ -43,6 +44,8 @@ export function DataTable<TData>({ table }: DataTableProps<TData>) {
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
+                onClick={() => onRowClick?.(row.original)}
+                className={onRowClick ? "cursor-pointer hover:bg-muted/50" : ""}
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>

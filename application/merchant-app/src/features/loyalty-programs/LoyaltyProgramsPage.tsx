@@ -37,12 +37,16 @@ export function V2LoyaltyProgramsPage() {
     fetchData()
   }, [fetchData])
 
-  const columns = React.useMemo(() => createColumns(fetchData), [fetchData])
+  const columns = React.useMemo(() => createColumns(), [])
 
   const table = useDataTable({
     data,
     columns,
   })
+
+  const handleRowClick = (program: LoyaltyProgramDto) => {
+    navigate(`/loyalty-programs/${program.id}`)
+  }
 
   if (isLoading) {
     return (
@@ -74,7 +78,10 @@ export function V2LoyaltyProgramsPage() {
             </Button>
         </CardHeader>
         <CardContent className="space-y-4">
-            <DataTable table={table.table} />
+            <DataTable 
+              table={table.table} 
+              onRowClick={handleRowClick}
+            />
             <DataTablePagination table={table.table} />
         </CardContent>
     </Card>

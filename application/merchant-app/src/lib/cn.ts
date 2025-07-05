@@ -10,6 +10,7 @@ export const ROUTES = {
   SCANNER: '/scanner',
   LOYALTY_PROGRAMS: '/loyalty-programs',
   LOYALTY_PROGRAMS_CREATE: '/loyalty-programs/create',
+  LOYALTY_PROGRAMS_VIEW: '/loyalty-programs/:id',
   DESIGN: '/design',
   WELCOME_QR: '/welcome-qr',
   ANALYTICS: '/analytics',

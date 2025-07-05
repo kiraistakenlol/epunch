@@ -15,8 +15,7 @@ export function LoyaltyProgramsCard() {
         icon: <Plus className="h-4 w-4" />,
         onClick: (e) => {
           e.stopPropagation();
-          // This should navigate to the create page when it's built
-          // navigate(V2_ROUTES.LOYALTY_PROGRAMS_CREATE) 
+          navigate(ROUTES.LOYALTY_PROGRAMS_CREATE);
         }
       }}
     />
