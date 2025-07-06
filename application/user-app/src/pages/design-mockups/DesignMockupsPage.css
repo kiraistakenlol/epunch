@@ -7,7 +7,7 @@
 
 .mockups-header {
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 48px;
   position: sticky;
   top: 0;
   background: #f8f9fa;
@@ -28,89 +28,10 @@
   margin: 0;
 }
 
-.variant-selector {
-  margin-bottom: 32px;
-  position: sticky;
-  top: 120px;
-  background: #f8f9fa;
-  z-index: 9;
-  padding: 16px 0;
-}
-
-.variant-selector h2 {
-  font-size: 24px;
-  font-weight: 600;
-  color: #333;
-  margin: 0 0 16px 0;
-}
-
-.variant-toggles {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-
-.variant-toggle {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  background: #fff;
-  border: 2px solid #e0e0e0;
-  border-radius: 12px;
-  padding: 16px 20px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  min-width: 280px;
-}
-
-.variant-toggle:hover {
-  border-color: #007AFF;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.variant-toggle input[type="checkbox"] {
-  margin: 0;
-  width: 18px;
-  height: 18px;
-  accent-color: #007AFF;
-}
-
-.variant-toggle input[type="checkbox"]:checked + .variant-info {
-  opacity: 1;
-}
-
-.variant-info {
-  opacity: 0.7;
-  transition: opacity 0.2s ease;
-}
-
-.variant-toggle:has(input:checked) {
-  border-color: #007AFF;
-  background: #f0f7ff;
-  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.15);
-}
-
-.variant-toggle:has(input:checked) .variant-info {
-  opacity: 1;
-}
-
-.variant-name {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 4px;
-}
-
-.variant-description {
-  font-size: 14px;
-  color: #666;
-  line-height: 1.4;
-}
-
 .mockup-canvas {
   display: flex;
   flex-direction: column;
-  gap: 48px;
+  gap: 64px;
   max-width: none;
   overflow-x: auto;
   overflow-y: visible;
@@ -119,17 +40,25 @@
 .variant-section {
   border: 1px solid #e0e0e0;
   border-radius: 16px;
-  padding: 24px;
+  padding: 32px;
   background: #fff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .variant-title {
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 28px;
+  font-weight: 700;
   color: #333;
-  margin: 0 0 24px 0;
+  margin: 0 0 8px 0;
   text-align: center;
+}
+
+.variant-description {
+  font-size: 16px;
+  color: #666;
+  margin: 0 0 32px 0;
+  text-align: center;
+  line-height: 1.5;
 }
 
 .screens-grid {
@@ -162,10 +91,11 @@
   
   .mockups-header {
     padding: 16px 0;
+    margin-bottom: 32px;
   }
   
-  .variant-selector {
-    top: 90px;
+  .mockup-canvas {
+    gap: 48px;
   }
   
   .screens-grid {
@@ -173,16 +103,12 @@
     gap: 24px;
   }
   
-  .variant-toggles {
-    flex-direction: column;
-  }
-  
-  .variant-toggle {
-    min-width: auto;
-  }
-  
   .variant-section {
-    padding: 16px;
+    padding: 24px;
+  }
+  
+  .variant-title {
+    font-size: 24px;
   }
 }
 

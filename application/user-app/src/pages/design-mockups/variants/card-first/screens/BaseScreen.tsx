@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusBar, AppHeader, BottomNav } from '../../../components';
+import { AppHeader, BottomNav } from '../../../components';
 import { ScreenProps, NavItem } from '../../../types';
 import './BaseScreen.css';
 
@@ -31,7 +31,6 @@ const BaseScreen: React.FC<BaseScreenProps> = ({
 
   return (
     <div className="base-screen">
-      <StatusBar />
       <AppHeader
         title={headerTitle}
         stats={headerStats}

@@ -18,6 +18,24 @@ export interface ScreenProps {
 export interface PhoneFrameProps {
   children: React.ReactNode;
   className?: string;
+  url?: string;
+  time?: string;
+}
+
+export interface IOSStatusBarProps {
+  time?: string;
+  className?: string;
+}
+
+export interface SafariToolbarProps {
+  url?: string;
+  canGoBack?: boolean;
+  canGoForward?: boolean;
+  className?: string;
+}
+
+export interface SafariBottomBarProps {
+  className?: string;
 }
 
 export interface StatusBarProps {
