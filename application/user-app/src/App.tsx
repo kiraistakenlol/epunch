@@ -7,6 +7,7 @@ import DevPage from './features/dev/DevPage';
 import CardPreviewPage from './pages/CardPreviewPage';
 import DashboardPreviewPage from './pages/DashboardPreviewPage';
 import MerchantLandingPage from './pages/MerchantLandingPage';
+import DesignMockupsPage from './pages/design-mockups/DesignMockupsPage';
 import AppLayout from './components/AppLayout';
 import SignOutModal from './components/SignOutModal';
 import CompletionOverlay from './features/dashboard/overlay/CompletionOverlay';
@@ -50,6 +51,7 @@ function App() {
           <Route path="merchant/card-preview" element={<CardPreviewPage />} />
           <Route path="preview" element={<DashboardPreviewPage />} />
           <Route path="for-merchants" element={<MerchantLandingPage />} />
+          <Route path="design-mockup" element={<DesignMockupsPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <SignOutModal />
