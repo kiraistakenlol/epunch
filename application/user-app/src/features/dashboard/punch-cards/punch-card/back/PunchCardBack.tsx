@@ -9,6 +9,7 @@ import layoutStyles from '../shared/PunchCardLayout.module.css';
 
 interface PunchCardBackProps extends Pick<PunchCardDto, 'loyaltyProgramId' | 'shopName' | 'shopAddress' | 'totalPunches'> {
   resolvedStyles: CustomizableCardStyles;
+  shopMapsUrl?: string;
 }
 
 const PunchCardBack: React.FC<PunchCardBackProps> = ({
@@ -16,10 +17,22 @@ const PunchCardBack: React.FC<PunchCardBackProps> = ({
   shopName,
   shopAddress,
   totalPunches,
-  resolvedStyles
+  resolvedStyles,
+  shopMapsUrl
 }) => {
   const { t } = useI18n('punchCards');
   const loyaltyProgram = useAppSelector(state => selectLoyaltyProgramById(state, loyaltyProgramId));
+
+  const getDefaultMapsUrl = (merchantName: string, merchantAddress: string) => {
+    const query = encodeURIComponent(`${merchantName}, ${merchantAddress}`);
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    
+    if (isIOS) {
+      return `http://maps.apple.com/?q=${query}`;
+    } else {
+      return `https://www.google.com/maps/search/?api=1&query=${query}`;
+    }
+  };
 
   return (
     <div 
@@ -66,12 +79,15 @@ const PunchCardBack: React.FC<PunchCardBackProps> = ({
         style={{ color: resolvedStyles.colors.textColor }}
       >
         {shopAddress && (
-          <span 
+          <a 
+            href={shopMapsUrl || getDefaultMapsUrl(shopName, shopAddress)}
             className={styles.addressText}
             style={{ color: resolvedStyles.colors.textColor }}
+            target="_blank"
+            rel="noopener noreferrer"
           >
             📍 {shopAddress}
-          </span>
+          </a>
         )}
       </div>
     </div>

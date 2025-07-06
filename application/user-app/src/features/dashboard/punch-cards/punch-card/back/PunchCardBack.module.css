@@ -76,6 +76,19 @@
 .addressText {
   font-size: 0.7em;
   text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  display: block;
+  padding: calc(var(--card-height) * 0.01);
+}
+
+.addressText:hover {
+  opacity: 0.8;
+}
+
+.addressText:active {
+  opacity: 0.6;
 }
 
 .totalPunches {
