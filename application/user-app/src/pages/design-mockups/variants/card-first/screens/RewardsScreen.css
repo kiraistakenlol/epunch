@@ -1,0 +1,121 @@
+.rewards-screen {
+  padding: 0;
+}
+
+.ready-rewards {
+  margin-bottom: 24px;
+}
+
+.reward-history {
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  color: #333;
+}
+
+.reward-card {
+  margin-bottom: 16px;
+}
+
+.reward-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.reward-shop {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.reward-emoji {
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.reward-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.reward-shop-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  color: inherit;
+}
+
+.reward-text {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 2px 0 0 0;
+}
+
+.reward-expiry {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 8px 0 0 0;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.history-shop {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.history-emoji {
+  font-size: 20px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: #f8f9fa;
+}
+
+.history-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.history-shop-name {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  color: #333;
+}
+
+.history-reward-text {
+  font-size: 12px;
+  color: #666;
+  margin: 2px 0 0 0;
+}
+
+.history-date {
+  font-size: 12px;
+  color: #999;
+} 

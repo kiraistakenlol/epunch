@@ -1,13 +1,11 @@
-export { SafariPhoneFrame as PhoneFrame } from './base-safari-view';
-export { BaseScreen } from './base-screen';
+export { default as PhoneFrame } from './PhoneFrame';
 export { default as StatusBar } from './StatusBar';
 export { default as AppHeader } from './AppHeader';
-export { default as BottomNavigation } from './BottomNavigation';
+export { default as BottomNav } from './BottomNav';
 export { default as NavItem } from './NavItem';
 export { default as Button } from './Button';
 export { default as Card } from './Card';
 export { default as ProgressBar } from './ProgressBar';
 export { default as ShopCard } from './ShopCard';
 export { default as SearchBar } from './SearchBar';
-export { default as FilterChips } from './FilterChips';
-export { default as PunchCard } from './PunchCard'; 
+export { default as FilterChips } from './FilterChips'; 
