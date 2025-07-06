@@ -1,4 +1,4 @@
-export { default as PhoneFrame } from './PhoneFrame';
+export { SafariPhoneFrame as PhoneFrame } from './base-safari-view';
 export { default as StatusBar } from './StatusBar';
 export { default as AppHeader } from './AppHeader';
 export { default as BottomNav } from './BottomNav';

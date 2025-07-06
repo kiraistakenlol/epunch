@@ -1,0 +1,28 @@
+.safari-phone-frame {
+  width: 320px;
+  height: 650px;
+  background: #000;
+  border-radius: 20px;
+  padding: 2px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Web App Content */
+.phone-content {
+  flex: 1;
+  background: #fff;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .safari-phone-frame {
+    width: 280px;
+    height: 580px;
+  }
+} 
