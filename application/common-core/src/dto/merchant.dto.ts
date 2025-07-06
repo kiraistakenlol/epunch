@@ -4,7 +4,6 @@ export interface MerchantDto {
   name: string;
   address: string | null;
   slug: string;
-  email: string; // todo remove this once merchantUser concept is implemented
   logoUrl: string;
   createdAt: string;
 }
