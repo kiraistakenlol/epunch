@@ -1,0 +1,8 @@
+.bottom-nav {
+  background: #fff;
+  border-top: 1px solid #f0f0f0;
+  padding: 8px 0;
+  display: flex;
+  justify-content: space-around;
+  flex-shrink: 0;
+} 

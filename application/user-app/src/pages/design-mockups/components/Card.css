@@ -1,0 +1,22 @@
+.card {
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.card--default {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+}
+
+.card--reward {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+}
+
+.card--active {
+  background: #fff;
+  border: 2px solid #007AFF;
+} 

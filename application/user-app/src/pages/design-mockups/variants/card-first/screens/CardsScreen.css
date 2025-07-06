@@ -1,0 +1,9 @@
+.cards-screen {
+  padding: 0;
+}
+
+.cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+} 
