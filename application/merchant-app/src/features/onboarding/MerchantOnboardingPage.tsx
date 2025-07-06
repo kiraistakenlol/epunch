@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '../../store/hooks';
-import { fetchMerchantBySlug } from '../../store/merchantSlice';
 import { generateOnboardingImage } from '../../services/imageUtils';
 import { apiClient, appColors } from 'e-punch-common-ui';
 import { useI18n } from 'e-punch-common-ui';
-import { PunchCardStyleDto, LoyaltyProgramDto, emptyPunchCardStyle } from 'e-punch-common-core';
+import { PunchCardStyleDto, LoyaltyProgramDto, MerchantDto, emptyPunchCardStyle } from 'e-punch-common-core';
 import {
   TopContactBar,
   TeaserSection,
@@ -24,9 +22,10 @@ import styles from './MerchantOnboardingPage.module.css';
 export const MerchantOnboardingPage: React.FC = () => {
   const { t } = useI18n('merchantOnboarding');
   const { merchantSlug } = useParams<{ merchantSlug: string }>();
-  const dispatch = useAppDispatch();
-  const { merchant, loading: merchantLoading, error: merchantError } = useAppSelector((state) => state.merchant);
   
+  const [merchant, setMerchant] = useState<MerchantDto | null>(null);
+  const [merchantLoading, setMerchantLoading] = useState(true);
+  const [merchantError, setMerchantError] = useState<string | null>(null);
   const [onboardingImageUrl, setOnboardingImageUrl] = useState<string | undefined>(undefined);
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const [merchantStyle, setMerchantStyle] = useState<PunchCardStyleDto | undefined>(undefined);
@@ -36,9 +35,9 @@ export const MerchantOnboardingPage: React.FC = () => {
 
   useEffect(() => {
     if (merchantSlug) {
-      dispatch(fetchMerchantBySlug(merchantSlug));
+      fetchMerchantBySlug(merchantSlug);
     }
-  }, [merchantSlug, dispatch]);
+  }, [merchantSlug]);
 
   useEffect(() => {
     if (merchant) {
@@ -51,6 +50,20 @@ export const MerchantOnboardingPage: React.FC = () => {
       generateOnboardingImagePreview();
     }
   }, [merchant, merchantStyle, loyaltyProgram, onboardingImageUrl, isGeneratingImage]);
+
+  const fetchMerchantBySlug = async (slug: string) => {
+    try {
+      setMerchantLoading(true);
+      setMerchantError(null);
+      const merchantData = await apiClient.getMerchantBySlug(slug);
+      setMerchant(merchantData);
+    } catch (error: any) {
+      setMerchantError(error.message || 'Failed to fetch merchant data');
+      setMerchant(null);
+    } finally {
+      setMerchantLoading(false);
+    }
+  };
 
   const fetchMerchantData = async () => {
     if (!merchant) return;
