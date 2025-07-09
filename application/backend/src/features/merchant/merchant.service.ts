@@ -1,12 +1,13 @@
 import { Injectable, Logger, NotFoundException, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { LoyaltyProgramDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreateMerchantDto, UpdateMerchantDto, FileUploadUrlDto, FileUploadResponseDto, JwtPayloadDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto } from 'e-punch-common-core';
+import { LoyaltyProgramDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreateMerchantDto, UpdateMerchantDto, FileUploadUrlDto, FileUploadResponseDto, JwtPayloadDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto, UserDto } from 'e-punch-common-core';
 import { MerchantRepository } from './merchant.repository';
 import { MerchantUserRepository } from '../merchant-user/merchant-user.repository';
+import { UserRepository } from '../user/user.repository';
 import { FileUploadService } from './file-upload.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { MerchantMapper } from '../../mappers';
+import { MerchantMapper, UserMapper } from '../../mappers';
 
 @Injectable()
 export class MerchantService {
@@ -15,6 +16,7 @@ export class MerchantService {
   constructor(
     private readonly merchantRepository: MerchantRepository,
     private readonly merchantUserRepository: MerchantUserRepository,
+    private readonly userRepository: UserRepository,
     private readonly fileUploadService: FileUploadService,
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService
@@ -401,6 +403,63 @@ export class MerchantService {
       this.logger.log(`Deleted user ${userId} for merchant: ${merchantId}`);
     } catch (error: any) {
       this.logger.error(`Error deleting user ${userId} for merchant ${merchantId}: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  async getMerchantCustomers(
+    merchantId: string,
+    page: number = 1,
+    limit: number = 10,
+    search?: string,
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc'
+  ): Promise<{ customers: UserDto[]; total: number; page: number; limit: number }> {
+    this.logger.log(`Fetching customers for merchant: ${merchantId}, page: ${page}, limit: ${limit}`);
+
+    try {
+      const merchant = await this.merchantRepository.findMerchantById(merchantId);
+
+      if (!merchant) {
+        throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
+      }
+
+      const customers = await this.merchantRepository.findCustomersByMerchantId(merchantId, page, limit, search, sortBy, sortOrder);
+      const total = await this.merchantRepository.countCustomersByMerchantId(merchantId, search);
+
+      this.logger.log(`Found ${customers.length} customers for merchant: ${merchantId}`);
+      return {
+        customers: customers.map(customer => UserMapper.toDto(customer)),
+        total,
+        page,
+        limit,
+      };
+    } catch (error: any) {
+      this.logger.error(`Error fetching customers for merchant ${merchantId}: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  async getMerchantCustomer(merchantId: string, customerId: string): Promise<UserDto> {
+    this.logger.log(`Fetching customer ${customerId} for merchant: ${merchantId}`);
+
+    try {
+      const merchant = await this.merchantRepository.findMerchantById(merchantId);
+
+      if (!merchant) {
+        throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
+      }
+
+      const customer = await this.merchantRepository.findCustomerByMerchantAndId(merchantId, customerId);
+
+      if (!customer) {
+        throw new NotFoundException(`Customer with ID ${customerId} not found for merchant ${merchantId}`);
+      }
+
+      this.logger.log(`Found customer ${customerId} for merchant: ${merchantId}`);
+      return UserMapper.toDto(customer);
+    } catch (error: any) {
+      this.logger.error(`Error fetching customer ${customerId} for merchant ${merchantId}: ${error.message}`, error.stack);
       throw error;
     }
   }

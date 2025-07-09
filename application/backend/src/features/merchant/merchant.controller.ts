@@ -1,5 +1,5 @@
 import { Controller, Get, Param, ParseUUIDPipe, Post, Body, HttpException, HttpStatus, Put, Delete, Query } from '@nestjs/common';
-import { LoyaltyProgramDto, MerchantUserLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreateMerchantDto, UpdateMerchantDto, FileUploadUrlDto, FileUploadResponseDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto } from 'e-punch-common-core';
+import { LoyaltyProgramDto, MerchantUserLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreateMerchantDto, UpdateMerchantDto, FileUploadUrlDto, FileUploadResponseDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto, UserDto } from 'e-punch-common-core';
 import { MerchantService } from './merchant.service';
 
 @Controller('merchants')
@@ -139,6 +139,28 @@ export class MerchantController {
     @Param('userId', ParseUUIDPipe) userId: string,
   ): Promise<void> {
     return this.merchantService.deleteMerchantUser(merchantId, userId);
+  }
+
+  @Get(':merchantId/customers')
+  async getMerchantCustomers(
+    @Param('merchantId', ParseUUIDPipe) merchantId: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('search') search?: string,
+    @Query('sortBy') sortBy?: string,
+    @Query('sortOrder') sortOrder?: 'asc' | 'desc',
+  ): Promise<{ customers: UserDto[]; total: number; page: number; limit: number }> {
+    const pageNum = page ? parseInt(page, 10) : 1;
+    const limitNum = limit ? parseInt(limit, 10) : 10;
+    return this.merchantService.getMerchantCustomers(merchantId, pageNum, limitNum, search, sortBy, sortOrder);
+  }
+
+  @Get(':merchantId/customers/:customerId')
+  async getMerchantCustomer(
+    @Param('merchantId', ParseUUIDPipe) merchantId: string,
+    @Param('customerId', ParseUUIDPipe) customerId: string,
+  ): Promise<UserDto> {
+    return this.merchantService.getMerchantCustomer(merchantId, customerId);
   }
 
 } 

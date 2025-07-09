@@ -4,6 +4,7 @@ import { MerchantController } from './merchant.controller';
 import { MerchantService } from './merchant.service';
 import { MerchantRepository } from './merchant.repository';
 import { MerchantUserRepository } from '../merchant-user/merchant-user.repository';
+import { UserRepository } from '../user/user.repository';
 import { FileUploadService } from './file-upload.service';
 
 @Module({
@@ -13,7 +14,7 @@ import { FileUploadService } from './file-upload.service';
     }),
   ],
   controllers: [MerchantController],
-  providers: [MerchantService, MerchantRepository, MerchantUserRepository, FileUploadService],
-  exports: [MerchantService, MerchantRepository, MerchantUserRepository, FileUploadService]
+  providers: [MerchantService, MerchantRepository, MerchantUserRepository, UserRepository, FileUploadService],
+  exports: [MerchantService, MerchantRepository, MerchantUserRepository, UserRepository, FileUploadService]
 })
 export class MerchantModule {} 

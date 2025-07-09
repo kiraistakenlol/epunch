@@ -17,6 +17,8 @@ import { V2DesignPage } from '../features/design/pages/DesignPage';
 import { V2ScannerPage } from '../features/scanner/pages/ScannerPage';
 import { WelcomeQRPage as V2WelcomeQRPage } from '../features/scanner/pages';
 import { AnalyticsPage } from '../features/analytics/AnalyticsPage';
+import { CustomersPage } from '../features/customers/CustomersPage';
+import { CustomerDetailPage } from '../features/customers/CustomerDetailPage';
 import { Toaster } from '../components/ui/sonner';
 import '../styles/global.css';
 import { RootState } from '../store/store';
@@ -131,6 +133,16 @@ function App() {
             <Route path="analytics" element={
               <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
                 <AnalyticsPage />
+              </RoleProtectedRoute>
+            } />
+            <Route path="customers" element={
+              <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+                <CustomersPage />
+              </RoleProtectedRoute>
+            } />
+            <Route path="customers/:id" element={
+              <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+                <CustomerDetailPage />
               </RoleProtectedRoute>
             } />
           </Route>

@@ -62,8 +62,8 @@ const navigationItems = [
 
 const adminItems = [
   {
-    title: "User Management",
-    url: ROUTES.ADMIN_USERS,
+    title: "Customers",
+    url: ROUTES.CUSTOMERS,
     icon: Users,
   },
   {

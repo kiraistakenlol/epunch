@@ -500,4 +500,36 @@ export const apiClient = {
     const response = await instance.get<LoyaltyProgramAnalyticsDto>(`/analytics/${merchantId}/loyalty-programs`);
     return response.data;
   },
+
+  async getMerchantCustomers(
+    merchantId: string,
+    page: number = 1,
+    limit: number = 10,
+    search?: string,
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc'
+  ): Promise<{ customers: UserDto[]; total: number; page: number; limit: number }> {
+    if (!merchantId) {
+      return Promise.reject(new Error('Merchant ID is required.'));
+    }
+    const params = new URLSearchParams();
+    params.append('page', page.toString());
+    params.append('limit', limit.toString());
+    if (search) params.append('search', search);
+    if (sortBy) params.append('sortBy', sortBy);
+    if (sortOrder) params.append('sortOrder', sortOrder);
+
+    const response = await instance.get<{ customers: UserDto[]; total: number; page: number; limit: number }>(
+      `/merchants/${merchantId}/customers?${params}`
+    );
+    return response.data;
+  },
+
+  async getMerchantCustomer(merchantId: string, customerId: string): Promise<UserDto> {
+    if (!merchantId || !customerId) {
+      return Promise.reject(new Error('Merchant ID and Customer ID are required.'));
+    }
+    const response = await instance.get<UserDto>(`/merchants/${merchantId}/customers/${customerId}`);
+    return response.data;
+  },
 }; 

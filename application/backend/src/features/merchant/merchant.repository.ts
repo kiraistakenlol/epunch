@@ -236,4 +236,81 @@ export class MerchantRepository {
     const result = await this.pool.query(query, [merchantId]);
     return result.rows.length > 0;
   }
+
+  async findCustomersByMerchantId(
+    merchantId: string,
+    page: number = 1,
+    limit: number = 10,
+    search?: string,
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc'
+  ): Promise<any[]> {
+    const offset = (page - 1) * limit;
+    
+    let whereClause = '';
+    let orderClause = 'ORDER BY u.created_at DESC';
+    const queryParams: any[] = [merchantId, limit, offset];
+    let paramIndex = 4;
+    
+    if (search) {
+      whereClause = `AND (u.email ILIKE $${paramIndex} OR u.id ILIKE $${paramIndex})`;
+      queryParams.push(`%${search}%`);
+      paramIndex++;
+    }
+    
+    if (sortBy && sortOrder) {
+      const validSortFields = ['email', 'created_at', 'id'];
+      if (validSortFields.includes(sortBy)) {
+        orderClause = `ORDER BY u.${sortBy} ${sortOrder.toUpperCase()}`;
+      }
+    }
+    
+    const query = `
+      SELECT DISTINCT u.id, u.email, u.external_id, u.external_provider, u.super_admin, u.created_at
+      FROM "user" u
+      JOIN punch_card pc ON u.id = pc.user_id
+      JOIN loyalty_program lp ON pc.loyalty_program_id = lp.id
+      WHERE lp.merchant_id = $1 ${whereClause}
+      ${orderClause}
+      LIMIT $2 OFFSET $3
+    `;
+    
+    const result = await this.pool.query(query, queryParams);
+    return result.rows;
+  }
+
+  async countCustomersByMerchantId(merchantId: string, search?: string): Promise<number> {
+    let whereClause = '';
+    const queryParams: any[] = [merchantId];
+    let paramIndex = 2;
+    
+    if (search) {
+      whereClause = `AND (u.email ILIKE $${paramIndex} OR u.id ILIKE $${paramIndex})`;
+      queryParams.push(`%${search}%`);
+    }
+    
+    const query = `
+      SELECT COUNT(DISTINCT u.id) as total
+      FROM "user" u
+      JOIN punch_card pc ON u.id = pc.user_id
+      JOIN loyalty_program lp ON pc.loyalty_program_id = lp.id
+      WHERE lp.merchant_id = $1 ${whereClause}
+    `;
+    
+    const result = await this.pool.query(query, queryParams);
+    return parseInt(result.rows[0].total) || 0;
+  }
+
+  async findCustomerByMerchantAndId(merchantId: string, customerId: string): Promise<any | null> {
+    const query = `
+      SELECT DISTINCT u.id, u.email, u.external_id, u.external_provider, u.super_admin, u.created_at
+      FROM "user" u
+      JOIN punch_card pc ON u.id = pc.user_id
+      JOIN loyalty_program lp ON pc.loyalty_program_id = lp.id
+      WHERE lp.merchant_id = $1 AND u.id = $2
+    `;
+    
+    const result = await this.pool.query(query, [merchantId, customerId]);
+    return result.rows[0] || null;
+  }
 } 
