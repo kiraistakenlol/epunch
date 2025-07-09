@@ -65,7 +65,6 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
   const isAuthenticated = useSelector((state: RootState) => selectIsAuthenticated(state));
   const isSuperAdmin = useSelector((state: RootState) => selectSuperAdmin(state));
 
-  const title = t('header.appTitle');
   const showProfileMenu = isAuthenticated;
   const showDevLink = isSuperAdmin;
 
