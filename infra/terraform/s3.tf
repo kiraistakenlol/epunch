@@ -39,9 +39,9 @@ resource "aws_s3_bucket_cors_configuration" "merchant_files" {
 
   cors_rule {
     allowed_headers = ["*"]
-    allowed_methods = ["GET", "PUT", "POST", "DELETE"]
+    allowed_methods = ["GET", "PUT", "POST", "DELETE", "HEAD"]
     allowed_origins = ["*"]
-    expose_headers  = ["ETag"]
+    expose_headers  = ["ETag", "Content-Length", "Content-Type"]
     max_age_seconds = 3000
   }
 }
