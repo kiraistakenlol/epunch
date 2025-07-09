@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, User, Calendar, CreditCard, Mail, Shield } from 'lucide-react';
+import { ArrowLeft, User, Calendar, CreditCard, Mail, Shield, Gift } from 'lucide-react';
 import { apiClient } from 'e-punch-common-ui';
 import { UserDto, PunchCardDto } from 'e-punch-common-core';
 import { useAppSelector } from '@/store/hooks';
@@ -10,6 +10,14 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
+
+interface GroupedPunchCards {
+  loyaltyProgramId: string;
+  loyaltyProgramName: string;
+  loyaltyProgramDescription: string;
+  rewardDescription: string;
+  cards: PunchCardDto[];
+}
 
 export function CustomerDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -86,6 +94,25 @@ export function CustomerDetailPage() {
         return status;
     }
   };
+
+  // Group punch cards by loyalty program
+  const groupedPunchCards: GroupedPunchCards[] = punchCards.reduce((groups, card) => {
+    const existingGroup = groups.find((group: GroupedPunchCards) => group.loyaltyProgramId === card.loyaltyProgramId);
+    
+    if (existingGroup) {
+      existingGroup.cards.push(card);
+    } else {
+      groups.push({
+        loyaltyProgramId: card.loyaltyProgramId,
+        loyaltyProgramName: card.loyaltyProgramName || card.shopName,
+        loyaltyProgramDescription: card.loyaltyProgramDescription || card.shopAddress,
+        rewardDescription: card.rewardDescription || 'Reward available',
+        cards: [card]
+      });
+    }
+    
+    return groups;
+  }, [] as GroupedPunchCards[]);
 
   if (loading) {
     return (
@@ -201,6 +228,10 @@ export function CustomerDetailPage() {
           </CardHeader>
           <CardContent className="space-y-3 sm:space-y-4">
             <div className="flex justify-between">
+              <span className="font-medium">Loyalty Programs:</span>
+              <span>{groupedPunchCards.length}</span>
+            </div>
+            <div className="flex justify-between">
               <span className="font-medium">Total Punch Cards:</span>
               <span>{punchCards.length}</span>
             </div>
@@ -225,78 +256,97 @@ export function CustomerDetailPage() {
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
-            <CreditCard className="h-4 w-4 sm:h-5 sm:w-5" />
-            Punch Cards ({punchCards.length})
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {punchCards.length === 0 ? (
-            <div className="text-center py-8">
-              <CreditCard className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No punch cards</h3>
-              <p className="text-muted-foreground">
-                This customer hasn't created any punch cards with your business yet.
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {punchCards.map((card) => (
-                <div
-                  key={card.id}
-                  className="border rounded-lg p-4 hover:bg-muted/25 transition-colors"
-                >
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
-                        <h4 className="font-medium truncate">{card.shopName}</h4>
-                        <Badge className={getStatusColor(card.status)}>
-                          {getStatusText(card.status)}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-muted-foreground mb-2 truncate">
-                        {card.shopAddress}
+      {groupedPunchCards.length === 0 ? (
+        <Card>
+          <CardContent className="text-center py-8">
+            <CreditCard className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">No punch cards</h3>
+            <p className="text-muted-foreground">
+              This customer hasn't created any punch cards with your business yet.
+            </p>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="space-y-6">
+          {groupedPunchCards.map((group) => (
+            <Card key={group.loyaltyProgramId}>
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                      <Gift className="h-4 w-4 sm:h-5 sm:w-5" />
+                      {group.loyaltyProgramName}
+                    </CardTitle>
+                    {group.loyaltyProgramDescription && (
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {group.loyaltyProgramDescription}
                       </p>
-                      <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-sm text-muted-foreground">
-                        <span>Punches: {card.currentPunches}/{card.totalPunches}</span>
-                        <span>Created: {formatDate(card.createdAt)}</span>
-                        {card.lastPunchAt && (
-                          <span className="hidden sm:inline">Last punch: {formatDateTime(card.lastPunchAt)}</span>
-                        )}
+                    )}
+                    <p className="text-sm font-medium text-primary mt-2">
+                      🎁 {group.rewardDescription}
+                    </p>
+                  </div>
+                  <Badge variant="outline" className="ml-4">
+                    {group.cards.length} card{group.cards.length !== 1 ? 's' : ''}
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {group.cards.map((card) => (
+                    <div
+                      key={card.id}
+                      className="border rounded-lg p-4 hover:bg-muted/25 transition-colors"
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                            <Badge className={getStatusColor(card.status)}>
+                              {getStatusText(card.status)}
+                            </Badge>
+                            <span className="text-sm text-muted-foreground">
+                              Created: {formatDate(card.createdAt)}
+                            </span>
+                          </div>
+                          <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-sm text-muted-foreground">
+                            <span>Punches: {card.currentPunches}/{card.totalPunches}</span>
+                            {card.lastPunchAt && (
+                              <span className="hidden sm:inline">Last punch: {formatDateTime(card.lastPunchAt)}</span>
+                            )}
+                          </div>
+                          {card.lastPunchAt && (
+                            <div className="sm:hidden text-sm text-muted-foreground mt-1">
+                              Last punch: {formatDateTime(card.lastPunchAt)}
+                            </div>
+                          )}
+                        </div>
+                        <div className="text-center sm:text-right">
+                          <div className="text-xl sm:text-2xl font-bold text-primary">
+                            {card.currentPunches}/{card.totalPunches}
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            {Math.round((card.currentPunches / card.totalPunches) * 100)}% Complete
+                          </div>
+                        </div>
                       </div>
-                      {card.lastPunchAt && (
-                        <div className="sm:hidden text-sm text-muted-foreground mt-1">
-                          Last punch: {formatDateTime(card.lastPunchAt)}
+                      {card.completedAt && (
+                        <div className="mt-2 pt-2 border-t text-sm text-muted-foreground">
+                          Completed: {formatDateTime(card.completedAt)}
+                        </div>
+                      )}
+                      {card.redeemedAt && (
+                        <div className="mt-2 pt-2 border-t text-sm text-muted-foreground">
+                          Redeemed: {formatDateTime(card.redeemedAt)}
                         </div>
                       )}
                     </div>
-                    <div className="text-center sm:text-right">
-                      <div className="text-xl sm:text-2xl font-bold text-primary">
-                        {card.currentPunches}/{card.totalPunches}
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        {Math.round((card.currentPunches / card.totalPunches) * 100)}% Complete
-                      </div>
-                    </div>
-                  </div>
-                  {card.completedAt && (
-                    <div className="mt-2 pt-2 border-t text-sm text-muted-foreground">
-                      Completed: {formatDateTime(card.completedAt)}
-                    </div>
-                  )}
-                  {card.redeemedAt && (
-                    <div className="mt-2 pt-2 border-t text-sm text-muted-foreground">
-                      Redeemed: {formatDateTime(card.redeemedAt)}
-                    </div>
-                  )}
+                  ))}
                 </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

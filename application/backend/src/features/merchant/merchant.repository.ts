@@ -249,8 +249,9 @@ export class MerchantRepository {
         pc.redeemed_at,
         pc.last_punch_at,
         pc.created_at,
-        m.name as merchant_name,
-        m.address as merchant_address,
+        lp.name as loyalty_program_name,
+        lp.description as loyalty_program_description,
+        lp.reward_description,
         lp.required_punches,
         COALESCE(specific_style.primary_color, default_style.primary_color) as primary_color,
         COALESCE(specific_style.secondary_color, default_style.secondary_color) as secondary_color,
@@ -263,7 +264,7 @@ export class MerchantRepository {
       LEFT JOIN punch_card_style specific_style ON specific_style.loyalty_program_id = lp.id
       LEFT JOIN punch_card_style default_style ON default_style.merchant_id = m.id AND default_style.loyalty_program_id IS NULL
       WHERE lp.merchant_id = $1 AND pc.user_id = $2
-      ORDER BY pc.created_at DESC
+      ORDER BY lp.name, pc.created_at DESC
     `;
 
     const result = await this.pool.query(query, [merchantId, customerId]);
@@ -271,8 +272,11 @@ export class MerchantRepository {
     return result.rows.map((row: any) => ({
       id: row.id,
       loyaltyProgramId: row.loyalty_program_id,
-      shopName: row.merchant_name,
-      shopAddress: row.merchant_address || '',
+      loyaltyProgramName: row.loyalty_program_name,
+      loyaltyProgramDescription: row.loyalty_program_description,
+      rewardDescription: row.reward_description,
+      shopName: row.loyalty_program_name,
+      shopAddress: row.loyalty_program_description || '',
       currentPunches: row.current_punches,
       totalPunches: row.required_punches,
       status: row.status,
