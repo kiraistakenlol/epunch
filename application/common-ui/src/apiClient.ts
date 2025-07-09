@@ -532,4 +532,12 @@ export const apiClient = {
     const response = await instance.get<UserDto>(`/merchants/${merchantId}/customers/${customerId}`);
     return response.data;
   },
+
+  async getMerchantCustomerPunchCards(merchantId: string, customerId: string): Promise<PunchCardDto[]> {
+    if (!merchantId || !customerId) {
+      return Promise.reject(new Error('Merchant ID and Customer ID are required.'));
+    }
+    const response = await instance.get<PunchCardDto[]>(`/merchants/${merchantId}/customers/${customerId}/punch-cards`);
+    return response.data;
+  },
 }; 

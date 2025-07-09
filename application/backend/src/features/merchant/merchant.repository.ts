@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { LoyaltyProgramDto, MerchantDto, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, CreateMerchantDto, UpdateMerchantDto } from 'e-punch-common-core';
+import { LoyaltyProgramDto, MerchantDto, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, CreateMerchantDto, UpdateMerchantDto, PunchCardDto } from 'e-punch-common-core';
 import { Pool } from 'pg';
-import { MerchantMapper, LoyaltyProgramMapper } from '../../mappers';
+import { MerchantMapper, LoyaltyProgramMapper, PunchCardMapper } from '../../mappers';
 
 export interface Merchant {
   id: string;
@@ -237,80 +237,57 @@ export class MerchantRepository {
     return result.rows.length > 0;
   }
 
-  async findCustomersByMerchantId(
-    merchantId: string,
-    page: number = 1,
-    limit: number = 10,
-    search?: string,
-    sortBy?: string,
-    sortOrder?: 'asc' | 'desc'
-  ): Promise<any[]> {
-    const offset = (page - 1) * limit;
-    
-    let whereClause = '';
-    let orderClause = 'ORDER BY u.created_at DESC';
-    const queryParams: any[] = [merchantId, limit, offset];
-    let paramIndex = 4;
-    
-    if (search) {
-      whereClause = `AND (u.email ILIKE $${paramIndex} OR u.id ILIKE $${paramIndex})`;
-      queryParams.push(`%${search}%`);
-      paramIndex++;
-    }
-    
-    if (sortBy && sortOrder) {
-      const validSortFields = ['email', 'created_at', 'id'];
-      if (validSortFields.includes(sortBy)) {
-        orderClause = `ORDER BY u.${sortBy} ${sortOrder.toUpperCase()}`;
-      }
-    }
-    
+  async findPunchCardsByMerchantAndCustomer(merchantId: string, customerId: string): Promise<PunchCardDto[]> {
     const query = `
-      SELECT DISTINCT u.id, u.email, u.external_id, u.external_provider, u.super_admin, u.created_at
-      FROM "user" u
-      JOIN punch_card pc ON u.id = pc.user_id
+      SELECT 
+        pc.id,
+        pc.user_id,
+        pc.loyalty_program_id,
+        pc.current_punches,
+        pc.status,
+        pc.completed_at,
+        pc.redeemed_at,
+        pc.last_punch_at,
+        pc.created_at,
+        m.name as merchant_name,
+        m.address as merchant_address,
+        lp.required_punches,
+        COALESCE(specific_style.primary_color, default_style.primary_color) as primary_color,
+        COALESCE(specific_style.secondary_color, default_style.secondary_color) as secondary_color,
+        COALESCE(specific_style.logo_url, default_style.logo_url) as logo_url,
+        COALESCE(specific_style.background_image_url, default_style.background_image_url) as background_image_url,
+        COALESCE(specific_style.punch_icons, default_style.punch_icons) as punch_icons
+      FROM punch_card pc
       JOIN loyalty_program lp ON pc.loyalty_program_id = lp.id
-      WHERE lp.merchant_id = $1 ${whereClause}
-      ${orderClause}
-      LIMIT $2 OFFSET $3
+      JOIN merchant m ON lp.merchant_id = m.id
+      LEFT JOIN punch_card_style specific_style ON specific_style.loyalty_program_id = lp.id
+      LEFT JOIN punch_card_style default_style ON default_style.merchant_id = m.id AND default_style.loyalty_program_id IS NULL
+      WHERE lp.merchant_id = $1 AND pc.user_id = $2
+      ORDER BY pc.created_at DESC
     `;
-    
-    const result = await this.pool.query(query, queryParams);
-    return result.rows;
-  }
 
-  async countCustomersByMerchantId(merchantId: string, search?: string): Promise<number> {
-    let whereClause = '';
-    const queryParams: any[] = [merchantId];
-    let paramIndex = 2;
-    
-    if (search) {
-      whereClause = `AND (u.email ILIKE $${paramIndex} OR u.id ILIKE $${paramIndex})`;
-      queryParams.push(`%${search}%`);
-    }
-    
-    const query = `
-      SELECT COUNT(DISTINCT u.id) as total
-      FROM "user" u
-      JOIN punch_card pc ON u.id = pc.user_id
-      JOIN loyalty_program lp ON pc.loyalty_program_id = lp.id
-      WHERE lp.merchant_id = $1 ${whereClause}
-    `;
-    
-    const result = await this.pool.query(query, queryParams);
-    return parseInt(result.rows[0].total) || 0;
-  }
-
-  async findCustomerByMerchantAndId(merchantId: string, customerId: string): Promise<any | null> {
-    const query = `
-      SELECT DISTINCT u.id, u.email, u.external_id, u.external_provider, u.super_admin, u.created_at
-      FROM "user" u
-      JOIN punch_card pc ON u.id = pc.user_id
-      JOIN loyalty_program lp ON pc.loyalty_program_id = lp.id
-      WHERE lp.merchant_id = $1 AND u.id = $2
-    `;
-    
     const result = await this.pool.query(query, [merchantId, customerId]);
-    return result.rows[0] || null;
+    
+    return result.rows.map((row: any) => ({
+      id: row.id,
+      loyaltyProgramId: row.loyalty_program_id,
+      shopName: row.merchant_name,
+      shopAddress: row.merchant_address || '',
+      currentPunches: row.current_punches,
+      totalPunches: row.required_punches,
+      status: row.status,
+      styles: {
+        primaryColor: row.primary_color,
+        secondaryColor: row.secondary_color,
+        logoUrl: row.logo_url,
+        backgroundImageUrl: row.background_image_url,
+        punchIcons: row.punch_icons,
+      },
+      createdAt: row.created_at.toISOString(),
+      completedAt: row.completed_at ? row.completed_at.toISOString() : null,
+      redeemedAt: row.redeemed_at ? row.redeemed_at.toISOString() : null,
+      lastPunchAt: row.last_punch_at ? row.last_punch_at.toISOString() : null,
+    }));
   }
+
 } 
