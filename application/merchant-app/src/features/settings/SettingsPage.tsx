@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
-import { User, Users, Settings as SettingsIcon, MapPin, Calendar, Clock } from 'lucide-react';
+import { User, Users, Settings as SettingsIcon, Store, Calendar, Clock } from 'lucide-react';
 import { toast } from 'sonner';
 
 export function SettingsPage() {
@@ -72,7 +72,7 @@ export function SettingsPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <MapPin className="h-5 w-5" />
+              <Store className="h-5 w-5" />
               Merchant Information
             </CardTitle>
           </CardHeader>
