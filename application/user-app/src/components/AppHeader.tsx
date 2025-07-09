@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Dropdown } from 'react-bootstrap';
-import { LanguageSwitch, useI18n, logoUrl } from 'e-punch-common-ui';
+import { LanguageSwitch, useI18n } from 'e-punch-common-ui';
 import { RootState } from '../store/store';
 import { selectIsAuthenticated, selectSuperAdmin } from '../features/auth/authSlice';
 import { openSignOutModal } from '../features/signOut/signOutSlice';
@@ -32,11 +32,7 @@ const logoStyle: React.CSSProperties = {
   alignItems: "center",
 };
 
-const logoImageStyle: React.CSSProperties = {
-  height: "50px",
-  width: "auto",
-  filter: "brightness(0)",
-};
+
 
 const profileIconStyle: React.CSSProperties = {
   height: "45px",
@@ -97,39 +93,22 @@ const AppHeader: React.FC<AppHeaderProps> = () => {
       <LanguageSwitch
         style={{
           color: appColors.epunchBlack,
-          marginRight: '10px'
+          position: "absolute",
+          left: showDevLink ? "50px" : "20px",
+          top: "50%",
+          transform: "translateY(-50%)"
         }}
       />
 
-      <div style={{ width: showProfileMenu ? "40px" : "0" }}></div>
       <div style={logoStyle}>
-        <div style={{
-          position: "relative",
-          display: "inline-block",
-          height: "50px",
-          width: "140px"
+        <span style={{
+          fontSize: "32px",
+          fontWeight: "500",
+          color: appColors.epunchBlack,
+          lineHeight: "1",
         }}>
-          <img
-            src={logoUrl}
-            alt={title}
-            style={{
-              ...logoImageStyle,
-              position: "absolute",
-              left: "-28px",
-            }}
-          />
-                      <span style={{
-              position: "absolute",
-              top: "18px",
-              left: "28px",
-              fontSize: "32px",
-              fontWeight: "500",
-              color: appColors.epunchBlack,
-              lineHeight: "1",
-            }}>
-            unch
-          </span>
-        </div>
+          ePunch
+        </span>
       </div>
 
       {showProfileMenu && (
