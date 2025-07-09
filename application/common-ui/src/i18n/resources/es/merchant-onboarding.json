@@ -128,6 +128,30 @@
       "label": "Gastan más dinero"
     }
   },
+  "pricing": {
+    "title": "Precios Simples y Transparentes",
+    "subtitle": "Elegí el plan que se ajuste al tamaño de tu negocio",
+    "monthly": "Mensual",
+    "starter": {
+      "name": "Inicial",
+      "price": "$10000",
+      "features": {
+        "unlimitedClients": "Clientes ilimitados",
+        "consumptions": "Hasta 50 consumos al mes",
+        "loyaltyPrograms": "Hasta 2 loyalty programs"
+      }
+    },
+    "professional": {
+      "name": "Profesional",
+      "price": "$30000",
+      "features": {
+        "unlimitedClients": "Clientes ilimitados",
+        "consumptions": "Hasta 500 consumos al mes",
+        "loyaltyPrograms": "Hasta 10 loyalty programs"
+      }
+    },
+    "popular": "Más Popular"
+  },
   "cta": {
     "title": "¿Listo para Hacer {{merchantName}} Adictivo?",
     "subtitle": "Contáctanos y convirtamos esos visitantes ocasionales en clientes obsesionados",

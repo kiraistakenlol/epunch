@@ -6,6 +6,7 @@ export { HowItWorksSection } from './HowItWorksSection';
 export { ProblemSolutionSection } from './ProblemSolutionSection';
 export { FuturePlansSection } from './FuturePlansSection';
 export { BenefitsSection } from './BenefitsSection';
+export { PricingSection } from './PricingSection';
 export { SocialProofSection } from './SocialProofSection';
 export { CTASection } from './CTASection';
 export { LoadingState } from './LoadingState';

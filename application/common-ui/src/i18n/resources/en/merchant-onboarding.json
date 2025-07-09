@@ -128,6 +128,30 @@
       "label": "Spend more money"
     }
   },
+  "pricing": {
+    "title": "Simple, Transparent Pricing",
+    "subtitle": "Choose the plan that fits your business size",
+    "monthly": "Monthly",
+    "starter": {
+      "name": "Starter",
+      "price": "$10",
+      "features": {
+        "unlimitedClients": "Unlimited clients",
+        "consumptions": "Up to 50 consumptions per month",
+        "loyaltyPrograms": "Up to 2 loyalty programs"
+      }
+    },
+    "professional": {
+      "name": "Professional",
+      "price": "$30",
+      "features": {
+        "unlimitedClients": "Unlimited clients",
+        "consumptions": "Up to 500 consumptions per month",
+        "loyaltyPrograms": "Up to 10 loyalty programs"
+      }
+    },
+    "popular": "Most Popular"
+  },
   "cta": {
     "title": "Ready to Make {{merchantName}} Addictive?",
     "subtitle": "Hit us up and let's turn those one-time visitors into obsessed regulars",

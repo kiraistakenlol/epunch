@@ -12,6 +12,7 @@ import {
   ProblemSolutionSection,
   FuturePlansSection,
   BenefitsSection,
+  PricingSection,
   SocialProofSection,
   CTASection,
   LoadingState,
@@ -219,6 +220,10 @@ export const MerchantOnboardingPage: React.FC = () => {
 
       <div id="future">
         <FuturePlansSection />
+      </div>
+
+      <div id="pricing">
+        <PricingSection />
       </div>
 
       <div id="social-proof">
