@@ -19,6 +19,7 @@ import { WelcomeQRPage as V2WelcomeQRPage } from '../features/scanner/pages';
 import { AnalyticsPage } from '../features/analytics/AnalyticsPage';
 import { CustomersPage } from '../features/customers/CustomersPage';
 import { CustomerDetailPage } from '../features/customers/CustomerDetailPage';
+import { SettingsPage } from '../features/settings/SettingsPage';
 import { Toaster } from '../components/ui/sonner';
 import '../styles/global.css';
 import { RootState } from '../store/store';
@@ -143,6 +144,11 @@ function App() {
             <Route path="customers/:id" element={
               <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
                 <CustomerDetailPage />
+              </RoleProtectedRoute>
+            } />
+            <Route path="admin/settings" element={
+              <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+                <SettingsPage />
               </RoleProtectedRoute>
             } />
           </Route>
