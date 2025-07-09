@@ -52,7 +52,6 @@ export class LoyaltyProgramMapper {
         name: row.merchant_name,
         address: row.merchant_address || '',
         slug: row.merchant_slug,
-        email: '',
         logoUrl: row.merchant_logo_url || '',
         createdAt: row.merchant_created_at.toISOString(),
       },

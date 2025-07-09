@@ -1,0 +1,110 @@
+/* Safari Bottom Bar */
+.safari-bottom-bar {
+  background: #f8f9fa;
+  border-top: 1px solid #e0e0e0;
+  flex-shrink: 0;
+  border-bottom-left-radius: 18px;
+  border-bottom-right-radius: 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.safari-address-section {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+}
+
+.safari-nav-section {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 16px;
+}
+
+.safari-bottom-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: none;
+  color: #007AFF;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.safari-bottom-btn:hover {
+  background: rgba(0, 122, 255, 0.1);
+}
+
+.safari-bottom-btn.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.safari-bottom-btn.disabled:hover {
+  background: none;
+}
+
+.safari-bottom-address-bar {
+  flex: 1;
+  height: 28px;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 8px;
+  font-size: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.safari-bottom-address-bar .safari-lock {
+  font-size: 12px;
+  color: #22c55e;
+  flex-shrink: 0;
+}
+
+.safari-bottom-address-bar .safari-url {
+  flex: 1;
+  color: #374151;
+  font-weight: 500;
+  font-size: 14px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .safari-address-section {
+    height: 40px;
+    padding: 6px 12px;
+  }
+  
+  .safari-nav-section {
+    height: 40px;
+    padding: 0 12px;
+  }
+  
+  .safari-bottom-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+  
+  .safari-bottom-address-bar {
+    height: 24px;
+    padding: 0 8px;
+    font-size: 12px;
+    border-radius: 12px;
+  }
+} 

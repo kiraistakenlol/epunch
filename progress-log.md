@@ -8,3 +8,4 @@
 8. фейковые данные
 9.  errors on backend and fronted, make a wrapper and retur technical_error
 10. show customers in merchant app 
+11. a click on the address opens maps 

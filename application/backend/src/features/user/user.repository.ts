@@ -112,4 +112,99 @@ export class UserRepository {
     }
   }
 
+  async findCustomersByMerchantId(
+    merchantId: string,
+    page: number = 1,
+    limit: number = 10,
+    search?: string,
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc'
+  ): Promise<{ customers: User[]; total: number }> {
+    this.logger.log(`Fetching customers for merchant: ${merchantId}, page: ${page}, limit: ${limit}`);
+    
+    const offset = (page - 1) * limit;
+    
+    let whereClause = '';
+    let orderClause = 'ORDER BY u.created_at DESC';
+    const queryParams: (string | number)[] = [merchantId, limit, offset];
+    let paramIndex = 4;
+    
+    if (search) {
+      whereClause = `AND (u.email ILIKE $${paramIndex} OR u.id ILIKE $${paramIndex})`;
+      queryParams.push(`%${search}%`);
+      paramIndex++;
+    }
+    
+    if (sortBy && sortOrder) {
+      const allowedSortColumns = ['email', 'created_at'];
+      if (allowedSortColumns.includes(sortBy)) {
+        orderClause = `ORDER BY u.${sortBy} ${sortOrder.toUpperCase()}`;
+      }
+    }
+    
+    const customerQuery = `
+      SELECT DISTINCT u.* 
+      FROM "user" u
+      INNER JOIN punch_card pc ON u.id = pc.user_id
+      INNER JOIN loyalty_program lp ON pc.loyalty_program_id = lp.id
+      WHERE lp.merchant_id = $1
+      ${whereClause}
+      ${orderClause}
+      LIMIT $2 OFFSET $3
+    `;
+    
+    const countQuery = `
+      SELECT COUNT(DISTINCT u.id) as total
+      FROM "user" u
+      INNER JOIN punch_card pc ON u.id = pc.user_id
+      INNER JOIN loyalty_program lp ON pc.loyalty_program_id = lp.id
+      WHERE lp.merchant_id = $1
+      ${whereClause}
+    `;
+    
+    try {
+      const countParams = search ? [merchantId, `%${search}%`] : [merchantId];
+      const [customerResult, countResult] = await Promise.all([
+        this.pool.query(customerQuery, queryParams),
+        this.pool.query(countQuery, countParams)
+      ]);
+      
+      const customers = customerResult.rows;
+      const total = parseInt(countResult.rows[0]?.total || '0', 10);
+      
+      this.logger.log(`Found ${customers.length} customers for merchant: ${merchantId}`);
+      return { customers, total };
+    } catch (error: any) {
+      this.logger.error(`Error fetching customers for merchant ${merchantId}: ${error.message}`);
+      throw error;
+    }
+  }
+
+  async findCustomerByMerchantAndId(merchantId: string, customerId: string): Promise<User | null> {
+    this.logger.log(`Fetching customer ${customerId} for merchant: ${merchantId}`);
+    
+    const query = `
+      SELECT DISTINCT u.* 
+      FROM "user" u
+      INNER JOIN punch_card pc ON u.id = pc.user_id
+      INNER JOIN loyalty_program lp ON pc.loyalty_program_id = lp.id
+      WHERE lp.merchant_id = $1 AND u.id = $2
+    `;
+    
+    try {
+      const result = await this.pool.query(query, [merchantId, customerId]);
+      
+      if (!result.rows[0]) {
+        this.logger.warn(`No customer found with id: ${customerId} for merchant: ${merchantId}`);
+        return null;
+      }
+      
+      this.logger.log(`Successfully found customer ${customerId} for merchant: ${merchantId}`);
+      return result.rows[0];
+    } catch (error: any) {
+      this.logger.error(`Error fetching customer ${customerId} for merchant ${merchantId}: ${error.message}`);
+      throw error;
+    }
+  }
+
 } 

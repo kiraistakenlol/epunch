@@ -1,0 +1,56 @@
+/* iOS Status Bar */
+.ios-status-bar {
+  height: 44px;
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+}
+
+.status-left {
+  flex: 1;
+}
+
+.status-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 16px;
+}
+
+.status-time {
+  font-weight: 600;
+  color: #000;
+}
+
+.status-signal,
+.status-wifi,
+.status-battery {
+  color: #000;
+  font-size: 16px;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .ios-status-bar {
+    height: 40px;
+    padding: 0 12px;
+    font-size: 12px;
+  }
+  
+  .status-right {
+    font-size: 14px;
+  }
+  
+  .status-signal,
+  .status-wifi,
+  .status-battery {
+    font-size: 14px;
+  }
+} 

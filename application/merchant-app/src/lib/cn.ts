@@ -16,4 +16,6 @@ export const ROUTES = {
   ANALYTICS: '/analytics',
   ADMIN_USERS: '/admin/users',
   ADMIN_SETTINGS: '/admin/settings',
+  CUSTOMERS: '/customers',
+  CUSTOMER_DETAIL: '/customers/:id',
 } as const
