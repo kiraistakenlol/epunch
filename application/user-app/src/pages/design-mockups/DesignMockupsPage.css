@@ -1,0 +1,75 @@
+.design-mockups-page {
+  padding: 20px;
+  background: #f8f9fa;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+
+
+.mockup-canvas {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+.variant-section {
+  padding: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.variant-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 32px 0;
+  text-align: center;
+}
+
+.screens-grid {
+  display: flex;
+  flex-direction: row;
+  gap: 64px;
+  align-items: flex-start;
+  width: 100%;
+  overflow-x: auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.screen-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.screen-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .design-mockups-page {
+    padding: 16px;
+  }
+  
+  .mockup-canvas {
+    gap: 60px;
+  }
+  
+  .screens-grid {
+    gap: 40px;
+    padding: 16px;
+  }
+  
+  .variant-title {
+    font-size: 24px;
+  }
+} 
