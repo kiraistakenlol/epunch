@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, User, Calendar, CreditCard, Mail, Shield, Gift } from 'lucide-react';
 import { apiClient } from 'e-punch-common-ui';
-import { UserDto, PunchCardDto } from 'e-punch-common-core';
-import { useAppSelector } from '@/store/hooks';
+import { UserDto, PunchCardDto, LoyaltyProgramDto } from 'e-punch-common-core';
+import { useAppSelector, useAppDispatch } from '@/store/hooks';
+import { fetchLoyaltyPrograms, selectLoyaltyPrograms } from '@/store/loyaltyProgramsSlice';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -15,16 +16,16 @@ import { ROUTES } from '@/lib/cn';
 import { toast } from 'sonner';
 
 interface GroupedPunchCards {
-  loyaltyProgramId: string;
-  loyaltyProgramName: string;
-  loyaltyProgramDescription?: string;
+  loyaltyProgram: LoyaltyProgramDto;
   cards: PunchCardDto[];
 }
 
 export function CustomerDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const merchantId = useAppSelector((state) => state.merchant.merchant?.id);
+  const loyaltyPrograms = useAppSelector(selectLoyaltyPrograms);
   
   const [customer, setCustomer] = useState<UserDto | null>(null);
   const [punchCards, setPunchCards] = useState<PunchCardDto[]>([]);
@@ -35,6 +36,12 @@ export function CustomerDetailPage() {
       loadCustomerData();
     }
   }, [id, merchantId]);
+
+  useEffect(() => {
+    if (merchantId && loyaltyPrograms.length === 0) {
+      dispatch(fetchLoyaltyPrograms(merchantId));
+    }
+  }, [merchantId, loyaltyPrograms.length, dispatch]);
 
   const loadCustomerData = async () => {
     if (!id || !merchantId) return;
@@ -86,17 +93,22 @@ export function CustomerDetailPage() {
     }
   };
 
-  // Group punch cards by loyalty program
+  // Group punch cards by loyalty program using loyaltyProgramId
   const groupedPunchCards: GroupedPunchCards[] = punchCards.reduce((groups, card) => {
-    const existingGroup = groups.find((group: GroupedPunchCards) => group.loyaltyProgramId === card.loyaltyProgramId);
+    const loyaltyProgram = loyaltyPrograms.find(program => program.id === card.loyaltyProgramId);
+    
+    if (!loyaltyProgram) {
+      // Skip cards for programs that don't exist or haven't been loaded yet
+      return groups;
+    }
+
+    const existingGroup = groups.find(group => group.loyaltyProgram.id === card.loyaltyProgramId);
     
     if (existingGroup) {
       existingGroup.cards.push(card);
     } else {
       groups.push({
-        loyaltyProgramId: card.loyaltyProgramId,
-        loyaltyProgramName: card.loyaltyProgramName || 'Unknown Program',
-        loyaltyProgramDescription: card.loyaltyProgramDescription,
+        loyaltyProgram,
         cards: [card]
       });
     }
@@ -231,18 +243,22 @@ export function CustomerDetailPage() {
               ) : (
                 <div className="space-y-6">
                   {groupedPunchCards.map((group) => (
-                    <div key={group.loyaltyProgramId} className="space-y-3">
+                    <div key={group.loyaltyProgram.id} className="space-y-3">
                       <div className="flex items-center gap-2">
                         <Gift className="w-4 h-4 text-primary" />
-                        <h4 className="font-medium">{group.loyaltyProgramName}</h4>
+                        <h4 className="font-medium">{group.loyaltyProgram.name}</h4>
                         <Badge variant="outline">{group.cards.length} card{group.cards.length > 1 ? 's' : ''}</Badge>
                       </div>
                       
-                      {group.loyaltyProgramDescription && (
+                      {group.loyaltyProgram.description && (
                         <p className="text-sm text-muted-foreground pl-6">
-                          {group.loyaltyProgramDescription}
+                          {group.loyaltyProgram.description}
                         </p>
                       )}
+                      
+                      <div className="text-sm text-muted-foreground pl-6 mb-2">
+                        🎁 {group.loyaltyProgram.rewardDescription}
+                      </div>
                       
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pl-6">
                         {group.cards.map((card) => (

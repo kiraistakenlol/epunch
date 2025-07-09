@@ -249,22 +249,21 @@ export class MerchantRepository {
         pc.redeemed_at,
         pc.last_punch_at,
         pc.created_at,
-        lp.name as loyalty_program_name,
-        lp.description as loyalty_program_description,
-        lp.reward_description,
+        m.name as merchant_name,
+        m.address as merchant_address,
         lp.required_punches,
         COALESCE(specific_style.primary_color, default_style.primary_color) as primary_color,
         COALESCE(specific_style.secondary_color, default_style.secondary_color) as secondary_color,
         COALESCE(specific_style.logo_url, default_style.logo_url) as logo_url,
-        COALESCE(specific_style.background_image_url, default_style.background_image_url) as background_image_url,
-        COALESCE(specific_style.punch_icons, default_style.punch_icons) as punch_icons
-      FROM punch_card pc
-      JOIN loyalty_program lp ON pc.loyalty_program_id = lp.id
-      JOIN merchant m ON lp.merchant_id = m.id
-      LEFT JOIN punch_card_style specific_style ON specific_style.loyalty_program_id = lp.id
-      LEFT JOIN punch_card_style default_style ON default_style.merchant_id = m.id AND default_style.loyalty_program_id IS NULL
-      WHERE lp.merchant_id = $1 AND pc.user_id = $2
-      ORDER BY lp.name, pc.created_at DESC
+        COALESCE(specific_style.background_color, default_style.background_color) as background_color,
+        COALESCE(specific_style.text_color, default_style.text_color) as text_color
+      FROM punch_cards pc
+      INNER JOIN loyalty_programs lp ON pc.loyalty_program_id = lp.id
+      INNER JOIN merchants m ON lp.merchant_id = m.id
+      LEFT JOIN punch_card_styles specific_style ON lp.punch_card_style_id = specific_style.id
+      LEFT JOIN punch_card_styles default_style ON m.default_punch_card_style_id = default_style.id
+      WHERE m.id = $1 AND pc.user_id = $2
+      ORDER BY pc.created_at DESC
     `;
 
     const result = await this.pool.query(query, [merchantId, customerId]);
@@ -272,25 +271,22 @@ export class MerchantRepository {
     return result.rows.map((row: any) => ({
       id: row.id,
       loyaltyProgramId: row.loyalty_program_id,
-      loyaltyProgramName: row.loyalty_program_name,
-      loyaltyProgramDescription: row.loyalty_program_description,
-      rewardDescription: row.reward_description,
-      shopName: row.loyalty_program_name,
-      shopAddress: row.loyalty_program_description || '',
+      shopName: row.merchant_name,
+      shopAddress: row.merchant_address,
       currentPunches: row.current_punches,
       totalPunches: row.required_punches,
       status: row.status,
+      createdAt: row.created_at,
+      completedAt: row.completed_at,
+      redeemedAt: row.redeemed_at,
+      lastPunchAt: row.last_punch_at,
       styles: {
         primaryColor: row.primary_color,
         secondaryColor: row.secondary_color,
         logoUrl: row.logo_url,
-        backgroundImageUrl: row.background_image_url,
-        punchIcons: row.punch_icons,
-      },
-      createdAt: row.created_at.toISOString(),
-      completedAt: row.completed_at ? row.completed_at.toISOString() : null,
-      redeemedAt: row.redeemed_at ? row.redeemed_at.toISOString() : null,
-      lastPunchAt: row.last_punch_at ? row.last_punch_at.toISOString() : null,
+        backgroundColor: row.background_color,
+        textColor: row.text_color,
+      }
     }));
   }
 
