@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { ScreenProps } from '../../../types';
 import { BaseScreen, FilterChips, Card } from '../../../components';
-import { Wallet, History, User, ArrowUpRight, Calendar } from 'lucide-react';
+import { ArrowUpRight, Calendar } from 'lucide-react';
 import FloatingQRButton from '../components/FloatingQRButton';
 import QRCodeModal from '../components/QRCodeModal';
 import './ActivityFeed.css';
 
-const ActivityFeed: React.FC<ScreenProps> = ({ isActive }) => {
+const ActivityFeed: React.FC<ScreenProps> = ({ isActive: _isActive }) => {
   const [activeFilter, setActiveFilter] = useState('all');
   const [showQRModal, setShowQRModal] = useState(false);
 

@@ -1,6 +1,5 @@
 import { DesignVariant } from '../../types';
 import HomeDashboard from './screens/HomeDashboard';
-import MyCardsGrid from './screens/MyCardsGrid';
 import RewardsManagement from './screens/RewardsManagement';
 import ActivityFeed from './screens/ActivityFeed';
 

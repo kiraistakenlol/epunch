@@ -286,6 +286,8 @@ export class MerchantRepository {
         logoUrl: row.logo_url,
         backgroundColor: row.background_color,
         textColor: row.text_color,
+        backgroundImageUrl: row.background_image_url || null,
+        punchIcons: row.punch_icons || null
       }
     }));
   }

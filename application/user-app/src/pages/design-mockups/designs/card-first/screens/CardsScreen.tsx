@@ -4,7 +4,7 @@ import { BaseScreen, SearchBar, FilterChips, ShopCard, Button } from '../../../c
 import ContextualQRModal from '../components/ContextualQRModal';
 import './CardsScreen.css';
 
-const CardsScreen: React.FC<ScreenProps> = ({ isActive }) => {
+const CardsScreen: React.FC<ScreenProps> = ({ isActive: _isActive }) => {
   const [searchValue, setSearchValue] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
   const [showQRModal, setShowQRModal] = useState(false);

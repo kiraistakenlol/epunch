@@ -4,7 +4,7 @@ import { BaseScreen, Card, Button, ProgressBar } from '../../../components';
 import ContextualQRModal from '../components/ContextualQRModal';
 import './RewardsScreen.css';
 
-const RewardsScreen: React.FC<ScreenProps> = ({ isActive }) => {
+const RewardsScreen: React.FC<ScreenProps> = ({ isActive: _isActive }) => {
   const [showQRModal, setShowQRModal] = useState(false);
   const [selectedReward, setSelectedReward] = useState<string | null>(null);
 
@@ -65,7 +65,7 @@ const RewardsScreen: React.FC<ScreenProps> = ({ isActive }) => {
     { id: 'profile', icon: '👤', label: 'Profile' }
   ];
 
-  const handleClaimReward = (rewardId: string, shopName: string) => {
+  const handleClaimReward = (_rewardId: string, shopName: string) => {
     setSelectedReward(shopName);
     setShowQRModal(true);
   };

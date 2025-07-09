@@ -1,12 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { ScreenProps } from '../../../types';
-import { BaseScreen, SearchBar, FilterChips, ShopCard } from '../../../components';
-import { Wallet, History, User, Search } from 'lucide-react';
+import { BaseScreen, FilterChips, ShopCard } from '../../../components';
+import { Search } from 'lucide-react';
 import FloatingQRButton from '../components/FloatingQRButton';
 import QRCodeModal from '../components/QRCodeModal';
 import './MyCardsGrid.css';
 
-const MyCardsGrid: React.FC<ScreenProps> = ({ isActive }) => {
+const MyCardsGrid: React.FC<ScreenProps> = ({ isActive: _isActive }) => {
   const [searchValue, setSearchValue] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
   const [showQRModal, setShowQRModal] = useState(false);

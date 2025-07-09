@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { ScreenProps } from '../../../types';
-import { BaseScreen, SearchBar, Button, PunchCard } from '../../../components';
-import { Wallet, History, User, Search } from 'lucide-react';
+import { BaseScreen, PunchCard } from '../../../components';
+import { Search } from 'lucide-react';
 import FloatingQRButton from '../components/FloatingQRButton';
 import QRCodeModal from '../components/QRCodeModal';
 import AuthPrompt from '../components/AuthPrompt';
 import './HomeDashboard.css';
 
-const HomeDashboard: React.FC<ScreenProps> = ({ isActive }) => {
+const HomeDashboard: React.FC<ScreenProps> = ({ isActive: _isActive }) => {
   const [searchValue, setSearchValue] = useState('');
   const [showQRModal, setShowQRModal] = useState(false);
   const [showAuthPrompt, setShowAuthPrompt] = useState(true);

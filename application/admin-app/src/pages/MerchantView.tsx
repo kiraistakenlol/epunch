@@ -17,7 +17,6 @@ import {
   ArrowBack as ArrowBackIcon,
   Edit as EditIcon,
   Business as BusinessIcon,
-  Email as EmailIcon,
   LocationOn as LocationIcon,
   Link as LinkIcon,
   CalendarToday as CalendarIcon,
@@ -249,17 +248,6 @@ export const MerchantView: React.FC = () => {
           <Divider sx={{ my: 3, borderColor: 'rgba(93, 64, 55, 0.2)' }} />
 
           <Box display="flex" flexDirection="column" gap={3}>
-            <Box display="flex" alignItems="center">
-              <EmailIcon sx={{ color: '#5d4037', mr: 2 }} />
-              <Box>
-                <Typography variant="subtitle2" color="text.secondary">
-                  Email
-                </Typography>
-                <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
-                  {merchant.email || '—'}
-                </Typography>
-              </Box>
-            </Box>
 
             <Box display="flex" alignItems="center">
               <LocationIcon sx={{ color: '#5d4037', mr: 2 }} />

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { ScreenProps } from '../../../types';
 import { BaseScreen, Button, Card } from '../../../components';
-import { Wallet, History, User, Settings, LogOut, Bell, Shield, HelpCircle, ChevronRight } from 'lucide-react';
+import { User, Settings, LogOut, Bell, Shield, HelpCircle, ChevronRight } from 'lucide-react';
 import FloatingQRButton from '../components/FloatingQRButton';
 import QRCodeModal from '../components/QRCodeModal';
 import './RewardsManagement.css';
 
-const RewardsManagement: React.FC<ScreenProps> = ({ isActive }) => {
+const RewardsManagement: React.FC<ScreenProps> = ({ isActive: _isActive }) => {
   const [showQRModal, setShowQRModal] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
 

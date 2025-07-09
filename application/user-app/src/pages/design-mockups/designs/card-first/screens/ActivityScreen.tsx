@@ -3,7 +3,7 @@ import { ScreenProps } from '../../../types';
 import { BaseScreen, Card, FilterChips } from '../../../components';
 import './ActivityScreen.css';
 
-const ActivityScreen: React.FC<ScreenProps> = ({ isActive }) => {
+const ActivityScreen: React.FC<ScreenProps> = ({ isActive: _isActive }) => {
   const [activeFilter, setActiveFilter] = useState('all');
 
   const activityData = [

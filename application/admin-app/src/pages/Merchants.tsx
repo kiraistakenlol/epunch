@@ -89,13 +89,6 @@ export const Merchants: React.FC = () => {
       accessor: 'address',
     },
     {
-      key: 'email',
-      label: 'Email',
-      width: '25%',
-      minWidth: '150px',
-      accessor: 'email',
-    },
-    {
       key: 'createdAt',
       label: 'Created',
       width: '15%',

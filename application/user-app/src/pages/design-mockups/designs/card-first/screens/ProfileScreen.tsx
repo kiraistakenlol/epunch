@@ -4,7 +4,7 @@ import { BaseScreen, Card, Button } from '../../../components';
 import ContextualQRModal from '../components/ContextualQRModal';
 import './ProfileScreen.css';
 
-const ProfileScreen: React.FC<ScreenProps> = ({ isActive }) => {
+const ProfileScreen: React.FC<ScreenProps> = ({ isActive: _isActive }) => {
   const [showQRModal, setShowQRModal] = useState(false);
 
   const userStats = {
