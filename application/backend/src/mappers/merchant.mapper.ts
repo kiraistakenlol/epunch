@@ -8,7 +8,6 @@ export class MerchantMapper {
       name: merchant.name,
       address: merchant.address || '',
       slug: merchant.slug,
-      email: '',
       logoUrl: merchant.logo_url || '',
       createdAt: merchant.created_at.toISOString(),
     };
