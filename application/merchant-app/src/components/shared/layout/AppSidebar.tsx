@@ -23,7 +23,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { ROUTES } from "@/lib/cn"
-import { logoUrl } from 'e-punch-common-ui'
+import { epunchLogo } from 'e-punch-common-ui'
 import { useAppSelector } from '@/store/hooks'
 import { ROLES } from 'e-punch-common-core'
 
@@ -92,7 +92,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader className="border-b border-border pb-2 pt-4">
         <div className="flex items-center">
           <img 
-            src={logoUrl} 
+            src={epunchLogo} 
             alt="ePunch Logo" 
             className="h-12 w-auto object-contain brightness-0"
           />

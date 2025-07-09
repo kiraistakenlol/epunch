@@ -6,4 +6,4 @@ export * from './localization/index';
 export { default as LanguageSwitch } from './components/LanguageSwitch';
 
 // Export logo as URL for use in apps
-export { default as logoUrl } from '../public/logo.svg?url';
+export { default as epunchLogo } from '../public/logo.svg?url';

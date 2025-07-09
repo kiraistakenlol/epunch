@@ -11,7 +11,7 @@ import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Loader2, AlertCircle, Eye, EyeOff } from 'lucide-react';
-import { logoUrl } from 'e-punch-common-ui';
+import { epunchLogo } from 'e-punch-common-ui';
 
 interface LoginFormData {
   merchantSlug: string;
@@ -92,7 +92,7 @@ export const LoginPage: React.FC = () => {
           <div className="flex items-center justify-center mb-6">
             <Avatar className="h-12 w-12 bg-transparent">
               <AvatarImage 
-                src={logoUrl} 
+                src={epunchLogo} 
                 alt="ePunch" 
                 className="brightness-0 opacity-80 object-contain"
               />
