@@ -424,8 +424,7 @@ export class MerchantService {
         throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
       }
 
-      const customers = await this.merchantRepository.findCustomersByMerchantId(merchantId, page, limit, search, sortBy, sortOrder);
-      const total = await this.merchantRepository.countCustomersByMerchantId(merchantId, search);
+      const { customers, total } = await this.userRepository.findCustomersByMerchantId(merchantId, page, limit, search, sortBy, sortOrder);
 
       this.logger.log(`Found ${customers.length} customers for merchant: ${merchantId}`);
       return {
@@ -450,7 +449,7 @@ export class MerchantService {
         throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
       }
 
-      const customer = await this.merchantRepository.findCustomerByMerchantAndId(merchantId, customerId);
+      const customer = await this.userRepository.findCustomerByMerchantAndId(merchantId, customerId);
 
       if (!customer) {
         throw new NotFoundException(`Customer with ID ${customerId} not found for merchant ${merchantId}`);
