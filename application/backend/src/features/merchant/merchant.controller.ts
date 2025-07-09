@@ -1,5 +1,5 @@
 import { Controller, Get, Param, ParseUUIDPipe, Post, Body, HttpException, HttpStatus, Put, Delete, Query } from '@nestjs/common';
-import { LoyaltyProgramDto, MerchantUserLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreateMerchantDto, UpdateMerchantDto, FileUploadUrlDto, FileUploadResponseDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto, UserDto } from 'e-punch-common-core';
+import { LoyaltyProgramDto, MerchantUserLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreateMerchantDto, UpdateMerchantDto, FileUploadUrlDto, FileUploadResponseDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto, UserDto, PunchCardDto } from 'e-punch-common-core';
 import { MerchantService } from './merchant.service';
 
 @Controller('merchants')
@@ -161,6 +161,14 @@ export class MerchantController {
     @Param('customerId', ParseUUIDPipe) customerId: string,
   ): Promise<UserDto> {
     return this.merchantService.getMerchantCustomer(merchantId, customerId);
+  }
+
+  @Get(':merchantId/customers/:customerId/punch-cards')
+  async getMerchantCustomerPunchCards(
+    @Param('merchantId', ParseUUIDPipe) merchantId: string,
+    @Param('customerId', ParseUUIDPipe) customerId: string,
+  ): Promise<PunchCardDto[]> {
+    return this.merchantService.getMerchantCustomerPunchCards(merchantId, customerId);
   }
 
 } 

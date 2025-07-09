@@ -1,6 +1,6 @@
 import { Injectable, Logger, NotFoundException, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { LoyaltyProgramDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreateMerchantDto, UpdateMerchantDto, FileUploadUrlDto, FileUploadResponseDto, JwtPayloadDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto, UserDto } from 'e-punch-common-core';
+import { LoyaltyProgramDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreateMerchantDto, UpdateMerchantDto, FileUploadUrlDto, FileUploadResponseDto, JwtPayloadDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto, UserDto, PunchCardDto } from 'e-punch-common-core';
 import { MerchantRepository } from './merchant.repository';
 import { MerchantUserRepository } from '../merchant-user/merchant-user.repository';
 import { UserRepository } from '../user/user.repository';
@@ -459,6 +459,32 @@ export class MerchantService {
       return UserMapper.toDto(customer);
     } catch (error: any) {
       this.logger.error(`Error fetching customer ${customerId} for merchant ${merchantId}: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  async getMerchantCustomerPunchCards(merchantId: string, customerId: string): Promise<PunchCardDto[]> {
+    this.logger.log(`Fetching punch cards for customer ${customerId} in merchant: ${merchantId}`);
+
+    try {
+      const merchant = await this.merchantRepository.findMerchantById(merchantId);
+
+      if (!merchant) {
+        throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
+      }
+
+      const customer = await this.userRepository.findCustomerByMerchantAndId(merchantId, customerId);
+
+      if (!customer) {
+        throw new NotFoundException(`Customer with ID ${customerId} not found for merchant ${merchantId}`);
+      }
+
+      const punchCards = await this.merchantRepository.findPunchCardsByMerchantAndCustomer(merchantId, customerId);
+
+      this.logger.log(`Found ${punchCards.length} punch cards for customer ${customerId} in merchant: ${merchantId}`);
+      return punchCards;
+    } catch (error: any) {
+      this.logger.error(`Error fetching punch cards for customer ${customerId} in merchant ${merchantId}: ${error.message}`, error.stack);
       throw error;
     }
   }

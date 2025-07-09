@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, User, Calendar, CreditCard, Mail, Shield } from 'lucide-react';
 import { apiClient } from 'e-punch-common-ui';
@@ -30,7 +30,7 @@ export function CustomerDetailPage() {
     try {
       const [customerData, punchCardsData] = await Promise.all([
         apiClient.getMerchantCustomer(merchantId, id),
-        apiClient.getUserPunchCards(id)
+        apiClient.getMerchantCustomerPunchCards(merchantId, id)
       ]);
       
       setCustomer(customerData);
@@ -89,15 +89,15 @@ export function CustomerDetailPage() {
 
   if (loading) {
     return (
-      <div className="p-6 space-y-6">
-        <div className="flex items-center gap-4">
-          <Skeleton className="h-10 w-10" />
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+        <div className="flex items-center gap-2 sm:gap-4">
+          <Skeleton className="h-8 w-8 sm:h-10 sm:w-10" />
           <div>
-            <Skeleton className="h-8 w-48" />
-            <Skeleton className="h-4 w-32 mt-2" />
+            <Skeleton className="h-6 sm:h-8 w-32 sm:w-48" />
+            <Skeleton className="h-3 sm:h-4 w-24 sm:w-32 mt-2" />
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           <Skeleton className="h-48" />
           <Skeleton className="h-48" />
         </div>
@@ -108,7 +108,7 @@ export function CustomerDetailPage() {
 
   if (error || !customer) {
     return (
-      <div className="p-6">
+      <div className="p-4 sm:p-6">
         <Button
           variant="ghost"
           onClick={() => navigate('/customers')}
@@ -127,19 +127,20 @@ export function CustomerDetailPage() {
   }
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center gap-4">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
         <Button
           variant="ghost"
           onClick={() => navigate('/customers')}
+          className="self-start"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Customers
         </Button>
-        <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2">
-            <User className="h-8 w-8" />
-            {customer.email || 'Anonymous Customer'}
+        <div className="flex-1">
+          <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
+            <User className="h-6 w-6 sm:h-8 sm:w-8" />
+            <span className="break-all">{customer.email || 'Anonymous Customer'}</span>
           </h1>
           <p className="text-muted-foreground mt-1">
             Customer details and activity
@@ -147,36 +148,44 @@ export function CustomerDetailPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <User className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+              <User className="h-4 w-4 sm:h-5 sm:w-5" />
               Customer Information
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Mail className="h-4 w-4 text-muted-foreground" />
-              <span className="font-medium">Email:</span>
-              <span>{customer.email || 'Not provided'}</span>
+          <CardContent className="space-y-3 sm:space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+              <div className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-muted-foreground" />
+                <span className="font-medium">Email:</span>
+              </div>
+              <span className="break-all">{customer.email || 'Not provided'}</span>
             </div>
-            <div className="flex items-center gap-2">
-              <Shield className="h-4 w-4 text-muted-foreground" />
-              <span className="font-medium">Account Type:</span>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+              <div className="flex items-center gap-2">
+                <Shield className="h-4 w-4 text-muted-foreground" />
+                <span className="font-medium">Account Type:</span>
+              </div>
               <Badge variant={customer.externalId ? 'default' : 'secondary'}>
                 {customer.externalId ? 'Registered' : 'Anonymous'}
               </Badge>
             </div>
-            <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-muted-foreground" />
-              <span className="font-medium">Joined:</span>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+              <div className="flex items-center gap-2">
+                <Calendar className="h-4 w-4 text-muted-foreground" />
+                <span className="font-medium">Joined:</span>
+              </div>
               <span>{formatDate(customer.createdAt)}</span>
             </div>
             {customer.superAdmin && (
-              <div className="flex items-center gap-2">
-                <Shield className="h-4 w-4 text-muted-foreground" />
-                <span className="font-medium">Super Admin:</span>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                <div className="flex items-center gap-2">
+                  <Shield className="h-4 w-4 text-muted-foreground" />
+                  <span className="font-medium">Super Admin:</span>
+                </div>
                 <Badge variant="destructive">Yes</Badge>
               </div>
             )}
@@ -185,12 +194,12 @@ export function CustomerDetailPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <CreditCard className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+              <CreditCard className="h-4 w-4 sm:h-5 sm:w-5" />
               Activity Summary
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-3 sm:space-y-4">
             <div className="flex justify-between">
               <span className="font-medium">Total Punch Cards:</span>
               <span>{punchCards.length}</span>
@@ -218,8 +227,8 @@ export function CustomerDetailPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <CreditCard className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+            <CreditCard className="h-4 w-4 sm:h-5 sm:w-5" />
             Punch Cards ({punchCards.length})
           </CardTitle>
         </CardHeader>
@@ -229,7 +238,7 @@ export function CustomerDetailPage() {
               <CreditCard className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
               <h3 className="text-lg font-semibold mb-2">No punch cards</h3>
               <p className="text-muted-foreground">
-                This customer hasn't created any punch cards yet.
+                This customer hasn't created any punch cards with your business yet.
               </p>
             </div>
           ) : (
@@ -239,27 +248,32 @@ export function CustomerDetailPage() {
                   key={card.id}
                   className="border rounded-lg p-4 hover:bg-muted/25 transition-colors"
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h4 className="font-medium">{card.shopName}</h4>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                        <h4 className="font-medium truncate">{card.shopName}</h4>
                         <Badge className={getStatusColor(card.status)}>
                           {getStatusText(card.status)}
                         </Badge>
                       </div>
-                      <p className="text-sm text-muted-foreground mb-2">
+                      <p className="text-sm text-muted-foreground mb-2 truncate">
                         {card.shopAddress}
                       </p>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-sm text-muted-foreground">
                         <span>Punches: {card.currentPunches}/{card.totalPunches}</span>
                         <span>Created: {formatDate(card.createdAt)}</span>
                         {card.lastPunchAt && (
-                          <span>Last punch: {formatDateTime(card.lastPunchAt)}</span>
+                          <span className="hidden sm:inline">Last punch: {formatDateTime(card.lastPunchAt)}</span>
                         )}
                       </div>
+                      {card.lastPunchAt && (
+                        <div className="sm:hidden text-sm text-muted-foreground mt-1">
+                          Last punch: {formatDateTime(card.lastPunchAt)}
+                        </div>
+                      )}
                     </div>
-                    <div className="text-right">
-                      <div className="text-2xl font-bold text-primary">
+                    <div className="text-center sm:text-right">
+                      <div className="text-xl sm:text-2xl font-bold text-primary">
                         {card.currentPunches}/{card.totalPunches}
                       </div>
                       <div className="text-xs text-muted-foreground">

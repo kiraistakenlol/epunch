@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Users, Search, Eye } from 'lucide-react';
 import { apiClient } from 'e-punch-common-ui';
@@ -17,7 +17,6 @@ import {
   SelectTrigger, 
   SelectValue 
 } from '@/components/ui/select';
-import { ROUTES } from '@/app/routes';
 
 interface CustomerListResponse {
   customers: UserDto[];
@@ -101,9 +100,9 @@ export function CustomersPage() {
 
   if (error) {
     return (
-      <div className="p-6">
+      <div className="p-4 sm:p-6">
         <div className="text-center">
-          <h2 className="text-2xl font-semibold mb-4">Error Loading Customers</h2>
+          <h2 className="text-xl sm:text-2xl font-semibold mb-4">Error Loading Customers</h2>
           <p className="text-muted-foreground mb-4">{error}</p>
           <Button onClick={fetchCustomers}>Try Again</Button>
         </div>
@@ -112,11 +111,11 @@ export function CustomersPage() {
   }
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2">
-            <Users className="h-8 w-8" />
+          <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
+            <Users className="h-6 w-6 sm:h-8 sm:w-8" />
             Customers
           </h1>
           <p className="text-muted-foreground mt-1">
@@ -130,28 +129,31 @@ export function CustomersPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Customer List</CardTitle>
-          <div className="flex items-center gap-4 flex-wrap">
-            <div className="flex items-center gap-2 flex-1 min-w-[200px]">
+          <CardTitle className="text-lg sm:text-xl">Customer List</CardTitle>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+            <div className="flex items-center gap-2 flex-1">
               <Search className="h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search by email or ID..."
                 value={search}
                 onChange={(e) => handleSearchChange(e.target.value)}
-                className="max-w-sm"
+                className="flex-1 min-w-0"
               />
             </div>
-            <Select value={pageSize.toString()} onValueChange={handlePageSizeChange}>
-              <SelectTrigger className="w-20">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="10">10</SelectItem>
-                <SelectItem value="25">25</SelectItem>
-                <SelectItem value="50">50</SelectItem>
-                <SelectItem value="100">100</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground whitespace-nowrap">Show:</span>
+              <Select value={pageSize.toString()} onValueChange={handlePageSizeChange}>
+                <SelectTrigger className="w-20">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="10">10</SelectItem>
+                  <SelectItem value="25">25</SelectItem>
+                  <SelectItem value="50">50</SelectItem>
+                  <SelectItem value="100">100</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </CardHeader>
         <CardContent>
@@ -168,53 +170,87 @@ export function CustomersPage() {
             </div>
           ) : (
             <>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead 
-                      className="cursor-pointer hover:bg-muted/50"
-                      onClick={() => handleSortChange('email')}
-                    >
-                      Email {sortBy === 'email' && (sortOrder === 'asc' ? '↑' : '↓')}
-                    </TableHead>
-                    <TableHead>Account Type</TableHead>
-                    <TableHead 
-                      className="cursor-pointer hover:bg-muted/50"
-                      onClick={() => handleSortChange('created_at')}
-                    >
-                      Joined {sortBy === 'created_at' && (sortOrder === 'asc' ? '↑' : '↓')}
-                    </TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {data?.customers.map((customer) => (
-                    <TableRow key={customer.id}>
-                      <TableCell className="font-medium">
-                        {customer.email || 'Anonymous User'}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={customer.externalId ? 'default' : 'secondary'}>
-                          {customer.externalId ? 'Registered' : 'Anonymous'}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        {formatDate(customer.createdAt)}
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => navigate(`/customers/${customer.id}`)}
-                        >
-                          <Eye className="h-4 w-4 mr-2" />
-                          View
-                        </Button>
-                      </TableCell>
+              {/* Desktop Table */}
+              <div className="hidden sm:block">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead 
+                        className="cursor-pointer hover:bg-muted/50"
+                        onClick={() => handleSortChange('email')}
+                      >
+                        Email {sortBy === 'email' && (sortOrder === 'asc' ? '↑' : '↓')}
+                      </TableHead>
+                      <TableHead>Account Type</TableHead>
+                      <TableHead 
+                        className="cursor-pointer hover:bg-muted/50"
+                        onClick={() => handleSortChange('created_at')}
+                      >
+                        Joined {sortBy === 'created_at' && (sortOrder === 'asc' ? '↑' : '↓')}
+                      </TableHead>
+                      <TableHead>Actions</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {data?.customers.map((customer) => (
+                      <TableRow key={customer.id}>
+                        <TableCell className="font-medium">
+                          {customer.email || 'Anonymous User'}
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={customer.externalId ? 'default' : 'secondary'}>
+                            {customer.externalId ? 'Registered' : 'Anonymous'}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          {formatDate(customer.createdAt)}
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => navigate(`/customers/${customer.id}`)}
+                          >
+                            <Eye className="h-4 w-4 mr-2" />
+                            View
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+
+              {/* Mobile Cards */}
+              <div className="sm:hidden space-y-4">
+                {data?.customers.map((customer) => (
+                  <Card key={customer.id} className="p-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-sm mb-1 break-all">
+                          {customer.email || 'Anonymous User'}
+                        </div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <Badge variant={customer.externalId ? 'default' : 'secondary'} className="text-xs">
+                            {customer.externalId ? 'Registered' : 'Anonymous'}
+                          </Badge>
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          Joined: {formatDate(customer.createdAt)}
+                        </div>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => navigate(`/customers/${customer.id}`)}
+                        className="ml-2"
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </Card>
+                ))}
+              </div>
 
               {data?.customers.length === 0 && (
                 <div className="text-center py-8">
@@ -227,7 +263,7 @@ export function CustomersPage() {
               )}
 
               {totalPages > 1 && (
-                <div className="flex items-center justify-between mt-4">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-4">
                   <div className="text-sm text-muted-foreground">
                     Showing {((currentPage - 1) * pageSize) + 1} to {Math.min(currentPage * pageSize, data?.total || 0)} of {data?.total} customers
                   </div>
@@ -240,7 +276,7 @@ export function CustomersPage() {
                     >
                       Previous
                     </Button>
-                    <span className="text-sm">
+                    <span className="text-sm px-2">
                       Page {currentPage} of {totalPages}
                     </span>
                     <Button
