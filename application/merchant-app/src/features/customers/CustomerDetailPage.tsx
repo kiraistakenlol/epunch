@@ -10,12 +10,14 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
+import { PageContainer } from '@/components/shared/layout/PageContainer';
+import { ROUTES } from '@/lib/cn';
+import { toast } from 'sonner';
 
 interface GroupedPunchCards {
   loyaltyProgramId: string;
   loyaltyProgramName: string;
-  loyaltyProgramDescription: string;
-  rewardDescription: string;
+  loyaltyProgramDescription?: string;
   cards: PunchCardDto[];
 }
 
@@ -27,15 +29,18 @@ export function CustomerDetailPage() {
   const [customer, setCustomer] = useState<UserDto | null>(null);
   const [punchCards, setPunchCards] = useState<PunchCardDto[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  const fetchCustomerData = async () => {
-    if (!merchantId || !id) return;
-    
-    setLoading(true);
-    setError(null);
-    
+  useEffect(() => {
+    if (id && merchantId) {
+      loadCustomerData();
+    }
+  }, [id, merchantId]);
+
+  const loadCustomerData = async () => {
+    if (!id || !merchantId) return;
+
     try {
+      setLoading(true);
       const [customerData, punchCardsData] = await Promise.all([
         apiClient.getMerchantCustomer(merchantId, id),
         apiClient.getMerchantCustomerPunchCards(merchantId, id)
@@ -43,55 +48,41 @@ export function CustomerDetailPage() {
       
       setCustomer(customerData);
       setPunchCards(punchCardsData);
-    } catch (err) {
-      setError('Failed to fetch customer data');
-      console.error('Error fetching customer data:', err);
+    } catch (error: any) {
+      console.error('Failed to load customer data:', error);
+      toast.error(error.message || 'Failed to load customer data');
+      navigate(ROUTES.CUSTOMERS);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchCustomerData();
-  }, [merchantId, id]);
-
-  const formatDate = (dateString: string | undefined) => {
+  const formatDate = (dateString: string | undefined | null) => {
     if (!dateString) return 'Unknown';
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
-
-  const formatDateTime = (dateString: string | undefined) => {
-    if (!dateString) return 'Unknown';
-    return new Date(dateString).toLocaleString();
+    return new Date(dateString).toLocaleDateString();
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'ACTIVE':
-        return 'bg-blue-100 text-blue-800';
       case 'REWARD_READY':
         return 'bg-green-100 text-green-800';
       case 'REWARD_REDEEMED':
         return 'bg-gray-100 text-gray-800';
+      case 'ACTIVE':
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-blue-100 text-blue-800';
     }
   };
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'ACTIVE':
-        return 'Active';
       case 'REWARD_READY':
         return 'Reward Ready';
       case 'REWARD_REDEEMED':
         return 'Redeemed';
+      case 'ACTIVE':
       default:
-        return status;
+        return 'Active';
     }
   };
 
@@ -104,9 +95,8 @@ export function CustomerDetailPage() {
     } else {
       groups.push({
         loyaltyProgramId: card.loyaltyProgramId,
-        loyaltyProgramName: card.loyaltyProgramName || card.shopName,
-        loyaltyProgramDescription: card.loyaltyProgramDescription || card.shopAddress,
-        rewardDescription: card.rewardDescription || 'Reward available',
+        loyaltyProgramName: card.loyaltyProgramName || 'Unknown Program',
+        loyaltyProgramDescription: card.loyaltyProgramDescription,
         cards: [card]
       });
     }
@@ -116,237 +106,195 @@ export function CustomerDetailPage() {
 
   if (loading) {
     return (
-      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-        <div className="flex items-center gap-2 sm:gap-4">
-          <Skeleton className="h-8 w-8 sm:h-10 sm:w-10" />
-          <div>
-            <Skeleton className="h-6 sm:h-8 w-32 sm:w-48" />
-            <Skeleton className="h-3 sm:h-4 w-24 sm:w-32 mt-2" />
+      <PageContainer>
+        <div className="space-y-6">
+          <div className="flex items-center gap-3">
+            <Skeleton className="h-8 w-8" />
+            <Skeleton className="h-8 w-48" />
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Card className="lg:col-span-1">
+              <CardHeader>
+                <Skeleton className="h-6 w-32" />
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-4 w-1/2" />
+              </CardContent>
+            </Card>
+            <Card className="lg:col-span-2">
+              <CardHeader>
+                <Skeleton className="h-6 w-32" />
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-32 w-full" />
+              </CardContent>
+            </Card>
           </div>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-          <Skeleton className="h-48" />
-          <Skeleton className="h-48" />
-        </div>
-        <Skeleton className="h-64" />
-      </div>
+      </PageContainer>
     );
   }
 
-  if (error || !customer) {
+  if (!customer) {
     return (
-      <div className="p-4 sm:p-6">
-        <Button
-          variant="ghost"
-          onClick={() => navigate('/customers')}
-          className="mb-4"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Customers
-        </Button>
-        <Alert variant="destructive">
-          <AlertDescription>
-            {error || 'Customer not found'}
-          </AlertDescription>
-        </Alert>
-      </div>
+      <PageContainer>
+        <Card>
+          <CardHeader>
+            <CardTitle>Customer not found</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Button onClick={() => navigate(ROUTES.CUSTOMERS)}>
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Customers
+            </Button>
+          </CardContent>
+        </Card>
+      </PageContainer>
     );
   }
 
   return (
-    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-        <Button
-          variant="ghost"
-          onClick={() => navigate('/customers')}
-          className="self-start"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Customers
-        </Button>
-        <div className="flex-1">
-          <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
-            <User className="h-6 w-6 sm:h-8 sm:w-8" />
-            <span className="break-all">{customer.email || 'Anonymous Customer'}</span>
+    <PageContainer>
+      <div className="space-y-6">
+        <div className="flex items-center gap-3">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate(ROUTES.CUSTOMERS)}
+            className="h-8 w-8 p-0"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
+          <h1 className="text-2xl font-bold">
+            {customer.email || 'Anonymous Customer'}
           </h1>
-          <p className="text-muted-foreground mt-1">
-            Customer details and activity
-          </p>
         </div>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
-              <User className="h-4 w-4 sm:h-5 sm:w-5" />
-              Customer Information
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3 sm:space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Customer Info */}
+          <Card className="lg:col-span-1">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <User className="w-5 h-5" />
+                Customer Information
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
               <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-muted-foreground" />
-                <span className="font-medium">Email:</span>
+                <Mail className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm break-all">
+                  {customer.email || 'No email provided'}
+                </span>
               </div>
-              <span className="break-all">{customer.email || 'Not provided'}</span>
-            </div>
-            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+              
               <div className="flex items-center gap-2">
-                <Shield className="h-4 w-4 text-muted-foreground" />
-                <span className="font-medium">Account Type:</span>
+                <Shield className="w-4 h-4 text-muted-foreground" />
+                <Badge variant={customer.externalId ? 'default' : 'secondary'}>
+                  {customer.externalId ? 'Registered' : 'Anonymous'}
+                </Badge>
               </div>
-              <Badge variant={customer.externalId ? 'default' : 'secondary'}>
-                {customer.externalId ? 'Registered' : 'Anonymous'}
-              </Badge>
-            </div>
-            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+              
               <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-muted-foreground" />
-                <span className="font-medium">Joined:</span>
+                <Calendar className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm">
+                  Joined: {formatDate(customer.createdAt)}
+                </span>
               </div>
-              <span>{formatDate(customer.createdAt)}</span>
-            </div>
-            {customer.superAdmin && (
-              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                <div className="flex items-center gap-2">
-                  <Shield className="h-4 w-4 text-muted-foreground" />
-                  <span className="font-medium">Super Admin:</span>
+              
+              {customer.externalId && (
+                <div className="text-xs text-muted-foreground">
+                  ID: {customer.externalId}
                 </div>
-                <Badge variant="destructive">Yes</Badge>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+              )}
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
-              <CreditCard className="h-4 w-4 sm:h-5 sm:w-5" />
-              Activity Summary
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3 sm:space-y-4">
-            <div className="flex justify-between">
-              <span className="font-medium">Loyalty Programs:</span>
-              <span>{groupedPunchCards.length}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="font-medium">Total Punch Cards:</span>
-              <span>{punchCards.length}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="font-medium">Active Cards:</span>
-              <span>{punchCards.filter(card => card.status === 'ACTIVE').length}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="font-medium">Rewards Ready:</span>
-              <span>{punchCards.filter(card => card.status === 'REWARD_READY').length}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="font-medium">Rewards Redeemed:</span>
-              <span>{punchCards.filter(card => card.status === 'REWARD_REDEEMED').length}</span>
-            </div>
-            <Separator />
-            <div className="flex justify-between">
-              <span className="font-medium">Total Punches:</span>
-              <span>{punchCards.reduce((sum, card) => sum + card.currentPunches, 0)}</span>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {groupedPunchCards.length === 0 ? (
-        <Card>
-          <CardContent className="text-center py-8">
-            <CreditCard className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">No punch cards</h3>
-            <p className="text-muted-foreground">
-              This customer hasn't created any punch cards with your business yet.
-            </p>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="space-y-6">
-          {groupedPunchCards.map((group) => (
-            <Card key={group.loyaltyProgramId}>
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
-                      <Gift className="h-4 w-4 sm:h-5 sm:w-5" />
-                      {group.loyaltyProgramName}
-                    </CardTitle>
-                    {group.loyaltyProgramDescription && (
-                      <p className="text-sm text-muted-foreground mt-1">
-                        {group.loyaltyProgramDescription}
-                      </p>
-                    )}
-                    <p className="text-sm font-medium text-primary mt-2">
-                      🎁 {group.rewardDescription}
-                    </p>
-                  </div>
-                  <Badge variant="outline" className="ml-4">
-                    {group.cards.length} card{group.cards.length !== 1 ? 's' : ''}
-                  </Badge>
+          {/* Punch Cards */}
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <CreditCard className="w-5 h-5" />
+                Loyalty Cards ({punchCards.length})
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {groupedPunchCards.length === 0 ? (
+                <div className="text-center py-8">
+                  <CreditCard className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">No loyalty cards</h3>
+                  <p className="text-muted-foreground">
+                    This customer hasn't started any loyalty programs yet.
+                  </p>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {group.cards.map((card) => (
-                    <div
-                      key={card.id}
-                      className="border rounded-lg p-4 hover:bg-muted/25 transition-colors"
-                    >
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                        <div className="flex-1 min-w-0">
-                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
-                            <Badge className={getStatusColor(card.status)}>
-                              {getStatusText(card.status)}
-                            </Badge>
-                            <span className="text-sm text-muted-foreground">
-                              Created: {formatDate(card.createdAt)}
-                            </span>
-                          </div>
-                          <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-sm text-muted-foreground">
-                            <span>Punches: {card.currentPunches}/{card.totalPunches}</span>
-                            {card.lastPunchAt && (
-                              <span className="hidden sm:inline">Last punch: {formatDateTime(card.lastPunchAt)}</span>
-                            )}
-                          </div>
-                          {card.lastPunchAt && (
-                            <div className="sm:hidden text-sm text-muted-foreground mt-1">
-                              Last punch: {formatDateTime(card.lastPunchAt)}
-                            </div>
-                          )}
-                        </div>
-                        <div className="text-center sm:text-right">
-                          <div className="text-xl sm:text-2xl font-bold text-primary">
-                            {card.currentPunches}/{card.totalPunches}
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            {Math.round((card.currentPunches / card.totalPunches) * 100)}% Complete
-                          </div>
-                        </div>
+              ) : (
+                <div className="space-y-6">
+                  {groupedPunchCards.map((group) => (
+                    <div key={group.loyaltyProgramId} className="space-y-3">
+                      <div className="flex items-center gap-2">
+                        <Gift className="w-4 h-4 text-primary" />
+                        <h4 className="font-medium">{group.loyaltyProgramName}</h4>
+                        <Badge variant="outline">{group.cards.length} card{group.cards.length > 1 ? 's' : ''}</Badge>
                       </div>
-                      {card.completedAt && (
-                        <div className="mt-2 pt-2 border-t text-sm text-muted-foreground">
-                          Completed: {formatDateTime(card.completedAt)}
-                        </div>
+                      
+                      {group.loyaltyProgramDescription && (
+                        <p className="text-sm text-muted-foreground pl-6">
+                          {group.loyaltyProgramDescription}
+                        </p>
                       )}
-                      {card.redeemedAt && (
-                        <div className="mt-2 pt-2 border-t text-sm text-muted-foreground">
-                          Redeemed: {formatDateTime(card.redeemedAt)}
-                        </div>
+                      
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pl-6">
+                        {group.cards.map((card) => (
+                          <div
+                            key={card.id}
+                            className="p-4 border rounded-lg space-y-2"
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm font-medium">
+                                {card.currentPunches} / {card.totalPunches} punches
+                              </span>
+                              <div className={`inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold ${getStatusColor(card.status)}`}>
+                                {getStatusText(card.status)}
+                              </div>
+                            </div>
+                            
+                            <div className="w-full bg-gray-200 rounded-full h-2">
+                              <div
+                                className="bg-primary h-2 rounded-full transition-all duration-300"
+                                style={{
+                                  width: `${Math.min((card.currentPunches / card.totalPunches) * 100, 100)}%`
+                                }}
+                              />
+                            </div>
+                            
+                            <div className="text-xs text-muted-foreground space-y-1">
+                              <div>Created: {formatDate(card.createdAt)}</div>
+                              {card.lastPunchAt && (
+                                <div>Last punch: {formatDate(card.lastPunchAt)}</div>
+                              )}
+                              {card.completedAt && (
+                                <div>Completed: {formatDate(card.completedAt)}</div>
+                              )}
+                              {card.redeemedAt && (
+                                <div>Redeemed: {formatDate(card.redeemedAt)}</div>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      {group !== groupedPunchCards[groupedPunchCards.length - 1] && (
+                        <Separator className="my-4" />
                       )}
                     </div>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
-          ))}
+              )}
+            </CardContent>
+          </Card>
         </div>
-      )}
-    </div>
+      </div>
+    </PageContainer>
   );
 }

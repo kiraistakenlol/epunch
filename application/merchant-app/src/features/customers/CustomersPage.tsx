@@ -17,6 +17,9 @@ import {
   SelectTrigger, 
   SelectValue 
 } from '@/components/ui/select';
+import { PageContainer } from '@/components/shared/layout/PageContainer';
+import { ROUTES } from '@/lib/cn';
+import { toast } from 'sonner';
 
 interface CustomerListResponse {
   customers: UserDto[];
@@ -31,7 +34,6 @@ export function CustomersPage() {
   
   const [data, setData] = useState<CustomerListResponse | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -43,7 +45,6 @@ export function CustomersPage() {
     if (!merchantId) return;
     
     setLoading(true);
-    setError(null);
     
     try {
       const response = await apiClient.getMerchantCustomers(
@@ -55,9 +56,9 @@ export function CustomersPage() {
         sortOrder
       );
       setData(response);
-    } catch (err) {
-      setError('Failed to fetch customers');
-      console.error('Error fetching customers:', err);
+    } catch (error: any) {
+      console.error('Error fetching customers:', error);
+      toast.error(error.message || 'Failed to fetch customers');
     } finally {
       setLoading(false);
     }
@@ -96,69 +97,32 @@ export function CustomersPage() {
     return new Date(dateString).toLocaleDateString();
   };
 
+  const handleRowClick = (customer: UserDto) => {
+    navigate(`${ROUTES.CUSTOMERS}/${customer.id}`);
+  };
+
   const totalPages = data ? Math.ceil(data.total / pageSize) : 0;
 
-  if (error) {
+  if (loading) {
     return (
-      <div className="p-4 sm:p-6">
-        <div className="text-center">
-          <h2 className="text-xl sm:text-2xl font-semibold mb-4">Error Loading Customers</h2>
-          <p className="text-muted-foreground mb-4">{error}</p>
-          <Button onClick={fetchCustomers}>Try Again</Button>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
-            <Users className="h-6 w-6 sm:h-8 sm:w-8" />
-            Customers
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            Manage your loyalty program customers
-          </p>
-        </div>
-        <div className="text-sm text-muted-foreground">
-          {data ? `${data.total} total customers` : ''}
-        </div>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg sm:text-xl">Customer List</CardTitle>
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-            <div className="flex items-center gap-2 flex-1">
-              <Search className="h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search by email or ID..."
-                value={search}
-                onChange={(e) => handleSearchChange(e.target.value)}
-                className="flex-1 min-w-0"
-              />
+      <PageContainer>
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Skeleton className="h-8 w-8" />
+              <Skeleton className="h-8 w-48" />
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground whitespace-nowrap">Show:</span>
-              <Select value={pageSize.toString()} onValueChange={handlePageSizeChange}>
-                <SelectTrigger className="w-20">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="10">10</SelectItem>
-                  <SelectItem value="25">25</SelectItem>
-                  <SelectItem value="50">50</SelectItem>
-                  <SelectItem value="100">100</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <Skeleton className="h-4 w-32" />
           </div>
-        </CardHeader>
-        <CardContent>
-          {loading ? (
-            <div className="space-y-4">
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-6 w-64" />
+              <div className="flex items-center gap-4">
+                <Skeleton className="h-10 flex-1" />
+                <Skeleton className="h-10 w-20" />
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
               {[...Array(pageSize)].map((_, i) => (
                 <div key={i} className="flex items-center space-x-4">
                   <Skeleton className="h-4 w-[200px]" />
@@ -167,133 +131,198 @@ export function CustomersPage() {
                   <Skeleton className="h-8 w-[60px]" />
                 </div>
               ))}
+            </CardContent>
+          </Card>
+        </div>
+      </PageContainer>
+    );
+  }
+
+  return (
+    <PageContainer>
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <Users className="h-8 w-8" />
+            <div>
+              <h1 className="text-2xl font-bold">Customers</h1>
+              <p className="text-muted-foreground">
+                Manage your loyalty program customers
+              </p>
             </div>
-          ) : (
-            <>
-              {/* Desktop Table */}
-              <div className="hidden sm:block">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead 
-                        className="cursor-pointer hover:bg-muted/50"
-                        onClick={() => handleSortChange('email')}
-                      >
-                        Email {sortBy === 'email' && (sortOrder === 'asc' ? '↑' : '↓')}
-                      </TableHead>
-                      <TableHead>Account Type</TableHead>
-                      <TableHead 
-                        className="cursor-pointer hover:bg-muted/50"
-                        onClick={() => handleSortChange('created_at')}
-                      >
-                        Joined {sortBy === 'created_at' && (sortOrder === 'asc' ? '↑' : '↓')}
-                      </TableHead>
-                      <TableHead>Actions</TableHead>
+          </div>
+          <div className="text-sm text-muted-foreground">
+            {data ? `${data.total} total customers` : ''}
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Customer List</CardTitle>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+              <div className="flex items-center gap-2 flex-1">
+                <Search className="h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search by email or ID..."
+                  value={search}
+                  onChange={(e) => handleSearchChange(e.target.value)}
+                  className="flex-1 min-w-0"
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground whitespace-nowrap">Show:</span>
+                <Select value={pageSize.toString()} onValueChange={handlePageSizeChange}>
+                  <SelectTrigger className="w-20">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="10">10</SelectItem>
+                    <SelectItem value="25">25</SelectItem>
+                    <SelectItem value="50">50</SelectItem>
+                    <SelectItem value="100">100</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {/* Desktop Table */}
+            <div className="hidden sm:block">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead 
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() => handleSortChange('email')}
+                    >
+                      Email {sortBy === 'email' && (sortOrder === 'asc' ? '↑' : '↓')}
+                    </TableHead>
+                    <TableHead>Account Type</TableHead>
+                    <TableHead 
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() => handleSortChange('created_at')}
+                    >
+                      Joined {sortBy === 'created_at' && (sortOrder === 'asc' ? '↑' : '↓')}
+                    </TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {data?.customers.map((customer) => (
+                    <TableRow 
+                      key={customer.id}
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() => handleRowClick(customer)}
+                    >
+                      <TableCell className="font-medium">
+                        {customer.email || 'Anonymous User'}
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={customer.externalId ? 'default' : 'secondary'}>
+                          {customer.externalId ? 'Registered' : 'Anonymous'}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        {formatDate(customer.createdAt)}
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={(e: React.MouseEvent) => {
+                            e.stopPropagation();
+                            handleRowClick(customer);
+                          }}
+                        >
+                          <Eye className="h-4 w-4 mr-2" />
+                          View
+                        </Button>
+                      </TableCell>
                     </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {data?.customers.map((customer) => (
-                      <TableRow key={customer.id}>
-                        <TableCell className="font-medium">
-                          {customer.email || 'Anonymous User'}
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant={customer.externalId ? 'default' : 'secondary'}>
-                            {customer.externalId ? 'Registered' : 'Anonymous'}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          {formatDate(customer.createdAt)}
-                        </TableCell>
-                        <TableCell>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => navigate(`/customers/${customer.id}`)}
-                          >
-                            <Eye className="h-4 w-4 mr-2" />
-                            View
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
 
-              {/* Mobile Cards */}
-              <div className="sm:hidden space-y-4">
-                {data?.customers.map((customer) => (
-                  <Card key={customer.id} className="p-4">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium text-sm mb-1 break-all">
-                          {customer.email || 'Anonymous User'}
-                        </div>
-                        <div className="flex items-center gap-2 mb-2">
-                          <Badge variant={customer.externalId ? 'default' : 'secondary'} className="text-xs">
-                            {customer.externalId ? 'Registered' : 'Anonymous'}
-                          </Badge>
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          Joined: {formatDate(customer.createdAt)}
-                        </div>
+            {/* Mobile Cards */}
+            <div className="sm:hidden space-y-4">
+              {data?.customers.map((customer) => (
+                <Card 
+                  key={customer.id} 
+                  className="p-4 cursor-pointer hover:bg-muted/50 transition-colors"
+                  onClick={() => handleRowClick(customer)}
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-sm mb-1 break-all">
+                        {customer.email || 'Anonymous User'}
                       </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => navigate(`/customers/${customer.id}`)}
-                        className="ml-2"
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Badge variant={customer.externalId ? 'default' : 'secondary'} className="text-xs">
+                          {customer.externalId ? 'Registered' : 'Anonymous'}
+                        </Badge>
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        Joined: {formatDate(customer.createdAt)}
+                      </div>
                     </div>
-                  </Card>
-                ))}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                                             onClick={(e: React.MouseEvent) => {
+                         e.stopPropagation();
+                         handleRowClick(customer);
+                       }}
+                      className="ml-2"
+                    >
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </Card>
+              ))}
+            </div>
+
+            {data?.customers.length === 0 && (
+              <div className="text-center py-8">
+                <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-lg font-semibold mb-2">No customers found</h3>
+                <p className="text-muted-foreground">
+                  {search ? 'No customers match your search criteria.' : 'No customers have used your loyalty programs yet.'}
+                </p>
               </div>
+            )}
 
-              {data?.customers.length === 0 && (
-                <div className="text-center py-8">
-                  <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">No customers found</h3>
-                  <p className="text-muted-foreground">
-                    {search ? 'No customers match your search criteria.' : 'No customers have used your loyalty programs yet.'}
-                  </p>
+            {totalPages > 1 && (
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6">
+                <div className="text-sm text-muted-foreground">
+                  Showing {((currentPage - 1) * pageSize) + 1} to {Math.min(currentPage * pageSize, data?.total || 0)} of {data?.total} customers
                 </div>
-              )}
-
-              {totalPages > 1 && (
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-4">
-                  <div className="text-sm text-muted-foreground">
-                    Showing {((currentPage - 1) * pageSize) + 1} to {Math.min(currentPage * pageSize, data?.total || 0)} of {data?.total} customers
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handlePageChange(currentPage - 1)}
-                      disabled={currentPage === 1}
-                    >
-                      Previous
-                    </Button>
-                    <span className="text-sm px-2">
-                      Page {currentPage} of {totalPages}
-                    </span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handlePageChange(currentPage + 1)}
-                      disabled={currentPage === totalPages}
-                    >
-                      Next
-                    </Button>
-                  </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </Button>
+                  <span className="text-sm px-2">
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                  </Button>
                 </div>
-              )}
-            </>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </PageContainer>
   );
 }
