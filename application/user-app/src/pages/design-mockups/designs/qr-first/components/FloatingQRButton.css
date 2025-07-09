@@ -1,0 +1,50 @@
+.floating-qr-button {
+  position: absolute;
+  bottom: 80px;
+  right: 16px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #000000;
+  border: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 1000;
+}
+
+.floating-qr-button:hover {
+  background: #333333;
+  transform: scale(1.05);
+}
+
+.floating-qr-button:active {
+  transform: scale(0.95);
+}
+
+.floating-qr-button.has-rewards {
+  background: #000000;
+  border: 2px solid #666666;
+}
+
+.floating-qr-button.has-rewards:hover {
+  background: #333333;
+  border-color: #000000;
+}
+
+.reward-indicator {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: #000000;
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+} 

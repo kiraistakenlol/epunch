@@ -1,0 +1,44 @@
+.base-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  background: #f8f9fa;
+  overflow: hidden;
+  container-type: size;
+}
+
+.screen-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 0 clamp(16px, 4vw, 24px);
+  overflow: hidden;
+}
+
+.base-screen .app-header {
+  flex-shrink: 0;
+  z-index: 100;
+}
+
+.base-screen .bottom-nav {
+  flex-shrink: 0;
+  z-index: 100;
+}
+
+/* Ensure no scrolling anywhere */
+.base-screen,
+.base-screen * {
+  -webkit-overflow-scrolling: touch;
+}
+
+.base-screen *::-webkit-scrollbar {
+  display: none;
+}
+
+/* Only allow scrolling in explicitly marked containers */
+.base-screen .scrollable-content {
+  overflow-y: auto;
+  min-height: 0;
+} 

@@ -31,10 +31,11 @@
   - Quick access to QR code
 
 - **Punch Card Management**
-  - View all active cards
+  - View all active cards (full-size, minimalistic physical card design)
   - Search/filter cards by shop name
-  - Card progress tracking
-  - Real-time punch updates
+  - Card progress tracking with visual punch hole indicators (e.g., "6/8 filled")
+  - Real-time punch updates with animation feedback
+  - Unique but minimal card designs per merchant (subtle colors, icons, branding)
 
 - **Reward System**
   - View available rewards
@@ -110,6 +111,29 @@
 3. **List View:** Searchable, detailed information
 4. **Stacked/Wallet:** iOS wallet-style interface
 
+### Punch Card Visual Design
+1. **Physical Card Aesthetic:** Cards should mimic real physical punch cards with:
+   - Minimalistic, clean design
+   - Card-like appearance with subtle shadows/borders
+   - Simple, uncluttered layout
+   - Physical punch hole representations
+2. **Full-Size Display:** Punch cards should be shown full-size (fit into the screen) when viewed
+3. **Visual Progress Indicators:** Cards must show punch icons/progress visually (e.g., "6/8 filled")
+   - Punch holes/stamps should look like actual physical punches
+   - Clear visual distinction between filled and empty punches
+4. **Unique Card Identity:** Each card should have:
+   - Unique color schemes per merchant (subtle, not overwhelming)
+   - Custom punch icons (coffee cups, stars, etc.)
+   - Merchant-specific branding elements (logo, colors)
+   - Distinctive but minimal visual patterns
+5. **Minimalistic Design Principles:**
+   - Clean typography
+   - Ample white space
+   - Subtle color palettes
+   - Focus on essential information only
+6. **Progress Visualization:** Clear visual representation of completion status
+7. **Interactive Elements:** Cards should respond to user interactions with appropriate feedback
+
 ### Navigation Patterns
 1. **Bottom Tab Bar:** 4-5 main sections
 2. **Drawer Navigation:** Expandable side menu
@@ -142,17 +166,19 @@
 ### Main Dashboard
 ```
 - Header: User stats, notifications
-- Hero Section: Featured card OR QR code
+- Hero Section: Featured card (full-size, minimalistic physical card design) OR QR code
 - Quick Actions: Scan QR, View Rewards, etc.
-- Recent Activity: Last 3-5 punches
+- Recent Activity: Last 3-5 punches with visual feedback
 - Navigation: Bottom tabs
 ```
 
 ### My Cards
 ```
 - Header: Search/filter controls
-- Card List: All active cards
-- Card Details: Progress, shop info, actions
+- Card List: All active cards (full-size, minimalistic physical card design)
+- Card Details: Punch hole progress (6/8 filled), shop info, actions
+- Visual Elements: Subtle unique colors, custom punch icons per merchant
+- Physical Card Aesthetic: Clean, card-like appearance with subtle shadows
 - Quick Actions: Show QR, Mark favorite
 ```
 

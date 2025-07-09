@@ -1,0 +1,196 @@
+/* Punch Card Base */
+.punch-card {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border: 1px solid #000000;
+  border-radius: 8px;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1.25;
+  padding: clamp(8px, 2vw, 16px);
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Header */
+.punch-card__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(2px, 0.5vw, 4px);
+  margin-bottom: clamp(8px, 2vw, 12px);
+  flex-shrink: 0;
+}
+
+.punch-card__title {
+  font-size: clamp(10px, 2.5vw, 14px);
+  font-weight: 700;
+  color: #000000;
+  text-align: center;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.punch-card__subtitle {
+  font-size: clamp(8px, 2vw, 10px);
+  font-weight: 500;
+  color: #666666;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* Grid Container */
+.punch-card__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(clamp(20px, 4vw, 30px), 1fr));
+  gap: clamp(4px, 1vw, 8px);
+  flex: 1;
+  align-items: center;
+  justify-items: center;
+  padding: clamp(4px, 1vw, 8px) 0;
+}
+
+/* Slot */
+.punch-card__slot {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 1px solid #000000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  transition: all 0.2s ease;
+  position: relative;
+  max-width: clamp(20px, 4vw, 32px);
+  max-height: clamp(20px, 4vw, 32px);
+}
+
+.punch-card__slot--punched {
+  background: #000000;
+  border-color: #000000;
+}
+
+.punch-card__punch {
+  width: 60%;
+  height: 60%;
+  background: #ffffff;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Footer */
+.punch-card__footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: clamp(8px, 2vw, 12px);
+  flex-shrink: 0;
+}
+
+.punch-card__progress {
+  font-size: clamp(9px, 2vw, 11px);
+  font-weight: 600;
+  color: #000000;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Variants */
+
+/* Default Variant */
+.punch-card--default {
+  /* Already defined in base styles */
+}
+
+/* Completed Variant */
+.punch-card--completed {
+  border-color: #000000;
+  border-width: 2px;
+  background: #f8f8f8;
+}
+
+.punch-card--completed .punch-card__title {
+  color: #000000;
+}
+
+.punch-card--completed .punch-card__progress {
+  color: #000000;
+  font-weight: 700;
+}
+
+/* Minimal Variant */
+.punch-card--minimal {
+  padding: clamp(6px, 1.5vw, 12px);
+  border-radius: 4px;
+}
+
+.punch-card--minimal .punch-card__header {
+  margin-bottom: clamp(4px, 1vw, 8px);
+}
+
+.punch-card--minimal .punch-card__title {
+  font-size: clamp(9px, 2vw, 12px);
+}
+
+.punch-card--minimal .punch-card__subtitle {
+  font-size: clamp(7px, 1.5vw, 9px);
+}
+
+.punch-card--minimal .punch-card__grid {
+  gap: clamp(2px, 0.5vw, 4px);
+}
+
+.punch-card--minimal .punch-card__slot {
+  max-width: clamp(16px, 3vw, 24px);
+  max-height: clamp(16px, 3vw, 24px);
+}
+
+/* Container Queries for Modern Responsive Design */
+@container (max-width: 200px) {
+  .punch-card__grid {
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+  }
+}
+
+@container (min-width: 201px) and (max-width: 400px) {
+  .punch-card__grid {
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+  }
+}
+
+@container (min-width: 401px) {
+  .punch-card__grid {
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: 1fr;
+  }
+}
+
+/* Focus States for Accessibility */
+.punch-card:focus-within {
+  outline: 2px solid #000000;
+  outline-offset: 2px;
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .punch-card {
+    border-width: 2px;
+  }
+  
+  .punch-card__slot {
+    border-width: 2px;
+  }
+  
+  .punch-card--completed {
+    border-width: 3px;
+  }
+} 
