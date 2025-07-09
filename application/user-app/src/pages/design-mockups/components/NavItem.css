@@ -4,7 +4,7 @@
   align-items: center;
   gap: 4px;
   font-size: 10px;
-  color: #666;
+  color: #666666;
   text-decoration: none;
   cursor: pointer;
   padding: 8px 4px;
@@ -13,7 +13,7 @@
 }
 
 .nav-item--active {
-  color: #007AFF;
+  color: #000000;
 }
 
 .nav-icon {
@@ -27,5 +27,7 @@
 
 .nav-label {
   font-size: 10px;
-  font-weight: 500;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 } 

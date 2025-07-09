@@ -15,8 +15,9 @@
 .phone-content {
   flex: 1;
   background: #fff;
-  overflow-y: auto;
+  overflow: hidden;
   position: relative;
+  width: 100%;
 }
 
 /* Mobile responsive */

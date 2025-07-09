@@ -2,6 +2,13 @@
 
 A comprehensive design prototyping system for the E-Punch user app that provides a scrollable canvas for showcasing different design variants with realistic mobile Safari browser chrome.
 
+## Design Process
+
+Before implementing any design variants, review the design documentation:
+
+- **[DESIGN_GUIDELINES.md](./DESIGN_GUIDELINES.md)** - Core principles and standards for creating minimalistic prototypes
+- **[DESIGN_TEMPLATE.md](./DESIGN_TEMPLATE.md)** - Template for documenting new design concepts
+
 ## Architecture
 
 The system is built with a clear separation of concerns:
@@ -16,15 +23,20 @@ design-mockups/
 │   │   ├── SafariBottomBar.tsx/.css
 │   │   ├── SafariPhoneFrame.tsx/.css
 │   │   └── index.ts
-│   ├── [other design-agnostic components]
+│   ├── [other shared components]  # Design-agnostic components
 │   └── index.ts
-├── variants/
-│   ├── card-first/             # Card-focused design variant
-│   │   ├── screens/
-│   │   └── index.ts
-│   └── [other variants]
+├── designs/
+│   ├── qr-first/               # QR-First design concept
+│   │   ├── description.md      # Design specification
+│   │   └── [implementation files when built]
+│   ├── card-first/             # Card-First design concept
+│   │   ├── description.md      # Design specification
+│   │   └── [implementation files when built]
+│   └── [other design concepts]
 ├── types.ts
 ├── DesignMockupsPage.tsx
+├── DESIGN_GUIDELINES.md
+├── DESIGN_TEMPLATE.md
 └── README.md
 ```
 
@@ -38,13 +50,19 @@ design-mockups/
    - **SafariBottomBar**: Safari bottom navigation with tabs and bookmarks
    - **SafariPhoneFrame**: Complete iPhone mockup with all Safari components
 
-2. **Design-Agnostic Components** (`/components/`)
-   - Base components that can be used across multiple design variants
+2. **Shared Components** (`/components/`)
+   - Reusable, design-agnostic components that can be used across multiple design variants
    - Components should not contain design-specific styling or logic
+   - Follow the minimalistic design principles from DESIGN_GUIDELINES.md
    - Examples: BaseScreen, AppHeader, BottomNav, Card, etc.
 
-3. **Variant-Specific Components** (`/variants/[variant-name]/`)
-   - All design-specific styling and behavior
+3. **Design Implementations** (`/designs/[design-name]/`)
+   - Each design concept starts with a `description.md` file following the DESIGN_TEMPLATE.md
+   - Implementation files are added when the design is built (screens/, components/, etc.)
+   - All design-specific styling and behavior contained within the design directory
+
+4. **Legacy Variant Components** (`/variants/[variant-name]/`)
+   - Existing variant implementations (maintained for backward compatibility)
    - Screen implementations using base components
    - Variant configuration and exports
 
@@ -81,38 +99,68 @@ The Safari browser chrome provides a realistic mobile web experience with:
 - **Navigation State**: Control back/forward button states
 - **Responsive**: Adapts to different screen sizes
 
-## Creating New Variants
+## Creating New Designs
 
-1. **Create variant directory**: `/variants/new-variant/`
-2. **Implement screens**: Create screen components in `/variants/new-variant/screens/`
-3. **Export variant**: Create `/variants/new-variant/index.ts` with variant definition
-4. **Update main page**: Add variant to `DesignMockupsPage.tsx`
+### Design Process
+1. **Create design concept**: Start with `/designs/new-design-name/`
+2. **Write design specification**: Create `description.md` using `DESIGN_TEMPLATE.md`
+3. **Follow design guidelines**: Ensure alignment with `DESIGN_GUIDELINES.md` principles
+4. **Plan implementation**: Define screens and components needed
+5. **Build implementation**: Create screen components and design-specific logic
+6. **Update main page**: Add design to `DesignMockupsPage.tsx`
 
-### Variant Structure
+### Design Directory Structure
+```
+designs/new-design-name/
+├── description.md              # Design specification (required)
+├── screens/                    # Screen components (when implemented)
+│   ├── HomeScreen.tsx
+│   ├── CardsScreen.tsx
+│   └── ...
+├── components/                 # Design-specific components (if needed)
+│   └── CustomComponent.tsx
+└── index.ts                   # Design export (when implemented)
+```
+
+### Implementation Structure
 ```typescript
-// variants/new-variant/index.ts
-export const newVariant: DesignVariant = {
-  id: 'new-variant',
-  name: 'New Variant',
-  description: 'Description of the new design variant',
+// designs/new-design-name/index.ts
+export const newDesign: DesignVariant = {
+  id: 'new-design-name',
+  name: 'New Design Name',
+  description: 'Brief description from design specification',
   screens: [
-    { id: 'screen1', name: 'Screen 1', component: Screen1Component },
-    { id: 'screen2', name: 'Screen 2', component: Screen2Component }
+    { id: 'home', name: 'Home', component: HomeScreen },
+    { id: 'cards', name: 'Cards', component: CardsScreen }
   ]
 };
 ```
 
 ## Best Practices
 
-1. **Component Reusability**: Keep base components design-agnostic
-2. **Variant Isolation**: All design-specific code should be in variant directories
-3. **Consistent Typing**: Use TypeScript interfaces from `types.ts`
-4. **Mobile-First**: Design for mobile web experience, not native app
-5. **Safari Accuracy**: Maintain realistic Safari browser chrome appearance
-6. **Performance**: Optimize for smooth scrolling and interactions
+1. **Follow Design Guidelines**: Adhere to principles in `DESIGN_GUIDELINES.md` for minimalistic prototypes
+2. **Component Reusability**: Keep shared components in `/components/` design-agnostic
+3. **Design Isolation**: All design-specific code should be contained within `/designs/[design-name]/`
+4. **Documentation First**: Start with `description.md` using `DESIGN_TEMPLATE.md` before implementing
+5. **Consistent Typing**: Use TypeScript interfaces from `types.ts`
+6. **Mobile-First**: Design for mobile web experience, not native app
+7. **Safari Accuracy**: Maintain realistic Safari browser chrome appearance
+8. **Performance**: Optimize for smooth scrolling and interactions
+9. **Minimalistic Focus**: Prioritize core user experience over complex features
 
 ## Development
 
-The system automatically displays all variants without selection controls, providing a comprehensive design gallery that can be scrolled in all directions to explore different design approaches.
+The system provides a comprehensive design gallery that can be scrolled in all directions to explore different design approaches. Currently, the system includes:
 
-Each variant is displayed in its own Safari phone frame, making it easy to compare different design approaches side by side while maintaining the realistic mobile web context.
+### Current Design Concepts
+- **QR-First Design** (`/designs/qr-first/`) - Maintains QR code prominence with enhanced card management
+- **Card-First Design** (`/designs/card-first/`) - Prioritizes card discovery with contextual QR access
+
+### Implementation Status
+- Design specifications are complete in each design's `description.md`
+- Implementation files will be added as designs are built
+- Each implemented design will be displayed in its own Safari phone frame
+- Legacy variants in `/variants/` are maintained for backward compatibility
+
+### Shared Components
+The `/components/` directory contains reusable components that follow the minimalistic design principles and can be used across multiple design implementations. These components are designed to be flexible and design-agnostic.
