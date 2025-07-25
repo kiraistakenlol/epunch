@@ -257,7 +257,7 @@ export class MerchantRepository {
         COALESCE(specific_style.logo_url, default_style.logo_url) as logo_url,
         COALESCE(specific_style.background_color, default_style.background_color) as background_color,
         COALESCE(specific_style.text_color, default_style.text_color) as text_color
-      FROM punch_cards pc
+      FROM punch_card pc
       INNER JOIN loyalty_programs lp ON pc.loyalty_program_id = lp.id
       INNER JOIN merchants m ON lp.merchant_id = m.id
       LEFT JOIN punch_card_styles specific_style ON lp.punch_card_style_id = specific_style.id
