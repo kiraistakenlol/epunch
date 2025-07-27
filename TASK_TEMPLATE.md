@@ -6,17 +6,23 @@
 ## GOAL
 {Clear, measurable outcome expected}
 
-## Target
-{Specific files, components, or systems to be modified}
+## Implementation plan
+* {design decision 1}
+* {architecture consideration 2}
+* {planning step 3}
+* ...
 
-## Plan
-1. Explore [Target] 
-2. Create step-by-step executable plan
-3. Ask for review
-4. Execute implementation
+## Implementation progress
+- [ ] {create/implement step 1}
+- [ ] {create/implement step 2}
+- ...
+- [ ] {create/implement step n}
 
----
+## Implementation
 
-### Usage Instructions
-1. Replace `{}` placeholders with specific details
-2. Keep Problem statement under 2 sentences
+### {Step 1}
+
+### {Step 2}
+...
+
+### {Step n}

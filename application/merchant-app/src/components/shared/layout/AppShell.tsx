@@ -12,6 +12,7 @@ import { UserMenu } from './UserMenu'
 import { 
   QrCode,
   CreditCard,
+  Package,
   Palette,
   BarChart3,
   Users,
@@ -35,6 +36,11 @@ const navigationItems = [
     title: "Loyalty Programs",
     url: ROUTES.LOYALTY_PROGRAMS,
     icon: CreditCard,
+  },
+  {
+    title: "Bundle Programs",
+    url: ROUTES.BUNDLE_PROGRAMS,
+    icon: Package,
   },
   {
     title: "Design",

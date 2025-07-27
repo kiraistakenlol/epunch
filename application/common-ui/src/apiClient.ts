@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, AuthResponseDto, UserDto, LoyaltyProgramDto, MerchantUserLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreatePunchCardDto, CreateMerchantDto, UpdateMerchantDto, PunchCardStyleDto, IconSearchResultDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto, AdminLoginDto, AdminLoginResponse, QuickOverviewDto, UsersAnalyticsDto, CardsAnalyticsDto, GrowthTrendsDto, ActivityTrendsDto, DaysOfWeekAnalyticsDto, LoyaltyProgramAnalyticsDto } from 'e-punch-common-core';
+import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, AuthResponseDto, UserDto, LoyaltyProgramDto, MerchantUserLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreatePunchCardDto, CreateMerchantDto, UpdateMerchantDto, PunchCardStyleDto, IconSearchResultDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto, AdminLoginDto, AdminLoginResponse, QuickOverviewDto, UsersAnalyticsDto, CardsAnalyticsDto, GrowthTrendsDto, ActivityTrendsDto, DaysOfWeekAnalyticsDto, LoyaltyProgramAnalyticsDto, BundleProgramDto, BundleProgramCreateDto, BundleProgramUpdateDto } from 'e-punch-common-core';
 
 // The API URL will be set by the app using this client
 let API_BASE_URL: string;
@@ -539,5 +539,34 @@ export const apiClient = {
     }
     const response = await instance.get<PunchCardDto[]>(`/merchants/${merchantId}/customers/${customerId}/punch-cards`);
     return response.data;
+  },
+
+  // Bundle Program endpoints
+  async getMerchantBundlePrograms(merchantId: string): Promise<BundleProgramDto[]> {
+    if (!merchantId) {
+      return Promise.reject(new Error('Merchant ID is required.'));
+    }
+    const response = await instance.get<BundleProgramDto[]>(`/merchants/${merchantId}/bundle-programs`);
+    return response.data;
+  },
+
+  async createBundleProgram(data: BundleProgramCreateDto): Promise<BundleProgramDto> {
+    const response = await instance.post<BundleProgramDto>('/bundle-programs', data);
+    return response.data;
+  },
+
+  async updateBundleProgram(programId: string, data: BundleProgramUpdateDto): Promise<BundleProgramDto> {
+    if (!programId) {
+      return Promise.reject(new Error('Program ID is required.'));
+    }
+    const response = await instance.put<BundleProgramDto>(`/bundle-programs/${programId}`, data);
+    return response.data;
+  },
+
+  async deleteBundleProgram(programId: string): Promise<void> {
+    if (!programId) {
+      return Promise.reject(new Error('Program ID is required.'));
+    }
+    await instance.delete(`/bundle-programs/${programId}`);
   },
 }; 

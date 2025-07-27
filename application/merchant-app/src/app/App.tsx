@@ -13,6 +13,10 @@ import { V2LoyaltyProgramsPage } from '../features/loyalty-programs/LoyaltyProgr
 import { LoyaltyProgramCreatePage } from '../features/loyalty-programs/LoyaltyProgramCreatePage';
 import { LoyaltyProgramEditPage } from '../features/loyalty-programs/LoyaltyProgramEditPage';
 import { LoyaltyProgramPage } from '../features/loyalty-programs/LoyaltyProgramPage';
+import BundleProgramsPage from '../features/bundle-programs/BundleProgramsPage';
+import { BundleProgramCreatePage } from '../features/bundle-programs/BundleProgramCreatePage';
+import { BundleProgramEditPage } from '../features/bundle-programs/BundleProgramEditPage';
+import BundleProgramPage from '../features/bundle-programs/BundleProgramPage';
 import { V2DesignPage } from '../features/design/pages/DesignPage';
 import { V2ScannerPage } from '../features/scanner/pages/ScannerPage';
 import { WelcomeQRPage as V2WelcomeQRPage } from '../features/scanner/pages';
@@ -119,6 +123,26 @@ function App() {
             <Route path="loyalty-programs/:id/edit" element={
               <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
                 <LoyaltyProgramEditPage />
+              </RoleProtectedRoute>
+            } />
+            <Route path="bundle-programs" element={
+              <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+                <BundleProgramsPage />
+              </RoleProtectedRoute>
+            } />
+            <Route path="bundle-programs/create" element={
+              <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+                <BundleProgramCreatePage />
+              </RoleProtectedRoute>
+            } />
+            <Route path="bundle-programs/:id" element={
+              <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+                <BundleProgramPage />
+              </RoleProtectedRoute>
+            } />
+            <Route path="bundle-programs/:id/edit" element={
+              <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+                <BundleProgramEditPage />
               </RoleProtectedRoute>
             } />
             <Route path="design" element={

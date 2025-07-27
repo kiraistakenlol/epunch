@@ -66,4 +66,39 @@ CREATE TABLE punch (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     punch_card_id UUID NOT NULL REFERENCES punch_card(id) ON DELETE CASCADE,
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+-- Bundle Program table
+CREATE TABLE bundle_program (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    merchant_id UUID NOT NULL REFERENCES merchant(id) ON DELETE CASCADE,
+    name VARCHAR(255) NOT NULL,
+    item_name VARCHAR(100) NOT NULL,
+    description TEXT,
+    quantity_presets JSONB NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    is_deleted BOOLEAN NOT NULL DEFAULT false,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    deleted_at TIMESTAMP
+);
+
+-- Bundle table
+CREATE TABLE bundle (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    bundle_program_id UUID NOT NULL REFERENCES bundle_program(id) ON DELETE CASCADE,
+    original_quantity INTEGER NOT NULL,
+    remaining_quantity INTEGER NOT NULL,
+    expires_at TIMESTAMP,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    last_used_at TIMESTAMP
+);
+
+-- Bundle Usage table
+CREATE TABLE bundle_usage (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    bundle_id UUID NOT NULL REFERENCES bundle(id) ON DELETE CASCADE,
+    quantity_used INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
 ); 

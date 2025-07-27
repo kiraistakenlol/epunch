@@ -1,10 +1,14 @@
 import { Controller, Get, Param, ParseUUIDPipe, Post, Body, HttpException, HttpStatus, Put, Delete, Query } from '@nestjs/common';
-import { LoyaltyProgramDto, MerchantUserLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreateMerchantDto, UpdateMerchantDto, FileUploadUrlDto, FileUploadResponseDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto, UserDto, PunchCardDto } from 'e-punch-common-core';
+import { LoyaltyProgramDto, MerchantUserLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreateMerchantDto, UpdateMerchantDto, FileUploadUrlDto, FileUploadResponseDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto, UserDto, PunchCardDto, BundleProgramDto } from 'e-punch-common-core';
 import { MerchantService } from './merchant.service';
+import { BundleProgramService } from '../bundle-program/bundle-program.service';
 
 @Controller('merchants')
 export class MerchantController {
-  constructor(private readonly merchantService: MerchantService) {}
+  constructor(
+    private readonly merchantService: MerchantService,
+    private readonly bundleProgramService: BundleProgramService,
+  ) {}
 
   @Get()
   async getAllMerchants(@Query('slug') slug?: string): Promise<MerchantDto[]> {
@@ -99,6 +103,13 @@ export class MerchantController {
     @Param('id', ParseUUIDPipe) programId: string,
   ): Promise<void> {
     return this.merchantService.deleteLoyaltyProgram(merchantId, programId);
+  }
+
+  @Get(':merchantId/bundle-programs')
+  async getMerchantBundlePrograms(
+    @Param('merchantId', ParseUUIDPipe) merchantId: string,
+  ): Promise<BundleProgramDto[]> {
+    return this.bundleProgramService.getMerchantBundlePrograms(merchantId);
   }
 
   @Post(':merchantId/file-upload-url')

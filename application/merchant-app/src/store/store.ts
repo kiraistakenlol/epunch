@@ -3,6 +3,7 @@ import authReducer from './authSlice';
 import loadingReducer from './loadingSlice';
 import merchantReducer from './merchantSlice';
 import loyaltyProgramsReducer from './loyaltyProgramsSlice';
+import bundleProgramsReducer from './bundleProgramsSlice';
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     loading: loadingReducer,
     merchant: merchantReducer,
     loyaltyPrograms: loyaltyProgramsReducer,
+    bundlePrograms: bundleProgramsReducer,
   },
 });
 

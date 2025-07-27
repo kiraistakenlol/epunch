@@ -13,6 +13,7 @@ import { PunchCardStyleModule } from './features/punch-card-style/punch-card-sty
 import { IconsModule } from './features/icons/icons.module';
 import { AdminModule } from './features/admin/admin.module';
 import { AnalyticsModule } from './features/analytics/analytics.module';
+import { BundleProgramModule } from './features/bundle-program/bundle-program.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { AnalyticsModule } from './features/analytics/analytics.module';
     AuthModule,
     AdminModule,
     AnalyticsModule,
+    BundleProgramModule,
     PunchCardsModule,
     UserModule,
     DevModule,
