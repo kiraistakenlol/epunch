@@ -12,6 +12,12 @@ import {
   Chip,
   Divider,
   Grid,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  TextField,
+  Paper,
+  IconButton,
 } from '@mui/material';
 import {
   ArrowBack as ArrowBackIcon,
@@ -26,6 +32,9 @@ import {
   Analytics as AnalyticsIcon,
   QrCode as QrCodeIcon,
   PictureAsPdf as PdfIcon,
+  ExpandMore as ExpandMoreIcon,
+  Launch as LaunchIcon,
+  ContentCopy as ContentCopyIcon,
 } from '@mui/icons-material';
 import { QRCodeSVG } from 'qrcode.react';
 import { apiClient, SystemStatistics } from 'e-punch-common-ui';
@@ -42,6 +51,8 @@ export const MerchantView: React.FC = () => {
   const [merchantStats, setMerchantStats] = useState<SystemStatistics['merchants']['list'][0] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [statsLoading, setStatsLoading] = useState(true);
+  const [onboardingExpanded, setOnboardingExpanded] = useState(false);
+  const [contactName, setContactName] = useState('');
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
     message: string;
@@ -132,6 +143,40 @@ export const MerchantView: React.FC = () => {
         console.error('Failed to generate PDF:', error);
         showSnackbar('Failed to generate PDF', 'error');
       }
+    }
+  };
+
+  const generatePitchMessage = (name: string, merchantSlug: string): string => {
+    if (!name.trim()) return '';
+    
+    return `hey ${name}! great meeting you today - loved your energy and vibe! 🙌
+
+as promised, here's that digital punch card system i mentioned:
+
+to keep it short, E-PUNCH is basically paper punch cards but digital - customers get a QR code, you scan it, they collect punches and redeem rewards. plus you get analytics on what's working and bundles coming soon for selling packages upfront.
+
+check it out and let me know what you think:
+https://merchant.epunch.app/onboarding/${merchantSlug}
+
+even if it's not a good fit for you, i'd love to hear why - that would help me a ton! 🙏
+
+happy to chat more over coffee (my treat!) - let me know if you want to give it a try! 😊`;
+  };
+
+  const handleCopyMessage = async () => {
+    if (!merchant || !contactName.trim()) {
+      showSnackbar('Please enter a contact name first', 'warning');
+      return;
+    }
+
+    const message = generatePitchMessage(contactName, merchant.slug);
+    
+    try {
+      await navigator.clipboard.writeText(message);
+      showSnackbar('Message copied to clipboard!', 'success');
+    } catch (error) {
+      console.error('Failed to copy message:', error);
+      showSnackbar('Failed to copy message', 'error');
     }
   };
 
@@ -371,6 +416,117 @@ export const MerchantView: React.FC = () => {
           </Box>
         </CardContent>
       </Card>
+
+      {/* Onboarding */}
+      <Accordion 
+        expanded={onboardingExpanded} 
+        onChange={(_, isExpanded) => setOnboardingExpanded(isExpanded)}
+        sx={{ 
+          backgroundColor: '#f5f5dc', 
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)', 
+          mb: 4,
+          '&:before': { display: 'none' } // Remove default accordion divider
+        }}
+      >
+        <AccordionSummary 
+          expandIcon={<ExpandMoreIcon sx={{ color: '#5d4037' }} />}
+          sx={{
+            backgroundColor: '#f5f5dc',
+            '& .MuiAccordionSummary-content': {
+              alignItems: 'center'
+            }
+          }}
+        >
+          <Box display="flex" alignItems="center">
+            <LaunchIcon sx={{ fontSize: 40, color: '#5d4037', mr: 2 }} />
+            <Box>
+              <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#3e2723' }}>
+                Onboarding
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Generate personalized pitch messages for potential customers
+              </Typography>
+            </Box>
+          </Box>
+        </AccordionSummary>
+        <AccordionDetails sx={{ pt: 0 }}>
+          <Box>
+            <Typography variant="h6" sx={{ color: '#3e2723', mb: 2, fontWeight: 'bold' }}>
+              Pitch Message Generator
+            </Typography>
+            
+            <Box display="flex" gap={2} mb={3} alignItems="flex-end">
+              <TextField
+                label="Contact Name"
+                placeholder="e.g., Andrea"
+                value={contactName}
+                onChange={(e) => setContactName(e.target.value)}
+                variant="outlined"
+                size="small"
+                sx={{
+                  minWidth: 200,
+                  '& .MuiOutlinedInput-root': {
+                    backgroundColor: '#fff',
+                  }
+                }}
+              />
+              <Button
+                variant="contained"
+                startIcon={<ContentCopyIcon />}
+                onClick={handleCopyMessage}
+                disabled={!contactName.trim()}
+                sx={{
+                  backgroundColor: '#5d4037',
+                  color: '#f5f5dc',
+                  '&:hover': { backgroundColor: '#6d4c41' },
+                  '&:disabled': { 
+                    backgroundColor: '#ccc',
+                    color: '#666'
+                  }
+                }}
+              >
+                Copy Message
+              </Button>
+            </Box>
+
+            {contactName.trim() && (
+              <Paper 
+                sx={{ 
+                  p: 3, 
+                  backgroundColor: '#fff',
+                  border: '1px solid #e0e0e0',
+                  borderRadius: '8px'
+                }}
+              >
+                <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#3e2723' }}>
+                    Generated Message Preview
+                  </Typography>
+                  <IconButton 
+                    size="small" 
+                    onClick={handleCopyMessage}
+                    sx={{ color: '#5d4037' }}
+                  >
+                    <ContentCopyIcon fontSize="small" />
+                  </IconButton>
+                </Box>
+                <Typography 
+                  variant="body2" 
+                  component="pre"
+                  sx={{ 
+                    whiteSpace: 'pre-wrap',
+                    fontFamily: 'inherit',
+                    lineHeight: 1.6,
+                    color: '#333'
+                  }}
+                >
+                  {generatePitchMessage(contactName, merchant.slug)}
+                </Typography>
+              </Paper>
+            )}
+          </Box>
+        </AccordionDetails>
+      </Accordion>
 
       {/* Merchant Statistics */}
       <Typography variant="h5" sx={{ color: '#f5f5dc', mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
