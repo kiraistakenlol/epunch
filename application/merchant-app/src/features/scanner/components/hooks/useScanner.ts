@@ -3,7 +3,7 @@ import { QRValueDto } from 'e-punch-common-core'
 import { apiClient } from 'e-punch-common-ui'
 import { toast } from 'sonner'
 
-export type ScannerState = 'scanning' | 'userQR' | 'punchCardQR' | 'processing'
+export type ScannerState = 'scanning' | 'userQR' | 'punchCardQR' | 'bundleQR' | 'processing'
 
 export interface QRScanResult {
   qrData: string
@@ -27,6 +27,8 @@ export const useScanner = (options: UseScannerOptions = {}) => {
       setCurrentState('userQR')
     } else if (result.parsedData.type === 'redemption_punch_card_id') {
       setCurrentState('punchCardQR')
+    } else if (result.parsedData.type === 'bundle_id') {
+      setCurrentState('bundleQR')
     }
   }, [])
 
@@ -109,6 +111,38 @@ export const useScanner = (options: UseScannerOptions = {}) => {
     }
   }, [scanResult, options, handleReset])
 
+  const handleUseBundle = useCallback(async (quantityUsed: number = 1) => {
+    if (!scanResult?.parsedData || scanResult.parsedData.type !== 'bundle_id') return
+
+    setCurrentState('processing')
+    setIsProcessing(true)
+
+    try {
+      const result = await apiClient.useBundle(scanResult.parsedData.bundle_id, { quantityUsed })
+      const message = `✅ Bundle used! ${quantityUsed} ${result.bundleProgram.itemName}(s)`
+      
+      toast.success("Success", {
+        description: message,
+        duration: 3000,
+      })
+      options.onSuccess?.(message)
+      handleReset()
+    } catch (error: any) {
+      console.error('Bundle use operation error:', error)
+      const errorMessage = error.response?.data?.message || error.message || 'Bundle use operation failed.'
+      
+      toast.error("Error", {
+        description: errorMessage,
+        duration: 4000,
+      })
+      options.onError?.(errorMessage)
+      
+      setTimeout(() => handleReset(), 4500)
+    } finally {
+      setIsProcessing(false)
+    }
+  }, [scanResult, options, handleReset])
+
   return {
     currentState,
     scanResult,
@@ -117,6 +151,7 @@ export const useScanner = (options: UseScannerOptions = {}) => {
     handleError,
     handleReset,
     handlePunch,
-    handleRedeem
+    handleRedeem,
+    handleUseBundle
   }
 } 

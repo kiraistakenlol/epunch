@@ -43,6 +43,9 @@ export const ScannerCamera: React.FC<ScannerCameraProps> = ({
       if (parsed.type === 'redemption_punch_card_id' && parsed.punch_card_id) {
         return parsed
       }
+      if (parsed.type === 'bundle_id' && parsed.bundle_id) {
+        return parsed
+      }
       return null
     } catch (error) {
       console.error('Failed to parse QR data as JSON:', error)

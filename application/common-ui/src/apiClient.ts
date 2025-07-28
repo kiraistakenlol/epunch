@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, AuthResponseDto, UserDto, LoyaltyProgramDto, MerchantUserLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreatePunchCardDto, CreateMerchantDto, UpdateMerchantDto, PunchCardStyleDto, IconSearchResultDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto, AdminLoginDto, AdminLoginResponse, QuickOverviewDto, UsersAnalyticsDto, CardsAnalyticsDto, GrowthTrendsDto, ActivityTrendsDto, DaysOfWeekAnalyticsDto, LoyaltyProgramAnalyticsDto, BundleProgramDto, BundleProgramCreateDto, BundleProgramUpdateDto } from 'e-punch-common-core';
+import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, AuthResponseDto, UserDto, LoyaltyProgramDto, MerchantUserLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreatePunchCardDto, CreateMerchantDto, UpdateMerchantDto, PunchCardStyleDto, IconSearchResultDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto, AdminLoginDto, AdminLoginResponse, QuickOverviewDto, UsersAnalyticsDto, CardsAnalyticsDto, GrowthTrendsDto, ActivityTrendsDto, DaysOfWeekAnalyticsDto, LoyaltyProgramAnalyticsDto, BundleProgramDto, BundleProgramCreateDto, BundleProgramUpdateDto, BundleDto, BundleCreateDto, BundleUseDto } from 'e-punch-common-core';
 
 // The API URL will be set by the app using this client
 let API_BASE_URL: string;
@@ -568,5 +568,36 @@ export const apiClient = {
       return Promise.reject(new Error('Program ID is required.'));
     }
     await instance.delete(`/bundle-programs/${programId}`);
+  },
+
+  // Bundle endpoints
+  async getBundleById(bundleId: string): Promise<BundleDto> {
+    if (!bundleId) {
+      return Promise.reject(new Error('Bundle ID is required.'));
+    }
+    const response = await instance.get<BundleDto>(`/bundles/${bundleId}`);
+    return response.data;
+  },
+
+  async createBundle(data: BundleCreateDto): Promise<BundleDto> {
+    const response = await instance.post<BundleDto>('/bundles', data);
+    return response.data;
+  },
+
+  async useBundle(bundleId: string, data: BundleUseDto = {}): Promise<BundleDto> {
+    if (!bundleId) {
+      return Promise.reject(new Error('Bundle ID is required.'));
+    }
+    const response = await instance.post<BundleDto>(`/bundles/${bundleId}/use`, data);
+    return response.data;
+  },
+
+  async getUserBundles(userId: string): Promise<BundleDto[]> {
+    if (!userId) {
+      console.warn('getUserBundles called without a userId. Returning empty list.');
+      return Promise.resolve([]);
+    }
+    const response = await instance.get<BundleDto[]>(`/users/${userId}/bundles`);
+    return response.data;
   },
 }; 

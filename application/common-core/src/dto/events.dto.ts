@@ -1,4 +1,5 @@
 import { PunchCardDto } from './punch-card.dto';
+import { BundleDto } from './bundle.dto';
 
 // Base event interface  
 export interface BaseEvent {
@@ -18,5 +19,16 @@ export interface RewardClaimedEvent extends BaseEvent {
   card: PunchCardDto;
 }
 
+export interface BundleCreatedEvent extends BaseEvent {
+  type: 'BUNDLE_CREATED';
+  bundle: BundleDto;
+}
+
+export interface BundleUsedEvent extends BaseEvent {
+  type: 'BUNDLE_USED';
+  bundle: BundleDto;
+  quantityUsed: number;
+}
+
 // Union type for all events
-export type AppEvent = PunchAddedEvent | RewardClaimedEvent; 
+export type AppEvent = PunchAddedEvent | RewardClaimedEvent | BundleCreatedEvent | BundleUsedEvent; 

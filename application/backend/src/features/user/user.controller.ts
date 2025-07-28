@@ -1,8 +1,9 @@
 import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
-import { PunchCardDto, UserDto } from 'e-punch-common-core';
+import { PunchCardDto, UserDto, BundleDto } from 'e-punch-common-core';
 import { Auth, RequireEndUser, isEndUser } from '../../core/decorators/security.decorators';
 import { Authentication } from '../../core/types/authentication.interface';
 import { PunchCardsService } from '../punch-cards/punch-cards.service';
+import { BundleService } from '../bundle/bundle.service';
 import { UserRepository } from './user.repository';
 import { UserMapper } from '../../mappers';
 
@@ -10,6 +11,7 @@ import { UserMapper } from '../../mappers';
 export class UserController {
   constructor(
     private readonly punchCardsService: PunchCardsService,
+    private readonly bundleService: BundleService,
     private readonly userRepository: UserRepository,
   ) {}
   
@@ -48,5 +50,12 @@ export class UserController {
     @Param('userId', ParseUUIDPipe) userId: string,
   ): Promise<PunchCardDto[]> {
     return this.punchCardsService.getUserPunchCards(userId);
+  }
+
+  @Get(':userId/bundles')
+  async getUserBundles(
+    @Param('userId', ParseUUIDPipe) userId: string,
+  ): Promise<BundleDto[]> {
+    return this.bundleService.getUserBundles(userId);
   }
 } 

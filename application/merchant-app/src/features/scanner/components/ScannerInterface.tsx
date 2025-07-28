@@ -1,11 +1,16 @@
 import React from 'react'
 import { Card, CardContent } from '@/components/ui/card'
-import { Loader2 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Loader2, Package } from 'lucide-react'
 import { QRScanner } from './QRScanner'
 import { CustomerScanResult } from './CustomerScanResult'
 import { PunchCardScanResult } from './PunchCardScanResult'
+import { BundleScanResult } from './BundleScanResult'
 import { useScanner } from './hooks/useScanner'
 import { cn } from '@/lib/cn'
+
+// Development flag - set to true to show mock bundle button
+const SHOW_DEV_BUTTONS = false
 
 interface ScannerInterfaceProps {
   className?: string
@@ -16,15 +21,52 @@ export const ScannerInterface: React.FC<ScannerInterfaceProps> = ({
   className,
 }) => {
   const scanner = useScanner()
+  const [mockBundleIndex, setMockBundleIndex] = React.useState(0)
+
+  const handleMockBundleScan = () => {
+    // Cycle through different mock bundles
+    const bundleId = `mock-bundle-${mockBundleIndex}`
+    const mockBundleQR = {
+      qrData: JSON.stringify({ type: 'bundle_id', bundle_id: bundleId }),
+      parsedData: {
+        type: 'bundle_id' as const,
+        bundle_id: bundleId
+      }
+    }
+    scanner.handleScanResult(mockBundleQR)
+    setMockBundleIndex((prev) => (prev + 1) % 4) // Cycle through 4 mock bundles
+  }
 
   const renderCurrentState = () => {
     switch (scanner.currentState) {
       case 'scanning':
         return (
-          <QRScanner
-            onScanResult={scanner.handleScanResult}
-            onError={scanner.handleError}
-          />
+          <div className="space-y-4">
+            <QRScanner
+              onScanResult={scanner.handleScanResult}
+              onError={scanner.handleError}
+            />
+            
+            {SHOW_DEV_BUTTONS && (
+              <Card className="w-full max-w-lg mx-auto">
+                <CardContent className="p-4">
+                  <div className="space-y-2">
+                    <h3 className="text-sm font-medium text-center text-muted-foreground">
+                      Development Tools
+                    </h3>
+                    <Button 
+                      onClick={handleMockBundleScan}
+                      variant="outline"
+                      className="w-full"
+                    >
+                      <Package className="w-4 h-4 mr-2" />
+                      Test Bundle Scan ({mockBundleIndex + 1}/4)
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
         )
       
       case 'userQR':
@@ -40,6 +82,15 @@ export const ScannerInterface: React.FC<ScannerInterfaceProps> = ({
           <PunchCardScanResult
             data={scanner.scanResult}
             onRedeem={scanner.handleRedeem}
+            onReset={scanner.handleReset}
+          />
+        ) : null
+      
+      case 'bundleQR':
+        return scanner.scanResult ? (
+          <BundleScanResult
+            data={scanner.scanResult}
+            onUseBundle={scanner.handleUseBundle}
             onReset={scanner.handleReset}
           />
         ) : null
