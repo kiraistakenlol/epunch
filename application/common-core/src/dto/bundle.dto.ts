@@ -30,12 +30,19 @@ export interface BundleProgramSummaryDto {
 export interface BundleDto {
   id: string;
   userId: string;
-  bundleProgram: BundleProgramSummaryDto;
+  
+  itemName: string;
+  description: string | null;
+  
+  merchant: MerchantDto;
+  
   originalQuantity: number;
   remainingQuantity: number;
   expiresAt: string | null;
   createdAt: string;
   lastUsedAt: string | null;
+  
+  bundleProgramId?: string;
   styles: PunchCardStyleDto;
 }
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import { CustomizableCardStyles } from '../../../../../../utils/cardStyles';
 import { LoyaltyProgramDto } from 'e-punch-common-core';
 import PunchCardFrontBodyPunchesSection from './punches/PunchCardFrontBodyPunchesSection';
 import styles from './PunchCardFrontBody.module.css';
@@ -9,7 +8,11 @@ interface PunchCardFrontBodyProps {
   currentPunches: number;
   animatedPunchIndex?: number;
   loyaltyProgram: LoyaltyProgramDto | null;
-  resolvedStyles: CustomizableCardStyles;
+  secondaryColor: string;
+  punchIcons: {
+    filled: NonNullable<any>;
+    unfilled: NonNullable<any>;
+  };
 }
 
 const PunchCardFrontBody: React.FC<PunchCardFrontBodyProps> = ({
@@ -17,7 +20,8 @@ const PunchCardFrontBody: React.FC<PunchCardFrontBodyProps> = ({
   currentPunches,
   animatedPunchIndex,
   loyaltyProgram,
-  resolvedStyles
+  secondaryColor,
+  punchIcons
 }) => {
   return (
     <div className={styles.container}>
@@ -26,12 +30,16 @@ const PunchCardFrontBody: React.FC<PunchCardFrontBodyProps> = ({
           totalPunches={totalPunches}
           currentPunches={currentPunches}
           animatedPunchIndex={animatedPunchIndex}
-          resolvedStyles={resolvedStyles}
+          iconColor={secondaryColor}
+          punchIcons={punchIcons}
         />
       </div>
       {loyaltyProgram && (
         <div className={styles.loyaltyProgramNameContainer}>
-          <div className={styles.loyaltyProgramName}>
+          <div 
+            className={styles.loyaltyProgramName}
+            style={{ color: secondaryColor }}
+          >
             {loyaltyProgram.name}
           </div>
         </div>

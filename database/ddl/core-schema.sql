@@ -88,6 +88,11 @@ CREATE TABLE bundle (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
     bundle_program_id UUID NOT NULL REFERENCES bundle_program(id) ON DELETE CASCADE,
+    merchant_id UUID NOT NULL REFERENCES merchant(id) ON DELETE CASCADE,
+    
+    item_name VARCHAR(100) NOT NULL,
+    description TEXT,
+    
     original_quantity INTEGER NOT NULL,
     remaining_quantity INTEGER NOT NULL,
     expires_at TIMESTAMP,

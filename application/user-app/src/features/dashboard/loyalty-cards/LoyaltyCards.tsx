@@ -95,8 +95,6 @@ const LoyaltyCards = () => {
     return true;
   });
 
-  console.log('cardsToRender', allLoyaltyCards);
-
   const renderContent = () => {
     if (isAuthLoading || isLoading || punchCards === undefined || bundles === undefined) {
       return (

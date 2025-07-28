@@ -1,18 +1,17 @@
 import React from 'react';
-import { PunchCardDto } from 'e-punch-common-core';
+import { PunchCardDto, PunchCardStyleDto } from 'e-punch-common-core';
+import { appColors } from 'e-punch-common-ui';
 import { useAppSelector } from '../../../../../store/hooks';
 import { selectLoyaltyProgramById } from '../../../../loyaltyPrograms/loyaltyProgramsSlice';
-import { CustomizableCardStyles } from '../../../../../utils/cardStyles';
+import { resolveCardStyles } from '../../../../../utils/cardStyles';
 import PunchCardFrontHeader from './header/PunchCardFrontHeader';
 import PunchCardFrontBody from './body/PunchCardFrontBody';
-import PunchCardFrontFooter from './footer/PunchCardFrontFooter';
 import styles from './PunchCardFront.module.css';
 import layoutStyles from '../shared/PunchCardLayout.module.css';
 
 interface PunchCardFrontProps extends Pick<PunchCardDto, 'loyaltyProgramId' | 'shopName' | 'currentPunches' | 'totalPunches' | 'status'> {
-  resolvedStyles: CustomizableCardStyles;
+  cardStyles: PunchCardStyleDto;
   animatedPunchIndex?: number;
-  isSelected: boolean;
 }
 
 const PunchCardFront: React.FC<PunchCardFrontProps> = ({
@@ -21,23 +20,24 @@ const PunchCardFront: React.FC<PunchCardFrontProps> = ({
   currentPunches,
   totalPunches,
   status,
-  resolvedStyles,
-  animatedPunchIndex,
-  isSelected
+  cardStyles,
+  animatedPunchIndex
 }) => {
   const loyaltyProgram = useAppSelector(state => selectLoyaltyProgramById(state, loyaltyProgramId));
+  const primaryColor = cardStyles?.primaryColor || appColors.epunchGray;
+  const secondaryColor = cardStyles?.secondaryColor || appColors.epunchBlack;
+  const resolvedStyles = resolveCardStyles(cardStyles); // Still need for punch icons
 
   return (
     <div 
       className={`${layoutStyles.defaultCardLayout} ${styles.frontSide}`}
-      style={{ backgroundColor: resolvedStyles.colors.frontBodyBg }}
+      style={{ backgroundColor: primaryColor }}
     >
       <div className={`${layoutStyles.cardSection}`}>
         <PunchCardFrontHeader
           shopName={shopName}
           status={status}
-          isSelected={isSelected}
-          colors={resolvedStyles.colors}
+          secondaryColor={secondaryColor}
         />
       </div>
       <div className={`${layoutStyles.cardSection}`}>
@@ -46,11 +46,11 @@ const PunchCardFront: React.FC<PunchCardFrontProps> = ({
           currentPunches={currentPunches}
           animatedPunchIndex={animatedPunchIndex}
           loyaltyProgram={loyaltyProgram}
-          resolvedStyles={resolvedStyles}
+          secondaryColor={secondaryColor}
+          punchIcons={resolvedStyles.punchIcons}
         />
       </div>
       <div className={`${layoutStyles.cardSection}`}>
-        <PunchCardFrontFooter logoUrl={resolvedStyles.logoUrl} />
       </div>
     </div>
   );

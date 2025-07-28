@@ -1,11 +1,18 @@
 import { Injectable, Logger, Inject } from '@nestjs/common';
 import { Pool } from 'pg';
 import { BundleCreateDto } from 'e-punch-common-core';
+import { Merchant } from '../merchant/merchant.repository';
+import { PunchCardStyle } from '../punch-card-style/punch-card-style.repository';
 
 export interface Bundle {
   id: string;
   user_id: string;
   bundle_program_id: string;
+  
+  item_name: string;
+  description: string | null;
+  merchant_id: string;
+  
   original_quantity: number;
   remaining_quantity: number;
   expires_at: Date | null;
@@ -13,24 +20,13 @@ export interface Bundle {
   last_used_at: Date | null;
 }
 
-export interface BundleWithProgram extends Bundle {
-  program_name: string;
-  program_item_name: string;
-  program_description: string | null;
-  merchant_id: string;
-  merchant_name: string;
-  merchant_address: string | null;
-  merchant_slug: string;
-  merchant_logo_url: string;
-  merchant_created_at: Date;
+export interface BundleWithMerchant extends Bundle {
+  merchant: Merchant;
 }
 
-export interface BundleWithProgramAndStyles extends BundleWithProgram {
-  primary_color: string | null;
-  secondary_color: string | null;
-  logo_url: string | null;
-  background_image_url: string | null;
-  punch_icons: any | null;
+export interface BundleWithMerchantAndStyles extends Bundle {
+  merchant: Merchant;
+  styles: Omit<PunchCardStyle, 'id' | 'merchant_id' | 'loyalty_program_id' | 'created_at'>;
 }
 
 @Injectable()
@@ -56,72 +52,113 @@ export class BundleRepository {
     }
   }
 
-  async findBundleWithProgramById(bundleId: string): Promise<BundleWithProgram | null> {
-    this.logger.log(`Finding bundle with program details by ID: ${bundleId}`);
+  async findBundleWithMerchantById(bundleId: string): Promise<BundleWithMerchant | null> {
+    this.logger.log(`Finding bundle with merchant details by ID: ${bundleId}`);
     
     const query = `
       SELECT 
         b.*,
-        bp.name as program_name,
-        bp.item_name as program_item_name,
-        bp.description as program_description,
-        bp.merchant_id,
+        m.id as merchant_id,
         m.name as merchant_name,
         m.address as merchant_address,
         m.slug as merchant_slug,
         m.logo_url as merchant_logo_url,
         m.created_at as merchant_created_at
       FROM bundle b
-      JOIN bundle_program bp ON b.bundle_program_id = bp.id
-      JOIN merchant m ON bp.merchant_id = m.id
+      JOIN merchant m ON b.merchant_id = m.id
       WHERE b.id = $1
-        AND bp.is_deleted = false
     `;
     
     try {
       const result = await this.pool.query(query, [bundleId]);
-      return result.rows[0] || null;
+      if (result.rows.length === 0) {
+        return null;
+      }
+
+      const row = result.rows[0];
+      return {
+        id: row.id,
+        user_id: row.user_id,
+        bundle_program_id: row.bundle_program_id,
+        item_name: row.item_name,
+        description: row.description,
+        merchant_id: row.merchant_id,
+        original_quantity: row.original_quantity,
+        remaining_quantity: row.remaining_quantity,
+        expires_at: row.expires_at,
+        created_at: row.created_at,
+        last_used_at: row.last_used_at,
+        merchant: {
+          id: row.merchant_id,
+          name: row.merchant_name,
+          address: row.merchant_address,
+          slug: row.merchant_slug,
+          logo_url: row.merchant_logo_url,
+          created_at: row.merchant_created_at
+        }
+      };
     } catch (error: any) {
-      this.logger.error(`Error finding bundle with program by ID ${bundleId}:`, error.message);
+      this.logger.error(`Error finding bundle with merchant by ID ${bundleId}:`, error.message);
       throw error;
     }
   }
 
-  async findUserBundles(userId: string): Promise<BundleWithProgramAndStyles[]> {
+  async findUserBundles(userId: string): Promise<BundleWithMerchantAndStyles[]> {
     this.logger.log(`Finding bundles for user: ${userId}`);
     
     const query = `
       SELECT 
         b.*,
-        bp.name as program_name,
-        bp.item_name as program_item_name,
-        bp.description as program_description,
-        bp.merchant_id,
+        m.id as merchant_id,
         m.name as merchant_name,
         m.address as merchant_address,
         m.slug as merchant_slug,
         m.logo_url as merchant_logo_url,
         m.created_at as merchant_created_at,
-        COALESCE(specific_style.primary_color, default_style.primary_color) as primary_color,
-        COALESCE(specific_style.secondary_color, default_style.secondary_color) as secondary_color,
-        COALESCE(specific_style.logo_url, default_style.logo_url) as logo_url,
-        COALESCE(specific_style.background_image_url, default_style.background_image_url) as background_image_url,
-        COALESCE(specific_style.punch_icons, default_style.punch_icons) as punch_icons
+        merchant_style.primary_color,
+        merchant_style.secondary_color,
+        merchant_style.logo_url as style_logo_url,
+        merchant_style.background_image_url,
+        merchant_style.punch_icons
       FROM bundle b
-      JOIN bundle_program bp ON b.bundle_program_id = bp.id
-      JOIN merchant m ON bp.merchant_id = m.id
-      LEFT JOIN punch_card_style specific_style ON specific_style.loyalty_program_id = bp.id
-      LEFT JOIN punch_card_style default_style ON default_style.merchant_id = m.id AND default_style.loyalty_program_id IS NULL
+      JOIN merchant m ON b.merchant_id = m.id
+      LEFT JOIN punch_card_style merchant_style ON merchant_style.merchant_id = b.merchant_id
       WHERE b.user_id = $1
-        AND bp.is_deleted = false
-        AND b.remaining_quantity > 0
       ORDER BY b.created_at DESC
     `;
     
     try {
       const result = await this.pool.query(query, [userId]);
       this.logger.log(`Found ${result.rows.length} bundles for user: ${userId}`);
-      return result.rows;
+      
+      return result.rows.map(row => ({
+        id: row.id,
+        user_id: row.user_id,
+        bundle_program_id: row.bundle_program_id,
+        item_name: row.item_name,
+        description: row.description,
+        merchant_id: row.merchant_id,
+        original_quantity: row.original_quantity,
+        remaining_quantity: row.remaining_quantity,
+        expires_at: row.expires_at,
+        created_at: row.created_at,
+        last_used_at: row.last_used_at,
+        merchant: {
+          id: row.merchant_id,
+          name: row.merchant_name,
+          address: row.merchant_address,
+          slug: row.merchant_slug,
+          logo_url: row.merchant_logo_url,
+          created_at: row.merchant_created_at
+        },
+        styles: {
+          primary_color: row.primary_color,
+          secondary_color: row.secondary_color,
+          logo_url: row.style_logo_url,
+          background_image_url: row.background_image_url,
+          punch_icons: row.punch_icons
+        }
+      }));
     } catch (error: any) {
       this.logger.error(`Error finding bundles for user ${userId}:`, error.message);
       throw error;
@@ -136,8 +173,27 @@ export class BundleRepository {
       : null;
     
     const query = `
-      INSERT INTO bundle (user_id, bundle_program_id, original_quantity, remaining_quantity, expires_at)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO bundle (
+        user_id, 
+        bundle_program_id, 
+        item_name,
+        description,
+        merchant_id,
+        original_quantity, 
+        remaining_quantity, 
+        expires_at
+      )
+      SELECT 
+        $1 as user_id,
+        $2 as bundle_program_id,
+        bp.item_name,
+        bp.description,
+        bp.merchant_id,
+        $3 as original_quantity,
+        $4 as remaining_quantity,
+        $5 as expires_at
+      FROM bundle_program bp
+      WHERE bp.id = $2
       RETURNING *
     `;
     

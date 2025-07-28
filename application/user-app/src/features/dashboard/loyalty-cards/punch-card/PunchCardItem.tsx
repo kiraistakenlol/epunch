@@ -1,7 +1,6 @@
-import { forwardRef, useMemo } from 'react';
+import { forwardRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { PunchCardDto } from 'e-punch-common-core';
-import { resolveCardStyles } from '../../../../utils/cardStyles';
 import BaseCard from '../../../../components/BaseCard';
 import PunchCardFront from './front/PunchCardFront';
 import PunchCardBack from './back/PunchCardBack';
@@ -49,10 +48,7 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
   const selectedCardId = useAppSelector(selectSelectedCardId);
   const isSelected = selectedCardId === id;
   
-  // Internal style resolution
-  const resolvedStyles = useMemo(() => 
-    resolveCardStyles(cardStyles), [cardStyles]
-  );
+
   
   // Internal animation state - access animationFlags from rest props
   const animationFlags = (rest as any).animationFlags;
@@ -116,9 +112,8 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
         currentPunches={currentPunches}
         totalPunches={totalPunches}
         status={status}
-        resolvedStyles={resolvedStyles}
+        cardStyles={cardStyles}
         animatedPunchIndex={animatedPunchIndex}
-        isSelected={isSelected}
       />
       {status === 'REWARD_READY' && animatedPunchIndex === undefined && showCompletionOverlay && (
         <PunchCardOverlay
@@ -129,13 +124,13 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
   );
 
   const backContent = (
-    <PunchCardBack
-      loyaltyProgramId={loyaltyProgramId}
-      shopName={shopName}
-      shopAddress={shopAddress}
-      totalPunches={totalPunches}
-      resolvedStyles={resolvedStyles}
-    />
+          <PunchCardBack
+        loyaltyProgramId={loyaltyProgramId}
+        shopName={shopName}
+        shopAddress={shopAddress}
+        totalPunches={totalPunches}
+        cardStyles={cardStyles}
+      />
   );
 
   return (

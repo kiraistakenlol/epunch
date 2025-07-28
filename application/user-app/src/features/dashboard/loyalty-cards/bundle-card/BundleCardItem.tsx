@@ -29,12 +29,12 @@ interface BundleCardItemProps extends BundleDto {
 
 const BundleCardItem = forwardRef<HTMLDivElement, BundleCardItemProps>(({
   id,
-  bundleProgram,
+  itemName,
+  merchant,
   originalQuantity,
   remainingQuantity,
   expiresAt,
-  createdAt,
-  lastUsedAt,
+  styles: cardStyles,
   // Behavioral props with defaults
   interactive = true,
   selectable = true,
@@ -48,6 +48,8 @@ const BundleCardItem = forwardRef<HTMLDivElement, BundleCardItemProps>(({
   // Read selection state from Redux (external state that QRCode depends on)
   const selectedBundleId = useAppSelector(selectSelectedBundleId);
   const isSelected = selectedBundleId === id;
+  
+
   
   // Internal animation state
   const isHighlighted = enableAnimations && (animationFlags?.highlighted || false);
@@ -112,14 +114,15 @@ const BundleCardItem = forwardRef<HTMLDivElement, BundleCardItemProps>(({
 
   const content = (
     <BundleCardFront
-      bundleProgram={bundleProgram}
+      merchant={merchant}
+      itemName={itemName}
       remainingQuantity={remainingQuantity}
       originalQuantity={originalQuantity}
       expiresAt={expiresAt}
-      isSelected={isSelected}
       isExpired={isExpired}
       isUsedUp={isUsedUp}
       isAvailable={!isExpired && !isUsedUp}
+      cardStyles={cardStyles}
     />
   );
 

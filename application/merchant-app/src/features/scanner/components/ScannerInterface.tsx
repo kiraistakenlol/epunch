@@ -74,7 +74,7 @@ export const ScannerInterface: React.FC<ScannerInterfaceProps> = ({
           <CustomerScanResult
             onPunch={scanner.handlePunch}
             onReset={scanner.handleReset}
-            onSuccess={(message) => scanner.handleReset()}
+            onSuccess={() => scanner.handleReset()}
             userId={scanner.scanResult.parsedData.user_id}
           />
         ) : null

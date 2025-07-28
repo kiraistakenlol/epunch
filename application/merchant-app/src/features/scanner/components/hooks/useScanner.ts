@@ -119,7 +119,7 @@ export const useScanner = (options: UseScannerOptions = {}) => {
 
     try {
       const result = await apiClient.useBundle(scanResult.parsedData.bundle_id, { quantityUsed })
-      const message = `✅ Bundle used! ${quantityUsed} ${result.bundleProgram.itemName}(s)`
+      const message = `✅ Bundle used! ${quantityUsed} ${result.itemName}(s)`
       
       toast.success("Success", {
         description: message,

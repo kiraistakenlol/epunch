@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { apiClient } from 'e-punch-common-ui'
-import { LoyaltyProgramDto, BundleProgramDto } from 'e-punch-common-core'
+import { LoyaltyProgramDto } from 'e-punch-common-core'
 import { useAppSelector, useAppDispatch } from '../../../store/hooks'
 import { fetchBundlePrograms, selectBundlePrograms, selectBundleProgramsLoading } from '../../../store/bundleProgramsSlice'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'

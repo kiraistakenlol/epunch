@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { Loader2, Package } from 'lucide-react'
-import { cn } from '@/lib/cn'
+
 import { toast } from 'sonner'
 
 interface BundlesTabProps {
@@ -73,7 +73,7 @@ export const BundlesTab: React.FC<BundlesTabProps> = ({
       }
       
       const result = await apiClient.createBundle(bundleData)
-      const message = `🎁 Bundle given! ${customQuantity}x ${result.bundleProgram.itemName}`
+      const message = `🎁 Bundle given! ${customQuantity}x ${result.itemName}`
       
       toast.success("Success", {
         description: message,
@@ -143,37 +143,7 @@ export const BundlesTab: React.FC<BundlesTabProps> = ({
               </div>
             </div>
 
-            {/* Custom Inputs */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="amount" className="text-sm font-medium">
-                  Amount
-                </Label>
-                <Input
-                  id="amount"
-                  type="number"
-                  min="1"
-                  value={customQuantity}
-                  onChange={(e) => setCustomQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="days" className="text-sm font-medium">
-                  Days to Expire
-                </Label>
-                <Input
-                  id="days"
-                  type="number"
-                  min="1"
-                  placeholder="No expiry"
-                  value={customValidityDays || ''}
-                  onChange={(e) => {
-                    const value = e.target.value
-                    setCustomValidityDays(value ? Math.max(1, parseInt(value) || 1) : null)
-                  }}
-                />
-              </div>
-            </div>
+
           </>
         ) : (
           <div className="flex items-center justify-center h-32 text-muted-foreground">

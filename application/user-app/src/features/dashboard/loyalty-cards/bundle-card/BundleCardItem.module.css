@@ -1,51 +1,27 @@
 /* === BUNDLE CARD SPECIFIC STYLING === */
 
 .shadowBlack {
-  box-shadow: 
-    calc(var(--card-height) * -0.02) 
-    calc(var(--card-height) * 0.02) 
-    calc(var(--card-height) * var(--shadow-intensity)) 
-    var(--color-epunch-black);
+  /* Base shadow is already applied in BaseCard - these are empty for now */
 }
 
 .shadowGreen {
-  box-shadow: 
-    calc(var(--card-height) * -0.02) 
-    calc(var(--card-height) * 0.02) 
-    calc(var(--card-height) * var(--shadow-intensity)) 
-    var(--color-epunch-green);
+  /* Base shadow is already applied in BaseCard - these are empty for now */
 }
 
 .shadowGold {
-  box-shadow: 
-    calc(var(--card-height) * -0.02) 
-    calc(var(--card-height) * 0.02) 
-    calc(var(--card-height) * var(--shadow-intensity)) 
-    #fbbf24;
+  /* Base shadow is already applied in BaseCard - these are empty for now */  
 }
 
 .shadowBlue {
-  box-shadow: 
-    calc(var(--card-height) * -0.02) 
-    calc(var(--card-height) * 0.02) 
-    calc(var(--card-height) * var(--shadow-intensity)) 
-    #3b82f6;
+  /* Base shadow is already applied in BaseCard - these are empty for now */
 }
 
 .shadowRed {
-  box-shadow: 
-    calc(var(--card-height) * -0.02) 
-    calc(var(--card-height) * 0.02) 
-    calc(var(--card-height) * var(--shadow-intensity)) 
-    #ef4444;
+  /* Base shadow is already applied in BaseCard - these are empty for now */
 }
 
 .shadowGray {
-  box-shadow: 
-    calc(var(--card-height) * -0.02) 
-    calc(var(--card-height) * 0.02) 
-    calc(var(--card-height) * var(--shadow-intensity)) 
-    #6b7280;
+  /* Base shadow is already applied in BaseCard - these are empty for now */
 }
 
 /* === TRANSFORM UTILITIES === */

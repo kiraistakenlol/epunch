@@ -50,7 +50,18 @@ export interface CustomizableCardStyles {
 export function resolveCardStyles(
   customization?: PunchCardStyleDto | null
 ): CustomizableCardStyles {
-  const resolvedColors = deriveCardColors(customization?.primaryColor, customization?.secondaryColor);
+  const primary = customization?.primaryColor || appColors.epunchGray;
+  const secondary = customization?.secondaryColor || appColors.epunchBlack;
+  
+  // Simplified - only create the colors we actually use
+  const minimalColors: CardColors = {
+    frontHeaderBg: primary, // Not used anymore
+    frontBodyBg: primary, // Not used anymore  
+    backHeaderBg: primary, // Not used anymore
+    backBodyBg: lightenColor(primary, 0.6), // Still used for punch card back
+    punchIconColor: primary, // Not used anymore
+    textColor: secondary, // Not used anymore
+  };
   
   // Handle individual icon nulls - use default for any missing icons
   let resolvedPunchIcons: CustomizableCardStyles['punchIcons'] = {
@@ -66,27 +77,10 @@ export function resolveCardStyles(
   }
   
   return {
-    colors: resolvedColors,
+    colors: minimalColors,
     logoUrl: customization?.logoUrl || null,
     punchIcons: resolvedPunchIcons,
     backgroundImageUrl: customization?.backgroundImageUrl || null,
-  };
-}
-
-function deriveCardColors(
-  primaryColor?: string | null, 
-  secondaryColor?: string | null
-): CardColors {
-  const primary = primaryColor || appColors.epunchDarkCoffee;
-  const secondary = secondaryColor || appColors.epunchWhite;
-
-  return {
-    frontHeaderBg: primary,
-    frontBodyBg: lightenColor(primary, 0.4),
-    backHeaderBg: darkenColor(primary, 0.2),
-    backBodyBg: lightenColor(primary, 0.6),
-    punchIconColor: primary,
-    textColor: secondary,
   };
 }
 
@@ -103,15 +97,4 @@ function lightenColor(color: string, amount: number): string {
   return `rgb(${newR}, ${newG}, ${newB})`;
 }
 
-function darkenColor(color: string, amount: number): string {
-  const hex = color.replace('#', '');
-  const r = parseInt(hex.substr(0, 2), 16);
-  const g = parseInt(hex.substr(2, 2), 16);
-  const b = parseInt(hex.substr(4, 2), 16);
-  
-  const newR = Math.max(0, Math.round(r * (1 - amount)));
-  const newG = Math.max(0, Math.round(g * (1 - amount)));
-  const newB = Math.max(0, Math.round(b * (1 - amount)));
-  
-  return `rgb(${newR}, ${newG}, ${newB})`;
-} 
+ 

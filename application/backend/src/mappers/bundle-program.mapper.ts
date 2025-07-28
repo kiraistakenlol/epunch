@@ -1,6 +1,7 @@
 import { BundleProgramDto, BundleProgramSummaryDto } from 'e-punch-common-core';
 import { BundleProgram } from '../features/bundle-program/bundle-program.repository';
 import { Merchant } from '../features/merchant/merchant.repository';
+import { MerchantMapper } from './merchant.mapper';
 
 export class BundleProgramMapper {
   static toDto(bundleProgram: BundleProgram, merchant: Merchant): BundleProgramDto {
@@ -22,7 +23,7 @@ export class BundleProgramMapper {
       name: bundleProgram.name,
       itemName: bundleProgram.item_name,
       description: bundleProgram.description,
-      merchantName: merchant.name,
+      merchant: MerchantMapper.toDto(merchant),
     };
   }
 

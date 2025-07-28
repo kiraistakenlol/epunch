@@ -150,7 +150,7 @@ export const BundleScanResult: React.FC<BundleScanResultProps> = ({
             <Package className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
             {getStatusBadge()}
           </div>
-          <CardTitle className="text-xl sm:text-2xl text-center">{bundle.bundleProgram.name}</CardTitle>
+          <CardTitle className="text-xl sm:text-2xl text-center">{bundle.itemName} Bundle</CardTitle>
           <p className="text-xs sm:text-sm text-center text-muted-foreground">ID: {getBundleId()}</p>
         </CardHeader>
         
@@ -158,16 +158,16 @@ export const BundleScanResult: React.FC<BundleScanResultProps> = ({
           <div className="flex-1 space-y-4 sm:space-y-6">
             <div className="p-3 sm:p-4 bg-muted/50 rounded-lg">
               <div className="space-y-2">
-                <h4 className="font-medium text-base sm:text-lg">{bundle.bundleProgram.merchantName}</h4>
+                <h4 className="font-medium text-base sm:text-lg">{bundle.merchant.name}</h4>
                 <div className="flex items-center space-x-2">
                   <span className="text-base sm:text-lg">📦</span>
                   <p className="text-xs sm:text-sm text-muted-foreground">
-                    {bundle.remainingQuantity} of {bundle.originalQuantity} {bundle.bundleProgram.itemName}(s) remaining
+                    {bundle.remainingQuantity} of {bundle.originalQuantity} {bundle.itemName}(s) remaining
                   </p>
                 </div>
-                {bundle.bundleProgram.description && (
+                {bundle.description && (
                   <p className="text-xs sm:text-sm text-muted-foreground mt-2">
-                    {bundle.bundleProgram.description}
+                    {bundle.description}
                   </p>
                 )}
               </div>

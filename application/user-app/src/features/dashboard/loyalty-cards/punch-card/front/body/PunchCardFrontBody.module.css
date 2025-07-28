@@ -25,7 +25,6 @@
 }
 
 .loyaltyProgramName {
-  color: var(--color-epunch-black);
   font-weight: 800;
   font-style: italic;
   text-align: center;
@@ -34,9 +33,4 @@
   overflow: hidden;
   text-overflow: ellipsis;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-  border-radius: calc(var(--card-height) * 0.02);
-  padding: calc(var(--card-height) * 0.015) calc(var(--card-height) * 0.03);
-  backdrop-filter: blur(2px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
 }

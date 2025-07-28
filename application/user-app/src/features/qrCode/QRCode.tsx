@@ -70,7 +70,7 @@ const QRCodeComponent: React.FC = () => {
           </>
         ) : isBundleMode && selectedBundle ? (
           <>
-            Show to use {selectedBundle.bundleProgram.itemName}
+            {selectedBundle.itemName}
           </>
         ) : (
           t('qr.myCode')

@@ -1,24 +1,31 @@
 import React from 'react';
-import { BundleProgramSummaryDto } from 'e-punch-common-core';
+import { MerchantDto, PunchCardStyleDto } from 'e-punch-common-core';
+import { appColors } from 'e-punch-common-ui';
 import styles from './BundleCardFront.module.css';
+import layoutStyles from '../../punch-card/shared/PunchCardLayout.module.css';
 
 interface BundleCardFrontProps {
-  bundleProgram: BundleProgramSummaryDto;
+  merchant: MerchantDto;
+  itemName: string;
   remainingQuantity: number;
   originalQuantity: number;
   expiresAt: string | null;
-  isSelected: boolean;
   isExpired: boolean;
   isUsedUp: boolean;
   isAvailable: boolean;
+  cardStyles: PunchCardStyleDto;
 }
 
 const BundleCardFront: React.FC<BundleCardFrontProps> = ({
-  bundleProgram,
+  merchant,
+  itemName,
   remainingQuantity,
   originalQuantity,
-  expiresAt
+  expiresAt,
+  cardStyles
 }) => {
+  const primaryColor = cardStyles?.primaryColor || appColors.epunchGray;
+  const secondaryColor = cardStyles?.secondaryColor || appColors.epunchBlack;
   const getDaysUntilExpiration = () => {
     if (!expiresAt) return { text: null, days: null };
     const expirationDate = new Date(expiresAt);
@@ -29,42 +36,67 @@ const BundleCardFront: React.FC<BundleCardFrontProps> = ({
     if (diffDays < 0) return { text: 'Expired', days: diffDays };
     if (diffDays === 0) return { text: 'Expires today', days: 0 };
     if (diffDays === 1) return { text: 'Expires in 1 day', days: 1 };
-    return { text: `Expires in ${diffDays} days`, days: diffDays };
+    return { text: `${diffDays} day(s) left`, days: diffDays };
   };
 
-  const getExpirationColorClass = () => {
-    const expiration = getDaysUntilExpiration();
-    if (!expiration.text || expiration.days === null) return '';
-    
-    if (expiration.days < 0) return styles.expired; // Red for expired
-    if (expiration.days <= 7) return styles.expiringSoon; // Orange for expiring soon
-    if (expiration.days <= 30) return styles.expiringMedium; // Yellow for medium term
-    return styles.expiringLater; // Green for long term
-  };
+
 
   const expiration = getDaysUntilExpiration();
 
   return (
-    <div className={styles.frontCard}>
-      {/* Top section with merchant name */}
-      <div className={styles.topSection}>
-        <div className={styles.merchantName}>{bundleProgram.merchant.name}</div>
+    <div 
+      className={`${layoutStyles.defaultCardLayout} ${styles.frontSide}`}
+      style={{
+        backgroundColor: primaryColor
+      }}
+    >
+      <div className={`${layoutStyles.cardSection}`}>
+        <div 
+          className={styles.headerSection}
+          style={{
+            color: secondaryColor
+          }}
+        >
+          <span 
+            className={styles.merchantName}
+            style={{ color: secondaryColor }}
+          >
+            {merchant.name}
+          </span>
+        </div>
+      </div>
+      
+      <div className={`${layoutStyles.cardSection}`}>
+        <div className={styles.mainContent}>
+          <div 
+            className={styles.quantity}
+            style={{ color: secondaryColor }}
+          >
+            <span className={styles.remainingQuantity}>{remainingQuantity}</span>
+            <span className={styles.separator}>/</span>
+            <span className={styles.totalQuantity}>{originalQuantity}</span>
+          </div>
+          <div 
+            className={styles.itemName}
+            style={{ color: secondaryColor }}
+          >
+            {itemName}
+          </div>
+        </div>
       </div>
 
-      {/* Main content section with quantity and item name close together */}
-      <div className={styles.mainContent}>
-        <div className={styles.quantity}>
-          {remainingQuantity}/{originalQuantity}
+      <div className={`${layoutStyles.cardSection}`}>
+        <div className={styles.footerSection}>
+          {expiration.text && (
+            <div 
+              className={styles.expiration}
+              style={{ color: secondaryColor }}
+            >
+              {expiration.text}
+            </div>
+          )}
         </div>
-        <div className={styles.itemName}>{bundleProgram.itemName}</div>
       </div>
-
-      {/* Bottom section with expiration */}
-      {expiration.text && (
-        <div className={`${styles.expiration} ${getExpirationColorClass()}`}>
-          {expiration.text}
-        </div>
-      )}
     </div>
   );
 };

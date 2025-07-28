@@ -1,14 +1,13 @@
 import React from 'react';
-import { PunchCardDto } from 'e-punch-common-core';
-import { useI18n } from 'e-punch-common-ui';
+import { PunchCardDto, PunchCardStyleDto } from 'e-punch-common-core';
+import { useI18n, appColors } from 'e-punch-common-ui';
 import { useAppSelector } from '../../../../../store/hooks';
 import { selectLoyaltyProgramById } from '../../../../loyaltyPrograms/loyaltyProgramsSlice';
-import { CustomizableCardStyles } from '../../../../../utils/cardStyles';
 import styles from './PunchCardBack.module.css';
 import layoutStyles from '../shared/PunchCardLayout.module.css';
 
 interface PunchCardBackProps extends Pick<PunchCardDto, 'loyaltyProgramId' | 'shopName' | 'shopAddress' | 'totalPunches'> {
-  resolvedStyles: CustomizableCardStyles;
+  cardStyles: PunchCardStyleDto;
   shopMapsUrl?: string;
 }
 
@@ -17,11 +16,13 @@ const PunchCardBack: React.FC<PunchCardBackProps> = ({
   shopName,
   shopAddress,
   totalPunches,
-  resolvedStyles,
+  cardStyles,
   shopMapsUrl
 }) => {
   const { t } = useI18n('punchCards');
   const loyaltyProgram = useAppSelector(state => selectLoyaltyProgramById(state, loyaltyProgramId));
+  const primaryColor = cardStyles?.primaryColor || appColors.epunchGray;
+  const secondaryColor = cardStyles?.secondaryColor || appColors.epunchBlack;
 
   const getDefaultMapsUrl = (merchantName: string, merchantAddress: string) => {
     const query = encodeURIComponent(`${merchantName}, ${merchantAddress}`);
@@ -37,52 +38,38 @@ const PunchCardBack: React.FC<PunchCardBackProps> = ({
   return (
     <div 
       className={`${layoutStyles.defaultCardLayout} ${styles.backCard}`}
-      style={{ backgroundColor: resolvedStyles.colors.backBodyBg }}
+      style={{ backgroundColor: primaryColor }}
     >
-      {resolvedStyles.logoUrl && (
-        <img src={resolvedStyles.logoUrl} alt="" className={styles.logoBackground} />
-      )}
-      <div 
-        className={`${layoutStyles.cardSection} ${styles.header}`}
-        style={{
-          backgroundColor: resolvedStyles.colors.backHeaderBg,
-          color: resolvedStyles.colors.textColor
-        }}
-      >
-        <span 
-          className={styles.headerTitle}
-          style={{ color: resolvedStyles.colors.textColor }}
-        >
-          {t('back.details')}
-        </span>
+
+      <div className={`${layoutStyles.cardSection} ${styles.header}`}>
       </div>
       <div 
         className={`${layoutStyles.cardSection} ${styles.body}`}
-        style={{ color: resolvedStyles.colors.textColor }}
+        style={{ color: secondaryColor }}
       >
         {loyaltyProgram && (
           <div className={`${styles.rewardMessage} ${styles.rewardText}`}>
-            <div style={{ color: resolvedStyles.colors.textColor }}>
+            <div style={{ color: secondaryColor }}>
               {t('back.collectMessage', { totalPunches, shopName })}
             </div>
             <div 
               className={styles.rewardName}
-              style={{ color: resolvedStyles.colors.textColor }}
+              style={{ color: secondaryColor }}
             >
-              🎁 {loyaltyProgram.rewardDescription}
+              {loyaltyProgram.rewardDescription}
             </div>
           </div>
         )}
       </div>
       <div 
         className={`${layoutStyles.cardSection} ${styles.footer}`}
-        style={{ color: resolvedStyles.colors.textColor }}
+        style={{ color: secondaryColor }}
       >
         {shopAddress && (
           <a 
             href={shopMapsUrl || getDefaultMapsUrl(shopName, shopAddress)}
             className={styles.addressText}
-            style={{ color: resolvedStyles.colors.textColor }}
+            style={{ color: secondaryColor }}
             target="_blank"
             rel="noopener noreferrer"
           >

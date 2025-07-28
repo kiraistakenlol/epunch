@@ -1,36 +1,35 @@
 import React from 'react';
-import { CardColors } from '../../../../../../utils/cardStyles';
 import styles from './PunchCardFrontHeader.module.css';
 
 interface PunchCardFrontHeaderProps {
   shopName: string;
   status: string;
-  isSelected: boolean;
-  colors: CardColors;
+  secondaryColor: string;
 }
 
 const PunchCardFrontHeader: React.FC<PunchCardFrontHeaderProps> = ({
   shopName,
   status,
-  isSelected,
-  colors
+  secondaryColor
 }) => {
   const rewardReadyIcon =
-    <span className={`${styles.checkIcon} ${isSelected ? styles.selected : ''}`}>
-      🎁
+    <span 
+      className={styles.readyIcon}
+      style={{ color: secondaryColor }}
+    >
+      ✓
     </span>;
 
   return (
     <div 
       className={styles.container}
       style={{
-        backgroundColor: colors.frontHeaderBg,
-        color: colors.textColor
+        color: secondaryColor
       }}
     >
       <span 
         className={styles.shopName}
-        style={{ color: colors.textColor }}
+        style={{ color: secondaryColor }}
       >
         {shopName}
       </span>

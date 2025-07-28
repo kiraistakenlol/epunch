@@ -19,12 +19,12 @@ export class BundleService {
   ) {}
 
   async getBundleById(bundleId: string, auth: Authentication): Promise<BundleDto> {
-    this.logger.log(`Fetching bundle: ${bundleId}`);
+    this.logger.log(`Fetching bundle by ID: ${bundleId}`);
 
     try {
-      const bundleWithProgram = await this.bundleRepository.findBundleWithProgramById(bundleId);
+      const bundle = await this.bundleRepository.findBundleById(bundleId);
 
-      if (!bundleWithProgram) {
+      if (!bundle) {
         throw new NotFoundException(`Bundle with ID ${bundleId} not found`);
       }
 
@@ -33,13 +33,19 @@ export class BundleService {
           throw new ForbiddenException('No merchant user found');
         }
 
-        if (bundleWithProgram.merchant_id !== auth.merchantUser.merchantId) {
+        if (bundle.merchant_id !== auth.merchantUser.merchantId) {
           throw new ForbiddenException('Not authorized to access this bundle');
         }
       }
 
+      // Get full details for response
+      const bundleWithMerchant = await this.bundleRepository.findBundleWithMerchantById(bundleId);
+      if (!bundleWithMerchant) {
+        throw new Error('Failed to retrieve bundle with merchant details');
+      }
+
       this.logger.log(`Found bundle: ${bundleId}`);
-      return BundleMapper.toDto(bundleWithProgram);
+      return BundleMapper.toDtoFromBundleWithMerchant(bundleWithMerchant);
     } catch (error: any) {
       this.logger.error(`Error fetching bundle ${bundleId}: ${error.message}`, error.stack);
       throw error;
@@ -48,7 +54,6 @@ export class BundleService {
 
   async getUserBundles(userId: string): Promise<BundleDto[]> {
     this.logger.log(`Fetching bundles for user: ${userId}`);
-
     try {
       const bundlesWithStyles = await this.bundleRepository.findUserBundles(userId);
       this.logger.log(`Found ${bundlesWithStyles.length} bundles for user: ${userId}`);
@@ -84,13 +89,13 @@ export class BundleService {
       }
 
       const bundle = await this.bundleRepository.createBundle(data);
-      const bundleWithProgram = await this.bundleRepository.findBundleWithProgramById(bundle.id);
+      const bundleWithMerchant = await this.bundleRepository.findBundleWithMerchantById(bundle.id);
 
-      if (!bundleWithProgram) {
-        throw new Error('Failed to retrieve created bundle');
+      if (!bundleWithMerchant) {
+        throw new Error('Failed to retrieve created bundle with merchant details');
       }
 
-      const bundleDto = BundleMapper.toDto(bundleWithProgram);
+      const bundleDto = BundleMapper.toDtoFromBundleWithMerchant(bundleWithMerchant);
 
       this.logger.log(`Emitting BUNDLE_CREATED event for user ${data.userId}, bundle ${bundle.id}`);
       this.eventService.emitAppEvent({
@@ -111,9 +116,9 @@ export class BundleService {
     this.logger.log(`Using bundle ${bundleId} with quantity: ${data.quantityUsed || 1}`);
 
     try {
-      const bundleWithProgram = await this.bundleRepository.findBundleWithProgramById(bundleId);
+      const bundle = await this.bundleRepository.findBundleById(bundleId);
 
-      if (!bundleWithProgram) {
+      if (!bundle) {
         throw new NotFoundException(`Bundle with ID ${bundleId} not found`);
       }
 
@@ -122,7 +127,7 @@ export class BundleService {
           throw new ForbiddenException('No merchant user found');
         }
 
-        if (bundleWithProgram.merchant_id !== auth.merchantUser.merchantId) {
+        if (bundle.merchant_id !== auth.merchantUser.merchantId) {
           throw new ForbiddenException('Not authorized to use this bundle');
         }
       }
@@ -133,33 +138,33 @@ export class BundleService {
         throw new BadRequestException('Quantity used must be greater than 0');
       }
 
-      if (bundleWithProgram.remaining_quantity < quantityUsed) {
-        throw new BadRequestException(`Insufficient quantity. Available: ${bundleWithProgram.remaining_quantity}, Requested: ${quantityUsed}`);
+      if (bundle.remaining_quantity < quantityUsed) {
+        throw new BadRequestException(`Insufficient quantity. Available: ${bundle.remaining_quantity}, Requested: ${quantityUsed}`);
       }
 
-      if (bundleWithProgram.expires_at && bundleWithProgram.expires_at < new Date()) {
+      if (bundle.expires_at && bundle.expires_at < new Date()) {
         throw new BadRequestException('Bundle has expired');
       }
 
       const updatedBundle = await this.bundleRepository.useBundle(bundleId, quantityUsed);
       await this.bundleRepository.createBundleUsage(bundleId, quantityUsed);
 
-      const updatedBundleWithProgram = await this.bundleRepository.findBundleWithProgramById(bundleId);
-      if (!updatedBundleWithProgram) {
-        throw new Error('Failed to retrieve updated bundle');
+      const updatedBundleWithMerchant = await this.bundleRepository.findBundleWithMerchantById(bundleId);
+      if (!updatedBundleWithMerchant) {
+        throw new Error('Failed to retrieve updated bundle with merchant details');
       }
 
-      const bundleDto = BundleMapper.toDto(updatedBundleWithProgram);
+      const bundleDto = BundleMapper.toDtoFromBundleWithMerchant(updatedBundleWithMerchant);
 
-      this.logger.log(`Emitting BUNDLE_USED event for user ${bundleWithProgram.user_id}, bundle ${bundleId}`);
+      this.logger.log(`Emitting BUNDLE_USED event for user ${bundle.user_id}, bundle ${bundleId}`);
       this.eventService.emitAppEvent({
         type: 'BUNDLE_USED',
-        userId: bundleWithProgram.user_id,
+        userId: bundle.user_id,
         bundle: bundleDto,
         quantityUsed,
       });
 
-      this.logger.log(`Successfully used bundle: ${bundleId}. Remaining quantity: ${updatedBundle.remaining_quantity}`);
+      this.logger.log(`Successfully used bundle: ${bundleId}`);
       return bundleDto;
     } catch (error: any) {
       this.logger.error(`Error using bundle ${bundleId}: ${error.message}`, error.stack);

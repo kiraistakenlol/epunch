@@ -1,27 +1,15 @@
 /* === PUNCH CARD SPECIFIC STYLING === */
 
 .shadowBlack {
-  box-shadow: 
-    calc(var(--card-height) * -0.02) 
-    calc(var(--card-height) * 0.02) 
-    calc(var(--card-height) * var(--shadow-intensity)) 
-    var(--color-epunch-black);
+  /* Base shadow is already applied in BaseCard - these are empty for now */
 }
 
 .shadowGold {
-  box-shadow: 
-    calc(var(--card-height) * -0.02) 
-    calc(var(--card-height) * 0.02) 
-    calc(var(--card-height) * var(--shadow-intensity)) 
-    var(--color-epunch-gold);
+  /* Base shadow is already applied in BaseCard - these are empty for now */
 }
 
 .shadowGreen {
-  box-shadow: 
-    calc(var(--card-height) * -0.02) 
-    calc(var(--card-height) * 0.02) 
-    calc(var(--card-height) * var(--shadow-intensity)) 
-    var(--color-epunch-green);
+  /* Base shadow is already applied in BaseCard - these are empty for now */
 }
 /* === TRANSFORM UTILITIES === */
 .scaleUp {

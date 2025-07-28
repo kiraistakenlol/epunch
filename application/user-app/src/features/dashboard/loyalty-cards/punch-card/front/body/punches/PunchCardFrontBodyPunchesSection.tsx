@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { CustomizableCardStyles } from '../../../../../../../utils/cardStyles';
 import PunchIconSVG from './punch-icon-circle/PunchIconSVG';
 import styles from './PunchCardFrontBodyPunchesSection.module.css';
 import { appColors } from 'e-punch-common-ui';
@@ -9,14 +8,19 @@ interface PunchCardFrontBodyPunchesSectionProps {
   totalPunches: number;
   currentPunches: number;
   animatedPunchIndex?: number;
-  resolvedStyles: CustomizableCardStyles;
+  iconColor: string;
+  punchIcons: {
+    filled: NonNullable<any>;
+    unfilled: NonNullable<any>;
+  };
 }
 
 const PunchCardFrontBodyPunchesSection: React.FC<PunchCardFrontBodyPunchesSectionProps> = ({
   totalPunches,
   currentPunches,
   animatedPunchIndex,
-  resolvedStyles
+  iconColor,
+  punchIcons
 }) => {
   const MAX_PUNCHES = 10;
   const punchCircles: JSX.Element[] = [];
@@ -36,10 +40,10 @@ const PunchCardFrontBodyPunchesSection: React.FC<PunchCardFrontBodyPunchesSectio
       <motion.div 
         key={i} 
         className={containerClasses}
-        style={{ color: resolvedStyles.colors.punchIconColor }}
+        style={{ color: iconColor }}
         animate={isAnimated ? {
           scale: [0.8, 1.2, 1],
-          color: [resolvedStyles.colors.punchIconColor, appColors.epunchGold, resolvedStyles.colors.punchIconColor]
+          color: [iconColor, appColors.epunchGold, iconColor]
         } : {}}
         transition={isAnimated ? {
           duration: 1.5,
@@ -50,8 +54,8 @@ const PunchCardFrontBodyPunchesSection: React.FC<PunchCardFrontBodyPunchesSectio
         <PunchIconSVG 
           svgRawContent={
             isFilled 
-              ? resolvedStyles.punchIcons.filled.data.svg_raw_content 
-              : resolvedStyles.punchIcons.unfilled.data.svg_raw_content
+              ? punchIcons.filled.data.svg_raw_content 
+              : punchIcons.unfilled.data.svg_raw_content
           }
         />
       </motion.div>
