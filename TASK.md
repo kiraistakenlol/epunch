@@ -16,8 +16,11 @@ Implement bundle system allowing merchants to create bundle programs with quanti
 - [x] Create DTOs and mappers
 - [x] Implement backend services and controllers
 - [x] Update merchant app UI for bundle management
+- [x] **Add bundle usage to QR scanning flow**
+- [x] **Implement bundle repository, service, and controller**
+- [x] **Add bundle events system (BUNDLE_CREATED, BUNDLE_USED)**
+- [x] **Complete API client integration for bundle endpoints**
 - [ ] Update user app UI for bundle display
-- [ ] Add bundle usage to QR scanning flow
 - [ ] Test end-to-end workflows
 
 ## Current Progress Overview
@@ -27,8 +30,18 @@ Implement bundle system allowing merchants to create bundle programs with quanti
 - **API Endpoints**: Full CRUD with authentication following punch-cards pattern
   - `GET /merchants/:merchantId/bundle-programs` (list programs)
   - `POST/PUT/DELETE /bundle-programs/*` (authenticated CRUD)
+  - **`GET /bundles/:bundleId`** (get bundle details for scanning)
+  - **`POST /bundles/:bundleId/use`** (redeem bundle quantity)
+  - **`POST /bundles`** (create bundle for user)
+  - **`GET /users/:userId/bundles`** (get user's bundles)
+- **Bundle Repository**: Database operations for individual user bundles
+- **Bundle Service**: Business logic with authentication and merchant authorization
+- **Bundle Controller**: REST endpoints with proper auth decorators
+- **Bundle Module**: Dependency injection and module wiring
+- **Bundle Mapper**: Entity-to-DTO conversion with program details
 - **Soft Delete**: Programs marked `is_deleted=true`, filtered from queries
 - **DTOs**: Separate merchant/user DTOs with proper validation
+- **Events System**: `BUNDLE_CREATED` and `BUNDLE_USED` events for real-time updates
 
 ### ✅ **Merchant App Complete**
 - **Bundle Program Management**: Create, edit, view, delete programs
@@ -36,17 +49,50 @@ Implement bundle system allowing merchants to create bundle programs with quanti
 - **UI Components**: Form validation, data tables, loading states
 - **Quantity Presets**: Dynamic array management with add/remove
 
-### 🔄 **Next Steps Required**
+### ✅ **QR Scanner Integration Complete**
+- **Bundle QR Recognition**: `ScannerCamera` recognizes `bundle_id` QR codes
+- **Bundle Scan Result UI**: Complete bundle scanning interface with:
+  - Bundle details display (name, merchant, remaining quantity)
+  - Quantity input with +/- buttons for flexible usage amounts
+  - Expiration date validation and warnings
+  - Availability checks and status badges (Available/Used Up/Expired)
+  - Comprehensive error handling and loading states
+- **Scanner State Management**: `useScanner` hook handles `bundleQR` state
+- **Bundle Usage Action**: `handleUseBundle` with quantity validation
+- **API Integration**: Real-time bundle usage via `apiClient.useBundle`
 
-#### **QR Scanner Integration**
-- Add bundle program selection to merchant scanner flow
-- Implement "Give Bundle" action when scanning `user_id` QR codes
-- Handle bundle redemption when scanning `bundle_id` QR codes
+### 🔄 **Next Steps Required**
 
 #### **User App Bundle Display**
 - Show bundles alongside punch cards in dashboard
 - Bundle cards with remaining quantity and expiration
 - QR code switching to `bundle_id` for redemption
+
+#### **Additional Scanner Features** (Future)
+- Add bundle program selection to merchant scanner flow
+- Implement "Give Bundle" action when scanning `user_id` QR codes
+
+---
+
+## ✅ **Major Accomplishments**
+
+### **Complete Bundle Scanning Workflow**
+- **QR Code Recognition**: Extended `ScannerCamera` to parse `bundle_id` QR codes
+- **Bundle Details UI**: Professional interface showing bundle info, quantity controls, expiration status
+- **Smart Validation**: Quantity input with +/- buttons, validation for available quantity and expiration
+- **Real-time Usage**: Immediate bundle quantity updates via authenticated API calls
+- **Error Handling**: Comprehensive error states for expired, used up, and not found bundles
+
+### **Production-Ready Backend**
+- **Authentication & Authorization**: Merchant users can only access their own bundles
+- **Data Integrity**: Proper validation for quantity limits, expiration checks, merchant ownership
+- **Event System**: Real-time notifications via `BUNDLE_CREATED` and `BUNDLE_USED` events
+- **Database Design**: Efficient queries with proper relationships and soft delete support
+
+### **Clean Architecture**
+- **Separation of Concerns**: Bundle logic separated from punch card logic
+- **Reusable Components**: Consistent UI patterns following existing design system
+- **Type Safety**: Full TypeScript implementation with proper DTOs and interfaces
 
 ---
 
@@ -96,22 +142,25 @@ CREATE TABLE bundle_usage (
 **Merchant:**
 1. Create bundle programs with quantity presets ✅
 2. Scan user QR (user_id) → see available bundle programs → select → choose preset → give to user 🔄
-3. Scan user QR (bundle_id) → see bundle details → redeem quantity 🔄
+3. **Scan bundle QR (bundle_id) → see bundle details → redeem quantity ✅**
 
 **User:**
 1. View bundles alongside punch cards in app 🔄
 2. Select bundle → QR switches to bundle_id mode for redemption 🔄
 
-### QR Code Types
+### QR Code Types ✅
 
 ```typescript
-// Add to existing QRValueDto:
+// Completed - Added to existing QRValueDto:
 export type QRValueType = 'user_id' | 'redemption_punch_card_id' | 'bundle_id';
 
 export interface QRValueBundleIdDto {
   type: 'bundle_id';
   bundle_id: string;
 }
+
+// Full QR Value DTO union type:
+export type QRValueDto = QRValueUserIdDto | QRValuePunchCardIdDto | QRValueBundleIdDto;
 ```
 
 ### API Endpoints
@@ -123,11 +172,11 @@ POST   /bundle-programs                         // Create program (auth required
 PUT    /bundle-programs/{programId}             // Update program (auth required)  
 DELETE /bundle-programs/{programId}             // Soft delete program (auth required)
 
-// Bundle Operations 🔄
-POST /bundles                    // Give bundle to user
+// Bundle Operations ✅
+POST /bundles                    // Give bundle to user (auth required)
 GET  /users/{userId}/bundles     // Get user's bundles
-POST /bundles/{bundleId}/use     // Redeem bundle quantity
-GET  /bundles/{bundleId}         // Get bundle details
+POST /bundles/{bundleId}/use     // Redeem bundle quantity (auth required)
+GET  /bundles/{bundleId}         // Get bundle details (auth required)
 ```
 
 ### Soft Delete Implementation
