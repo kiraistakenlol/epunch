@@ -1,8 +1,10 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useI18n } from 'e-punch-common-ui';
 import PunchCardItem from './punch-card/PunchCardItem';
+import BundleCardItem from './bundle-card/BundleCardItem';
+import type { PunchCardDto, BundleDto } from 'e-punch-common-core';
 import styles from './LoyaltyCards.module.css';
 import type { RootState, AppDispatch } from '../../../store/store';
 import { selectAuthLoading } from '../../auth/authSlice';
@@ -13,6 +15,13 @@ import {
   selectScrollTargetCardId,
   clearScrollTarget
 } from '../../punchCards/punchCardsSlice';
+import {
+  selectBundles,
+  selectBundlesLoading,
+  selectBundlesError,
+  selectScrollTargetBundleId,
+  clearScrollTarget as clearBundleScrollTarget
+} from '../../bundles/bundlesSlice';
 import { useAppSelector } from '../../../store/hooks';
 
 
@@ -20,17 +29,34 @@ const LoyaltyCards = () => {
   const { t } = useI18n('punchCards');
   const dispatch = useDispatch<AppDispatch>();
   const isAuthLoading = useAppSelector(selectAuthLoading);
-  const loyaltyCards = useSelector((state: RootState) => selectPunchCards(state));
+  const punchCards = useSelector((state: RootState) => selectPunchCards(state));
+  const bundles = useSelector((state: RootState) => selectBundles(state));
   const scrollTargetCardId = useSelector((state: RootState) => selectScrollTargetCardId(state));
-  const isLoading = useSelector((state: RootState) => selectPunchCardsLoading(state));
-  const error = useSelector((state: RootState) => selectPunchCardsError(state));
+  const scrollTargetBundleId = useSelector((state: RootState) => selectScrollTargetBundleId(state));
+  const isPunchCardsLoading = useSelector((state: RootState) => selectPunchCardsLoading(state));
+  const isBundlesLoading = useSelector((state: RootState) => selectBundlesLoading(state));
+  const punchCardsError = useSelector((state: RootState) => selectPunchCardsError(state));
+  const bundlesError = useSelector((state: RootState) => selectBundlesError(state));
+  
+  // Combined state
+  const isLoading = isPunchCardsLoading || isBundlesLoading;
+  const error = punchCardsError || bundlesError;
   const [showEmptyState, setShowEmptyState] = useState(false);
   const cardRefs = useRef<{ [cardId: string]: HTMLDivElement | null }>({});
 
+  // Merge and sort all loyalty items
+  const allLoyaltyCards = useMemo(() => {
+    const combined = [
+      ...(punchCards?.map((card: PunchCardDto) => ({ type: 'punch_card' as const, ...card })) || []),
+      ...(bundles?.map((bundle: BundleDto) => ({ type: 'bundle' as const, ...bundle })) || [])
+    ];
+    return combined.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }, [punchCards, bundles]);
+
   useEffect(() => {
-    if (isLoading || loyaltyCards === undefined) {
+    if (isLoading || punchCards === undefined || bundles === undefined) {
       setShowEmptyState(false);
-    } else if (!error && loyaltyCards.length === 0) {
+    } else if (!error && allLoyaltyCards.length === 0) {
       const timer = setTimeout(() => {
         setShowEmptyState(true);
       }, 300);
@@ -38,11 +64,12 @@ const LoyaltyCards = () => {
     } else {
       setShowEmptyState(false);
     }
-  }, [isLoading, error, loyaltyCards]);
+  }, [isLoading, error, allLoyaltyCards, punchCards, bundles]);
 
   useEffect(() => {
-    if (scrollTargetCardId && cardRefs.current[scrollTargetCardId]) {
-      const cardElement = cardRefs.current[scrollTargetCardId];
+    const targetId = scrollTargetCardId || scrollTargetBundleId;
+    if (targetId && cardRefs.current[targetId]) {
+      const cardElement = cardRefs.current[targetId];
       if (cardElement) {
         const rect = cardElement.getBoundingClientRect();
         const isPartiallyVisible = rect.left < window.innerWidth && rect.right > 0;
@@ -55,17 +82,23 @@ const LoyaltyCards = () => {
           });
         }
       }
-      dispatch(clearScrollTarget());
+      if (scrollTargetCardId) dispatch(clearScrollTarget());
+      if (scrollTargetBundleId) dispatch(clearBundleScrollTarget());
     }
-  }, [scrollTargetCardId, dispatch]);
+  }, [scrollTargetCardId, scrollTargetBundleId, dispatch]);
 
-  const cardsToRender = loyaltyCards?.filter(card =>
-    card.status !== 'REWARD_REDEEMED'
-  ) || [];
+  const cardsToRender = allLoyaltyCards.filter(item => {
+    if (item.type === 'punch_card') {
+      return item.status !== 'REWARD_REDEEMED';
+    }
+    // For bundles, show all (expired/used up will be visually differentiated)
+    return true;
+  });
 
+  console.log('cardsToRender', allLoyaltyCards);
 
   const renderContent = () => {
-    if (isAuthLoading || isLoading || loyaltyCards === undefined) {
+    if (isAuthLoading || isLoading || punchCards === undefined || bundles === undefined) {
       return (
         <div className={styles.loadingContainer}>
           <div className={styles.loadingDots}>
@@ -99,10 +132,10 @@ const LoyaltyCards = () => {
     return (
       <div className={styles.loyaltyCardsList}>
         <AnimatePresence>
-          {cardsToRender.map((card) => {
+          {cardsToRender.map((item) => {
             return (
               <motion.div
-                key={card.id}
+                key={item.id}
                 layout
                 initial={{ x: -100, opacity: 0, scale: 0.8 }}
                 animate={{ x: 0, opacity: 1, scale: 1 }}
@@ -110,12 +143,21 @@ const LoyaltyCards = () => {
                 transition={{ duration: 0.6, layout: { duration: 0.6 } }}
                 style={{ height: '100%' }}
               >
-                <PunchCardItem
-                  ref={(el) => {
-                    cardRefs.current[card.id] = el;
-                  }}
-                  {...card}
-                />
+                {item.type === 'punch_card' ? (
+                  <PunchCardItem
+                    ref={(el) => {
+                      cardRefs.current[item.id] = el;
+                    }}
+                    {...item}
+                  />
+                ) : (
+                  <BundleCardItem
+                    ref={(el) => {
+                      cardRefs.current[item.id] = el;
+                    }}
+                    {...item}
+                  />
+                )}
               </motion.div>
             );
           })}

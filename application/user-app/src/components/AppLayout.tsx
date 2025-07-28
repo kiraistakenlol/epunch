@@ -8,6 +8,7 @@ import { useAnimationExecutor } from '../features/animations/useAnimationExecuto
 import { useLoyaltyProgramsSync } from '../features/loyaltyPrograms/useLoyaltyProgramsSync';
 import { useMerchantOnboarding } from '../hooks/useMerchantOnboarding';
 import { clearPunchCards, fetchPunchCards } from '../features/punchCards/punchCardsSlice';
+import { clearBundles, fetchBundles } from '../features/bundles/bundlesSlice';
 import type { AppDispatch } from '../store/store';
 
 const AppLayout: React.FC = () => {
@@ -22,8 +23,10 @@ const AppLayout: React.FC = () => {
   useEffect(() => {
     if (userId) {
       dispatch(fetchPunchCards(userId));
+      dispatch(fetchBundles(userId));
     } else {
       dispatch(clearPunchCards());
+      dispatch(clearBundles());
     }
   }, [userId, dispatch]);
 

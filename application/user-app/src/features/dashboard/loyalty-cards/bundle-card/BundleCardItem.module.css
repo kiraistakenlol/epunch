@@ -1,0 +1,81 @@
+/* === BUNDLE CARD SPECIFIC STYLING === */
+
+.shadowBlack {
+  box-shadow: 
+    calc(var(--card-height) * -0.02) 
+    calc(var(--card-height) * 0.02) 
+    calc(var(--card-height) * var(--shadow-intensity)) 
+    var(--color-epunch-black);
+}
+
+.shadowGreen {
+  box-shadow: 
+    calc(var(--card-height) * -0.02) 
+    calc(var(--card-height) * 0.02) 
+    calc(var(--card-height) * var(--shadow-intensity)) 
+    var(--color-epunch-green);
+}
+
+.shadowGold {
+  box-shadow: 
+    calc(var(--card-height) * -0.02) 
+    calc(var(--card-height) * 0.02) 
+    calc(var(--card-height) * var(--shadow-intensity)) 
+    #fbbf24;
+}
+
+.shadowBlue {
+  box-shadow: 
+    calc(var(--card-height) * -0.02) 
+    calc(var(--card-height) * 0.02) 
+    calc(var(--card-height) * var(--shadow-intensity)) 
+    #3b82f6;
+}
+
+.shadowRed {
+  box-shadow: 
+    calc(var(--card-height) * -0.02) 
+    calc(var(--card-height) * 0.02) 
+    calc(var(--card-height) * var(--shadow-intensity)) 
+    #ef4444;
+}
+
+.shadowGray {
+  box-shadow: 
+    calc(var(--card-height) * -0.02) 
+    calc(var(--card-height) * 0.02) 
+    calc(var(--card-height) * var(--shadow-intensity)) 
+    #6b7280;
+}
+
+/* === TRANSFORM UTILITIES === */
+.scaleUp {
+  transform: scale3d(1.04, 1.04, 1);
+}
+
+/* === EXPIRED STATE === */
+.expired {
+  opacity: 0.6;
+  filter: grayscale(0.3);
+  pointer-events: none;
+}
+
+/* === ANIMATION UTILITIES === */
+.scaleUpAndBackToNormalAnimation {
+  animation: scaleUpAndBackToNormal 1.5s ease-out;
+}
+
+@keyframes scaleUpAndBackToNormal {
+  0% {
+    transform: scale3d(1, 1, 1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale3d(1.05, 1.05, 1);
+    opacity: 0.95;
+  }
+  100% {
+    transform: scale3d(1, 1, 1);
+    opacity: 1;
+  }
+} 

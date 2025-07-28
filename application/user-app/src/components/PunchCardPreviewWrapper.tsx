@@ -4,6 +4,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import loyaltyProgramsReducer from '../features/loyaltyPrograms/loyaltyProgramsSlice';
 import animationReducer from '../features/animations/animationSlice';
 import punchCardsReducer from '../features/punchCards/punchCardsSlice';
+import bundlesReducer from '../features/bundles/bundlesSlice';
 import PunchCardItem from '../features/dashboard/loyalty-cards/punch-card/PunchCardItem';
 import type { LoyaltyProgramDto, PunchCardDto, PunchCardStyleDto, PunchIconsDto } from 'e-punch-common-core';
 import styles from './PunchCardPreviewWrapper.module.css';
@@ -14,6 +15,7 @@ const createPreviewStore = (mockLoyaltyProgram: LoyaltyProgramDto) => {
       loyaltyPrograms: loyaltyProgramsReducer,
       animations: animationReducer,
       punchCards: punchCardsReducer,
+      bundles: bundlesReducer,
     },
     preloadedState: {
       loyaltyPrograms: {
@@ -32,6 +34,15 @@ const createPreviewStore = (mockLoyaltyProgram: LoyaltyProgramDto) => {
         cards: undefined,
         selectedCardId: null,
         scrollTargetCardId: null,
+        isLoading: false,
+        error: null,
+        lastFetched: null,
+        initialized: false
+      },
+      bundles: {
+        bundles: undefined,
+        selectedBundleId: null,
+        scrollTargetBundleId: null,
         isLoading: false,
         error: null,
         lastFetched: null,

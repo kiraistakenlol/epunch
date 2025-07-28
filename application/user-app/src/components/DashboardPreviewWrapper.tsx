@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from '../features/auth/authSlice';
 import punchCardsReducer from '../features/punchCards/punchCardsSlice';
+import bundlesReducer from '../features/bundles/bundlesSlice';
 import animationReducer from '../features/animations/animationSlice';
 import signOutReducer from '../features/signOut/signOutSlice';
 import completionOverlayReducer from '../features/dashboard/overlay/completionOverlaySlice';
@@ -49,6 +50,7 @@ const createPreviewStore = (
     reducer: {
       auth: authReducer,
       punchCards: punchCardsReducer,
+      bundles: bundlesReducer,
       animations: animationReducer,
       signOut: signOutReducer,
       completionOverlay: completionOverlayReducer,
@@ -77,6 +79,15 @@ const createPreviewStore = (
         programs: loyaltyProgramsMap,
         loading: false,
         error: null
+      },
+      bundles: {
+        bundles: [],
+        selectedBundleId: null,
+        scrollTargetBundleId: null,
+        isLoading: false,
+        error: null,
+        lastFetched: Date.now(),
+        initialized: true
       },
       animations: {
         sequence: [],

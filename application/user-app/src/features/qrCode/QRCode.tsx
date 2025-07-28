@@ -6,6 +6,7 @@ import type { QRValueDto } from 'e-punch-common-core';
 import type { RootState } from '../../store/store';
 import { selectUserId } from '../auth/authSlice';
 import { selectSelectedCard } from '../punchCards/punchCardsSlice';
+import { selectSelectedBundle } from '../bundles/bundlesSlice';
 import { selectLoyaltyProgramById } from '../loyaltyPrograms/loyaltyProgramsSlice';
 import styles from './QRCode.module.css';
 import { appColors } from '../../theme/constants';
@@ -15,18 +16,21 @@ const QRCodeComponent: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const userId = useSelector((state: RootState) => selectUserId(state));
   const selectedCard = useSelector((state: RootState) => selectSelectedCard(state));
+  const selectedBundle = useSelector((state: RootState) => selectSelectedBundle(state));
   const loyaltyProgram = useSelector((state: RootState) =>
     selectedCard ? selectLoyaltyProgramById(state, selectedCard.loyaltyProgramId) : undefined
   );
 
   const isRewardMode = selectedCard?.status === 'REWARD_READY';
-
+  const isBundleMode = Boolean(selectedBundle);
 
   const qrValue = isRewardMode && selectedCard
     ? JSON.stringify({ type: 'redemption_punch_card_id', punch_card_id: selectedCard.id } as QRValueDto)
-    : userId
-      ? JSON.stringify({ type: 'user_id', user_id: userId } as QRValueDto)
-      : '';
+    : isBundleMode && selectedBundle
+      ? JSON.stringify({ type: 'bundle_id', bundle_id: selectedBundle.id } as QRValueDto)
+      : userId
+        ? JSON.stringify({ type: 'user_id', user_id: userId } as QRValueDto)
+        : '';
 
   if (!qrValue) return null;
 
@@ -43,7 +47,7 @@ const QRCodeComponent: React.FC = () => {
       <div
         className={styles.qrWrapper}
         data-expanded={isExpanded}
-        data-reward={isRewardMode}
+        data-reward={isRewardMode || isBundleMode}
         onClick={handleClick}
         role="button"
         tabIndex={0}
@@ -63,6 +67,10 @@ const QRCodeComponent: React.FC = () => {
         {isRewardMode && loyaltyProgram ? (
           <>
             {t('qr.showToGet', { reward: loyaltyProgram.rewardDescription })}
+          </>
+        ) : isBundleMode && selectedBundle ? (
+          <>
+            Show to use {selectedBundle.bundleProgram.itemName}
           </>
         ) : (
           t('qr.myCode')
