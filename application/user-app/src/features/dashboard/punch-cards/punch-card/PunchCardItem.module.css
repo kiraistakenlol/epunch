@@ -1,34 +1,4 @@
-/* === PUNCH CARD MAIN CONTAINER === */
-.punchCardItemContainer {
-  /* Container-agnostic dimensions - takes full height of parent */
-  height: 100%;
-
-  --aspect-ratio: 1.25;
-
-  aspect-ratio: var(--aspect-ratio);
-  
-  /* Establish container context for children */
-  container-type: size;
-  
-  /* Prevent squeezing in flex container */
-  flex-shrink: 0;
-}
-
-/* === CARD INNER BASE === */
-.cardInner {
-  --card-height: 100cqh;
-  --shadow-intensity: 0.03;
-  
-  height: var(--card-height);
-  aspect-ratio: 1.25;
-  font-size: 2.5cqh(punch-card);
-  border-radius: calc(var(--card-height) * 0.05);
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-}
+/* === PUNCH CARD SPECIFIC STYLING === */
 
 .shadowBlack {
   box-shadow: 
@@ -63,10 +33,6 @@
   animation: scaleUpAndBackToNormal 1.5s ease-out;
 }
 
-.flipAnimation {
-  animation: cardFlip 0.6s ease-in-out;
-}
-
 @keyframes scaleUpAndBackToNormal {
   0% {
     transform: scale3d(1, 1, 1);
@@ -79,17 +45,5 @@
   100% {
     transform: scale3d(1, 1, 1);
     opacity: 1;
-  }
-}
-
-@keyframes cardFlip {
-  0% {
-    transform: rotateY(0deg);
-  }
-  50% {
-    transform: rotateY(90deg);
-  }
-  100% {
-    transform: rotateY(0deg);
   }
 }

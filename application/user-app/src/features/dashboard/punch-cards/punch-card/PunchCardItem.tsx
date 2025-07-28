@@ -1,6 +1,7 @@
-import React, { useRef, useState, forwardRef } from 'react';
+import { forwardRef } from 'react';
 import { PunchCardDto } from 'e-punch-common-core';
 import { CustomizableCardStyles } from '../../../../utils/cardStyles';
+import BaseCard from '../../../../components/BaseCard';
 import PunchCardFront from './front/PunchCardFront';
 import PunchCardBack from './back/PunchCardBack';
 import PunchCardOverlay from './ready-overlay/PunchCardOverlay';
@@ -35,38 +36,16 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
   disableFlipping = false,
   hideShadow = false
 }, forwardedRef) => {
-  const internalRef = useRef<HTMLDivElement>(null);
-  const cardRef = forwardedRef || internalRef;
-  const [isFlipped, setIsFlipped] = useState(false);
-  const [isFlipping, setIsFlipping] = useState(false);
 
-  // Check if there are any ongoing animations
-
-  const handleClick = (event: React.MouseEvent) => {
-    event.stopPropagation();
-
+  const handleClick = () => {
     if (onCardClick) {
       onCardClick(id);
     }
-
-    if (!disableFlipping && !isFlipping) {
-      const newFlippedState = !isFlipped;
-
-      setIsFlipping(true);
-
-      setTimeout(() => {
-        setIsFlipped(newFlippedState);
-      }, 300);
-
-      setTimeout(() => {
-        setIsFlipping(false);
-      }, 700);
-    }
   };
 
-  // Visual state logic
+  // Visual state logic for punch-card specific styling
   const getCardVisualClasses = () => {
-    const classes = [styles.cardInner];
+    const classes = [];
 
     // Only apply shadow classes if hideShadow is false
     if (!hideShadow) {
@@ -88,48 +67,48 @@ const PunchCardItem = forwardRef<HTMLDivElement, PunchCardItemProps>(({
       classes.push(styles.scaleUpAndBackToNormalAnimation);
     }
 
-    if (isFlipping) {
-      classes.push(styles.flipAnimation);
-    }
-
     return classes.join(' ');
   };
 
-  return (
-    <div
-      ref={cardRef}
-      className={styles.punchCardItemContainer}
-      onClick={handleClick}
-    >
-      <div className={getCardVisualClasses()}>
-        {!isFlipped ? (
-          <PunchCardFront
-            loyaltyProgramId={loyaltyProgramId}
-            shopName={shopName}
-            currentPunches={currentPunches}
-            totalPunches={totalPunches}
-            status={status}
-            resolvedStyles={resolvedStyles}
-            animatedPunchIndex={animatedPunchIndex}
-            isSelected={isSelected}
-          />
-        ) : (
-          <PunchCardBack
-            loyaltyProgramId={loyaltyProgramId}
-            shopName={shopName}
-            shopAddress={shopAddress}
-            totalPunches={totalPunches}
-            resolvedStyles={resolvedStyles}
-          />
-        )}
+  const frontContent = (
+    <>
+      <PunchCardFront
+        loyaltyProgramId={loyaltyProgramId}
+        shopName={shopName}
+        currentPunches={currentPunches}
+        totalPunches={totalPunches}
+        status={status}
+        resolvedStyles={resolvedStyles}
+        animatedPunchIndex={animatedPunchIndex}
+        isSelected={isSelected}
+      />
+      {status === 'REWARD_READY' && animatedPunchIndex === undefined && !hideCompletionOverlay && (
+        <PunchCardOverlay
+          cardId={id}
+        />
+      )}
+    </>
+  );
 
-        {!isFlipped && status === 'REWARD_READY' && animatedPunchIndex === undefined && !hideCompletionOverlay && (
-          <PunchCardOverlay
-            cardId={id}
-          />
-        )}
-      </div>
-    </div>
+  const backContent = (
+    <PunchCardBack
+      loyaltyProgramId={loyaltyProgramId}
+      shopName={shopName}
+      shopAddress={shopAddress}
+      totalPunches={totalPunches}
+      resolvedStyles={resolvedStyles}
+    />
+  );
+
+  return (
+    <BaseCard
+      ref={forwardedRef}
+      front={frontContent}
+      back={backContent}
+      onClick={handleClick}
+      className={getCardVisualClasses()}
+      disableFlipping={disableFlipping}
+    />
   );
 });
 
