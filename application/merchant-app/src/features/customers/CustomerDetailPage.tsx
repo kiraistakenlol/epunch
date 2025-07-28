@@ -47,13 +47,13 @@ export function CustomerDetailPage() {
 
     try {
       setLoading(true);
-      const [customerData, punchCardsData] = await Promise.all([
+      const [customerData] = await Promise.all([
         apiClient.getMerchantCustomer(merchantId, id),
-        apiClient.getMerchantCustomerPunchCards(merchantId, id)
+        // apiClient.getMerchantCustomerPunchCards(merchantId, id)
       ]);
       
       setCustomer(customerData);
-      setPunchCards(punchCardsData);
+      setPunchCards([]);
     } catch (error: any) {
       console.error('Failed to load customer data:', error);
       toast.error(error.message || 'Failed to load customer data');

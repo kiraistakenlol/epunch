@@ -1,4 +1,5 @@
 import { MerchantDto } from './merchant.dto';
+import { PunchCardStyleDto } from './punch-card-style.dto';
 
 export interface BundleProgramPreset {
   quantity: number;
@@ -23,7 +24,7 @@ export interface BundleProgramSummaryDto {
   name: string;
   itemName: string;
   description: string | null;
-  merchantName: string;
+  merchant: MerchantDto;
 }
 
 export interface BundleDto {
@@ -35,6 +36,7 @@ export interface BundleDto {
   expiresAt: string | null;
   createdAt: string;
   lastUsedAt: string | null;
+  styles: PunchCardStyleDto;
 }
 
 // Create/Update DTOs

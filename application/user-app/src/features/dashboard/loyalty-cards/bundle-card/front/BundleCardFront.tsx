@@ -48,7 +48,7 @@ const BundleCardFront: React.FC<BundleCardFrontProps> = ({
     <div className={styles.frontCard}>
       {/* Top section with merchant name */}
       <div className={styles.topSection}>
-        <div className={styles.merchantName}>{bundleProgram.merchantName}</div>
+        <div className={styles.merchantName}>{bundleProgram.merchant.name}</div>
       </div>
 
       {/* Main content section with quantity and item name close together */}

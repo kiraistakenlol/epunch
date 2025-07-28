@@ -20,6 +20,17 @@ export interface BundleWithProgram extends Bundle {
   merchant_id: string;
   merchant_name: string;
   merchant_address: string | null;
+  merchant_slug: string;
+  merchant_logo_url: string;
+  merchant_created_at: Date;
+}
+
+export interface BundleWithProgramAndStyles extends BundleWithProgram {
+  primary_color: string | null;
+  secondary_color: string | null;
+  logo_url: string | null;
+  background_image_url: string | null;
+  punch_icons: any | null;
 }
 
 @Injectable()
@@ -56,7 +67,10 @@ export class BundleRepository {
         bp.description as program_description,
         bp.merchant_id,
         m.name as merchant_name,
-        m.address as merchant_address
+        m.address as merchant_address,
+        m.slug as merchant_slug,
+        m.logo_url as merchant_logo_url,
+        m.created_at as merchant_created_at
       FROM bundle b
       JOIN bundle_program bp ON b.bundle_program_id = bp.id
       JOIN merchant m ON bp.merchant_id = m.id
@@ -73,7 +87,7 @@ export class BundleRepository {
     }
   }
 
-  async findUserBundles(userId: string): Promise<BundleWithProgram[]> {
+  async findUserBundles(userId: string): Promise<BundleWithProgramAndStyles[]> {
     this.logger.log(`Finding bundles for user: ${userId}`);
     
     const query = `
@@ -84,10 +98,20 @@ export class BundleRepository {
         bp.description as program_description,
         bp.merchant_id,
         m.name as merchant_name,
-        m.address as merchant_address
+        m.address as merchant_address,
+        m.slug as merchant_slug,
+        m.logo_url as merchant_logo_url,
+        m.created_at as merchant_created_at,
+        COALESCE(specific_style.primary_color, default_style.primary_color) as primary_color,
+        COALESCE(specific_style.secondary_color, default_style.secondary_color) as secondary_color,
+        COALESCE(specific_style.logo_url, default_style.logo_url) as logo_url,
+        COALESCE(specific_style.background_image_url, default_style.background_image_url) as background_image_url,
+        COALESCE(specific_style.punch_icons, default_style.punch_icons) as punch_icons
       FROM bundle b
       JOIN bundle_program bp ON b.bundle_program_id = bp.id
       JOIN merchant m ON bp.merchant_id = m.id
+      LEFT JOIN punch_card_style specific_style ON specific_style.loyalty_program_id = bp.id
+      LEFT JOIN punch_card_style default_style ON default_style.merchant_id = m.id AND default_style.loyalty_program_id IS NULL
       WHERE b.user_id = $1
         AND bp.is_deleted = false
         AND b.remaining_quantity > 0

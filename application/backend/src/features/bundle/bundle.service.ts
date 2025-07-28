@@ -50,9 +50,9 @@ export class BundleService {
     this.logger.log(`Fetching bundles for user: ${userId}`);
 
     try {
-      const bundlesWithProgram = await this.bundleRepository.findUserBundles(userId);
-      this.logger.log(`Found ${bundlesWithProgram.length} bundles for user: ${userId}`);
-      return BundleMapper.toDtoArray(bundlesWithProgram);
+      const bundlesWithStyles = await this.bundleRepository.findUserBundles(userId);
+      this.logger.log(`Found ${bundlesWithStyles.length} bundles for user: ${userId}`);
+      return BundleMapper.toDtoArrayWithStyles(bundlesWithStyles);
     } catch (error: any) {
       this.logger.error(`Error fetching bundles for user ${userId}: ${error.message}`, error.stack);
       throw error;

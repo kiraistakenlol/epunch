@@ -39,13 +39,27 @@ const mockBundles = [
       name: 'Gym Membership Package',
       itemName: 'Gym Visit',
       description: 'Visit our premium gym facilities',
-      merchantName: 'FitLife Gym'
+      merchant: {
+        id: 'merchant-1',
+        name: 'FitLife Gym',
+        address: '123 Fitness Street',
+        slug: 'fitlife-gym',
+        logoUrl: '',
+        createdAt: '2024-01-01T00:00:00Z'
+      }
     },
     originalQuantity: 10,
     remainingQuantity: 7,
     expiresAt: '2025-12-31T23:59:59Z', // Active - expires end of year
     createdAt: '2025-06-15T10:00:00Z',
-    lastUsedAt: '2025-07-20T14:30:00Z'
+    lastUsedAt: '2025-07-20T14:30:00Z',
+    styles: {
+      primaryColor: null,
+      secondaryColor: null,
+      logoUrl: null,
+      backgroundImageUrl: null,
+      punchIcons: null
+    }
   },
   {
     id: 'bundle-2',
@@ -55,13 +69,27 @@ const mockBundles = [
       name: 'Coffee Package',
       itemName: 'Coffee',
       description: 'Premium artisanal coffee',
-      merchantName: 'Bean There Coffee'
+      merchant: {
+        id: 'merchant-2',
+        name: 'Bean There Coffee',
+        address: '456 Coffee Ave',
+        slug: 'bean-there-coffee',
+        logoUrl: '',
+        createdAt: '2024-02-01T00:00:00Z'
+      }
     },
     originalQuantity: 20,
     remainingQuantity: 15,
     expiresAt: '2025-10-15T23:59:59Z', // Active - expires in October
     createdAt: '2025-05-01T09:00:00Z',
-    lastUsedAt: '2025-07-25T08:15:00Z'
+    lastUsedAt: '2025-07-25T08:15:00Z',
+    styles: {
+      primaryColor: null,
+      secondaryColor: null,
+      logoUrl: null,
+      backgroundImageUrl: null,
+      punchIcons: null
+    }
   },
   {
     id: 'bundle-3',
@@ -71,13 +99,27 @@ const mockBundles = [
       name: 'Spa Day Package',
       itemName: 'Spa Treatment',
       description: 'Relaxing spa treatments',
-      merchantName: 'Serenity Spa'
+      merchant: {
+        id: 'merchant-3',
+        name: 'Serenity Spa',
+        address: '789 Wellness Blvd',
+        slug: 'serenity-spa',
+        logoUrl: '',
+        createdAt: '2024-03-01T00:00:00Z'
+      }
     },
     originalQuantity: 5,
     remainingQuantity: 0,
     expiresAt: '2025-09-30T23:59:59Z', // Used up but not expired
     createdAt: '2025-04-01T11:00:00Z',
-    lastUsedAt: '2025-07-10T16:45:00Z'
+    lastUsedAt: '2025-07-10T16:45:00Z',
+    styles: {
+      primaryColor: null,
+      secondaryColor: null,
+      logoUrl: null,
+      backgroundImageUrl: null,
+      punchIcons: null
+    }
   },
   {
     id: 'bundle-4',
@@ -87,13 +129,27 @@ const mockBundles = [
       name: 'Pizza Night Deal',
       itemName: 'Pizza',
       description: 'Delicious wood-fired pizza',
-      merchantName: 'Tony\'s Pizzeria'
+      merchant: {
+        id: 'merchant-4',
+        name: 'Tony\'s Pizzeria',
+        address: '321 Pizza Lane',
+        slug: 'tonys-pizzeria',
+        logoUrl: '',
+        createdAt: '2024-04-01T00:00:00Z'
+      }
     },
     originalQuantity: 8,
     remainingQuantity: 2,
     expiresAt: '2025-07-25T23:59:59Z', // Expired recently (3 days ago)
     createdAt: '2025-04-15T18:00:00Z',
-    lastUsedAt: '2025-07-15T19:30:00Z'
+    lastUsedAt: '2025-07-15T19:30:00Z',
+    styles: {
+      primaryColor: null,
+      secondaryColor: null,
+      logoUrl: null,
+      backgroundImageUrl: null,
+      punchIcons: null
+    }
   },
   {
     id: 'bundle-5',
@@ -103,13 +159,27 @@ const mockBundles = [
       name: 'Smoothie Pack',
       itemName: 'Smoothie',
       description: null, // No description to test fallback
-      merchantName: 'Fresh Juice Bar'
+      merchant: {
+        id: 'merchant-5',
+        name: 'Fresh Juice Bar',
+        address: '654 Health Street',
+        slug: 'fresh-juice-bar',
+        logoUrl: '',
+        createdAt: '2024-05-01T00:00:00Z'
+      }
     },
     originalQuantity: 12,
     remainingQuantity: 9,
     expiresAt: '2025-08-05T23:59:59Z', // Expires soon (in about a week)
     createdAt: '2025-06-01T12:00:00Z',
-    lastUsedAt: '2025-07-22T10:15:00Z'
+    lastUsedAt: '2025-07-22T10:15:00Z',
+    styles: {
+      primaryColor: null,
+      secondaryColor: null,
+      logoUrl: null,
+      backgroundImageUrl: null,
+      punchIcons: null
+    }
   },
   {
     id: 'bundle-6',
@@ -119,13 +189,27 @@ const mockBundles = [
       name: 'Yoga Class Bundle',
       itemName: 'Yoga Class',
       description: 'Peaceful yoga sessions for mind and body',
-      merchantName: 'Zen Studio'
+      merchant: {
+        id: 'merchant-6',
+        name: 'Zen Studio',
+        address: '987 Mindfulness Way',
+        slug: 'zen-studio',
+        logoUrl: '',
+        createdAt: '2024-06-01T00:00:00Z'
+      }
     },
     originalQuantity: 15,
     remainingQuantity: 12,
     expiresAt: '2026-01-31T23:59:59Z', // Long expiration - very active
     createdAt: '2025-06-10T07:00:00Z',
-    lastUsedAt: '2025-07-23T18:00:00Z'
+    lastUsedAt: '2025-07-23T18:00:00Z',
+    styles: {
+      primaryColor: null,
+      secondaryColor: null,
+      logoUrl: null,
+      backgroundImageUrl: null,
+      punchIcons: null
+    }
   }
 ];
 
