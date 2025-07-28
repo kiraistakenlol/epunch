@@ -3,30 +3,24 @@ import { useSelector, useDispatch } from 'react-redux';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useI18n } from 'e-punch-common-ui';
 import PunchCardItem from './punch-card/PunchCardItem';
-import { resolveCardStyles } from '../../../utils/cardStyles';
-import styles from './PunchCards.module.css';
+import styles from './LoyaltyCards.module.css';
 import type { RootState, AppDispatch } from '../../../store/store';
 import { selectAuthLoading } from '../../auth/authSlice';
 import {
   selectPunchCards,
   selectPunchCardsLoading,
   selectPunchCardsError,
-  selectSelectedCardId,
-  setSelectedCardId,
-  clearSelectedCard,
   selectScrollTargetCardId,
-  clearScrollTarget,
-  scrollToCard
+  clearScrollTarget
 } from '../../punchCards/punchCardsSlice';
 import { useAppSelector } from '../../../store/hooks';
 
 
-const PunchCards = () => {
+const LoyaltyCards = () => {
   const { t } = useI18n('punchCards');
   const dispatch = useDispatch<AppDispatch>();
   const isAuthLoading = useAppSelector(selectAuthLoading);
-  const punchCards = useSelector((state: RootState) => selectPunchCards(state));
-  const selectedCardId = useSelector((state: RootState) => selectSelectedCardId(state));
+  const loyaltyCards = useSelector((state: RootState) => selectPunchCards(state));
   const scrollTargetCardId = useSelector((state: RootState) => selectScrollTargetCardId(state));
   const isLoading = useSelector((state: RootState) => selectPunchCardsLoading(state));
   const error = useSelector((state: RootState) => selectPunchCardsError(state));
@@ -34,9 +28,9 @@ const PunchCards = () => {
   const cardRefs = useRef<{ [cardId: string]: HTMLDivElement | null }>({});
 
   useEffect(() => {
-    if (isLoading || punchCards === undefined) {
+    if (isLoading || loyaltyCards === undefined) {
       setShowEmptyState(false);
-    } else if (!error && punchCards.length === 0) {
+    } else if (!error && loyaltyCards.length === 0) {
       const timer = setTimeout(() => {
         setShowEmptyState(true);
       }, 300);
@@ -44,7 +38,7 @@ const PunchCards = () => {
     } else {
       setShowEmptyState(false);
     }
-  }, [isLoading, error, punchCards]);
+  }, [isLoading, error, loyaltyCards]);
 
   useEffect(() => {
     if (scrollTargetCardId && cardRefs.current[scrollTargetCardId]) {
@@ -52,7 +46,7 @@ const PunchCards = () => {
       if (cardElement) {
         const rect = cardElement.getBoundingClientRect();
         const isPartiallyVisible = rect.left < window.innerWidth && rect.right > 0;
-        
+
         if (!isPartiallyVisible) {
           cardElement.scrollIntoView({
             behavior: 'smooth',
@@ -65,40 +59,13 @@ const PunchCards = () => {
     }
   }, [scrollTargetCardId, dispatch]);
 
-  const cardsToRender = punchCards?.filter(card =>
+  const cardsToRender = loyaltyCards?.filter(card =>
     card.status !== 'REWARD_REDEEMED'
   ) || [];
 
-  const handleCardClick = (cardId: string) => {
-    const clickedCard = cardsToRender.find(card => card.id === cardId);
-
-    if (selectedCardId === cardId) {
-      dispatch(clearSelectedCard());
-    } else if (clickedCard?.status === 'REWARD_READY') {
-      if (selectedCardId) {
-        dispatch(clearSelectedCard());
-      }
-    } else {
-      if (selectedCardId) {
-        dispatch(clearSelectedCard());
-      }
-    }
-  };
-
-  const handleRedemptionClick = (cardId: string) => {
-    if (selectedCardId === cardId) {
-      dispatch(clearSelectedCard());
-    } else {
-      if (selectedCardId) {
-        dispatch(clearSelectedCard());
-      }
-      dispatch(setSelectedCardId(cardId));
-    }
-    dispatch(scrollToCard(cardId));
-  };
 
   const renderContent = () => {
-    if (isAuthLoading || isLoading || punchCards === undefined) {
+    if (isAuthLoading || isLoading || loyaltyCards === undefined) {
       return (
         <div className={styles.loadingContainer}>
           <div className={styles.loadingDots}>
@@ -130,11 +97,9 @@ const PunchCards = () => {
       );
     }
     return (
-      <div className={styles.punchCardsList}>
+      <div className={styles.loyaltyCardsList}>
         <AnimatePresence>
           {cardsToRender.map((card) => {
-            const resolvedStyles = resolveCardStyles(card.styles);
-
             return (
               <motion.div
                 key={card.id}
@@ -150,12 +115,6 @@ const PunchCards = () => {
                     cardRefs.current[card.id] = el;
                   }}
                   {...card}
-                  resolvedStyles={resolvedStyles}
-                  isHighlighted={card.animationFlags?.highlighted || false}
-                  animatedPunchIndex={card.animationFlags?.punchAnimation?.punchIndex}
-                  isSelected={selectedCardId === card.id}
-                  onCardClick={handleCardClick}
-                  onRedemptionClick={handleRedemptionClick}
                 />
               </motion.div>
             );
@@ -172,4 +131,4 @@ const PunchCards = () => {
   );
 };
 
-export default PunchCards; 
+export default LoyaltyCards; 

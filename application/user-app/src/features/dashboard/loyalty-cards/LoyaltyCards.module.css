@@ -1,4 +1,4 @@
-.punchCardsList {
+.loyaltyCardsList {
   --cards-gap-ratio: 0.08;
 
   --card-gap: calc(var(--cards-section-height) * var(--cards-gap-ratio));

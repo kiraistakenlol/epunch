@@ -8,8 +8,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../../store/store';
 import { selectPunchCards } from '../../punchCards/punchCardsSlice';
 import { useAppSelector } from '../../../store/hooks';
-import PunchCardItem from '../punch-cards/punch-card/PunchCardItem';
-import { resolveCardStyles } from '../../../utils/cardStyles';
+import PunchCardItem from '../loyalty-cards/punch-card/PunchCardItem';
 
 const CompletionOverlay: React.FC = () => {
   const { t } = useI18n('punchCards');
@@ -38,7 +37,7 @@ const CompletionOverlay: React.FC = () => {
     dispatch(handleEvent('COMPLETION_OVERLAY_CLOSED'));
   };
 
-  const resolvedStyles = resolveCardStyles(completedCard.styles);
+
 
   return (
     <div
@@ -70,10 +69,12 @@ const CompletionOverlay: React.FC = () => {
         <div className={styles.cardContainer}>
           <PunchCardItem
             {...completedCard}
-            resolvedStyles={resolvedStyles}
-            onCardClick={() => {}}
-            hideCompletionOverlay={true}
-            disableFlipping={true}
+            interactive={false}
+            selectable={false}
+            flippable={false}
+            showCompletionOverlay={false}
+            enableAnimations={false}
+            showShadow={false}
           />
         </div>
 

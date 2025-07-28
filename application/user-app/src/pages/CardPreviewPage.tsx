@@ -26,7 +26,7 @@ const CardPreviewPage: React.FC = () => {
     currentPunches: parseInt(searchParams.get('currentPunches') || '3'),
     totalPunches: parseInt(searchParams.get('totalPunches') || '10'),
     status: (searchParams.get('status') as any) || 'ACTIVE',
-    showAnimations: searchParams.get('animations') === 'true',
+    enableAnimations: searchParams.get('animations') === 'true',
     hideShadow: searchParams.get('hideShadow') === 'true',
     renderOnBackgroundColor
   };

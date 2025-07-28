@@ -3,8 +3,8 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import loyaltyProgramsReducer from '../features/loyaltyPrograms/loyaltyProgramsSlice';
 import animationReducer from '../features/animations/animationSlice';
-import PunchCardItem from '../features/dashboard/punch-cards/punch-card/PunchCardItem';
-import { resolveCardStyles } from '../utils/cardStyles';
+import punchCardsReducer from '../features/punchCards/punchCardsSlice';
+import PunchCardItem from '../features/dashboard/loyalty-cards/punch-card/PunchCardItem';
 import type { LoyaltyProgramDto, PunchCardDto, PunchCardStyleDto, PunchIconsDto } from 'e-punch-common-core';
 import styles from './PunchCardPreviewWrapper.module.css';
 
@@ -13,6 +13,7 @@ const createPreviewStore = (mockLoyaltyProgram: LoyaltyProgramDto) => {
     reducer: {
       loyaltyPrograms: loyaltyProgramsReducer,
       animations: animationReducer,
+      punchCards: punchCardsReducer,
     },
     preloadedState: {
       loyaltyPrograms: {
@@ -26,6 +27,15 @@ const createPreviewStore = (mockLoyaltyProgram: LoyaltyProgramDto) => {
         sequence: [],
         currentStepIndex: 0,
         isRunning: false,
+      },
+      punchCards: {
+        cards: undefined,
+        selectedCardId: null,
+        scrollTargetCardId: null,
+        isLoading: false,
+        error: null,
+        lastFetched: null,
+        initialized: false
       }
     }
   });
@@ -45,7 +55,7 @@ interface PunchCardPreviewWrapperProps {
   currentPunches?: number;
   totalPunches?: number;
   status?: 'ACTIVE' | 'REWARD_READY' | 'REWARD_REDEEMED';
-  showAnimations?: boolean;
+  enableAnimations?: boolean;
   hideShadow?: boolean;
   renderOnBackgroundColor?: string;
 }
@@ -60,7 +70,7 @@ export const PunchCardPreviewWrapper: React.FC<PunchCardPreviewWrapperProps> = (
   currentPunches = 3,
   totalPunches = 10,
   status = 'ACTIVE',
-  showAnimations = false,
+  enableAnimations = false,
   hideShadow = false,
   renderOnBackgroundColor = 'white'
 }) => {
@@ -92,7 +102,7 @@ export const PunchCardPreviewWrapper: React.FC<PunchCardPreviewWrapperProps> = (
     punchIcons: punchIcons || null
   } as PunchCardStyleDto;
 
-  const resolvedStyles = resolveCardStyles(mockCardStyles);
+
 
   const mockPunchCard = {
     id: 'preview-card',
@@ -116,10 +126,12 @@ export const PunchCardPreviewWrapper: React.FC<PunchCardPreviewWrapperProps> = (
       >
         <PunchCardItem
           {...mockPunchCard}
-          resolvedStyles={resolvedStyles}
-          isHighlighted={showAnimations}
-          animatedPunchIndex={showAnimations ? currentPunches - 1 : undefined}
-          hideShadow={hideShadow}
+          interactive={false}
+          selectable={false}
+          flippable={true}
+          showCompletionOverlay={false}
+          enableAnimations={enableAnimations}
+          showShadow={!hideShadow}
         />
       </div>
     </Provider>

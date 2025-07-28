@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import QRCode from '../qrCode/QRCode';
-import PunchCards from './punch-cards/PunchCards';
+import LoyaltyCards from './loyalty-cards/LoyaltyCards';
 import AuthContainer from '../auth/AuthContainer';
 import AppHeader from '../../components/AppHeader';
 import styles from './DashboardPage.module.css';
@@ -34,7 +34,7 @@ const DashboardPage: React.FC = () => {
       </main>
       
       <section className={styles.bottomSection}>
-        <PunchCards />
+        <LoyaltyCards />
       </section>
     </div>
   );
