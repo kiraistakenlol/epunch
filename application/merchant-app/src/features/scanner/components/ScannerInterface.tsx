@@ -70,10 +70,12 @@ export const ScannerInterface: React.FC<ScannerInterfaceProps> = ({
         )
       
       case 'userQR':
-        return scanner.scanResult ? (
+        return scanner.scanResult && scanner.scanResult.parsedData.type === 'user_id' ? (
           <CustomerScanResult
             onPunch={scanner.handlePunch}
             onReset={scanner.handleReset}
+            onSuccess={(message) => scanner.handleReset()}
+            userId={scanner.scanResult.parsedData.user_id}
           />
         ) : null
       

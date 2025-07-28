@@ -143,6 +143,8 @@ export const useScanner = (options: UseScannerOptions = {}) => {
     }
   }, [scanResult, options, handleReset])
 
+
+
   return {
     currentState,
     scanResult,

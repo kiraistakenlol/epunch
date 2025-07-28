@@ -1,51 +1,108 @@
 import React, { useEffect, useState } from 'react'
 import { apiClient } from 'e-punch-common-ui'
-import { LoyaltyProgramDto } from 'e-punch-common-core'
-import { useAppSelector } from '../../../store/hooks'
+import { LoyaltyProgramDto, BundleProgramDto } from 'e-punch-common-core'
+import { useAppSelector, useAppDispatch } from '../../../store/hooks'
+import { fetchBundlePrograms, selectBundlePrograms, selectBundleProgramsLoading } from '../../../store/bundleProgramsSlice'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Loader2, User, Gift, ArrowLeft } from 'lucide-react'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Loader2, User, CreditCard, ArrowLeft, Package } from 'lucide-react'
 import { cn } from '@/lib/cn'
+import { PunchCardsTab } from './PunchCardsTab'
+import { BundlesTab } from './BundlesTab'
 
+// Main CustomerScanResult Component
 interface CustomerScanResultProps {
   onPunch: (loyaltyProgramId: string) => void
   onReset: () => void
+  onSuccess: (message: string) => void
+  userId: string
   className?: string
 }
 
 export const CustomerScanResult: React.FC<CustomerScanResultProps> = ({
   onPunch,
   onReset,
+  onSuccess,
+  userId,
   className
 }) => {
+  const dispatch = useAppDispatch()
   const merchantId = useAppSelector(state => state.merchant.merchant?.id)
+  const bundlePrograms = useAppSelector(selectBundlePrograms)
+  const bundleProgramsLoading = useAppSelector(selectBundleProgramsLoading)
+  
   const [loyaltyPrograms, setLoyaltyPrograms] = useState<LoyaltyProgramDto[]>([])
   const [selectedLoyaltyProgramId, setSelectedLoyaltyProgramId] = useState<string>('')
+  const [selectedBundleProgramId, setSelectedBundleProgramId] = useState<string>('')
+  const [selectedBundlePresetIndex, setSelectedBundlePresetIndex] = useState<number>(0)
   const [isLoading, setIsLoading] = useState(false)
+  const [activeTab, setActiveTab] = useState<'punch-cards' | 'bundles'>('punch-cards')
 
   useEffect(() => {
-    const fetchLoyaltyPrograms = async () => {
+    const fetchData = async () => {
       if (!merchantId) return
 
       setIsLoading(true)
       try {
+        // Fetch loyalty programs
         const programs = await apiClient.getMerchantLoyaltyPrograms(merchantId)
         const activePrograms = programs.filter(p => p.isActive)
         setLoyaltyPrograms(activePrograms)
         
-        if (activePrograms.length === 1) {
-          setSelectedLoyaltyProgramId(activePrograms[0].id)
-        }
+        // Fetch bundle programs
+        dispatch(fetchBundlePrograms(merchantId))
       } catch (error: any) {
-        console.error('Failed to fetch loyalty programs:', error)
+        console.error('Failed to fetch programs:', error)
       } finally {
         setIsLoading(false)
       }
     }
 
-    fetchLoyaltyPrograms()
-  }, [merchantId])
+    fetchData()
+  }, [merchantId, dispatch])
+
+  // Filter active bundle programs
+  const activeBundlePrograms = bundlePrograms.filter(program => program.isActive)
+
+  // Determine if we should show tabs (both types exist and not loading)
+  const shouldShowTabs = !isLoading && !bundleProgramsLoading && loyaltyPrograms.length > 0 && activeBundlePrograms.length > 0
+
+  // Handle mutual exclusivity between loyalty programs and bundles
+  const handleLoyaltyProgramSelect = (programId: string) => {
+    setSelectedLoyaltyProgramId(programId)
+    // Clear bundle selection when loyalty program is selected
+    if (selectedBundleProgramId) {
+      setSelectedBundleProgramId('')
+      setSelectedBundlePresetIndex(0)
+    }
+  }
+
+  const handleBundleProgramSelect = (programId: string) => {
+    setSelectedBundleProgramId(programId)
+    setSelectedBundlePresetIndex(0)
+    // Clear loyalty program selection when bundle is selected
+    if (selectedLoyaltyProgramId) {
+      setSelectedLoyaltyProgramId('')
+    }
+  }
+
+  // Handle tab changes - clear selections when switching tabs
+  const handleTabChange = (value: string) => {
+    const newTab = value as 'punch-cards' | 'bundles'
+    setActiveTab(newTab)
+    
+    // Clear selections when switching tabs
+    if (newTab === 'punch-cards') {
+      setSelectedBundleProgramId('')
+      setSelectedBundlePresetIndex(0)
+    } else if (newTab === 'bundles') {
+      setSelectedLoyaltyProgramId('')
+    }
+  }
+
+
 
   const handlePunch = () => {
     if (selectedLoyaltyProgramId) {
@@ -53,7 +110,7 @@ export const CustomerScanResult: React.FC<CustomerScanResultProps> = ({
     }
   }
 
-  if (isLoading) {
+  if (isLoading || bundleProgramsLoading) {
     return (
       <div className="flex flex-col items-center justify-center p-8">
         <Loader2 className="h-6 w-6 animate-spin mb-2" />
@@ -66,78 +123,98 @@ export const CustomerScanResult: React.FC<CustomerScanResultProps> = ({
     <div className={cn("p-2 sm:p-4 max-h-[90vh] flex flex-col w-full", className)}>
       <Card className="flex-1 flex flex-col w-full">
         <CardHeader className="pb-4 sm:pb-6 px-4 sm:px-6">
-          <div className="flex items-center justify-center space-x-3 mb-2 sm:mb-3">
-            <User className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
-            <Badge variant="outline" className="text-xs sm:text-sm px-2 sm:px-3 py-1">Customer</Badge>
+          <div className="flex items-center justify-between mb-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onReset}
+              className="h-8 w-8 p-0"
+            >
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
+            <div className="flex items-center space-x-3">
+              <User className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+              <Badge variant="outline" className="text-xs sm:text-sm px-2 sm:px-3 py-1">Customer</Badge>
+            </div>
+            <div className="w-8" /> {/* Spacer for balance */}
           </div>
-          <CardTitle className="text-xl sm:text-2xl text-center">Ready to Punch</CardTitle>
+          <CardTitle className="text-xl sm:text-2xl text-center">Choose Action</CardTitle>
         </CardHeader>
         
-        <CardContent className="flex-1 flex flex-col space-y-4 sm:space-y-6 px-4 sm:px-6">
-          {loyaltyPrograms.length === 0 ? (
-            <div className="text-center py-4 sm:py-6">
+        <CardContent className="flex-1 flex flex-col px-4 sm:px-6">
+          {loyaltyPrograms.length === 0 && activeBundlePrograms.length === 0 ? (
+            <div className="text-center py-4 sm:py-6 flex-1 flex items-center justify-center">
               <p className="text-sm sm:text-base text-muted-foreground">No active programs</p>
             </div>
+          ) : shouldShowTabs ? (
+            // Tabbed interface when both types exist
+            <Tabs value={activeTab} onValueChange={handleTabChange} className="flex-1 flex flex-col">
+              <TabsList className="grid w-full grid-cols-2 mb-4">
+                <TabsTrigger value="punch-cards" className="flex items-center space-x-2">
+                  <CreditCard className="w-4 h-4" />
+                  <span>Punch Cards</span>
+                </TabsTrigger>
+                <TabsTrigger value="bundles" className="flex items-center space-x-2">
+                  <Package className="w-4 h-4" />
+                  <span>Bundles</span>
+                </TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="punch-cards" className="flex-1">
+                <PunchCardsTab
+                  loyaltyPrograms={loyaltyPrograms}
+                  selectedLoyaltyProgramId={selectedLoyaltyProgramId}
+                  onLoyaltyProgramSelect={handleLoyaltyProgramSelect}
+                  onPunch={handlePunch}
+                />
+              </TabsContent>
+              
+              <TabsContent value="bundles" className="flex-1">
+                <BundlesTab
+                  activeBundlePrograms={activeBundlePrograms}
+                  selectedBundleProgramId={selectedBundleProgramId}
+                  selectedBundlePresetIndex={selectedBundlePresetIndex}
+                  onBundleProgramSelect={handleBundleProgramSelect}
+                  onPresetSelect={setSelectedBundlePresetIndex}
+                  userId={userId}
+                  onSuccess={onSuccess}
+                />
+              </TabsContent>
+            </Tabs>
           ) : (
-            <div className="flex-1 flex flex-col space-y-2 sm:space-y-3">
-              <p className="text-sm sm:text-base font-medium text-muted-foreground">Select a program:</p>
-              <div className="flex-1 max-h-[calc(90vh-280px)] min-h-[180px] sm:min-h-[200px] overflow-y-auto space-y-2 sm:space-y-3 pr-1 sm:pr-2">
-                {loyaltyPrograms.map((program) => (
-                  <div
-                    key={program.id}
-                    onClick={() => setSelectedLoyaltyProgramId(program.id)}
-                    className={cn(
-                      "p-3 sm:p-4 rounded-lg border-2 cursor-pointer transition-all duration-200",
-                      "hover:shadow-md active:scale-[0.98] min-h-[56px] sm:min-h-[60px]",
-                      selectedLoyaltyProgramId === program.id
-                        ? "border-primary bg-primary/5 shadow-sm"
-                        : "border-border bg-background hover:border-primary/50"
-                    )}
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center space-x-2 mb-1 sm:mb-2">
-                          <span className="text-sm sm:text-base">🎁</span>
-                          <h3 className="font-medium text-sm sm:text-base leading-tight">{program.name}</h3>
-                        </div>
-                        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                          {program.requiredPunches} punches → {program.rewardDescription}
-                        </p>
-                      </div>
-                      {selectedLoyaltyProgramId === program.id && (
-                        <div className="flex-shrink-0 ml-2">
-                          <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-primary flex items-center justify-center">
-                            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white"></div>
-                          </div>
+            // Separate sections when only one type exists
+            <div className="flex-1 flex flex-col space-y-4 sm:space-y-6">
+              {/* Punch Cards Section */}
+              {loyaltyPrograms.length > 0 && (
+                <div className="flex flex-col space-y-2 sm:space-y-3">
+                  <p className="text-sm sm:text-base font-medium text-muted-foreground">Punch Cards:</p>
+                  <PunchCardsTab
+                    loyaltyPrograms={loyaltyPrograms}
+                    selectedLoyaltyProgramId={selectedLoyaltyProgramId}
+                    onLoyaltyProgramSelect={handleLoyaltyProgramSelect}
+                    onPunch={handlePunch}
+                  />
+                </div>
+              )}
+
+              {/* Bundles Section */}
+              {activeBundlePrograms.length > 0 && (
+                <div className="flex flex-col space-y-2 sm:space-y-3">
+                  <p className="text-sm sm:text-base font-medium text-muted-foreground">Bundles:</p>
+                  <BundlesTab
+                    activeBundlePrograms={activeBundlePrograms}
+                    selectedBundleProgramId={selectedBundleProgramId}
+                    selectedBundlePresetIndex={selectedBundlePresetIndex}
+                    onBundleProgramSelect={handleBundleProgramSelect}
+                    onPresetSelect={setSelectedBundlePresetIndex}
+                    userId={userId}
+                    onSuccess={onSuccess}
+                  />
                         </div>
                       )}
-                    </div>
-                  </div>
-                ))}
-              </div>
             </div>
           )}
-          
-          <div className="flex space-x-2 sm:space-x-3 pt-3 sm:pt-4 mt-auto flex-shrink-0 px-4 sm:px-6">
-            <Button 
-              variant="outline" 
-              onClick={onReset}
-              className="w-1/2 h-12 sm:h-14 text-sm sm:text-base flex items-center justify-center"
-            >
-              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
-              Back
-            </Button>
-            
-            <Button 
-              onClick={handlePunch}
-              disabled={!selectedLoyaltyProgramId || loyaltyPrograms.length === 0}
-              className="w-1/2 h-12 sm:h-14 text-sm sm:text-base flex items-center justify-center"
-            >
-              <Gift className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
-              Punch
-            </Button>
-          </div>
-        </CardContent>
+                </CardContent>
       </Card>
     </div>
   )
