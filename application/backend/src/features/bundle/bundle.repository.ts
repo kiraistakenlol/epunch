@@ -20,10 +20,6 @@ export interface Bundle {
   last_used_at: Date | null;
 }
 
-export interface BundleWithMerchant extends Bundle {
-  merchant: Merchant;
-}
-
 export interface BundleWithMerchantAndStyles extends Bundle {
   merchant: Merchant;
   styles: Omit<PunchCardStyle, 'id' | 'merchant_id' | 'loyalty_program_id' | 'created_at'>;
@@ -52,8 +48,8 @@ export class BundleRepository {
     }
   }
 
-  async findBundleWithMerchantById(bundleId: string): Promise<BundleWithMerchant | null> {
-    this.logger.log(`Finding bundle with merchant details by ID: ${bundleId}`);
+  async findBundleWithMerchantAndStylesById(bundleId: string): Promise<BundleWithMerchantAndStyles | null> {
+    this.logger.log(`Finding bundle with merchant and styles by ID: ${bundleId}`);
     
     const query = `
       SELECT 
@@ -63,9 +59,15 @@ export class BundleRepository {
         m.address as merchant_address,
         m.slug as merchant_slug,
         m.logo_url as merchant_logo_url,
-        m.created_at as merchant_created_at
+        m.created_at as merchant_created_at,
+        merchant_style.primary_color,
+        merchant_style.secondary_color,
+        merchant_style.logo_url as style_logo_url,
+        merchant_style.background_image_url,
+        merchant_style.punch_icons
       FROM bundle b
       JOIN merchant m ON b.merchant_id = m.id
+      LEFT JOIN punch_card_style merchant_style ON merchant_style.merchant_id = b.merchant_id
       WHERE b.id = $1
     `;
     
@@ -95,10 +97,17 @@ export class BundleRepository {
           slug: row.merchant_slug,
           logo_url: row.merchant_logo_url,
           created_at: row.merchant_created_at
+        },
+        styles: {
+          primary_color: row.primary_color,
+          secondary_color: row.secondary_color,
+          logo_url: row.style_logo_url,
+          background_image_url: row.background_image_url,
+          punch_icons: row.punch_icons
         }
       };
     } catch (error: any) {
-      this.logger.error(`Error finding bundle with merchant by ID ${bundleId}:`, error.message);
+      this.logger.error(`Error finding bundle with merchant and styles by ID ${bundleId}:`, error.message);
       throw error;
     }
   }

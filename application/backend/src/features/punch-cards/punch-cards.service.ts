@@ -1,6 +1,6 @@
 import { Injectable, Logger, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
 import { PunchCardsRepository } from './punch-cards.repository';
-import { PunchCardDto, CreatePunchDto, PunchOperationResultDto } from 'e-punch-common-core';
+import { PunchCardDto, CreatePunchDto, PunchOperationResultDto, PunchAddedEvent, RewardClaimedEvent } from 'e-punch-common-core';
 import { EventService } from '../../events/event.service';
 import { UserRepository } from '../user/user.repository';
 import { MerchantRepository } from '../merchant/merchant.repository';
@@ -88,11 +88,12 @@ export class PunchCardsService {
       );
 
       this.logger.log(`Emitting REWARD_CLAIMED event for user ${userId}, card ${punchCardId}`);
-      this.eventService.emitAppEvent({
+      const rewardClaimedEvent: RewardClaimedEvent = {
         type: 'REWARD_CLAIMED',
         userId,
         card: updatedPunchCardDto,
-      });
+      };
+      this.eventService.emitAppEvent(rewardClaimedEvent);
 
       this.logger.log(`Successfully redeemed punch card: ${punchCardId}`);
       return updatedPunchCardDto;
@@ -319,12 +320,13 @@ export class PunchCardsService {
     );
 
     this.logger.log(`Emitting PUNCH_ADDED event for user ${userId}, card ${updatedPunchCard.id}`);
-    this.eventService.emitAppEvent({
+    const punchAddedEvent: PunchAddedEvent = {
       type: 'PUNCH_ADDED',
       userId,
       card: updatedPunchCardDto,
       newCard: newPunchCardDto || null,
-    });
+    };
+    this.eventService.emitAppEvent(punchAddedEvent);
 
     return {
       rewardAchieved,

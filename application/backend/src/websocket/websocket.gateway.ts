@@ -77,6 +77,14 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.eventService.on('REWARD_CLAIMED', (event: AppEvent) => {
       this.broadcastToUser(event);
     });
+
+    this.eventService.on('BUNDLE_CREATED', (event: AppEvent) => {
+      this.broadcastToUser(event);
+    });
+
+    this.eventService.on('BUNDLE_USED', (event: AppEvent) => {
+      this.broadcastToUser(event);
+    });
   }
 
   private addSocketToUser(userId: string, socketId: string): void {

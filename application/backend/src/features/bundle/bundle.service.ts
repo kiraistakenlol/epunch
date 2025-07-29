@@ -1,6 +1,6 @@
 import { Injectable, Logger, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
 import { BundleRepository } from './bundle.repository';
-import { BundleDto, BundleCreateDto, BundleUseDto } from 'e-punch-common-core';
+import { BundleDto, BundleCreateDto, BundleUseDto, BundleCreatedEvent, BundleUsedEvent } from 'e-punch-common-core';
 import { BundleMapper } from '../../mappers';
 import { EventService } from '../../events/event.service';
 import { UserRepository } from '../user/user.repository';
@@ -39,13 +39,13 @@ export class BundleService {
       }
 
       // Get full details for response
-      const bundleWithMerchant = await this.bundleRepository.findBundleWithMerchantById(bundleId);
-      if (!bundleWithMerchant) {
-        throw new Error('Failed to retrieve bundle with merchant details');
+      const bundleWithStyles = await this.bundleRepository.findBundleWithMerchantAndStylesById(bundleId);
+      if (!bundleWithStyles) {
+        throw new Error('Failed to retrieve bundle with merchant and styles');
       }
 
       this.logger.log(`Found bundle: ${bundleId}`);
-      return BundleMapper.toDtoFromBundleWithMerchant(bundleWithMerchant);
+      return BundleMapper.toDtoWithStyles(bundleWithStyles);
     } catch (error: any) {
       this.logger.error(`Error fetching bundle ${bundleId}: ${error.message}`, error.stack);
       throw error;
@@ -89,20 +89,21 @@ export class BundleService {
       }
 
       const bundle = await this.bundleRepository.createBundle(data);
-      const bundleWithMerchant = await this.bundleRepository.findBundleWithMerchantById(bundle.id);
+      const bundleWithStyles = await this.bundleRepository.findBundleWithMerchantAndStylesById(bundle.id);
 
-      if (!bundleWithMerchant) {
-        throw new Error('Failed to retrieve created bundle with merchant details');
+      if (!bundleWithStyles) {
+        throw new Error('Failed to retrieve created bundle with merchant and styles');
       }
 
-      const bundleDto = BundleMapper.toDtoFromBundleWithMerchant(bundleWithMerchant);
+      const bundleDto = BundleMapper.toDtoWithStyles(bundleWithStyles);
 
       this.logger.log(`Emitting BUNDLE_CREATED event for user ${data.userId}, bundle ${bundle.id}`);
-      this.eventService.emitAppEvent({
+      const bundleCreatedEvent: BundleCreatedEvent = {
         type: 'BUNDLE_CREATED',
         userId: data.userId,
         bundle: bundleDto,
-      });
+      };
+      this.eventService.emitAppEvent(bundleCreatedEvent);
 
       this.logger.log(`Successfully created bundle: ${bundle.id}`);
       return bundleDto;
@@ -149,20 +150,21 @@ export class BundleService {
       const updatedBundle = await this.bundleRepository.useBundle(bundleId, quantityUsed);
       await this.bundleRepository.createBundleUsage(bundleId, quantityUsed);
 
-      const updatedBundleWithMerchant = await this.bundleRepository.findBundleWithMerchantById(bundleId);
-      if (!updatedBundleWithMerchant) {
-        throw new Error('Failed to retrieve updated bundle with merchant details');
+      const updatedBundleWithStyles = await this.bundleRepository.findBundleWithMerchantAndStylesById(bundleId);
+      if (!updatedBundleWithStyles) {
+        throw new Error('Failed to retrieve updated bundle with merchant and styles');
       }
 
-      const bundleDto = BundleMapper.toDtoFromBundleWithMerchant(updatedBundleWithMerchant);
+      const bundleDto = BundleMapper.toDtoWithStyles(updatedBundleWithStyles);
 
       this.logger.log(`Emitting BUNDLE_USED event for user ${bundle.user_id}, bundle ${bundleId}`);
-      this.eventService.emitAppEvent({
+      const bundleUsedEvent: BundleUsedEvent = {
         type: 'BUNDLE_USED',
         userId: bundle.user_id,
         bundle: bundleDto,
         quantityUsed,
-      });
+      } as BundleUsedEvent;
+      this.eventService.emitAppEvent(bundleUsedEvent);
 
       this.logger.log(`Successfully used bundle: ${bundleId}`);
       return bundleDto;
