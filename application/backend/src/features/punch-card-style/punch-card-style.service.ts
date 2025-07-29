@@ -48,7 +48,6 @@ export class PunchCardStyleService {
       primaryColor: null,
       secondaryColor: null,
       logoUrl: null,
-      backgroundImageUrl: null,
       punchIcons: null,
     };
   }

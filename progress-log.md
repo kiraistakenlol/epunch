@@ -1,4 +1,5 @@
 bundles:
 
 todo 
-- get bundle auth
+- bundle events (new bundle/bundle use)
+- 

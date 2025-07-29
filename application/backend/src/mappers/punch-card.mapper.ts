@@ -38,7 +38,6 @@ export class PunchCardMapper {
         primaryColor: detail.primary_color,
         secondaryColor: detail.secondary_color,
         logoUrl: detail.logo_url,
-        backgroundImageUrl: detail.background_image_url,
         punchIcons: detail.punch_icons,
       },
       createdAt: detail.created_at.toISOString(),

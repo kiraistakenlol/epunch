@@ -10,7 +10,6 @@ export class BundleMapper {
       primaryColor: null,
       secondaryColor: null,
       logoUrl: null,
-      backgroundImageUrl: null,
       punchIcons: null
     };
 
@@ -37,7 +36,6 @@ export class BundleMapper {
       primaryColor: bundle.styles.primary_color,
       secondaryColor: bundle.styles.secondary_color,
       logoUrl: bundle.styles.logo_url,
-      backgroundImageUrl: bundle.styles.background_image_url,
       punchIcons: bundle.styles.punch_icons
     };
 

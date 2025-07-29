@@ -7,6 +7,8 @@ interface BaseCardProps {
   onClick?: () => void;
   className?: string;
   disableFlipping?: boolean;
+  backgroundColor?: string;
+  textColor?: string;
 }
 
 const BaseCard = forwardRef<HTMLDivElement, BaseCardProps>(({
@@ -14,7 +16,9 @@ const BaseCard = forwardRef<HTMLDivElement, BaseCardProps>(({
   back,
   onClick,
   className = '',
-  disableFlipping = false
+  disableFlipping = false,
+  backgroundColor,
+  textColor
 }, forwardedRef) => {
   const internalRef = useRef<HTMLDivElement>(null);
   const cardRef = forwardedRef || internalRef;
@@ -28,7 +32,6 @@ const BaseCard = forwardRef<HTMLDivElement, BaseCardProps>(({
       onClick();
     }
 
-    // Only flip if back is provided and flipping is not disabled
     if (back && !disableFlipping && !isFlipping) {
       const newFlippedState = !isFlipped;
 
@@ -64,7 +67,13 @@ const BaseCard = forwardRef<HTMLDivElement, BaseCardProps>(({
       className={styles.baseCardContainer}
       onClick={handleClick}
     >
-      <div className={getCardClasses()}>
+      <div 
+        className={getCardClasses()}
+        style={{
+          backgroundColor,
+          color: textColor
+        }}
+      >
         {!isFlipped ? front : (back || front)}
       </div>
     </div>

@@ -7,7 +7,6 @@ export class PunchCardStyleMapper {
       primaryColor: style.primary_color,
       secondaryColor: style.secondary_color,
       logoUrl: style.logo_url,
-      backgroundImageUrl: style.background_image_url,
       punchIcons: style.punch_icons,
     };
   }

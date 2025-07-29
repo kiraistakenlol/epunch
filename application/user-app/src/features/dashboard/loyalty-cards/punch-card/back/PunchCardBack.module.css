@@ -81,6 +81,7 @@
   transition: opacity 0.2s ease;
   display: block;
   padding: calc(var(--card-height) * 0.01);
+  color: inherit;
 }
 
 .addressText:hover {

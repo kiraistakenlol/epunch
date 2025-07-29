@@ -1,6 +1,5 @@
 import React from 'react';
-import { MerchantDto, PunchCardStyleDto } from 'e-punch-common-core';
-import { appColors } from 'e-punch-common-ui';
+import { MerchantDto } from 'e-punch-common-core';
 import styles from './BundleCardFront.module.css';
 import layoutStyles from '../../punch-card/shared/PunchCardLayout.module.css';
 
@@ -13,7 +12,6 @@ interface BundleCardFrontProps {
   isExpired: boolean;
   isUsedUp: boolean;
   isAvailable: boolean;
-  cardStyles: PunchCardStyleDto;
 }
 
 const BundleCardFront: React.FC<BundleCardFrontProps> = ({
@@ -21,11 +19,8 @@ const BundleCardFront: React.FC<BundleCardFrontProps> = ({
   itemName,
   remainingQuantity,
   originalQuantity,
-  expiresAt,
-  cardStyles
+  expiresAt
 }) => {
-  const primaryColor = cardStyles?.primaryColor || appColors.epunchGray;
-  const secondaryColor = cardStyles?.secondaryColor || appColors.epunchBlack;
   const getDaysUntilExpiration = () => {
     if (!expiresAt) return { text: null, days: null };
     const expirationDate = new Date(expiresAt);
@@ -39,28 +34,15 @@ const BundleCardFront: React.FC<BundleCardFrontProps> = ({
     return { text: `${diffDays} day(s) left`, days: diffDays };
   };
 
-
-
   const expiration = getDaysUntilExpiration();
 
   return (
     <div 
       className={`${layoutStyles.defaultCardLayout} ${styles.frontSide}`}
-      style={{
-        backgroundColor: primaryColor
-      }}
     >
       <div className={`${layoutStyles.cardSection}`}>
-        <div 
-          className={styles.headerSection}
-          style={{
-            color: secondaryColor
-          }}
-        >
-          <span 
-            className={styles.merchantName}
-            style={{ color: secondaryColor }}
-          >
+        <div className={styles.headerSection}>
+          <span className={styles.merchantName}>
             {merchant.name}
           </span>
         </div>
@@ -68,18 +50,12 @@ const BundleCardFront: React.FC<BundleCardFrontProps> = ({
       
       <div className={`${layoutStyles.cardSection}`}>
         <div className={styles.mainContent}>
-          <div 
-            className={styles.quantity}
-            style={{ color: secondaryColor }}
-          >
+          <div className={styles.quantity}>
             <span className={styles.remainingQuantity}>{remainingQuantity}</span>
             <span className={styles.separator}>/</span>
             <span className={styles.totalQuantity}>{originalQuantity}</span>
           </div>
-          <div 
-            className={styles.itemName}
-            style={{ color: secondaryColor }}
-          >
+          <div className={styles.itemName}>
             {itemName}
           </div>
         </div>
@@ -88,10 +64,7 @@ const BundleCardFront: React.FC<BundleCardFrontProps> = ({
       <div className={`${layoutStyles.cardSection}`}>
         <div className={styles.footerSection}>
           {expiration.text && (
-            <div 
-              className={styles.expiration}
-              style={{ color: secondaryColor }}
-            >
+            <div className={styles.expiration}>
               {expiration.text}
             </div>
           )}

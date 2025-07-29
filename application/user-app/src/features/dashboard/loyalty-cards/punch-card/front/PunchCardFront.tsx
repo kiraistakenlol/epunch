@@ -1,6 +1,5 @@
 import React from 'react';
 import { PunchCardDto, PunchCardStyleDto } from 'e-punch-common-core';
-import { appColors } from 'e-punch-common-ui';
 import { useAppSelector } from '../../../../../store/hooks';
 import { selectLoyaltyProgramById } from '../../../../loyaltyPrograms/loyaltyProgramsSlice';
 import { resolveCardStyles } from '../../../../../utils/cardStyles';
@@ -24,20 +23,16 @@ const PunchCardFront: React.FC<PunchCardFrontProps> = ({
   animatedPunchIndex
 }) => {
   const loyaltyProgram = useAppSelector(state => selectLoyaltyProgramById(state, loyaltyProgramId));
-  const primaryColor = cardStyles?.primaryColor || appColors.epunchGray;
-  const secondaryColor = cardStyles?.secondaryColor || appColors.epunchBlack;
-  const resolvedStyles = resolveCardStyles(cardStyles); // Still need for punch icons
+  const resolvedStyles = resolveCardStyles(cardStyles);
 
   return (
     <div 
       className={`${layoutStyles.defaultCardLayout} ${styles.frontSide}`}
-      style={{ backgroundColor: primaryColor }}
     >
       <div className={`${layoutStyles.cardSection}`}>
         <PunchCardFrontHeader
           shopName={shopName}
           status={status}
-          secondaryColor={secondaryColor}
         />
       </div>
       <div className={`${layoutStyles.cardSection}`}>
@@ -46,7 +41,6 @@ const PunchCardFront: React.FC<PunchCardFrontProps> = ({
           currentPunches={currentPunches}
           animatedPunchIndex={animatedPunchIndex}
           loyaltyProgram={loyaltyProgram}
-          secondaryColor={secondaryColor}
           punchIcons={resolvedStyles.punchIcons}
         />
       </div>

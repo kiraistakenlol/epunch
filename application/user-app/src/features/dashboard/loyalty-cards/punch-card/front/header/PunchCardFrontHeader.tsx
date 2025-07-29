@@ -4,33 +4,20 @@ import styles from './PunchCardFrontHeader.module.css';
 interface PunchCardFrontHeaderProps {
   shopName: string;
   status: string;
-  secondaryColor: string;
 }
 
 const PunchCardFrontHeader: React.FC<PunchCardFrontHeaderProps> = ({
   shopName,
-  status,
-  secondaryColor
+  status
 }) => {
   const rewardReadyIcon =
-    <span 
-      className={styles.readyIcon}
-      style={{ color: secondaryColor }}
-    >
+    <span className={styles.readyIcon}>
       ✓
     </span>;
 
   return (
-    <div 
-      className={styles.container}
-      style={{
-        color: secondaryColor
-      }}
-    >
-      <span 
-        className={styles.shopName}
-        style={{ color: secondaryColor }}
-      >
+    <div className={styles.container}>
+      <span className={styles.shopName}>
         {shopName}
       </span>
 

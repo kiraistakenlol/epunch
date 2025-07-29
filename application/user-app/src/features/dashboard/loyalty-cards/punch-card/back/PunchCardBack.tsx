@@ -1,13 +1,12 @@
 import React from 'react';
-import { PunchCardDto, PunchCardStyleDto } from 'e-punch-common-core';
-import { useI18n, appColors } from 'e-punch-common-ui';
+import { PunchCardDto } from 'e-punch-common-core';
+import { useI18n } from 'e-punch-common-ui';
 import { useAppSelector } from '../../../../../store/hooks';
 import { selectLoyaltyProgramById } from '../../../../loyaltyPrograms/loyaltyProgramsSlice';
 import styles from './PunchCardBack.module.css';
 import layoutStyles from '../shared/PunchCardLayout.module.css';
 
 interface PunchCardBackProps extends Pick<PunchCardDto, 'loyaltyProgramId' | 'shopName' | 'shopAddress' | 'totalPunches'> {
-  cardStyles: PunchCardStyleDto;
   shopMapsUrl?: string;
 }
 
@@ -16,13 +15,10 @@ const PunchCardBack: React.FC<PunchCardBackProps> = ({
   shopName,
   shopAddress,
   totalPunches,
-  cardStyles,
   shopMapsUrl
 }) => {
   const { t } = useI18n('punchCards');
   const loyaltyProgram = useAppSelector(state => selectLoyaltyProgramById(state, loyaltyProgramId));
-  const primaryColor = cardStyles?.primaryColor || appColors.epunchGray;
-  const secondaryColor = cardStyles?.secondaryColor || appColors.epunchBlack;
 
   const getDefaultMapsUrl = (merchantName: string, merchantAddress: string) => {
     const query = encodeURIComponent(`${merchantName}, ${merchantAddress}`);
@@ -38,24 +34,18 @@ const PunchCardBack: React.FC<PunchCardBackProps> = ({
   return (
     <div 
       className={`${layoutStyles.defaultCardLayout} ${styles.backCard}`}
-      style={{ backgroundColor: primaryColor }}
     >
-
       <div className={`${layoutStyles.cardSection} ${styles.header}`}>
       </div>
       <div 
         className={`${layoutStyles.cardSection} ${styles.body}`}
-        style={{ color: secondaryColor }}
       >
         {loyaltyProgram && (
           <div className={`${styles.rewardMessage} ${styles.rewardText}`}>
-            <div style={{ color: secondaryColor }}>
+            <div>
               {t('back.collectMessage', { totalPunches, shopName })}
             </div>
-            <div 
-              className={styles.rewardName}
-              style={{ color: secondaryColor }}
-            >
+            <div className={styles.rewardName}>
               {loyaltyProgram.rewardDescription}
             </div>
           </div>
@@ -63,13 +53,11 @@ const PunchCardBack: React.FC<PunchCardBackProps> = ({
       </div>
       <div 
         className={`${layoutStyles.cardSection} ${styles.footer}`}
-        style={{ color: secondaryColor }}
       >
         {shopAddress && (
           <a 
             href={shopMapsUrl || getDefaultMapsUrl(shopName, shopAddress)}
             className={styles.addressText}
-            style={{ color: secondaryColor }}
             target="_blank"
             rel="noopener noreferrer"
           >

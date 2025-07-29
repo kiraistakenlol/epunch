@@ -47,6 +47,5 @@ export const getDefaultStyle = (): PunchCardStyleDto => ({
   primaryColor: null,
   secondaryColor: null,
   logoUrl: null,
-  backgroundImageUrl: null,
   punchIcons: null
 }) 

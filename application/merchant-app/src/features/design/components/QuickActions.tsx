@@ -38,20 +38,28 @@ export const QuickActions: React.FC<QuickActionsProps> = ({
           <CardContent className="pt-0 space-y-6">
             <div className="flex justify-center space-x-3">
               <div 
-                className="w-16 h-16 rounded-xl border-2 border-white shadow-lg"
-                style={{ 
-                  backgroundColor: displayStyle.primaryColor || '#3b82f6',
+                className={`w-16 h-16 rounded-xl ${
+                  displayStyle.primaryColor 
+                    ? 'border-2 border-white shadow-lg' 
+                    : 'border-2 border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800/30'
+                }`}
+                style={displayStyle.primaryColor ? { 
+                  backgroundColor: displayStyle.primaryColor,
                   border: '2px solid white',
                   boxShadow: '0 0 0 1px rgba(0,0,0,0.1)'
-                }}
+                } : {}}
               />
               <div 
-                className="w-16 h-16 rounded-xl border-2 border-white shadow-lg"
-                style={{ 
-                  backgroundColor: displayStyle.secondaryColor || '#e5e7eb',
+                className={`w-16 h-16 rounded-xl ${
+                  displayStyle.secondaryColor 
+                    ? 'border-2 border-white shadow-lg' 
+                    : 'border-2 border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800/30'
+                }`}
+                style={displayStyle.secondaryColor ? { 
+                  backgroundColor: displayStyle.secondaryColor,
                   border: '2px solid white',
                   boxShadow: '0 0 0 1px rgba(0,0,0,0.1)'
-                }}
+                } : {}}
               />
             </div>
             <Button variant="ghost" className="w-full group-hover:bg-primary/5 py-3">

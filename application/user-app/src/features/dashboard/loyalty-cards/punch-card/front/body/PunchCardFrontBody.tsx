@@ -8,7 +8,6 @@ interface PunchCardFrontBodyProps {
   currentPunches: number;
   animatedPunchIndex?: number;
   loyaltyProgram: LoyaltyProgramDto | null;
-  secondaryColor: string;
   punchIcons: {
     filled: NonNullable<any>;
     unfilled: NonNullable<any>;
@@ -20,7 +19,6 @@ const PunchCardFrontBody: React.FC<PunchCardFrontBodyProps> = ({
   currentPunches,
   animatedPunchIndex,
   loyaltyProgram,
-  secondaryColor,
   punchIcons
 }) => {
   return (
@@ -30,16 +28,12 @@ const PunchCardFrontBody: React.FC<PunchCardFrontBodyProps> = ({
           totalPunches={totalPunches}
           currentPunches={currentPunches}
           animatedPunchIndex={animatedPunchIndex}
-          iconColor={secondaryColor}
           punchIcons={punchIcons}
         />
       </div>
       {loyaltyProgram && (
         <div className={styles.loyaltyProgramNameContainer}>
-          <div 
-            className={styles.loyaltyProgramName}
-            style={{ color: secondaryColor }}
-          >
+          <div className={styles.loyaltyProgramName}>
             {loyaltyProgram.name}
           </div>
         </div>

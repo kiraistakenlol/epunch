@@ -8,7 +8,6 @@ interface PunchCardFrontBodyPunchesSectionProps {
   totalPunches: number;
   currentPunches: number;
   animatedPunchIndex?: number;
-  iconColor: string;
   punchIcons: {
     filled: NonNullable<any>;
     unfilled: NonNullable<any>;
@@ -19,7 +18,6 @@ const PunchCardFrontBodyPunchesSection: React.FC<PunchCardFrontBodyPunchesSectio
   totalPunches,
   currentPunches,
   animatedPunchIndex,
-  iconColor,
   punchIcons
 }) => {
   const MAX_PUNCHES = 10;
@@ -40,10 +38,9 @@ const PunchCardFrontBodyPunchesSection: React.FC<PunchCardFrontBodyPunchesSectio
       <motion.div 
         key={i} 
         className={containerClasses}
-        style={{ color: iconColor }}
         animate={isAnimated ? {
           scale: [0.8, 1.2, 1],
-          color: [iconColor, appColors.epunchGold, iconColor]
+          color: ['currentColor', appColors.epunchGold, 'currentColor']
         } : {}}
         transition={isAnimated ? {
           duration: 1.5,

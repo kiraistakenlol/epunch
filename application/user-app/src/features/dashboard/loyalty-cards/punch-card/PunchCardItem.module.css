@@ -1,22 +1,8 @@
-/* === PUNCH CARD SPECIFIC STYLING === */
 
-.shadowBlack {
-  /* Base shadow is already applied in BaseCard - these are empty for now */
-}
-
-.shadowGold {
-  /* Base shadow is already applied in BaseCard - these are empty for now */
-}
-
-.shadowGreen {
-  /* Base shadow is already applied in BaseCard - these are empty for now */
-}
-/* === TRANSFORM UTILITIES === */
 .scaleUp {
   transform: scale3d(1.04, 1.04, 1);
 }
 
-/* === ANIMATION UTILITIES === */
 .scaleUpAndBackToNormalAnimation {
   animation: scaleUpAndBackToNormal 1.5s ease-out;
 }

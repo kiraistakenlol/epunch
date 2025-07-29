@@ -74,7 +74,7 @@ const CompletionOverlay: React.FC = () => {
             flippable={false}
             showCompletionOverlay={false}
             enableAnimations={false}
-            showShadow={false}
+
           />
         </div>
 

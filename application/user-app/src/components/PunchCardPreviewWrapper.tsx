@@ -67,7 +67,7 @@ interface PunchCardPreviewWrapperProps {
   totalPunches?: number;
   status?: 'ACTIVE' | 'REWARD_READY' | 'REWARD_REDEEMED';
   enableAnimations?: boolean;
-  hideShadow?: boolean;
+
   renderOnBackgroundColor?: string;
 }
 
@@ -82,7 +82,7 @@ export const PunchCardPreviewWrapper: React.FC<PunchCardPreviewWrapperProps> = (
   totalPunches = 10,
   status = 'ACTIVE',
   enableAnimations = false,
-  hideShadow = false,
+
   renderOnBackgroundColor = 'white'
 }) => {
 
@@ -142,7 +142,7 @@ export const PunchCardPreviewWrapper: React.FC<PunchCardPreviewWrapperProps> = (
           flippable={true}
           showCompletionOverlay={false}
           enableAnimations={enableAnimations}
-          showShadow={!hideShadow}
+
         />
       </div>
     </Provider>

@@ -112,7 +112,6 @@ export const DesignEditor: React.FC<DesignEditorProps> = ({ className }) => {
         primaryColor: updatedStyle.primaryColor || null,
         secondaryColor: updatedStyle.secondaryColor || null,
         logoUrl: updatedStyle.logoUrl || null,
-        backgroundImageUrl: updatedStyle.backgroundImageUrl || null,
         punchIcons: updatedStyle.punchIcons || null
       }
       
