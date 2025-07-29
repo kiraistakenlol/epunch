@@ -1,12 +1,12 @@
 .container {
-  background-color: var(--color-epunch-mint);
+  /* background-color: var(--color-epunch-mint); */
   display: flex;
   flex-direction: column;
   border-radius: 2svw;
   align-items: center;
   justify-content: center;
-  height: 90%;
-  width: 90%;
+  height: 70%;
+  width: 70%;
   padding: 2cqh;
   container-type: size;
   position: relative;
