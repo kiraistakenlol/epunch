@@ -1,6 +1,6 @@
 :root {
   --header-section-height: 70px;
-  --bottom-section-height: clamp(150px, 37svh, 350px);
+  --bottom-section-height: clamp(150px, 33svh, 350px);
   /*depreciated*/
   --cards-section-height: var(--bottom-section-height);
 }
