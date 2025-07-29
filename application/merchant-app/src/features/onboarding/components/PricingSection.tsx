@@ -1,9 +1,7 @@
 import React from 'react';
-import { useI18n } from 'e-punch-common-ui';
 import './PricingSection.css';
 
 export const PricingSection: React.FC = () => {
-  const { t } = useI18n('merchantOnboarding');
 
   return (
     <section className="pricing-section">
