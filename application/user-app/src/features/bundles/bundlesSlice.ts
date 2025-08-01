@@ -37,7 +37,11 @@ export const fetchBundles = createAsyncThunk(
       const bundles = await apiClient.getUserBundles(userId);
       return bundles || [];
     } catch (error: any) {
-      return rejectWithValue(error.message || 'Failed to fetch bundles');
+      const statusCode = error.response?.status;
+      return rejectWithValue({ 
+        message: error.message || 'Failed to fetch bundles',
+        statusCode 
+      });
     }
   }
 );
@@ -112,6 +116,15 @@ const bundlesSlice = createSlice({
     clearScrollTarget: (state) => {
       state.scrollTargetBundleId = null;
     },
+    clearAnimationFlags: (state, action: PayloadAction<string>) => {
+      if (!state.bundles) return;
+      const bundle = state.bundles.find(
+        bundle => bundle.id === action.payload
+      );
+      if (bundle) {
+        delete bundle.animationFlags;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -127,7 +140,12 @@ const bundlesSlice = createSlice({
       })
       .addCase(fetchBundles.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = (action.payload as string) || 'Failed to fetch bundles';
+        const payload = action.payload as { message: string; statusCode?: number };
+        // Don't show 401 errors as user-facing errors (authentication issues)
+        if (payload?.statusCode !== 401) {
+          state.error = payload?.message || 'Failed to fetch bundles';
+        }
+        state.bundles = [];
         state.initialized = true;
       });
   },
@@ -144,12 +162,14 @@ export const {
   clearSelectedBundle,
   scrollToBundle,
   clearScrollTarget,
+  clearAnimationFlags,
 } = bundlesSlice.actions;
 
 // Selectors
 export const selectBundles = (state: { bundles: BundlesState }) => state.bundles.bundles;
 export const selectBundlesLoading = (state: { bundles: BundlesState }) => state.bundles.isLoading;
 export const selectBundlesError = (state: { bundles: BundlesState }) => state.bundles.error;
+export const selectBundlesInitialized = (state: { bundles: BundlesState }) => state.bundles.initialized;
 export const selectSelectedBundleId = (state: { bundles: BundlesState }) => state.bundles.selectedBundleId;
 export const selectScrollTargetBundleId = (state: { bundles: BundlesState }) => state.bundles.scrollTargetBundleId;
 export const selectBundleById = (state: { bundles: BundlesState }, bundleId: string) => 

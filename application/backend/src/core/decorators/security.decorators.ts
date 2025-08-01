@@ -7,6 +7,7 @@ import { SecurityCheckGuard } from '../guards/security-check.guard';
 export const Auth = createParamDecorator(
   (data: unknown, ctx: ExecutionContext): Authentication => {
     const request = ctx.switchToHttp().getRequest();
+    console.log('Auth', request.authentication);
     return request.authentication;
   },
 );

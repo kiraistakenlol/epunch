@@ -1,4 +1,4 @@
-import { Injectable, Logger, Inject } from '@nestjs/common';
+import { Injectable, Logger, Inject, NotFoundException } from '@nestjs/common';
 import { Pool } from 'pg';
 import { BundleProgramCreateDto, BundleProgramUpdateDto } from 'e-punch-common-core';
 
@@ -56,6 +56,19 @@ export class BundleProgramRepository {
       this.logger.error(`Error fetching bundle program ${id}:`, error.message);
       throw error;
     }
+  }
+
+  async getBundleProgramById(id: string): Promise<BundleProgram> {
+    this.logger.log(`Getting bundle program by ID: ${id}`);
+    
+    const bundleProgram = await this.findBundleProgramById(id);
+    
+    if (!bundleProgram) {
+      this.logger.error(`Bundle program with ID ${id} not found`);
+      throw new NotFoundException(`Bundle program with ID ${id} not found`);
+    }
+    
+    return bundleProgram;
   }
 
   async createBundleProgram(merchantId: string, data: BundleProgramCreateDto): Promise<BundleProgram> {

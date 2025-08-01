@@ -1,11 +1,11 @@
 import { Injectable, Logger, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
 import { BundleRepository } from './bundle.repository';
-import { BundleDto, BundleCreateDto, BundleUseDto, BundleCreatedEvent, BundleUsedEvent } from 'e-punch-common-core';
+import { BundleDto, BundleCreateDto, BundleUpdateDto, BundleCreatedEvent, BundleUsedEvent } from 'e-punch-common-core';
 import { BundleMapper } from '../../mappers';
 import { EventService } from '../../events/event.service';
 import { UserRepository } from '../user/user.repository';
 import { BundleProgramRepository } from '../bundle-program/bundle-program.repository';
-import { Authentication } from '../../core/types/authentication.interface';
+import { Authentication, AuthorizationService } from '../../core';
 
 @Injectable()
 export class BundleService {
@@ -16,86 +16,60 @@ export class BundleService {
     private readonly userRepository: UserRepository,
     private readonly bundleProgramRepository: BundleProgramRepository,
     private readonly eventService: EventService,
+    private readonly authorizationService: AuthorizationService,
   ) {}
 
   async getBundleById(bundleId: string, auth: Authentication): Promise<BundleDto> {
     this.logger.log(`Fetching bundle by ID: ${bundleId}`);
 
-    try {
-      const bundle = await this.bundleRepository.findBundleById(bundleId);
+    const bundle = await this.bundleRepository.getBundleById(bundleId);
 
-      if (!bundle) {
-        throw new NotFoundException(`Bundle with ID ${bundleId} not found`);
-      }
+    this.authorizationService.validateBundleReadAccess(auth, bundle);
 
-      if (!auth.superAdmin) {
-        if (!auth.merchantUser) {
-          throw new ForbiddenException('No merchant user found');
-        }
-
-        if (bundle.merchant_id !== auth.merchantUser.merchantId) {
-          throw new ForbiddenException('Not authorized to access this bundle');
-        }
-      }
-
-      // Get full details for response
-      const bundleWithStyles = await this.bundleRepository.findBundleWithMerchantAndStylesById(bundleId);
-      if (!bundleWithStyles) {
-        throw new Error('Failed to retrieve bundle with merchant and styles');
-      }
-
-      this.logger.log(`Found bundle: ${bundleId}`);
-      return BundleMapper.toDtoWithStyles(bundleWithStyles);
-    } catch (error: any) {
-      this.logger.error(`Error fetching bundle ${bundleId}: ${error.message}`, error.stack);
-      throw error;
-    }
+    this.logger.log(`Found bundle: ${bundleId}`);
+    return BundleMapper.toDto(bundle);
   }
 
-  async getUserBundles(userId: string): Promise<BundleDto[]> {
+  async getUserBundles(userId: string, auth: Authentication): Promise<BundleDto[]> {
     this.logger.log(`Fetching bundles for user: ${userId}`);
+    
+    this.authorizationService.validateGetUserBundlesAccess(auth, userId);
+
     try {
       const bundlesWithStyles = await this.bundleRepository.findUserBundles(userId);
+
       this.logger.log(`Found ${bundlesWithStyles.length} bundles for user: ${userId}`);
-      return BundleMapper.toDtoArrayWithStyles(bundlesWithStyles);
+      return BundleMapper.toDtoArray(bundlesWithStyles);
     } catch (error: any) {
       this.logger.error(`Error fetching bundles for user ${userId}: ${error.message}`, error.stack);
       throw error;
     }
   }
-
+  
   async createBundle(data: BundleCreateDto, auth: Authentication): Promise<BundleDto> {
     this.logger.log(`Creating bundle for user ${data.userId} with program ${data.bundleProgramId}`);
 
     try {
-      let user = await this.userRepository.findUserById(data.userId);
-      if (!user) {
-        user = await this.userRepository.createAnonymousUser(data.userId);
-      }
+      const bundleProgram = await this.bundleProgramRepository.getBundleProgramById(data.bundleProgramId);
 
-      const bundleProgram = await this.bundleProgramRepository.findBundleProgramById(data.bundleProgramId);
-      if (!bundleProgram || bundleProgram.is_deleted) {
-        throw new NotFoundException(`Bundle program with ID ${data.bundleProgramId} not found`);
-      }
+      this.authorizationService.validateBundleCreateAccess(auth, bundleProgram);
 
-      if (!auth.superAdmin) {
-        if (!auth.merchantUser) {
-          throw new ForbiddenException('No merchant user found');
-        }
+      const user = await this.userRepository.getUserById(data.userId);
+      // todo check that user is not anonymous (if not, throw error)
 
-        if (bundleProgram.merchant_id !== auth.merchantUser.merchantId) {
-          throw new ForbiddenException('You can only create bundles for your own programs');
-        }
-      }
+      const expiresAt = data.validityDays 
+        ? new Date(Date.now() + data.validityDays * 24 * 60 * 60 * 1000)
+        : null;
 
-      const bundle = await this.bundleRepository.createBundle(data);
-      const bundleWithStyles = await this.bundleRepository.findBundleWithMerchantAndStylesById(bundle.id);
+      const bundle = await this.bundleRepository.createBundle(
+        data.userId,
+        data.bundleProgramId,
+        data.quantity,
+        expiresAt
+      );
+      const bundleWithStyles = await this.bundleRepository.getBundleById(bundle.id);
 
-      if (!bundleWithStyles) {
-        throw new Error('Failed to retrieve created bundle with merchant and styles');
-      }
-
-      const bundleDto = BundleMapper.toDtoWithStyles(bundleWithStyles);
+      const bundleDto = BundleMapper.toDto(bundleWithStyles);
 
       this.logger.log(`Emitting BUNDLE_CREATED event for user ${data.userId}, bundle ${bundle.id}`);
       const bundleCreatedEvent: BundleCreatedEvent = {
@@ -113,64 +87,51 @@ export class BundleService {
     }
   }
 
-  async useBundle(bundleId: string, data: BundleUseDto, auth: Authentication): Promise<BundleDto> {
-    this.logger.log(`Using bundle ${bundleId} with quantity: ${data.quantityUsed || 1}`);
+  async updateBundle(bundleId: string, updateData: BundleUpdateDto, auth: Authentication): Promise<BundleDto> {
+    this.logger.log(`Updating bundle ${bundleId} with data:`, updateData);
 
-    try {
-      const bundle = await this.bundleRepository.findBundleById(bundleId);
+    const bundle = await this.bundleRepository.getBundleById(bundleId);
 
-      if (!bundle) {
-        throw new NotFoundException(`Bundle with ID ${bundleId} not found`);
-      }
+    this.authorizationService.validateBundleUpdateAccess(auth, bundle);
 
-      if (!auth.superAdmin) {
-        if (!auth.merchantUser) {
-          throw new ForbiddenException('No merchant user found');
-        }
+    const newRemainingQuantity = updateData.remainingQuantity;
 
-        if (bundle.merchant_id !== auth.merchantUser.merchantId) {
-          throw new ForbiddenException('Not authorized to use this bundle');
-        }
-      }
+    if (newRemainingQuantity < 0) {
+      throw new BadRequestException('Remaining quantity cannot be negative');
+    }
 
-      const quantityUsed = data.quantityUsed || 1;
+    if (newRemainingQuantity > bundle.original_quantity) {
+      throw new BadRequestException(`Remaining quantity cannot exceed original quantity. Original: ${bundle.original_quantity}, Requested: ${newRemainingQuantity}`);
+    }
 
-      if (quantityUsed <= 0) {
-        throw new BadRequestException('Quantity used must be greater than 0');
-      }
+    if (bundle.expires_at && bundle.expires_at < new Date()) {
+      throw new BadRequestException('Bundle has expired');
+    }
 
-      if (bundle.remaining_quantity < quantityUsed) {
-        throw new BadRequestException(`Insufficient quantity. Available: ${bundle.remaining_quantity}, Requested: ${quantityUsed}`);
-      }
+    const quantityChange = bundle.remaining_quantity - newRemainingQuantity;
 
-      if (bundle.expires_at && bundle.expires_at < new Date()) {
-        throw new BadRequestException('Bundle has expired');
-      }
+    await this.bundleRepository.updateBundleQuantity(bundleId, newRemainingQuantity);
+    
+    if (quantityChange !== 0) {
+      await this.bundleRepository.createBundleUsage(bundleId, quantityChange);
+    }
 
-      const updatedBundle = await this.bundleRepository.useBundle(bundleId, quantityUsed);
-      await this.bundleRepository.createBundleUsage(bundleId, quantityUsed);
+    const updatedBundle = await this.bundleRepository.getBundleById(bundleId);
 
-      const updatedBundleWithStyles = await this.bundleRepository.findBundleWithMerchantAndStylesById(bundleId);
-      if (!updatedBundleWithStyles) {
-        throw new Error('Failed to retrieve updated bundle with merchant and styles');
-      }
+    const bundleDto = BundleMapper.toDto(updatedBundle);
 
-      const bundleDto = BundleMapper.toDtoWithStyles(updatedBundleWithStyles);
-
+    if (quantityChange !== 0) {
       this.logger.log(`Emitting BUNDLE_USED event for user ${bundle.user_id}, bundle ${bundleId}`);
       const bundleUsedEvent: BundleUsedEvent = {
         type: 'BUNDLE_USED',
         userId: bundle.user_id,
         bundle: bundleDto,
-        quantityUsed,
+        quantityUsed: quantityChange,
       } as BundleUsedEvent;
       this.eventService.emitAppEvent(bundleUsedEvent);
-
-      this.logger.log(`Successfully used bundle: ${bundleId}`);
-      return bundleDto;
-    } catch (error: any) {
-      this.logger.error(`Error using bundle ${bundleId}: ${error.message}`, error.stack);
-      throw error;
     }
+
+    this.logger.log(`Successfully updated bundle ${bundleId}`);
+    return bundleDto;
   }
 } 

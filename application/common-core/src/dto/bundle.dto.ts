@@ -70,6 +70,6 @@ export interface BundleCreateDto {
   validityDays?: number;
 }
 
-export interface BundleUseDto {
-  quantityUsed?: number;
+export interface BundleUpdateDto {
+  remainingQuantity: number;
 } 

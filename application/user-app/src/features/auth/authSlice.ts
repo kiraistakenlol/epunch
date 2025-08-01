@@ -39,7 +39,7 @@ export const initializeUser = createAsyncThunk<void, void, {}>(
 
       const cognitoUser = await getCurrentUser();
       
-      const backendUser = await apiClient.getCurrentUser(idToken);
+      const backendUser = await apiClient.getCurrentUser();
       
       // Update state with authenticated user data
       dispatch(setUserId(backendUser.id));

@@ -243,4 +243,37 @@ export class PunchCardsRepository {
 
     return result.rows[0].user_id;
   }
+
+  async findPunchCardsByMerchantAndCustomer(merchantId: string, customerId: string): Promise<PunchCardDetails[]> {
+    const query = `
+      SELECT
+        pc.id,
+        pc.user_id,
+        pc.loyalty_program_id,
+        pc.current_punches,
+        pc.status,
+        pc.completed_at,
+        pc.redeemed_at,
+        pc.last_punch_at,
+        pc.created_at,
+        m.name as merchant_name,
+        m.address as merchant_address,
+        lp.required_punches,
+        COALESCE(specific_style.primary_color, default_style.primary_color) as primary_color,
+        COALESCE(specific_style.secondary_color, default_style.secondary_color) as secondary_color,
+        COALESCE(specific_style.logo_url, default_style.logo_url) as logo_url,
+        COALESCE(specific_style.background_image_url, default_style.background_image_url) as background_image_url,
+        COALESCE(specific_style.punch_icons, default_style.punch_icons) as punch_icons
+      FROM punch_card pc
+      JOIN loyalty_program lp ON pc.loyalty_program_id = lp.id
+      JOIN merchant m ON lp.merchant_id = m.id
+      LEFT JOIN punch_card_style specific_style ON specific_style.loyalty_program_id = lp.id
+      LEFT JOIN punch_card_style default_style ON default_style.merchant_id = m.id AND default_style.loyalty_program_id IS NULL
+      WHERE pc.user_id = $1 AND m.id = $2
+      ORDER BY pc.created_at DESC
+    `;
+
+    const result = await this.pool.query(query, [customerId, merchantId]);
+    return result.rows;
+  }
 } 

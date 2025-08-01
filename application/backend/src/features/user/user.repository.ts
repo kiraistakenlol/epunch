@@ -1,4 +1,4 @@
-import { Injectable, Logger, Inject } from '@nestjs/common';
+import { Injectable, Logger, Inject, NotFoundException } from '@nestjs/common';
 import { Pool } from 'pg';
 
 export interface User {
@@ -37,6 +37,19 @@ export class UserRepository {
     }
   }
 
+  async getUserById(id: string): Promise<User> {
+    this.logger.log(`Getting user by ID: ${id}`);
+    
+    const user = await this.findUserById(id);
+    
+    if (!user) {
+      this.logger.error(`User with ID ${id} not found`);
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+    
+    return user;
+  }
+
   async findUserByExternalId(externalId: string): Promise<User | null> {
     this.logger.log(`Attempting to find user with external_id: ${externalId}`);
     
@@ -56,6 +69,19 @@ export class UserRepository {
       this.logger.error(`Error fetching user with external_id ${externalId}:`, error.message);
       return null;
     }
+  }
+
+  async getUserByExternalId(externalId: string): Promise<User> {
+    this.logger.log(`Getting user by external ID: ${externalId}`);
+    
+    const user = await this.findUserByExternalId(externalId);
+    
+    if (!user) {
+      this.logger.error(`User with external ID ${externalId} not found`);
+      throw new NotFoundException(`User with external ID ${externalId} not found`);
+    }
+    
+    return user;
   }
 
   async createAnonymousUser(id: string): Promise<User> {
@@ -205,6 +231,19 @@ export class UserRepository {
       this.logger.error(`Error fetching customer ${customerId} for merchant ${merchantId}: ${error.message}`);
       throw error;
     }
+  }
+
+  async getCustomerByMerchantAndId(merchantId: string, customerId: string): Promise<User> {
+    this.logger.log(`Getting customer ${customerId} for merchant: ${merchantId}`);
+    
+    const customer = await this.findCustomerByMerchantAndId(merchantId, customerId);
+    
+    if (!customer) {
+      this.logger.error(`Customer with ID ${customerId} not found for merchant ${merchantId}`);
+      throw new NotFoundException(`Customer with ID ${customerId} not found for merchant ${merchantId}`);
+    }
+    
+    return customer;
   }
 
 } 

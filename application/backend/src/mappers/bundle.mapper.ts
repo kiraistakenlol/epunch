@@ -4,7 +4,7 @@ import { MerchantMapper } from './merchant.mapper';
 
 export class BundleMapper {
 
-  static toDtoWithStyles(bundle: BundleWithMerchantAndStyles): BundleDto {
+  static toDto(bundle: BundleWithMerchantAndStyles): BundleDto {
     const merchant = MerchantMapper.toDto(bundle.merchant);
 
     const styles: PunchCardStyleDto = {
@@ -30,7 +30,7 @@ export class BundleMapper {
     };
   }
 
-  static toDtoArrayWithStyles(bundlesWithStyles: BundleWithMerchantAndStyles[]): BundleDto[] {
-    return bundlesWithStyles.map(bundle => this.toDtoWithStyles(bundle));
+  static toDtoArray(bundlesWithStyles: BundleWithMerchantAndStyles[]): BundleDto[] {
+    return bundlesWithStyles.map(bundle => this.toDto(bundle));
   }
 } 

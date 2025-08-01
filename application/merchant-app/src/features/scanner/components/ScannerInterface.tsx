@@ -92,7 +92,7 @@ export const ScannerInterface: React.FC<ScannerInterfaceProps> = ({
         return scanner.scanResult ? (
           <BundleScanResult
             data={scanner.scanResult}
-            onUseBundle={scanner.handleUseBundle}
+            onUseBundle={scanner.handleUpdateBundle}
             onReset={scanner.handleReset}
           />
         ) : null

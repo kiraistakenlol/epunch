@@ -55,7 +55,9 @@ export class UserController {
   @Get(':userId/bundles')
   async getUserBundles(
     @Param('userId', ParseUUIDPipe) userId: string,
+    @Auth() auth: Authentication,
   ): Promise<BundleDto[]> {
-    return this.bundleService.getUserBundles(userId);
+    console.log('getUserBundles', userId, auth);
+    return this.bundleService.getUserBundles(userId, auth);
   }
 } 

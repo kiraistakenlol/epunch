@@ -122,9 +122,7 @@ export class IconsRepository implements OnModuleInit {
     try {
       const iconModule = await import(`react-icons/${lib.key}`);
       const iconNames = Object.keys(iconModule).filter(key => key !== 'default');
-      
-      this.logger.log(`Loading ${iconNames.length} icons from ${lib.name}...`);
-      
+    
       for (const iconName of iconNames) {
         const IconComponent = iconModule[iconName];
         const displayName = this.formatDisplayName(iconName.replace(lib.prefix, ''));

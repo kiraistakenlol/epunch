@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { configureApiClient, I18nProvider } from 'e-punch-common-ui';
+import { configureApiClient, setAuthTokenProvider, I18nProvider } from 'e-punch-common-ui';
 import DashboardPage from './features/dashboard/DashboardPage';
 import DevPage from './features/dev/DevPage';
 import CardPreviewPage from './pages/CardPreviewPage';
@@ -15,12 +15,24 @@ import Alert from './features/alert/Alert';
 import { initializeUser } from './features/auth/authSlice';
 import { configureAmplify, setupAuthListener } from './config/amplify';
 import { config } from './config/env';
+import { fetchAuthSession } from 'aws-amplify/auth';
 import { injectCSSVariables } from './styles/css-variables';
 import type { AppDispatch } from './store/store';
 import './styles/global.css';
 import { useGlobalAnimationEvents } from './hooks/useGlobalAnimationEvents';
 
 configureApiClient(config.api.baseUrl);
+
+// Set up async auth token provider for AWS Cognito
+setAuthTokenProvider(async () => {
+  try {
+    const session = await fetchAuthSession();
+    return session.tokens?.idToken?.toString() || null;
+  } catch (error) {
+    // User not authenticated or session expired
+    return null;
+  }
+});
 
 function App() {
   const dispatch: AppDispatch = useDispatch();

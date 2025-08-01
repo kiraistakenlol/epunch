@@ -1,6 +1,5 @@
-import { Injectable, Logger, Inject } from '@nestjs/common';
+import { Injectable, Logger, Inject, NotFoundException } from '@nestjs/common';
 import { Pool } from 'pg';
-import { BundleCreateDto } from 'e-punch-common-core';
 import { Merchant } from '../merchant/merchant.repository';
 import { PunchCardStyle } from '../punch-card-style/punch-card-style.repository';
 
@@ -25,31 +24,16 @@ export interface BundleWithMerchantAndStyles extends Bundle {
   styles: Omit<PunchCardStyle, 'id' | 'merchant_id' | 'loyalty_program_id' | 'created_at'>;
 }
 
+
+
 @Injectable()
 export class BundleRepository {
   private readonly logger = new Logger(BundleRepository.name);
 
   constructor(@Inject('DATABASE_POOL') private readonly pool: Pool) {}
 
-  async findBundleById(bundleId: string): Promise<Bundle | null> {
+  async findBundle(bundleId: string): Promise<BundleWithMerchantAndStyles | null> {
     this.logger.log(`Finding bundle by ID: ${bundleId}`);
-    
-    const query = `
-      SELECT * FROM bundle
-      WHERE id = $1
-    `;
-    
-    try {
-      const result = await this.pool.query(query, [bundleId]);
-      return result.rows[0] || null;
-    } catch (error: any) {
-      this.logger.error(`Error finding bundle by ID ${bundleId}:`, error.message);
-      throw error;
-    }
-  }
-
-  async findBundleWithMerchantAndStylesById(bundleId: string): Promise<BundleWithMerchantAndStyles | null> {
-    this.logger.log(`Finding bundle with merchant and styles by ID: ${bundleId}`);
     
     const query = `
       SELECT 
@@ -107,9 +91,22 @@ export class BundleRepository {
         }
       };
     } catch (error: any) {
-      this.logger.error(`Error finding bundle with merchant and styles by ID ${bundleId}:`, error.message);
+      this.logger.error(`Error finding bundle by ID ${bundleId}:`, error.message);
       throw error;
     }
+  }
+
+  async getBundleById(id: string): Promise<BundleWithMerchantAndStyles> {
+    this.logger.log(`Getting bundle by ID: ${id}`);
+    
+    const bundle = await this.findBundle(id);
+    
+    if (!bundle) {
+      this.logger.error(`Bundle with ID ${id} not found`);
+      throw new NotFoundException(`Bundle with ID ${id} not found`);
+    }
+    
+    return bundle;
   }
 
   async findUserBundles(userId: string): Promise<BundleWithMerchantAndStyles[]> {
@@ -174,12 +171,8 @@ export class BundleRepository {
     }
   }
 
-  async createBundle(data: BundleCreateDto): Promise<Bundle> {
-    this.logger.log(`Creating bundle for user: ${data.userId}`);
-    
-    const expiresAt = data.validityDays 
-      ? new Date(Date.now() + data.validityDays * 24 * 60 * 60 * 1000)
-      : null;
+  async createBundle(userId: string, bundleProgramId: string, quantity: number, expiresAt: Date | null): Promise<Bundle> {
+    this.logger.log(`Creating bundle for user: ${userId}`);
     
     const query = `
       INSERT INTO bundle (
@@ -207,10 +200,10 @@ export class BundleRepository {
     `;
     
     const values = [
-      data.userId,
-      data.bundleProgramId,
-      data.quantity,
-      data.quantity,
+      userId,
+      bundleProgramId,
+      quantity,
+      quantity,
       expiresAt
     ];
     
@@ -220,42 +213,42 @@ export class BundleRepository {
       this.logger.log(`Created bundle: ${bundle.id}`);
       return bundle;
     } catch (error: any) {
-      this.logger.error(`Error creating bundle for user ${data.userId}:`, error.message);
+      this.logger.error(`Error creating bundle for user ${userId}:`, error.message);
       throw error;
     }
   }
 
-  async useBundle(bundleId: string, quantityUsed: number = 1): Promise<Bundle> {
-    this.logger.log(`Using bundle ${bundleId} with quantity: ${quantityUsed}`);
+  async updateBundleQuantity(bundleId: string, newRemainingQuantity: number): Promise<Bundle> {
+    this.logger.log(`Updating bundle ${bundleId} remaining quantity to: ${newRemainingQuantity}`);
     
     const now = new Date();
+    
     const query = `
       UPDATE bundle 
       SET 
-        remaining_quantity = remaining_quantity - $1,
+        remaining_quantity = $1,
         last_used_at = $2
       WHERE id = $3
-        AND remaining_quantity >= $1
       RETURNING *
     `;
     
     try {
-      const result = await this.pool.query(query, [quantityUsed, now, bundleId]);
+      const result = await this.pool.query(query, [newRemainingQuantity, now, bundleId]);
       
       if (result.rows.length === 0) {
-        throw new Error(`Bundle ${bundleId} not found or insufficient quantity`);
+        throw new Error(`Bundle ${bundleId} not found`);
       }
       
       const bundle = result.rows[0];
-      this.logger.log(`Used bundle ${bundleId}. Remaining quantity: ${bundle.remaining_quantity}`);
+      this.logger.log(`Updated bundle ${bundleId} remaining quantity to: ${bundle.remaining_quantity}`);
       return bundle;
     } catch (error: any) {
-      this.logger.error(`Error using bundle ${bundleId}:`, error.message);
+      this.logger.error(`Error updating bundle ${bundleId}:`, error.message);
       throw error;
     }
   }
 
-  async createBundleUsage(bundleId: string, quantityUsed: number = 1): Promise<void> {
+  async createBundleUsage(bundleId: string, quantityUsed: number): Promise<void> {
     this.logger.log(`Recording bundle usage for bundle: ${bundleId}`);
     
     const query = `

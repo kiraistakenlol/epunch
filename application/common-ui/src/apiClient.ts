@@ -1,11 +1,11 @@
 import axios, { AxiosInstance } from 'axios';
-import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, AuthResponseDto, UserDto, LoyaltyProgramDto, MerchantUserLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreatePunchCardDto, CreateMerchantDto, UpdateMerchantDto, PunchCardStyleDto, IconSearchResultDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto, AdminLoginDto, AdminLoginResponse, QuickOverviewDto, UsersAnalyticsDto, CardsAnalyticsDto, GrowthTrendsDto, ActivityTrendsDto, DaysOfWeekAnalyticsDto, LoyaltyProgramAnalyticsDto, BundleProgramDto, BundleProgramCreateDto, BundleProgramUpdateDto, BundleDto, BundleCreateDto, BundleUseDto } from 'e-punch-common-core';
+import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, AuthResponseDto, UserDto, LoyaltyProgramDto, MerchantUserLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreatePunchCardDto, CreateMerchantDto, UpdateMerchantDto, PunchCardStyleDto, IconSearchResultDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto, AdminLoginDto, AdminLoginResponse, QuickOverviewDto, UsersAnalyticsDto, CardsAnalyticsDto, GrowthTrendsDto, ActivityTrendsDto, DaysOfWeekAnalyticsDto, LoyaltyProgramAnalyticsDto, BundleProgramDto, BundleProgramCreateDto, BundleProgramUpdateDto, BundleDto, BundleCreateDto, BundleUpdateDto } from 'e-punch-common-core';
 
 // The API URL will be set by the app using this client
 let API_BASE_URL: string;
 
 // Authentication provider function - can be set by each app
-export type AuthTokenProvider = () => string | null;
+export type AuthTokenProvider = () => Promise<string | null> | string | null;
 let authTokenProvider: AuthTokenProvider | undefined = undefined;
 
 const createInstance = (baseURL: string): AxiosInstance => {
@@ -15,11 +15,11 @@ const createInstance = (baseURL: string): AxiosInstance => {
 
   // Request interceptor to add Authorization header
   instance.interceptors.request.use(
-    (config) => {
+    async (config) => {
       try {
         const provider = authTokenProvider;
         if (provider) {
-          const token = provider();
+          const token = await Promise.resolve(provider());
           if (token) {
             config.headers.Authorization = `Bearer ${token}`;
           }
@@ -268,15 +268,8 @@ export const apiClient = {
   },
 
   // Get current user
-  async getCurrentUser(authToken: string): Promise<UserDto> {
-    if (!authToken) {
-      return Promise.reject(new Error('Auth token is required.'));
-    }
-    const response = await instance.get<UserDto>('/users/me', {
-      headers: {
-        Authorization: `Bearer ${authToken}`
-      }
-    });
+  async getCurrentUser(): Promise<UserDto> {
+    const response = await instance.get<UserDto>('/users/me');
     return response.data;
   },
 
@@ -541,6 +534,14 @@ export const apiClient = {
     return response.data;
   },
 
+  async getMerchantCustomerBundles(merchantId: string, customerId: string): Promise<BundleDto[]> {
+    if (!merchantId || !customerId) {
+      return Promise.reject(new Error('Merchant ID and Customer ID are required.'));
+    }
+    const response = await instance.get<BundleDto[]>(`/merchants/${merchantId}/customers/${customerId}/bundles`);
+    return response.data;
+  },
+
   // Bundle Program endpoints
   async getMerchantBundlePrograms(merchantId: string): Promise<BundleProgramDto[]> {
     if (!merchantId) {
@@ -584,11 +585,14 @@ export const apiClient = {
     return response.data;
   },
 
-  async useBundle(bundleId: string, data: BundleUseDto = {}): Promise<BundleDto> {
+  async updateBundle(bundleId: string, updateData: BundleUpdateDto): Promise<BundleDto> {
     if (!bundleId) {
       return Promise.reject(new Error('Bundle ID is required.'));
     }
-    const response = await instance.post<BundleDto>(`/bundles/${bundleId}/use`, data);
+    if (updateData.remainingQuantity < 0) {
+      return Promise.reject(new Error('Remaining quantity cannot be negative.'));
+    }
+    const response = await instance.put<BundleDto>(`/bundles/${bundleId}`, updateData);
     return response.data;
   },
 

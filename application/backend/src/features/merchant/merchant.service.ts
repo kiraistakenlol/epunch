@@ -1,6 +1,6 @@
 import { Injectable, Logger, NotFoundException, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { LoyaltyProgramDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreateMerchantDto, UpdateMerchantDto, FileUploadUrlDto, FileUploadResponseDto, JwtPayloadDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto, UserDto, PunchCardDto } from 'e-punch-common-core';
+import { LoyaltyProgramDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreateMerchantDto, UpdateMerchantDto, FileUploadUrlDto, FileUploadResponseDto, JwtPayloadDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto, UserDto, PunchCardDto, BundleDto } from 'e-punch-common-core';
 import { MerchantRepository } from './merchant.repository';
 import { MerchantUserRepository } from '../merchant-user/merchant-user.repository';
 import { UserRepository } from '../user/user.repository';
@@ -8,6 +8,9 @@ import { FileUploadService } from './file-upload.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { MerchantMapper, UserMapper } from '../../mappers';
+import { Authentication } from '../../core/types/authentication.interface';
+import { PunchCardsRepository } from '../punch-cards/punch-cards.repository';
+import { BundleService } from '../bundle/bundle.service';
 
 @Injectable()
 export class MerchantService {
@@ -19,7 +22,9 @@ export class MerchantService {
     private readonly userRepository: UserRepository,
     private readonly fileUploadService: FileUploadService,
     private readonly configService: ConfigService,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private readonly punchCardsRepository: PunchCardsRepository,
+    private readonly bundleService: BundleService,
   ) { }
 
   async getAllMerchants(): Promise<MerchantDto[]> {
@@ -479,12 +484,69 @@ export class MerchantService {
         throw new NotFoundException(`Customer with ID ${customerId} not found for merchant ${merchantId}`);
       }
 
-      const punchCards = await this.merchantRepository.findPunchCardsByMerchantAndCustomer(merchantId, customerId);
+      const punchCardsDetails = await this.punchCardsRepository.findPunchCardsByMerchantAndCustomer(merchantId, customerId);
+
+      // Map the punch card details to DTOs
+      const punchCards = punchCardsDetails.map((details) => ({
+        id: details.id,
+        loyaltyProgramId: details.loyalty_program_id,
+        shopName: details.merchant_name,
+        shopAddress: details.merchant_address,
+        currentPunches: details.current_punches,
+        totalPunches: details.required_punches,
+        status: details.status,
+        createdAt: details.created_at.toISOString(),
+        completedAt: details.completed_at?.toISOString() || null,
+        redeemedAt: details.redeemed_at?.toISOString() || null,
+        lastPunchAt: details.last_punch_at?.toISOString() || null,
+        styles: {
+          primaryColor: details.primary_color,
+          secondaryColor: details.secondary_color,
+          logoUrl: details.logo_url,
+          backgroundColor: null, // Not in schema
+          textColor: null, // Not in schema
+          backgroundImageUrl: details.background_image_url || null,
+          punchIcons: details.punch_icons || null
+        }
+      }));
 
       this.logger.log(`Found ${punchCards.length} punch cards for customer ${customerId} in merchant: ${merchantId}`);
       return punchCards;
     } catch (error: any) {
       this.logger.error(`Error fetching punch cards for customer ${customerId} in merchant ${merchantId}: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  async getMerchantCustomerBundles(merchantId: string, customerId: string, auth: Authentication): Promise<BundleDto[]> {
+    this.logger.log(`Fetching bundles for customer ${customerId} in merchant: ${merchantId}`);
+
+    try {
+      const merchant = await this.merchantRepository.findMerchantById(merchantId);
+
+      if (!merchant) {
+        throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
+      }
+
+      const customer = await this.userRepository.findCustomerByMerchantAndId(merchantId, customerId);
+
+      if (!customer) {
+        throw new NotFoundException(`Customer with ID ${customerId} not found for merchant ${merchantId}`);
+      }
+
+      // Get all bundles for the customer, then filter by merchant
+      const allBundles = await this.bundleService.getUserBundles(customerId, auth);
+      
+      // Filter bundles to only include those from this merchant
+      // Note: Using merchant.id property from the bundle's merchant object
+      const merchantBundles = allBundles.filter(bundle => 
+        bundle.merchant && bundle.merchant.id === merchantId
+      );
+
+      this.logger.log(`Found ${merchantBundles.length} bundles for customer ${customerId} in merchant: ${merchantId}`);
+      return merchantBundles;
+    } catch (error: any) {
+      this.logger.error(`Error fetching bundles for customer ${customerId} in merchant ${merchantId}: ${error.message}`, error.stack);
       throw error;
     }
   }

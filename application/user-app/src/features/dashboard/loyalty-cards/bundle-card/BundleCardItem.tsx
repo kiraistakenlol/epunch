@@ -89,6 +89,7 @@ const BundleCardItem = forwardRef<HTMLDivElement, BundleCardItemProps>(({
 
   const content = (
     <BundleCardFront
+      id={id}
       merchant={merchant}
       itemName={itemName}
       remainingQuantity={remainingQuantity}
@@ -97,6 +98,8 @@ const BundleCardItem = forwardRef<HTMLDivElement, BundleCardItemProps>(({
       isExpired={isExpired}
       isUsedUp={isUsedUp}
       isAvailable={!isExpired && !isUsedUp}
+      animationFlags={animationFlags}
+      styles={cardStyles}
     />
   );
 

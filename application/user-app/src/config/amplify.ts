@@ -4,6 +4,8 @@ import { getCurrentUser, fetchAuthSession, signOut } from 'aws-amplify/auth';
 import { config } from './env';
 import type { AppDispatch } from '../store/store';
 import { getOrInitializeUserIdFromLocalStorage, setAuthenticated, setCognitoUser, setUserId, setSuperAdmin } from '../features/auth/authSlice';
+import { clearPunchCards } from '../features/punchCards/punchCardsSlice';
+import { clearBundles } from '../features/bundles/bundlesSlice';
 import { apiClient } from 'e-punch-common-ui';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -82,6 +84,8 @@ export const setupAuthListener = (dispatch: AppDispatch) => {
         dispatch(setSuperAdmin(false));
         dispatch(setCognitoUser(null));
         dispatch(setUserId(uuidv4()));
+        dispatch(clearPunchCards());
+        dispatch(clearBundles());
         break;
 
       case 'signInWithRedirect_failure':

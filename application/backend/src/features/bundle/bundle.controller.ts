@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Param, Body, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Post, Put, Param, Body, ParseUUIDPipe } from '@nestjs/common';
 import { BundleService } from './bundle.service';
-import { BundleDto, BundleCreateDto, BundleUseDto } from 'e-punch-common-core';
+import { BundleDto, BundleCreateDto, BundleUpdateDto } from 'e-punch-common-core';
 import { RequireMerchantUser, Auth } from '../../core/decorators/security.decorators';
 import { Authentication } from '../../core/types/authentication.interface';
 
@@ -17,14 +17,14 @@ export class BundleController {
     return this.bundleService.getBundleById(bundleId, auth);
   }
 
-  @Post(':bundleId/use')
+  @Put(':bundleId')
   @RequireMerchantUser()
-  async useBundle(
+  async updateBundle(
     @Param('bundleId', ParseUUIDPipe) bundleId: string,
-    @Body() bundleUseDto: BundleUseDto,
+    @Body() updateDto: BundleUpdateDto,
     @Auth() auth: Authentication,
   ): Promise<BundleDto> {
-    return this.bundleService.useBundle(bundleId, bundleUseDto, auth);
+    return this.bundleService.updateBundle(bundleId, updateDto, auth);
   }
 
   @Post()

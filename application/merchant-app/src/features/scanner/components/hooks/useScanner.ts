@@ -111,15 +111,17 @@ export const useScanner = (options: UseScannerOptions = {}) => {
     }
   }, [scanResult, options, handleReset])
 
-  const handleUseBundle = useCallback(async (quantityUsed: number = 1) => {
+  const handleUpdateBundle = useCallback(async (quantityToConsume: number = 1) => {
     if (!scanResult?.parsedData || scanResult.parsedData.type !== 'bundle_id') return
 
     setCurrentState('processing')
     setIsProcessing(true)
 
     try {
-      const result = await apiClient.useBundle(scanResult.parsedData.bundle_id, { quantityUsed })
-      const message = `✅ Bundle used! ${quantityUsed} ${result.itemName}(s)`
+      const currentBundle = await apiClient.getBundleById(scanResult.parsedData.bundle_id)
+      const newRemainingQuantity = currentBundle.remainingQuantity - quantityToConsume
+      const result = await apiClient.updateBundle(scanResult.parsedData.bundle_id, { remainingQuantity: newRemainingQuantity })
+      const message = `✅ Bundle used! ${quantityToConsume} ${result.itemName}(s)`
       
       toast.success("Success", {
         description: message,
@@ -128,8 +130,8 @@ export const useScanner = (options: UseScannerOptions = {}) => {
       options.onSuccess?.(message)
       handleReset()
     } catch (error: any) {
-      console.error('Bundle use operation error:', error)
-      const errorMessage = error.response?.data?.message || error.message || 'Bundle use operation failed.'
+      console.error('Bundle update error:', error)
+      const errorMessage = error.response?.data?.message || error.message || 'Bundle update failed.'
       
       toast.error("Error", {
         description: errorMessage,
@@ -154,6 +156,6 @@ export const useScanner = (options: UseScannerOptions = {}) => {
     handleReset,
     handlePunch,
     handleRedeem,
-    handleUseBundle
+    handleUpdateBundle
   }
 } 

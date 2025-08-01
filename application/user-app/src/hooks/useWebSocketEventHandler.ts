@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useWebSocket } from './useWebSocket';
 import { selectUserId } from '../features/auth/authSlice';
 import { updatePunchCard } from '../features/punchCards/punchCardsSlice';
+import { addBundle, updateBundle } from '../features/bundles/bundlesSlice';
 import { startSequence } from '../features/animations/animationSlice';
 import { 
   ShowPunchAnimation, 
@@ -57,6 +58,27 @@ export const useWebSocketEventHandler = () => {
         const { card } = appEvent;
         
         dispatch(updatePunchCard(card));
+      }
+
+      if (appEvent.type === 'BUNDLE_CREATED') {
+        const { bundle } = appEvent;
+        
+        dispatch(addBundle(bundle));
+        // The AnimatePresence in LoyaltyCards will automatically handle the slide-in animation
+      }
+
+      if (appEvent.type === 'BUNDLE_USED') {
+        const { bundle } = appEvent;
+        
+        // Update the bundle with animation flag
+        dispatch(updateBundle({
+          ...bundle,
+          animationFlags: {
+            quantityAnimation: { 
+              newQuantity: bundle.remainingQuantity
+            }
+          }
+        }));
       }
     }
   }, [events, userId, dispatch]);

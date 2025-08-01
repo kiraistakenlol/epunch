@@ -7,40 +7,39 @@ import BundleCardItem from './bundle-card/BundleCardItem';
 import type { PunchCardDto, BundleDto } from 'e-punch-common-core';
 import styles from './LoyaltyCards.module.css';
 import type { RootState, AppDispatch } from '../../../store/store';
-import { selectAuthLoading } from '../../auth/authSlice';
+import { selectIsAuthenticated } from '../../auth/authSlice';
 import {
   selectPunchCards,
-  selectPunchCardsLoading,
   selectPunchCardsError,
+  selectPunchCardsInitialized,
   selectScrollTargetCardId,
   clearScrollTarget
 } from '../../punchCards/punchCardsSlice';
 import {
   selectBundles,
-  selectBundlesLoading,
   selectBundlesError,
+  selectBundlesInitialized,
   selectScrollTargetBundleId,
   clearScrollTarget as clearBundleScrollTarget
 } from '../../bundles/bundlesSlice';
-import { useAppSelector } from '../../../store/hooks';
 
 
 const LoyaltyCards = () => {
   const { t } = useI18n('punchCards');
   const dispatch = useDispatch<AppDispatch>();
-  const isAuthLoading = useAppSelector(selectAuthLoading);
+  const isAuthenticated = useSelector((state: RootState) => selectIsAuthenticated(state));
   const punchCards = useSelector((state: RootState) => selectPunchCards(state));
   const bundles = useSelector((state: RootState) => selectBundles(state));
   const scrollTargetCardId = useSelector((state: RootState) => selectScrollTargetCardId(state));
   const scrollTargetBundleId = useSelector((state: RootState) => selectScrollTargetBundleId(state));
-  const isPunchCardsLoading = useSelector((state: RootState) => selectPunchCardsLoading(state));
-  const isBundlesLoading = useSelector((state: RootState) => selectBundlesLoading(state));
   const punchCardsError = useSelector((state: RootState) => selectPunchCardsError(state));
   const bundlesError = useSelector((state: RootState) => selectBundlesError(state));
+  const isPunchCardsInitialized = useSelector((state: RootState) => selectPunchCardsInitialized(state));
+  const isBundlesInitialized = useSelector((state: RootState) => selectBundlesInitialized(state));
   
   // Combined state
-  const isLoading = isPunchCardsLoading || isBundlesLoading;
-  const error = punchCardsError || bundlesError;
+  const isLoading = !isPunchCardsInitialized || (isAuthenticated && !isBundlesInitialized);
+  const hasError = punchCardsError || bundlesError;
   const [showEmptyState, setShowEmptyState] = useState(false);
   const cardRefs = useRef<{ [cardId: string]: HTMLDivElement | null }>({});
 
@@ -54,9 +53,9 @@ const LoyaltyCards = () => {
   }, [punchCards, bundles]);
 
   useEffect(() => {
-    if (isLoading || punchCards === undefined || bundles === undefined) {
+    if (isLoading) {
       setShowEmptyState(false);
-    } else if (!error && allLoyaltyCards.length === 0) {
+    } else if (hasError || allLoyaltyCards.length === 0) {
       const timer = setTimeout(() => {
         setShowEmptyState(true);
       }, 300);
@@ -64,7 +63,7 @@ const LoyaltyCards = () => {
     } else {
       setShowEmptyState(false);
     }
-  }, [isLoading, error, allLoyaltyCards, punchCards, bundles]);
+  }, [isLoading, hasError, allLoyaltyCards]);
 
   useEffect(() => {
     const targetId = scrollTargetCardId || scrollTargetBundleId;
@@ -96,7 +95,7 @@ const LoyaltyCards = () => {
   });
 
   const renderContent = () => {
-    if (isAuthLoading || isLoading || punchCards === undefined || bundles === undefined) {
+    if (isLoading) {
       return (
         <div className={styles.loadingContainer}>
           <div className={styles.loadingDots}>
@@ -107,16 +106,7 @@ const LoyaltyCards = () => {
         </div>
       );
     }
-    if (error) {
-      return (
-        <div className={styles.emptyStateContainer}>
-          <div className={styles.emptyStateContent}>
-            <h2 className={styles.emptyStateHeadline}>{t('error.title')}</h2>
-            <p className={styles.emptyStateSubtext}>{t('error.message', { error })}</p>
-          </div>
-        </div>
-      );
-    }
+    
     if (showEmptyState) {
       return (
         <div className={styles.emptyStateContainer}>
