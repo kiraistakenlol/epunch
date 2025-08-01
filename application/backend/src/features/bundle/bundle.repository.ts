@@ -8,6 +8,7 @@ export interface Bundle {
   user_id: string;
   bundle_program_id: string;
   
+  name: string;
   item_name: string;
   description: string | null;
   merchant_id: string;
@@ -66,6 +67,7 @@ export class BundleRepository {
         id: row.id,
         user_id: row.user_id,
         bundle_program_id: row.bundle_program_id,
+        name: row.name,
         item_name: row.item_name,
         description: row.description,
         merchant_id: row.merchant_id,
@@ -141,6 +143,7 @@ export class BundleRepository {
         id: row.id,
         user_id: row.user_id,
         bundle_program_id: row.bundle_program_id,
+        name: row.name,
         item_name: row.item_name,
         description: row.description,
         merchant_id: row.merchant_id,
@@ -178,6 +181,7 @@ export class BundleRepository {
       INSERT INTO bundle (
         user_id, 
         bundle_program_id, 
+        name,
         item_name,
         description,
         merchant_id,
@@ -188,6 +192,7 @@ export class BundleRepository {
       SELECT 
         $1 as user_id,
         $2 as bundle_program_id,
+        bp.name,
         bp.item_name,
         bp.description,
         bp.merchant_id,

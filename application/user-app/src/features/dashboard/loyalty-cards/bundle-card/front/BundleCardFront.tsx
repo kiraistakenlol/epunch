@@ -15,6 +15,7 @@ interface BundleAnimationFlags {
 interface BundleCardFrontProps {
   id: string;
   merchant: MerchantDto;
+  name: string;
   itemName: string;
   remainingQuantity: number;
   originalQuantity: number;
@@ -34,6 +35,7 @@ interface BundleCardFrontProps {
 const BundleCardFront: React.FC<BundleCardFrontProps> = ({
   id,
   merchant,
+  name,
   itemName,
   remainingQuantity,
   originalQuantity,
@@ -88,6 +90,9 @@ const BundleCardFront: React.FC<BundleCardFrontProps> = ({
       
       <div className={`${layoutStyles.cardSection}`}>
         <div className={styles.mainContent}>
+          <div className={styles.itemName}>
+            {name}
+          </div>
           <div className={styles.quantity}>
             <motion.span 
               className={styles.remainingQuantity}

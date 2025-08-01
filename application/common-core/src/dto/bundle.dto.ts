@@ -31,6 +31,7 @@ export interface BundleDto {
   id: string;
   userId: string;
   
+  name: string;
   itemName: string;
   description: string | null;
   

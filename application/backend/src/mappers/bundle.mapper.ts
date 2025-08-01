@@ -17,6 +17,7 @@ export class BundleMapper {
     return {
       id: bundle.id,
       userId: bundle.user_id,
+      name: bundle.name,
       itemName: bundle.item_name,
       description: bundle.description,
       merchant,

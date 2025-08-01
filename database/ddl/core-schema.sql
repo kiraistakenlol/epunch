@@ -90,6 +90,7 @@ CREATE TABLE bundle (
     bundle_program_id UUID NOT NULL REFERENCES bundle_program(id) ON DELETE CASCADE,
     merchant_id UUID NOT NULL REFERENCES merchant(id) ON DELETE CASCADE,
     
+    name VARCHAR(255) NOT NULL,
     item_name VARCHAR(100) NOT NULL,
     description TEXT,
     

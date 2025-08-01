@@ -26,6 +26,7 @@ interface BundleCardItemProps extends BundleDto {
 
 const BundleCardItem = forwardRef<HTMLDivElement, BundleCardItemProps>(({
   id,
+  name,
   itemName,
   merchant,
   originalQuantity,
@@ -91,6 +92,7 @@ const BundleCardItem = forwardRef<HTMLDivElement, BundleCardItemProps>(({
     <BundleCardFront
       id={id}
       merchant={merchant}
+      name={name}
       itemName={itemName}
       remainingQuantity={remainingQuantity}
       originalQuantity={originalQuantity}

@@ -51,6 +51,7 @@ export class BundleService {
 
     try {
       const bundleProgram = await this.bundleProgramRepository.getBundleProgramById(data.bundleProgramId);
+      this.logger.log(`Bundle program found: "${bundleProgram.name}" (${bundleProgram.item_name})`);
 
       this.authorizationService.validateBundleCreateAccess(auth, bundleProgram);
 
@@ -67,6 +68,7 @@ export class BundleService {
         data.quantity,
         expiresAt
       );
+      this.logger.log(`Bundle created with name: "${bundle.name}" copied from program`);
       const bundleWithStyles = await this.bundleRepository.getBundleById(bundle.id);
 
       const bundleDto = BundleMapper.toDto(bundleWithStyles);
