@@ -44,7 +44,6 @@ export class AuthorizationService {
     if (this.isSuperAdmin(auth)) return;
     if (auth.endUser && bundle.user_id === auth.endUser.id) return;
     this.ensureMerchantOwnership(auth, bundle.merchant_id);
-    throw new ForbiddenException('Access denied');
   }
 
   validateBundleCreateAccess(auth: Authentication, bundleProgram: { merchant_id: string }): void {
