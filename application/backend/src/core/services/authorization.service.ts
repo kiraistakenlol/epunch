@@ -39,11 +39,11 @@ export class AuthorizationService {
     }
   }
 
-  validateBundleReadAccess(auth: Authentication, bundle: { user_id: string }): void {
+  validateBundleReadAccess(auth: Authentication, bundle: { user_id: string, merchant_id: string }): void {
     this.ensureAuthenticated(auth);
     if (this.isSuperAdmin(auth)) return;
     if (auth.endUser && bundle.user_id === auth.endUser.id) return;
-    if (auth.merchantUser) return;
+    this.ensureMerchantOwnership(auth, bundle.merchant_id);
     throw new ForbiddenException('Access denied');
   }
 
