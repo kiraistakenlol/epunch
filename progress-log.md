@@ -2,11 +2,7 @@
 - bundle lending
 - sms sign up
 - show expired bunldes
-<<<<<<< HEAD
 - списал все бандлы, но карта не стала неактивной
-=======
-
->>>>>>> master
 
 - discount cards
 
