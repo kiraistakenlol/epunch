@@ -50,7 +50,7 @@ export default function BundleProgramsPage() {
     navigate(ROUTES.BUNDLE_PROGRAMS_CREATE);
   };
 
-  if (loading) {
+  if (loading || (bundlePrograms.length === 0 && !error)) {
     return (
       <Card>
         <CardHeader>
