@@ -52,7 +52,7 @@ const BundleCardItem = forwardRef<HTMLDivElement, BundleCardItemProps>(({
   const handleClick = () => {
     if (!interactive || !selectable) return;
     
-    if (isExpired) return;
+    if (isExpired || isUsedUp) return;
     
     onAction?.(isSelected ? 'select' : 'select', id);
     
@@ -70,12 +70,16 @@ const BundleCardItem = forwardRef<HTMLDivElement, BundleCardItemProps>(({
   const getCardVisualClasses = () => {
     const classes = [];
 
-    if (isSelected && !isExpired) {
+    if (isSelected && !isExpired && !isUsedUp) {
       classes.push(styles.scaleUp);
     }
 
     if (isExpired) {
       classes.push(styles.expired);
+    }
+
+    if (isUsedUp) {
+      classes.push(styles.usedUp);
     }
 
     if (isHighlighted) {
@@ -109,7 +113,7 @@ const BundleCardItem = forwardRef<HTMLDivElement, BundleCardItemProps>(({
     <BaseCard
       ref={forwardedRef}
       front={content}
-      onClick={interactive && !isExpired ? handleClick : undefined}
+      onClick={interactive && !isExpired && !isUsedUp ? handleClick : undefined}
       className={getCardVisualClasses()}
       disableFlipping={true}
       backgroundColor={backgroundColor}

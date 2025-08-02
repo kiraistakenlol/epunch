@@ -12,6 +12,13 @@
   pointer-events: none;
 }
 
+/* === USED UP STATE === */
+.usedUp {
+  opacity: 0.6;
+  filter: grayscale(0.3);
+  pointer-events: none;
+}
+
 /* === ANIMATION UTILITIES === */
 .scaleUpAndBackToNormalAnimation {
   animation: scaleUpAndBackToNormal 1.5s ease-out;
