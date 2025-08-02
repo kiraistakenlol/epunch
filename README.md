@@ -1,8 +1,8 @@
 # E-PUNCH.io
 
-A simple electronic punch card system.
+A comprehensive digital loyalty platform offering multiple product types for businesses and customers.
 
-Users have a personal QR code and digital punch cards for various businesses. Businesses scan the user's QR code to add punches. Accumulated punches lead to rewards.
+Users have a personal QR code to interact with various loyalty products at different businesses. The platform supports multiple loyalty mechanisms: **punch cards** for earn-and-redeem programs, **bundles** for pre-paid packages with quantity tracking, and **discount cards** for percentage-based savings (coming soon). Businesses can mix and match these products to create tailored loyalty experiences for their customers.
 
 ## Application
 
@@ -10,75 +10,94 @@ Users have a personal QR code and digital punch cards for various businesses. Bu
 
 #### Features
 
-1. Personal QR code for quick punch collection
-2. View and manage digital punch cards for multiple businesses
-4. Track punch progress across different loyalty programs
-5 Authentication is not required (user id is generated on the frontend and user is created on the first punch, later on sign up the external_id is linked to this user)
-6. Authentication is available via google and email/password
-7. Real-time updates via WebSocket connections when punch cards is complete or/and a new punch received
-8. Animated punch card interactions and completion flows
-9. Development page and api for testing and debugging (`/dev` route and `/api/v1/dev` endpoint) - **restricted to super admin users only** in user-app
+1. **Personal QR Code**: Universal QR code for interacting with all loyalty products across businesses
+2. **Multi-Product Loyalty Wallet**: View and manage various loyalty products from multiple businesses:
+   - **Punch Cards**: Traditional earn-and-redeem loyalty programs with progress tracking
+   - **Bundles**: Pre-purchased packages with quantity tracking and expiration management
+   - **Discount Cards**: Percentage-based savings cards *(coming soon)*
+3. **Flexible Authentication**: 
+   - Basic punch card functionality works without authentication (user ID auto-generated)
+   - Advanced features (bundles, discount cards) require authentication for security and account management
+   - Google and email/password authentication available
+4. **Real-time Updates**: Live updates via WebSocket for all loyalty product interactions and completions
+5. **Rich Interactions**: Animated loyalty product interactions with completion flows and visual feedback
+6. **Development Tools**: Testing and debugging interface (`/dev` route) - *restricted to super admin users only*
 
-#### User Basic Journey
+#### User Journey Examples
 
-**Visiting "Pottery Cafe"**
+**Scenario 1: First-Time Visit to "Pottery Cafe"**
 
 1. I walk into "Pottery Cafe" and scan their QR code (or open `epunch.io` manually).
-2. I see my personal QR code on `epunch.io` and my list of punch cards.
-   * If it's my first time at Pottery Cafe:
-     * If I scanned their QR code: I might see a new "Pottery Punch Card" with 0/10 punches right away.
-     * If I opened `epunch.io` manually: The "Pottery Punch Card" will appear in my list only *after* the manager scans my QR code for the first time (usually showing 1/10 punches).
-   * If I've been here before, I see my existing "Pottery Punch Card" with its current punch count (e.g., n/10).
+2. I see my personal QR code and my loyalty wallet.
 3. I buy a coffee and show my QR code to the manager.
-4. The manager scans my QR code, selects 'Pottery Punch Card' loyalty program, presses "PUNCH".
-5. I see my "Pottery Punch Card" on `epunch.io` update with +1 punch.
-6. When my card shows 10/10 punches ("Reward Ready!"):
-   * I press on the punch card, the QR code changes, now it's linked to the punch card
-   * I show the merchant the QR code.
-   * Merchant scans the QR code via merchant-app, and sees the REDEEM button and loyalty program description.
-   * Merchant presses REDEEM
-   * The punch card dissapears from my screen in user-app.
-   * Merchant gives me a free coffee.
-   * If the loyalty program is active, I automatically get a new punch card that belogs to the same loyalty program with 0/10 punches.
+4. Manager scans my QR code and sees available loyalty options for their business:
+   - **Punch Card**: "Coffee Loyalty" (10 coffees = 1 free)
+   - **Bundle**: "Coffee Bundle" (buy 5 coffees in advance for discount)
+   - **Discount Card**: "VIP Discount" (15% off all items) *(coming soon)*
+5. Manager selects "Coffee Loyalty" punch card and adds a punch.
+6. I now see a "Coffee Loyalty" punch card in my wallet showing "1/10 punches".
 
-**Visiting a Different Cafe ("Cafe B")**
+**Scenario 2: Purchasing a Bundle at "FitGym"**
 
-1. I visit "Cafe B" and scan their QR code (or open `epunch.io`).
-2. After buying something and the manager scans my QR code for the first time:
-   * I see a new "Cafe B Punch Card" appear in my list on `epunch.io`, starting with 1 punch (or 0).
+1. I visit "FitGym" wanting to commit to regular workouts.
+2. Manager scans my user QR code and shows me loyalty options:
+   - **Punch Card**: "Workout Rewards" (10 visits = 1 free personal training)
+   - **Bundle**: "Monthly Pass" (20 visits, 30-day validity, bulk discount)
+3. I choose the bundle for better value and convenience.
+4. Manager processes the "Monthly Pass" bundle - I now see it in my wallet: "20 visits remaining, expires in 30 days".
+
+**Scenario 3: Using Different Products at the Same Business**
+
+1. I return to "FitGym" with both a punch card and an active bundle.
+2. I tap my "Monthly Pass" bundle - my QR switches to bundle mode.
+3. Manager scans my bundle QR and redeems 1 visit (now "19 remaining").
+4. Next visit, I might choose to earn punches instead by using my punch card QR mode.
+
+**Multi-Business Loyalty Management**
+
+My loyalty wallet shows products from multiple businesses:
+- **Pottery Cafe**: Coffee punch card (3/10), VIP discount card *(coming soon)*
+- **FitGym**: Monthly bundle (15 remaining), Workout punch card (2/10) 
+- **BookStore**: Reading rewards punch card (7/15), Book bundle (5 remaining)
 
 ### Merchant App
 
 #### Features
 
-1. **Loyalty Program Management**
-   - Create, edit, and manage loyalty programs
-   - Track program performance and analytics
-   - Configure punch requirements and rewards
+1. **Multi-Product Loyalty Management**
+   - **Punch Card Programs**: Create earn-and-redeem loyalty programs with configurable punch requirements and rewards
+   - **Bundle Programs**: Design pre-paid packages with quantity presets, validity periods, and bulk pricing
+   - **Discount Cards**: Set up percentage-based discount programs *(coming soon)*
+   - Comprehensive analytics and performance tracking across all product types
 
-2. **QR Code Scanner System**
-   - Advanced camera-based QR code scanning
-   - Automatic recognition of user QR codes vs. punch card QR codes
-   - For user QR codes: Display active loyalty programs, select and punch
-   - For punch card QR codes: Show program description with redeem button
+2. **Advanced QR Code Scanner System**
+   - Intelligent QR code recognition for all loyalty product types
+   - **User QR Scanning**: View all available loyalty products, select and activate (punch, give bundle, apply discount)
+   - **Product QR Scanning**: Handle punch card redemptions, bundle usage, and discount applications
+   - Flexible quantity controls and transaction management
 
-3. **Customer Onboarding**
-   - Generate QR codes linking to `https://app.com/?merchant=merchantSlug`
-   - Automatic loyalty program enrollment for new users
-   - Seamless onboarding without manual program search
+3. **Customer Relationship Management**
+   - Unified customer profiles showing all loyalty products and history
+   - Track customer engagement across different product types
+   - Manage individual customer loyalty inventories (punch cards, bundles, discount cards)
 
-4. **Design Customization**
-   - Color theme editor with live preview
-   - Logo and icon customization
-   - Brand-specific punch card styling
-   - File upload for custom graphics
+4. **Customer Onboarding & Discovery**
+   - Generate merchant-specific QR codes for automatic product enrollment
+   - Seamless customer onboarding without manual product search
+   - Customizable landing pages showcasing available loyalty products
 
-5. **Role-Based Access Control**
+5. **Brand Customization**
+   - Universal design system for all loyalty product types
+   - Color theme editor with live preview across products
+   - Logo and icon customization for consistent branding
+   - Custom graphics and styling for enhanced brand identity
+
+6. **Role-Based Access Control**
    - Admin access: Full dashboard, analytics, program management
    - Staff access: Scanner functionality only
    - Secure authentication with JWT tokens
 
-6. **Analytics Dashboard**
+7. **Analytics Dashboard**
    - Real-time statistics and performance metrics
    - Customer engagement tracking
    - Program effectiveness analysis
@@ -105,9 +124,13 @@ src/
 ├── features/           # Feature-specific code
 │   ├── auth/          # Authentication & login
 │   ├── dashboard/     # Analytics & overview
-│   ├── scanner/       # QR code scanning
-│   ├── loyalty-programs/ # Program management
-│   ├── design/        # Customization tools
+│   ├── scanner/       # QR code scanning for all product types
+│   ├── loyalty-programs/ # Punch card program management
+│   ├── bundle-programs/  # Bundle program management
+│   ├── discount-programs/ # Discount program management (coming soon)
+│   ├── customers/     # Unified customer management across all products
+│   ├── analytics/     # Advanced analytics for all product types
+│   ├── design/        # Universal customization tools
 │   └── onboarding/    # Merchant landing pages
 ├── components/
 │   ├── ui/           # shadcn/ui components
@@ -150,12 +173,25 @@ src/
 
 ## Core Entities
 
-1.  **User:** The customer. Can optionally be a super admin with access to development tools.
+### User Management
+1.  **User:** The customer with a universal QR code for all loyalty interactions. Can optionally be a super admin with access to development tools.
 2.  **Admin User:** System administrators with varying permission levels (staff, manager, super admin).
-3.  **Merchant:** The business offering loyalty programs.
-4.  **Loyalty Program:** Defines the rules and reward for a specific merchant offer (e.g., "10 punches for a free coffee").
-5.  **Punch Card:** Tracks a specific user's progress in a loyalty program.
-6.  **Punch:** A single punch event.
+3.  **Merchant:** The business offering multiple loyalty product types to customers.
+
+### Loyalty Product Templates (Created by Merchants)
+4.  **Loyalty Program:** Defines punch card rules and rewards (e.g., "10 punches for a free coffee").
+5.  **Bundle Program:** Template for pre-sellable packages with quantity presets and validity periods (e.g., "10 Gym Visits" bundle).
+6.  **Discount Program:** Template for percentage-based savings programs *(coming soon)*.
+
+### User Loyalty Product Instances
+7.  **Punch Card:** Individual user's progress tracker for a specific loyalty program.
+8.  **Bundle:** Individual user's bundle instance with remaining quantity, expiration date, and usage tracking.
+9.  **Discount Card:** Individual user's discount card with usage limits and validity *(coming soon)*.
+
+### Activity Tracking
+10. **Punch:** Records a single punch event with timestamp and location.
+11. **Bundle Usage:** Records each bundle redemption event with quantity used and timestamp.
+12. **Discount Usage:** Records discount applications with amount saved and timestamp *(coming soon)*.
 
 ## Technical Implementation
 
@@ -174,21 +210,25 @@ src/
 
 ### Real-time Features
 
-The application uses WebSocket connections for real-time updates:
+The application uses WebSocket connections for real-time updates across all loyalty product types:
 
-* **Live punch updates:** Users see punch additions immediately without page refresh
-* **Card completion notifications:** Real-time alerts when cards are completed
-* **Reward redemption updates:** Instant feedback when rewards are claimed
-* **Animation system:** Coordinated animations for punch additions and card completions
+* **Live Activity Updates:** Users see all loyalty interactions immediately without page refresh
+  - Punch additions and card completions
+  - Bundle creation, usage, and quantity changes
+  - Discount applications and savings tracking *(coming soon)*
+* **Instant Notifications:** Real-time alerts for all product milestones and redemptions
+* **Animation System:** Coordinated animations for all loyalty product interactions and completions
+* **Multi-Product Sync:** Changes to any loyalty product instantly sync across user and merchant apps
 
 ### Animation System
 
-The application includes a sophisticated animation system for enhanced user experience:
+The application includes a sophisticated animation system for enhanced user experience across all loyalty products:
 
-* **Sequence-based animations:** Complex animation flows defined as step sequences
-* **Event-driven progression:** Animations can wait for user interactions
-* **Global components:** Alerts and overlays work across the entire application
-* **State management:** Separate Redux slices for animation execution and UI state
+* **Universal Product Animations:** Consistent animation patterns for punch cards, bundles, and discount cards
+* **Sequence-based flows:** Complex animation flows defined as step sequences for product interactions
+* **Event-driven progression:** Animations can wait for user interactions and respond to real-time updates
+* **Global components:** Alerts and overlays work across the entire application for all product types
+* **State management:** Separate Redux slices for animation execution and UI state management
 
 See `ANIMATION_FLOW.md` for detailed documentation of the animation architecture.
 
@@ -237,26 +277,36 @@ application/
 │   │   │   ├── merchant/
 │   │   │   ├── loyalty/
 │   │   │   ├── punch-cards/
-│   │   │   ├── punches/
 │   │   │   ├── punch-card-style/
+│   │   │   ├── bundle-program/     # Bundle program management
+│   │   │   ├── bundle/            # Individual bundle operations
+│   │   │   ├── analytics/
 │   │   │   ├── icons/
+│   │   │   ├── admin/
+│   │   │   ├── merchant-user/
 │   │   │   └── dev/
 │   │   ├── core/
 │   │   │   ├── middleware/
 │   │   │   ├── decorators/
+│   │   │   ├── guards/
 │   │   │   ├── interceptors/
+│   │   │   ├── services/
 │   │   │   └── types/
 │   │   ├── database/
 │   │   ├── config/
 │   │   ├── websocket/
 │   │   ├── events/
 │   │   ├── supabase/
-│   │   └── mappers/
+│   │   └── mappers/               # Includes bundle and bundle-program mappers
 ├── user-app/
 │   ├── src/
 │   │   ├── features/
 │   │   │   ├── auth/
-│   │   │   ├── dashboard/
+│   │   │   ├── dashboard/           # Includes bundle card components
+│   │   │   │   └── loyalty-cards/
+│   │   │   │       ├── bundle-card/ # Bundle card UI components
+│   │   │   │       └── punch-card/  # Punch card UI components
+│   │   │   ├── bundles/            # Bundle state management
 │   │   │   ├── punchCards/
 │   │   │   ├── loyaltyPrograms/
 │   │   │   ├── qrCode/
@@ -285,8 +335,11 @@ application/
 │   │   ├── features/          # Feature-based organization
 │   │   │   ├── auth/         # Authentication & login
 │   │   │   ├── dashboard/    # Analytics & overview
-│   │   │   ├── scanner/      # QR code scanning
+│   │   │   ├── scanner/      # QR code scanning with bundle support
 │   │   │   ├── loyalty-programs/ # Program management
+│   │   │   ├── bundle-programs/  # Bundle program management
+│   │   │   ├── customers/    # Customer management with bundles and punch cards
+│   │   │   ├── analytics/    # Advanced analytics
 │   │   │   ├── design/       # Customization tools
 │   │   │   └── onboarding/   # Merchant landing pages
 │   │   ├── lib/              # Utilities (cn.ts for class merging)
@@ -321,8 +374,16 @@ application/
 │   │   │   ├── loyalty-program.dto.ts
 │   │   │   ├── punch-card.dto.ts
 │   │   │   ├── punch-card-style.dto.ts
-│   │   │   ├── qr-value.dto.ts
-│   │   │   ├── events.dto.ts
+│   │   │   ├── bundle.dto.ts       # Bundle-related DTOs
+│   │   │   ├── qr-value.dto.ts     # Includes bundle_id QR type
+│   │   │   ├── events.dto.ts       # Includes bundle events
+│   │   │   ├── analytics.dto.ts
+│   │   │   ├── admin.dto.ts
+│   │   │   ├── merchant-user.dto.ts
+│   │   │   ├── icon.dto.ts
+│   │   │   ├── jwt.dto.ts
+│   │   │   ├── create-punch.dto.ts
+│   │   │   ├── punch-operation-result.dto.ts
 │   │   │   └── api-response.dto.ts
 │   │   └── constants/
 └── common-ui/
