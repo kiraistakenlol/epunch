@@ -2,7 +2,7 @@
 - bundle lending
 - sms sign up
 - show expired bunldes
-
+- списал все бандлы, но карта не стала неактивной
 
 - discount cards
 

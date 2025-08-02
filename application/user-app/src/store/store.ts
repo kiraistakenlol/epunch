@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from '../features/auth/authSlice';
+import authModalReducer from '../features/auth/authModalSlice';
 import punchCardsReducer from '../features/punchCards/punchCardsSlice';
 import bundlesReducer from '../features/bundles/bundlesSlice';
 import animationReducer from '../features/animations/animationSlice';
@@ -11,6 +12,7 @@ import loyaltyProgramsReducer from '../features/loyaltyPrograms/loyaltyProgramsS
 export const store = configureStore({
   reducer: {
     auth: authReducer,
+    authModal: authModalReducer,
     punchCards: punchCardsReducer,
     bundles: bundlesReducer,
     animations: animationReducer,

@@ -10,6 +10,7 @@ import MerchantLandingPage from './pages/MerchantLandingPage';
 import DesignMockupsPage from './pages/design-mockups/DesignMockupsPage';
 import AppLayout from './components/AppLayout';
 import SignOutModal from './components/SignOutModal';
+import GlobalAuthModal from './components/GlobalAuthModal';
 import CompletionOverlay from './features/dashboard/overlay/CompletionOverlay';
 import Alert from './features/alert/Alert';
 import { initializeUser } from './features/auth/authSlice';
@@ -67,6 +68,7 @@ function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <SignOutModal />
+        <GlobalAuthModal />
         <CompletionOverlay />
         <Alert />
       </BrowserRouter>
