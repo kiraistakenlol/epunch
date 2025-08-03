@@ -8,6 +8,7 @@ export * from './dto/events.dto';
 export * from './dto/icon.dto';
 export * from './dto/jwt.dto';
 export * from './dto/loyalty-program.dto';
+export * from './dto/loyalty-products.dto';
 export * from './dto/merchant.dto';
 export * from './dto/merchant-user.dto';
 export * from './dto/punch-card.dto';

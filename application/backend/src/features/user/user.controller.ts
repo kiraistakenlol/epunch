@@ -1,5 +1,5 @@
 import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
-import { PunchCardDto, UserDto, BundleDto } from 'e-punch-common-core';
+import { PunchCardDto, UserDto, BundleDto, LoyaltyProductsDto } from 'e-punch-common-core';
 import { Auth, RequireEndUser, isEndUser } from '../../core/decorators/security.decorators';
 import { Authentication } from '../../core/types/authentication.interface';
 import { PunchCardsService } from '../punch-cards/punch-cards.service';
@@ -59,5 +59,21 @@ export class UserController {
   ): Promise<BundleDto[]> {
     console.log('getUserBundles', userId, auth);
     return this.bundleService.getUserBundles(userId, auth);
+  }
+
+  @Get(':userId/loyalty-products')
+  async getUserLoyaltyProducts(
+    @Param('userId', ParseUUIDPipe) userId: string,
+    @Auth() auth: Authentication,
+  ): Promise<LoyaltyProductsDto> {
+    const [punchCards, bundles] = await Promise.all([
+      this.punchCardsService.getUserPunchCards(userId),
+      this.bundleService.getUserBundles(userId, auth)
+    ]);
+    
+    return {
+      punchCards,
+      bundles
+    };
   }
 } 
