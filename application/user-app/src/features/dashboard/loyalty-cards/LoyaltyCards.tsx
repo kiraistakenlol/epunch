@@ -11,21 +11,18 @@ import type { RootState, AppDispatch } from '../../../store/store';
 import { selectIsAuthenticated } from '../../auth/authSlice';
 import {
   selectPunchCards,
-  selectPunchCardsError,
   selectPunchCardsInitialized,
   selectScrollTargetCardId,
   clearScrollTarget
 } from '../../punchCards/punchCardsSlice';
 import {
   selectBundles,
-  selectBundlesError,
   selectBundlesInitialized,
   selectScrollTargetBundleId,
   clearScrollTarget as clearBundleScrollTarget
 } from '../../bundles/bundlesSlice';
 import {
   selectBenefitCards,
-  selectBenefitCardsError,
   selectBenefitCardsInitialized,
   selectScrollTargetBenefitCardId,
   clearScrollTarget as clearBenefitCardScrollTarget
@@ -42,16 +39,12 @@ const LoyaltyCards = () => {
   const scrollTargetCardId = useSelector((state: RootState) => selectScrollTargetCardId(state));
   const scrollTargetBundleId = useSelector((state: RootState) => selectScrollTargetBundleId(state));
   const scrollTargetBenefitCardId = useSelector((state: RootState) => selectScrollTargetBenefitCardId(state));
-  const punchCardsError = useSelector((state: RootState) => selectPunchCardsError(state));
-  const bundlesError = useSelector((state: RootState) => selectBundlesError(state));
-  const benefitCardsError = useSelector((state: RootState) => selectBenefitCardsError(state));
   const isPunchCardsInitialized = useSelector((state: RootState) => selectPunchCardsInitialized(state));
   const isBundlesInitialized = useSelector((state: RootState) => selectBundlesInitialized(state));
   const isBenefitCardsInitialized = useSelector((state: RootState) => selectBenefitCardsInitialized(state));
   
   // Combined state
   const isLoading = !isPunchCardsInitialized || (isAuthenticated && !isBundlesInitialized) || (isAuthenticated && !isBenefitCardsInitialized);
-  const hasError = punchCardsError || bundlesError || benefitCardsError;
   const [showEmptyState, setShowEmptyState] = useState(false);
   const cardRefs = useRef<{ [cardId: string]: HTMLDivElement | null }>({});
 
@@ -68,7 +61,7 @@ const LoyaltyCards = () => {
   useEffect(() => {
     if (isLoading) {
       setShowEmptyState(false);
-    } else if (hasError || allLoyaltyCards.length === 0) {
+    } else if (allLoyaltyCards.length === 0) {
       const timer = setTimeout(() => {
         setShowEmptyState(true);
       }, 300);
@@ -76,7 +69,7 @@ const LoyaltyCards = () => {
     } else {
       setShowEmptyState(false);
     }
-  }, [isLoading, hasError, allLoyaltyCards]);
+  }, [isLoading, allLoyaltyCards]);
 
   useEffect(() => {
     const targetId = scrollTargetCardId || scrollTargetBundleId || scrollTargetBenefitCardId;
