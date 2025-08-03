@@ -110,7 +110,7 @@ const benefitCardsSlice = createSlice({
       })
       .addCase(fetchBenefitCards.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload?.message || 'Failed to fetch benefit cards';
+        state.error = action.payload as string || 'Failed to fetch benefit cards';
         state.initialized = true;
       });
   },

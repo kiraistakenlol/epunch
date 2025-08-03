@@ -18,10 +18,7 @@ interface BenefitCardFrontProps {
 const BenefitCardFront: React.FC<BenefitCardFrontProps> = ({
   merchant,
   itemName,
-  expiresAt,
-  isExpired,
-  styles: cardStyles
-}) => {
+  expiresAt}) => {
   const getDaysUntilExpiration = () => {
     if (!expiresAt) return { text: null, days: null };
     const expirationDate = new Date(expiresAt);
