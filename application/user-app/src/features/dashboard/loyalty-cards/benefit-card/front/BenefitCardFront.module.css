@@ -1,0 +1,54 @@
+/* === BENEFIT FRONT CARD === */
+.frontSide {
+  width: 100%;
+  height: 100%;
+}
+
+/* === HEADER SECTION === */
+.headerSection {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: calc(var(--card-height) * 0.04) calc(var(--card-height) * 0.06);
+}
+
+.merchantName {
+  font-weight: 900;
+  font-size: calc(var(--card-height) * 0.08);
+  line-height: 1.2;
+}
+
+/* === MAIN CONTENT === */
+.mainContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+  padding: calc(var(--card-height) * 0.02);
+}
+
+.itemName {
+  font-size: calc(var(--card-height) * 0.075);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* === FOOTER SECTION === */
+.footerSection {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: calc(var(--card-height) * 0.02) calc(var(--card-height) * 0.02);
+}
+
+.expiration {
+  font-size: calc(var(--card-height) * 0.055);
+  font-weight: 500;
+  text-align: center;
+}

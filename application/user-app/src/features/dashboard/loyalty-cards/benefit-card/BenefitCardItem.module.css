@@ -1,0 +1,19 @@
+.scaleUp {
+  transform: scale(1.02);
+  transition: transform 0.2s ease-in-out;
+}
+
+.expired {
+  opacity: 0.6;
+  filter: grayscale(50%);
+}
+
+.scaleUpAndBackToNormalAnimation {
+  animation: scaleUpAndBackToNormal 0.6s ease-in-out;
+}
+
+@keyframes scaleUpAndBackToNormal {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}

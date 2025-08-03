@@ -7,10 +7,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
-import { Loader2, User, CreditCard, ArrowLeft, Package } from 'lucide-react'
+import { Loader2, User, CreditCard, ArrowLeft, Package, Gift } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import { PunchCardsTab } from './PunchCardsTab'
 import { BundlesTab } from './BundlesTab'
+import { BenefitCardsTab } from './BenefitCardsTab'
 
 // Main CustomerScanResult Component
 interface CustomerScanResultProps {
@@ -38,7 +39,7 @@ export const CustomerScanResult: React.FC<CustomerScanResultProps> = ({
   const [selectedBundleProgramId, setSelectedBundleProgramId] = useState<string>('')
   const [selectedBundlePresetIndex, setSelectedBundlePresetIndex] = useState<number>(0)
   const [isLoading, setIsLoading] = useState(false)
-  const [activeTab, setActiveTab] = useState<'punch-cards' | 'bundles'>('punch-cards')
+  const [activeTab, setActiveTab] = useState<'punch-cards' | 'bundles' | 'benefit-cards'>('punch-cards')
 
   useEffect(() => {
     const fetchData = async () => {
@@ -90,7 +91,7 @@ export const CustomerScanResult: React.FC<CustomerScanResultProps> = ({
 
   // Handle tab changes - clear selections when switching tabs
   const handleTabChange = (value: string) => {
-    const newTab = value as 'punch-cards' | 'bundles'
+    const newTab = value as 'punch-cards' | 'bundles' | 'benefit-cards'
     setActiveTab(newTab)
     
     // Clear selections when switching tabs
@@ -99,6 +100,10 @@ export const CustomerScanResult: React.FC<CustomerScanResultProps> = ({
       setSelectedBundlePresetIndex(0)
     } else if (newTab === 'bundles') {
       setSelectedLoyaltyProgramId('')
+    } else if (newTab === 'benefit-cards') {
+      setSelectedLoyaltyProgramId('')
+      setSelectedBundleProgramId('')
+      setSelectedBundlePresetIndex(0)
     }
   }
 
@@ -149,7 +154,7 @@ export const CustomerScanResult: React.FC<CustomerScanResultProps> = ({
           ) : shouldShowTabs ? (
             // Tabbed interface when both types exist
             <Tabs value={activeTab} onValueChange={handleTabChange} className="flex-1 flex flex-col">
-              <TabsList className="grid w-full grid-cols-2 mb-4">
+              <TabsList className="grid w-full grid-cols-3 mb-4">
                 <TabsTrigger value="punch-cards" className="flex items-center space-x-2">
                   <CreditCard className="w-4 h-4" />
                   <span>Punch Cards</span>
@@ -157,6 +162,10 @@ export const CustomerScanResult: React.FC<CustomerScanResultProps> = ({
                 <TabsTrigger value="bundles" className="flex items-center space-x-2">
                   <Package className="w-4 h-4" />
                   <span>Bundles</span>
+                </TabsTrigger>
+                <TabsTrigger value="benefit-cards" className="flex items-center space-x-2">
+                  <Gift className="w-4 h-4" />
+                  <span>Benefits</span>
                 </TabsTrigger>
               </TabsList>
               
@@ -176,6 +185,13 @@ export const CustomerScanResult: React.FC<CustomerScanResultProps> = ({
                   selectedBundlePresetIndex={selectedBundlePresetIndex}
                   onBundleProgramSelect={handleBundleProgramSelect}
                   onPresetSelect={setSelectedBundlePresetIndex}
+                  userId={userId}
+                  onSuccess={onSuccess}
+                />
+              </TabsContent>
+              
+              <TabsContent value="benefit-cards" className="flex-1">
+                <BenefitCardsTab
                   userId={userId}
                   onSuccess={onSuccess}
                 />

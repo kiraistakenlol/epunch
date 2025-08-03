@@ -9,6 +9,7 @@ import { useLoyaltyProgramsSync } from '../features/loyaltyPrograms/useLoyaltyPr
 import { useMerchantOnboarding } from '../hooks/useMerchantOnboarding';
 import { clearPunchCards, fetchPunchCards } from '../features/punchCards/punchCardsSlice';
 import { clearBundles, fetchBundles } from '../features/bundles/bundlesSlice';
+import { clearBenefitCards, fetchBenefitCards } from '../features/benefitCards/benefitCardsSlice';
 import type { AppDispatch } from '../store/store';
 
 const AppLayout: React.FC = () => {
@@ -25,14 +26,16 @@ const AppLayout: React.FC = () => {
     if (userId) {
       dispatch(fetchPunchCards(userId));
       if (isAuthenticated) {
-        console.log('isAuthenticated', isAuthenticated);
         dispatch(fetchBundles(userId));
+        dispatch(fetchBenefitCards(userId));
       } else {
         dispatch(clearBundles());
+        dispatch(clearBenefitCards());
       }
     } else {
       dispatch(clearPunchCards());
       dispatch(clearBundles());
+      dispatch(clearBenefitCards());
     }
   }, [userId, isAuthenticated, dispatch]);
 

@@ -1,4 +1,4 @@
-export type QRValueType = 'user_id' | 'redemption_punch_card_id' | 'bundle_id';
+export type QRValueType = 'user_id' | 'redemption_punch_card_id' | 'bundle_id' | 'benefit_card_id';
 
 export interface QRValueUserIdDto {
   type: 'user_id';
@@ -15,4 +15,9 @@ export interface QRValueBundleIdDto {
   bundle_id: string;
 }
 
-export type QRValueDto = QRValueUserIdDto | QRValuePunchCardIdDto | QRValueBundleIdDto; 
+export interface QRValueBenefitCardIdDto {
+  type: 'benefit_card_id';
+  benefit_card_id: string;
+}
+
+export type QRValueDto = QRValueUserIdDto | QRValuePunchCardIdDto | QRValueBundleIdDto | QRValueBenefitCardIdDto; 

@@ -1,3 +1,4 @@
+export * from './benefit-card.mapper';
 export * from './loyalty-program.mapper';
 export * from './merchant.mapper';
 export * from './merchant-user.mapper';

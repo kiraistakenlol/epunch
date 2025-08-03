@@ -4,6 +4,7 @@ import { useWebSocket } from './useWebSocket';
 import { selectUserId } from '../features/auth/authSlice';
 import { updatePunchCard } from '../features/punchCards/punchCardsSlice';
 import { addBundle, updateBundle } from '../features/bundles/bundlesSlice';
+import { addBenefitCard } from '../features/benefitCards/benefitCardsSlice';
 import { startSequence } from '../features/animations/animationSlice';
 import { 
   ShowPunchAnimation, 
@@ -79,6 +80,13 @@ export const useWebSocketEventHandler = () => {
             }
           }
         }));
+      }
+
+      if (appEvent.type === 'BENEFIT_CARD_CREATED') {
+        const { benefitCard } = appEvent;
+        
+        dispatch(addBenefitCard(benefitCard));
+        // The AnimatePresence in LoyaltyCards will automatically handle the slide-in animation
       }
     }
   }, [events, userId, dispatch]);

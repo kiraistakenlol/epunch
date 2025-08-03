@@ -7,6 +7,7 @@ import type { RootState } from '../../store/store';
 import { selectUserId } from '../auth/authSlice';
 import { selectSelectedCard } from '../punchCards/punchCardsSlice';
 import { selectSelectedBundle } from '../bundles/bundlesSlice';
+import { selectSelectedBenefitCard } from '../benefitCards/benefitCardsSlice';
 import { selectLoyaltyProgramById } from '../loyaltyPrograms/loyaltyProgramsSlice';
 import styles from './QRCode.module.css';
 import { appColors } from '../../theme/constants';
@@ -17,20 +18,24 @@ const QRCodeComponent: React.FC = () => {
   const userId = useSelector((state: RootState) => selectUserId(state));
   const selectedCard = useSelector((state: RootState) => selectSelectedCard(state));
   const selectedBundle = useSelector((state: RootState) => selectSelectedBundle(state));
+  const selectedBenefitCard = useSelector((state: RootState) => selectSelectedBenefitCard(state));
   const loyaltyProgram = useSelector((state: RootState) =>
     selectedCard ? selectLoyaltyProgramById(state, selectedCard.loyaltyProgramId) : undefined
   );
 
   const isRewardMode = selectedCard?.status === 'REWARD_READY';
   const isBundleMode = Boolean(selectedBundle);
+  const isBenefitCardMode = Boolean(selectedBenefitCard);
 
   const qrValue = isRewardMode && selectedCard
     ? JSON.stringify({ type: 'redemption_punch_card_id', punch_card_id: selectedCard.id } as QRValueDto)
     : isBundleMode && selectedBundle
       ? JSON.stringify({ type: 'bundle_id', bundle_id: selectedBundle.id } as QRValueDto)
-      : userId
-        ? JSON.stringify({ type: 'user_id', user_id: userId } as QRValueDto)
-        : '';
+      : isBenefitCardMode && selectedBenefitCard
+        ? JSON.stringify({ type: 'benefit_card_id', benefit_card_id: selectedBenefitCard.id } as QRValueDto)
+        : userId
+          ? JSON.stringify({ type: 'user_id', user_id: userId } as QRValueDto)
+          : '';
 
   if (!qrValue) return null;
 
@@ -47,7 +52,7 @@ const QRCodeComponent: React.FC = () => {
       <div
         className={styles.qrWrapper}
         data-expanded={isExpanded}
-        data-reward={isRewardMode || isBundleMode}
+        data-reward={isRewardMode || isBundleMode || isBenefitCardMode}
         onClick={handleClick}
         role="button"
         tabIndex={0}
@@ -71,6 +76,10 @@ const QRCodeComponent: React.FC = () => {
         ) : isBundleMode && selectedBundle ? (
           <>
             {selectedBundle.itemName}
+          </>
+        ) : isBenefitCardMode && selectedBenefitCard ? (
+          <>
+            {selectedBenefitCard.itemName}
           </>
         ) : (
           t('qr.myCode')

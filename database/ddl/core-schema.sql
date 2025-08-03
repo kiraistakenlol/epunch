@@ -107,4 +107,17 @@ CREATE TABLE bundle_usage (
     bundle_id UUID NOT NULL REFERENCES bundle(id) ON DELETE CASCADE,
     quantity_used INTEGER NOT NULL DEFAULT 1,
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
-); 
+);
+
+-- Benefit Card table
+CREATE TABLE benefit_card (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    merchant_id UUID NOT NULL REFERENCES merchant(id) ON DELETE CASCADE,
+    item_name VARCHAR(255) NOT NULL,
+    expires_at TIMESTAMP,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_benefit_card_user_id ON benefit_card(user_id);
+CREATE INDEX idx_benefit_card_merchant_id ON benefit_card(merchant_id); 

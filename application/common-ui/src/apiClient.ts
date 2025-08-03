@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, AuthResponseDto, UserDto, LoyaltyProgramDto, MerchantUserLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreatePunchCardDto, CreateMerchantDto, UpdateMerchantDto, PunchCardStyleDto, IconSearchResultDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto, AdminLoginDto, AdminLoginResponse, QuickOverviewDto, UsersAnalyticsDto, CardsAnalyticsDto, GrowthTrendsDto, ActivityTrendsDto, DaysOfWeekAnalyticsDto, LoyaltyProgramAnalyticsDto, BundleProgramDto, BundleProgramCreateDto, BundleProgramUpdateDto, BundleDto, BundleCreateDto, BundleUpdateDto } from 'e-punch-common-core';
+import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, AuthResponseDto, UserDto, LoyaltyProgramDto, MerchantUserLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreatePunchCardDto, CreateMerchantDto, UpdateMerchantDto, PunchCardStyleDto, IconSearchResultDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto, AdminLoginDto, AdminLoginResponse, QuickOverviewDto, UsersAnalyticsDto, CardsAnalyticsDto, GrowthTrendsDto, ActivityTrendsDto, DaysOfWeekAnalyticsDto, LoyaltyProgramAnalyticsDto, BundleProgramDto, BundleProgramCreateDto, BundleProgramUpdateDto, BundleDto, BundleCreateDto, BundleUpdateDto, BenefitCardDto, BenefitCardCreateDto } from 'e-punch-common-core';
 
 // The API URL will be set by the app using this client
 let API_BASE_URL: string;
@@ -602,6 +602,29 @@ export const apiClient = {
       return Promise.resolve([]);
     }
     const response = await instance.get<BundleDto[]>(`/users/${userId}/bundles`);
+    return response.data;
+  },
+
+  // Benefit Card endpoints
+  async getBenefitCardById(benefitCardId: string): Promise<BenefitCardDto> {
+    if (!benefitCardId) {
+      return Promise.reject(new Error('Benefit card ID is required.'));
+    }
+    const response = await instance.get<BenefitCardDto>(`/benefit-cards/${benefitCardId}`);
+    return response.data;
+  },
+
+  async createBenefitCard(data: BenefitCardCreateDto): Promise<BenefitCardDto> {
+    const response = await instance.post<BenefitCardDto>('/benefit-cards', data);
+    return response.data;
+  },
+
+  async getUserBenefitCards(userId: string): Promise<BenefitCardDto[]> {
+    if (!userId) {
+      console.warn('getUserBenefitCards called without a userId. Returning empty list.');
+      return Promise.resolve([]);
+    }
+    const response = await instance.get<BenefitCardDto[]>(`/users/${userId}/benefit-cards`);
     return response.data;
   },
 }; 

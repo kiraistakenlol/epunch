@@ -6,6 +6,7 @@ import { QRScanner } from './QRScanner'
 import { CustomerScanResult } from './CustomerScanResult'
 import { PunchCardScanResult } from './PunchCardScanResult'
 import { BundleScanResult } from './BundleScanResult'
+import { BenefitCardScanResult } from './BenefitCardScanResult'
 import { useScanner } from './hooks/useScanner'
 import { cn } from '@/lib/cn'
 
@@ -93,6 +94,14 @@ export const ScannerInterface: React.FC<ScannerInterfaceProps> = ({
           <BundleScanResult
             data={scanner.scanResult}
             onUseBundle={scanner.handleUpdateBundle}
+            onReset={scanner.handleReset}
+          />
+        ) : null
+      
+      case 'benefitCardQR':
+        return scanner.scanResult ? (
+          <BenefitCardScanResult
+            data={scanner.scanResult}
             onReset={scanner.handleReset}
           />
         ) : null

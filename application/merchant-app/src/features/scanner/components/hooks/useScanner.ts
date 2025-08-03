@@ -3,7 +3,7 @@ import { QRValueDto } from 'e-punch-common-core'
 import { apiClient } from 'e-punch-common-ui'
 import { toast } from 'sonner'
 
-export type ScannerState = 'scanning' | 'userQR' | 'punchCardQR' | 'bundleQR' | 'processing'
+export type ScannerState = 'scanning' | 'userQR' | 'punchCardQR' | 'bundleQR' | 'benefitCardQR' | 'processing'
 
 export interface QRScanResult {
   qrData: string
@@ -29,6 +29,8 @@ export const useScanner = (options: UseScannerOptions = {}) => {
       setCurrentState('punchCardQR')
     } else if (result.parsedData.type === 'bundle_id') {
       setCurrentState('bundleQR')
+    } else if (result.parsedData.type === 'benefit_card_id') {
+      setCurrentState('benefitCardQR')
     }
   }, [])
 

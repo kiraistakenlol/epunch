@@ -2,6 +2,7 @@ export * from './dto/admin.dto';
 export * from './dto/analytics.dto';
 export * from './dto/api-response.dto';
 export * from './dto/auth.dto';
+export * from './dto/benefit-card.dto';
 export * from './dto/bundle.dto';
 export * from './dto/create-punch.dto';
 export * from './dto/events.dto';

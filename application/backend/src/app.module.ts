@@ -15,6 +15,7 @@ import { AdminModule } from './features/admin/admin.module';
 import { AnalyticsModule } from './features/analytics/analytics.module';
 import { BundleProgramModule } from './features/bundle-program/bundle-program.module';
 import { BundleModule } from './features/bundle/bundle.module';
+import { BenefitCardModule } from './features/benefit-card/benefit-card.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { BundleModule } from './features/bundle/bundle.module';
     AnalyticsModule,
     BundleProgramModule,
     BundleModule,
+    BenefitCardModule,
     PunchCardsModule,
     UserModule,
     DevModule,

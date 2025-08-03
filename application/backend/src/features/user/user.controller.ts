@@ -1,9 +1,10 @@
 import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
-import { PunchCardDto, UserDto, BundleDto } from 'e-punch-common-core';
+import { PunchCardDto, UserDto, BundleDto, BenefitCardDto } from 'e-punch-common-core';
 import { Auth, RequireEndUser, isEndUser } from '../../core/decorators/security.decorators';
 import { Authentication } from '../../core/types/authentication.interface';
 import { PunchCardsService } from '../punch-cards/punch-cards.service';
 import { BundleService } from '../bundle/bundle.service';
+import { BenefitCardService } from '../benefit-card/benefit-card.service';
 import { UserRepository } from './user.repository';
 import { UserMapper } from '../../mappers';
 
@@ -12,6 +13,7 @@ export class UserController {
   constructor(
     private readonly punchCardsService: PunchCardsService,
     private readonly bundleService: BundleService,
+    private readonly benefitCardService: BenefitCardService,
     private readonly userRepository: UserRepository,
   ) {}
   
@@ -59,5 +61,13 @@ export class UserController {
   ): Promise<BundleDto[]> {
     console.log('getUserBundles', userId, auth);
     return this.bundleService.getUserBundles(userId, auth);
+  }
+
+  @Get(':userId/benefit-cards')
+  async getUserBenefitCards(
+    @Param('userId', ParseUUIDPipe) userId: string,
+    @Auth() auth: Authentication,
+  ): Promise<BenefitCardDto[]> {
+    return this.benefitCardService.getUserBenefitCards(userId, auth);
   }
 } 
