@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, AuthResponseDto, UserDto, LoyaltyProgramDto, MerchantUserLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreatePunchCardDto, CreateMerchantDto, UpdateMerchantDto, PunchCardStyleDto, IconSearchResultDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto, AdminLoginDto, AdminLoginResponse, QuickOverviewDto, UsersAnalyticsDto, CardsAnalyticsDto, GrowthTrendsDto, ActivityTrendsDto, DaysOfWeekAnalyticsDto, LoyaltyProgramAnalyticsDto, BundleProgramDto, BundleProgramCreateDto, BundleProgramUpdateDto, BundleDto, BundleCreateDto, BundleUpdateDto } from 'e-punch-common-core';
+import { CreatePunchDto, PunchCardDto, PunchOperationResultDto, AuthRequestDto, AuthResponseDto, UserDto, LoyaltyProgramDto, MerchantUserLoginDto, MerchantLoginResponse, CreateLoyaltyProgramDto, UpdateLoyaltyProgramDto, MerchantDto, CreatePunchCardDto, CreateMerchantDto, UpdateMerchantDto, PunchCardStyleDto, IconSearchResultDto, MerchantUserDto, CreateMerchantUserDto, UpdateMerchantUserDto, AdminLoginDto, AdminLoginResponse, QuickOverviewDto, UsersAnalyticsDto, CardsAnalyticsDto, GrowthTrendsDto, ActivityTrendsDto, DaysOfWeekAnalyticsDto, LoyaltyProgramAnalyticsDto, BundleProgramDto, BundleProgramCreateDto, BundleProgramUpdateDto, BundleDto, BundleCreateDto, BundleUpdateDto, LoyaltyProductsDto } from 'e-punch-common-core';
 
 // The API URL will be set by the app using this client
 let API_BASE_URL: string;
@@ -602,6 +602,15 @@ export const apiClient = {
       return Promise.resolve([]);
     }
     const response = await instance.get<BundleDto[]>(`/users/${userId}/bundles`);
+    return response.data;
+  },
+
+  async getUserLoyaltyProducts(userId: string): Promise<LoyaltyProductsDto> {
+    if (!userId) {
+      console.warn('getUserLoyaltyProducts called without a userId. Returning empty data.');
+      return Promise.resolve({ punchCards: [], bundles: [] });
+    }
+    const response = await instance.get<LoyaltyProductsDto>(`/users/${userId}/loyalty-products`);
     return response.data;
   },
 }; 

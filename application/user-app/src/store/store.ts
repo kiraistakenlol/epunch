@@ -3,6 +3,7 @@ import authReducer from '../features/auth/authSlice';
 import authModalReducer from '../features/auth/authModalSlice';
 import punchCardsReducer from '../features/punchCards/punchCardsSlice';
 import bundlesReducer from '../features/bundles/bundlesSlice';
+import loyaltyProductsReducer from '../features/loyaltyProducts/loyaltyProductsSlice';
 import animationReducer from '../features/animations/animationSlice';
 import signOutReducer from '../features/signOut/signOutSlice';
 import completionOverlayReducer from '../features/dashboard/overlay/completionOverlaySlice';
@@ -15,6 +16,7 @@ export const store = configureStore({
     authModal: authModalReducer,
     punchCards: punchCardsReducer,
     bundles: bundlesReducer,
+    loyaltyProducts: loyaltyProductsReducer,
     animations: animationReducer,
     signOut: signOutReducer,
     completionOverlay: completionOverlayReducer,

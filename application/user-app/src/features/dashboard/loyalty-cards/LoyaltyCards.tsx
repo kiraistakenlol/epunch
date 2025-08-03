@@ -10,18 +10,13 @@ import type { RootState, AppDispatch } from '../../../store/store';
 import { selectIsAuthenticated } from '../../auth/authSlice';
 import {
   selectPunchCards,
-  selectPunchCardsError,
-  selectPunchCardsInitialized,
-  selectScrollTargetCardId,
-  clearScrollTarget
-} from '../../punchCards/punchCardsSlice';
-import {
   selectBundles,
-  selectBundlesError,
-  selectBundlesInitialized,
+  selectLoyaltyProductsError,
+  selectLoyaltyProductsInitialized,
+  selectScrollTargetCardId,
   selectScrollTargetBundleId,
-  clearScrollTarget as clearBundleScrollTarget
-} from '../../bundles/bundlesSlice';
+  clearScrollTargets
+} from '../../loyaltyProducts/loyaltyProductsSlice';
 
 
 const LoyaltyCards = () => {
@@ -32,14 +27,12 @@ const LoyaltyCards = () => {
   const bundles = useSelector((state: RootState) => selectBundles(state));
   const scrollTargetCardId = useSelector((state: RootState) => selectScrollTargetCardId(state));
   const scrollTargetBundleId = useSelector((state: RootState) => selectScrollTargetBundleId(state));
-  const punchCardsError = useSelector((state: RootState) => selectPunchCardsError(state));
-  const bundlesError = useSelector((state: RootState) => selectBundlesError(state));
-  const isPunchCardsInitialized = useSelector((state: RootState) => selectPunchCardsInitialized(state));
-  const isBundlesInitialized = useSelector((state: RootState) => selectBundlesInitialized(state));
+  const error = useSelector((state: RootState) => selectLoyaltyProductsError(state));
+  const isInitialized = useSelector((state: RootState) => selectLoyaltyProductsInitialized(state));
   
   // Combined state
-  const isLoading = !isPunchCardsInitialized || (isAuthenticated && !isBundlesInitialized);
-  const hasError = punchCardsError || bundlesError;
+  const isLoading = !isInitialized;
+  const hasError = error;
   const [showEmptyState, setShowEmptyState] = useState(false);
   const cardRefs = useRef<{ [cardId: string]: HTMLDivElement | null }>({});
 
@@ -81,8 +74,9 @@ const LoyaltyCards = () => {
           });
         }
       }
-      if (scrollTargetCardId) dispatch(clearScrollTarget());
-      if (scrollTargetBundleId) dispatch(clearBundleScrollTarget());
+      if (scrollTargetCardId || scrollTargetBundleId) {
+        dispatch(clearScrollTargets());
+      }
     }
   }, [scrollTargetCardId, scrollTargetBundleId, dispatch]);
 
