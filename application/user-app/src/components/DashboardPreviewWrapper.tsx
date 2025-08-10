@@ -4,6 +4,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import authReducer from '../features/auth/authSlice';
 import punchCardsReducer from '../features/punchCards/punchCardsSlice';
 import bundlesReducer from '../features/bundles/bundlesSlice';
+import benefitCardsReducer from '../features/benefitCards/benefitCardsSlice';
 import animationReducer from '../features/animations/animationSlice';
 import signOutReducer from '../features/signOut/signOutSlice';
 import completionOverlayReducer from '../features/dashboard/overlay/completionOverlaySlice';
@@ -51,6 +52,7 @@ const createPreviewStore = (
       auth: authReducer,
       punchCards: punchCardsReducer,
       bundles: bundlesReducer,
+      benefitCards: benefitCardsReducer,
       animations: animationReducer,
       signOut: signOutReducer,
       completionOverlay: completionOverlayReducer,
@@ -84,6 +86,15 @@ const createPreviewStore = (
         bundles: [],
         selectedBundleId: null,
         scrollTargetBundleId: null,
+        isLoading: false,
+        error: null,
+        lastFetched: Date.now(),
+        initialized: true
+      },
+      benefitCards: {
+        benefitCards: [],
+        selectedBenefitCardId: null,
+        scrollTargetBenefitCardId: null,
         isLoading: false,
         error: null,
         lastFetched: Date.now(),
