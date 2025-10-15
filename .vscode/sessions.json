@@ -7,17 +7,19 @@
     "sessions": {
         "default": [
             {
-                "name": "claude",
-                "autoExecuteCommands": false,
-                "icon": "terminal",
-                "color": "terminal.ansiBlue",
-                "commands": []
+                "name": "Claude",
+                "autoExecuteCommands": true,
+                "icon": "robot",
+                "color": "terminal.ansiCyan",
+                "commands": [
+                    "claude"
+                ]
             },
             {
-                "name": "default",
+                "name": "Terminal",
                 "autoExecuteCommands": false,
                 "icon": "terminal",
-                "color": "terminal.ansiGreen",
+                "color": "terminal.ansiWhite",
                 "commands": []
             }
         ]
