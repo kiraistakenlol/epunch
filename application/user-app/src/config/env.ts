@@ -4,12 +4,8 @@ import { z } from "zod";
 
 const envSchema = z.object({
   VITE_API_URL: z.string().url(),
-  VITE_COGNITO_USER_POOL_ID: z.string().optional(),
-  VITE_COGNITO_USER_POOL_CLIENT_ID: z.string().optional(),
-  VITE_AWS_REGION: z.string(),
-  VITE_COGNITO_DOMAIN: z.string().optional(),
-  VITE_COGNITO_REDIRECT_SIGN_IN: z.string().url().optional(),
-  VITE_COGNITO_REDIRECT_SIGN_OUT: z.string().url().optional(),
+  VITE_GOOGLE_CLIENT_ID: z.string(),
+  VITE_GOOGLE_REDIRECT_URI: z.string().url(),
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
 });
 
@@ -34,13 +30,9 @@ export const config = {
   api: {
     baseUrl: env.VITE_API_URL,
   },
-  cognito: {
-    userPoolId: env.VITE_COGNITO_USER_POOL_ID,
-    userPoolClientId: env.VITE_COGNITO_USER_POOL_CLIENT_ID,
-    region: env.VITE_AWS_REGION,
-    domain: env.VITE_COGNITO_DOMAIN,
-    redirectSignIn: env.VITE_COGNITO_REDIRECT_SIGN_IN || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173'),
-    redirectSignOut: env.VITE_COGNITO_REDIRECT_SIGN_OUT || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173'),
+  google: {
+    clientId: env.VITE_GOOGLE_CLIENT_ID,
+    redirectUri: env.VITE_GOOGLE_REDIRECT_URI,
   },
   app: {
     environment: env.NODE_ENV,

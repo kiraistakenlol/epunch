@@ -1,57 +1,81 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { FileUploadResponseDto } from 'e-punch-common-core';
+import * as fs from 'fs';
+import * as path from 'path';
 
 export interface FileUploadOptions {
-  bucketName: string;
-  key: string;
+  merchantId: string;
+  fileName: string;
   contentType?: string;
-  expiresIn?: number;
 }
 
 @Injectable()
 export class FileUploadService {
   private readonly logger = new Logger(FileUploadService.name);
-  private readonly s3Client: S3Client;
+  private readonly uploadsDirectory: string;
 
   constructor(private readonly configService: ConfigService) {
-    this.s3Client = new S3Client({
-      region: this.configService.getOrThrow<string>('aws.region'),
-      credentials: {
-        accessKeyId: this.configService.getOrThrow<string>('aws.accessKeyId'),
-        secretAccessKey: this.configService.getOrThrow<string>('aws.secretAccessKey'),
-      },
-    });
+    this.uploadsDirectory = this.configService.get<string>('uploads.directory', './uploads');
+    this.ensureUploadsDirectoryExists();
+  }
+
+  private ensureUploadsDirectoryExists() {
+    if (!fs.existsSync(this.uploadsDirectory)) {
+      fs.mkdirSync(this.uploadsDirectory, { recursive: true });
+      this.logger.log(`Created uploads directory: ${this.uploadsDirectory}`);
+    }
   }
 
   async generateFileUploadUrl(options: FileUploadOptions): Promise<FileUploadResponseDto> {
-    this.logger.log(`Generating file upload URL for key: ${options.key}`);
-    
-    const command = new PutObjectCommand({
-      Bucket: options.bucketName,
-      Key: options.key,
-      ContentType: options.contentType || 'application/octet-stream',
-    });
+    const { merchantId, fileName } = options;
 
+    this.logger.log(`Generating file upload URL for merchant: ${merchantId}, file: ${fileName}`);
+
+    const merchantDir = path.join(this.uploadsDirectory, merchantId);
+    if (!fs.existsSync(merchantDir)) {
+      fs.mkdirSync(merchantDir, { recursive: true });
+    }
+
+    const timestamp = Date.now();
+    const sanitizedFileName = fileName.replace(/[^a-zA-Z0-9.-]/g, '_');
+    const uniqueFileName = `${timestamp}_${sanitizedFileName}`;
+    const publicUrl = `/uploads/${merchantId}/${uniqueFileName}`;
+
+    return {
+      uploadUrl: publicUrl,
+      publicUrl,
+    };
+  }
+
+  async saveUploadedFile(merchantId: string, fileName: string, fileBuffer: Buffer): Promise<string> {
+    const merchantDir = path.join(this.uploadsDirectory, merchantId);
+    if (!fs.existsSync(merchantDir)) {
+      fs.mkdirSync(merchantDir, { recursive: true });
+    }
+
+    const timestamp = Date.now();
+    const sanitizedFileName = fileName.replace(/[^a-zA-Z0-9.-]/g, '_');
+    const uniqueFileName = `${timestamp}_${sanitizedFileName}`;
+    const filePath = path.join(merchantDir, uniqueFileName);
+
+    await fs.promises.writeFile(filePath, fileBuffer);
+    this.logger.log(`Saved file: ${filePath}`);
+
+    return `/uploads/${merchantId}/${uniqueFileName}`;
+  }
+
+  async deleteFile(fileUrl: string): Promise<void> {
     try {
-      const uploadUrl = await getSignedUrl(this.s3Client, command, { 
-        expiresIn: options.expiresIn || 3600 // 1 hour default
-      });
-      
-      const region = this.configService.getOrThrow<string>('aws.region');
-      const publicUrl = `https://${options.bucketName}.s3.${region}.amazonaws.com/${options.key}`;
-      
-      this.logger.log(`Generated upload URL for ${options.key}`);
-      
-      return {
-        uploadUrl,
-        publicUrl,
-      };
+      const relativePath = fileUrl.replace('/uploads/', '');
+      const filePath = path.join(this.uploadsDirectory, relativePath);
+
+      if (fs.existsSync(filePath)) {
+        await fs.promises.unlink(filePath);
+        this.logger.log(`Deleted file: ${filePath}`);
+      }
     } catch (error: any) {
-      this.logger.error(`Error generating upload URL for ${options.key}: ${error.message}`, error.stack);
-      throw error;
+      this.logger.warn(`Failed to delete file ${fileUrl}: ${error.message}`);
     }
   }
 } 

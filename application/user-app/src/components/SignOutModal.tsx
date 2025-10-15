@@ -2,10 +2,10 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useI18n } from 'e-punch-common-ui';
 import EPunchModal from './EPunchModal';
-import type { RootState } from '../store/store';
+import type { RootState, AppDispatch } from '../store/store';
 import { appColors } from '../theme';
 import { selectSignOutModalOpen, closeSignOutModal } from '../features/signOut/signOutSlice';
-import { signOut } from 'aws-amplify/auth';
+import { signOut } from '../config/amplify';
 
 const buttonStyle: React.CSSProperties = {
   width: '100%',
@@ -41,16 +41,16 @@ const messageStyle: React.CSSProperties = {
 
 const SignOutModal: React.FC = () => {
   const { t } = useI18n('common');
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const isOpen = useSelector((state: RootState) => selectSignOutModalOpen(state));
 
   const handleClose = () => {
     dispatch(closeSignOutModal());
   };
 
-  const handleConfirm = async () => {
+  const handleConfirm = () => {
     try {
-      await signOut();
+      signOut(dispatch);
       dispatch(closeSignOutModal());
     } catch (error) {
       console.error('Error signing out:', error);

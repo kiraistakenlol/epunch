@@ -284,14 +284,10 @@ export class MerchantService {
         throw new NotFoundException(`Merchant with ID ${merchantId} not found`);
       }
 
-      const bucketName = this.configService.getOrThrow<string>('aws.s3.merchantFilesBucketName');
-      const key = `merchant-files/${merchantId}/${data.fileName}`;
-
       const result = await this.fileUploadService.generateFileUploadUrl({
-        bucketName,
-        key,
+        merchantId,
+        fileName: data.fileName,
         contentType: 'image/webp',
-        expiresIn: 3600,
       });
 
       this.logger.log(`Generated file upload URL for merchant: ${merchantId}`);

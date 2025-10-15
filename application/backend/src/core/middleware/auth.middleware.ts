@@ -1,6 +1,7 @@
 import { Injectable, NestMiddleware, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Request, Response, NextFunction } from 'express';
-import { decodeJwt } from 'jose';
+import { jwtVerify, decodeJwt } from 'jose';
 import { UserRepository } from '../../features/user/user.repository';
 import { MerchantUserRepository } from '../../features/merchant-user/merchant-user.repository';
 import { Authentication, EndUserAuthentication, MerchantUserAuthentication } from '../types/authentication.interface';
@@ -20,7 +21,8 @@ export class AuthMiddleware implements NestMiddleware {
 
   constructor(
     private userRepository: UserRepository,
-    private merchantUserRepository: MerchantUserRepository
+    private merchantUserRepository: MerchantUserRepository,
+    private configService: ConfigService
   ) {}
 
   async use(req: Request, res: Response, next: NextFunction) {
@@ -93,18 +95,23 @@ export class AuthMiddleware implements NestMiddleware {
 
   private async tryParseEndUserToken(token: string): Promise<EndUserAuthentication | null> {
     try {
-      const payload = decodeJwt(token);
-      
-      const externalId = payload.sub as string;
-      const email = payload.email as string;
-
-      if (!externalId || !email) {
+      const jwtSecret = this.configService.get<string>('jwt.secret');
+      if (!jwtSecret) {
         return null;
       }
 
-      // Handle regular Cognito user tokens
-      const user = await this.userRepository.findUserByExternalId(externalId);
-      
+      const { payload } = await jwtVerify(token, new TextEncoder().encode(jwtSecret));
+
+      const userId = payload.userId as string;
+      const email = payload.email as string;
+      const externalId = payload.sub as string;
+
+      if (!userId || !email || !externalId) {
+        return null;
+      }
+
+      const user = await this.userRepository.findUserById(userId);
+
       if (user) {
         return {
           id: user.id,
@@ -114,9 +121,9 @@ export class AuthMiddleware implements NestMiddleware {
         };
       }
     } catch (error) {
-      // Not a valid Cognito token, that's fine
+      // Not a valid end user token, that's fine
     }
-    
+
     return null;
   }
 

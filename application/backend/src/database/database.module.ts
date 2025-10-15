@@ -12,13 +12,14 @@ import { Pool } from 'pg';
       useFactory: async (configService: ConfigService) => {
         const logger = new Logger('DatabaseModule');
         
-        const poolConfig = {
+        const sslEnabled = configService.get<boolean>('database.ssl', false);
+
+        const poolConfig: any = {
           host: configService.get<string>('database.host'),
           port: configService.get<number>('database.port'),
           database: configService.get<string>('database.name'),
           user: configService.get<string>('database.user'),
           password: configService.get<string>('database.password'),
-          ssl: { rejectUnauthorized: false },
           max: 10,
           min: 2,
           idleTimeoutMillis: 10000,
@@ -30,6 +31,10 @@ import { Pool } from 'pg';
           createRetryIntervalMillis: 200,
           propagateCreateError: false,
         };
+
+        if (sslEnabled) {
+          poolConfig.ssl = { rejectUnauthorized: false };
+        }
 
         logger.log('Database pool config:', JSON.stringify({
           host: poolConfig.host,

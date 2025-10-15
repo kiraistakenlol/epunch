@@ -31,9 +31,10 @@ class WebSocketClient {
   }
 
   private setupConnection() {
-    // Remove /api/v1 from the URL to get the base WebSocket URL
-    const backendUrl = config.api.baseUrl.replace('/api/v1', '') || 'http://localhost:4000';
-    
+    const baseUrl = config.api.baseUrl || 'http://localhost:4000/api/v1';
+    const url = new URL(baseUrl);
+    const backendUrl = `${url.protocol}//${url.host}`;
+
     this.socket = io(backendUrl);
 
     this.socket.on('connect', () => {
