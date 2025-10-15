@@ -32,13 +32,13 @@ const buttonStyle: React.CSSProperties = {
   cursor: 'pointer',
 };
 
-const EmailAuthForm: React.FC<EmailAuthFormProps> = ({ mode, onSuccess, onError }) => {
+const EmailAuthForm: React.FC<EmailAuthFormProps> = ({ mode, onSuccess: _onSuccess, onError }) => {
   const { t } = useI18n('auth');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmationCode, setConfirmationCode] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [needsConfirmation, setNeedsConfirmation] = useState(false);
+  const [isLoading, _setIsLoading] = useState(false);
+  const [needsConfirmation, _setNeedsConfirmation] = useState(false);
 
   const handleSignUp = async () => {
     onError('Email/password authentication is not implemented. Please use Google Sign-In.');

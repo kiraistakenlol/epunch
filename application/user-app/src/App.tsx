@@ -14,14 +14,13 @@ import GlobalAuthModal from './components/GlobalAuthModal';
 import CompletionOverlay from './features/dashboard/overlay/CompletionOverlay';
 import Alert from './features/alert/Alert';
 import AuthCallbackPage from './pages/AuthCallbackPage';
-import { initializeUser, selectAuthToken } from './features/auth/authSlice';
+import { initializeUser } from './features/auth/authSlice';
 import { getStoredAuthToken } from './config/amplify';
 import { config } from './config/env';
 import { injectCSSVariables } from './styles/css-variables';
 import type { AppDispatch } from './store/store';
 import './styles/global.css';
 import { useGlobalAnimationEvents } from './hooks/useGlobalAnimationEvents';
-import { useSelector } from 'react-redux';
 
 configureApiClient(config.api.baseUrl);
 
