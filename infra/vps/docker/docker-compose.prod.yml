@@ -19,8 +19,8 @@ services:
 
   backend:
     build:
-      context: ../../../application/backend
-      dockerfile: Dockerfile
+      context: ../../../application
+      dockerfile: backend/Dockerfile
     container_name: epunch-backend
     ports:
       - "127.0.0.1:4000:4000"
@@ -40,8 +40,8 @@ services:
 
   user-app:
     build:
-      context: ../../../application/user-app
-      dockerfile: Dockerfile
+      context: ../../../application
+      dockerfile: user-app/Dockerfile
       args:
         VITE_API_URL: ${VITE_API_URL}
         VITE_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
@@ -53,8 +53,8 @@ services:
 
   merchant-app:
     build:
-      context: ../../../application/merchant-app
-      dockerfile: Dockerfile
+      context: ../../../application
+      dockerfile: merchant-app/Dockerfile
       args:
         VITE_API_URL: ${VITE_API_URL}
         VITE_USER_APP_URL: ${VITE_USER_APP_URL}
@@ -65,8 +65,8 @@ services:
 
   admin-app:
     build:
-      context: ../../../application/admin-app
-      dockerfile: Dockerfile
+      context: ../../../application
+      dockerfile: admin-app/Dockerfile
       args:
         VITE_API_URL: ${VITE_API_URL}
     container_name: epunch-admin-app

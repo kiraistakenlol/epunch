@@ -4,28 +4,28 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Copy workspace package files
-COPY ../../package.json ../../yarn.lock ./
-COPY package.json ./application/user-app/
-COPY ../common-core/package.json ./application/common-core/
-COPY ../common-ui/package.json ./application/common-ui/
+COPY ../package.json ../yarn.lock ./
+COPY user-app/package.json ./user-app/
+COPY common-core/package.json ./common-core/
+COPY common-ui/package.json ./common-ui/
 
 # Install dependencies
 RUN yarn install --frozen-lockfile
 
 # Copy source code
-COPY ../common-core ./application/common-core
-COPY ../common-ui ./application/common-ui
-COPY . ./application/user-app
+COPY common-core ./common-core
+COPY common-ui ./common-ui
+COPY user-app ./user-app
 
 # Build common packages
-WORKDIR /app/application/common-core
+WORKDIR /app/common-core
 RUN yarn build
 
-WORKDIR /app/application/common-ui
+WORKDIR /app/common-ui
 RUN yarn build
 
 # Build app with environment variables
-WORKDIR /app/application/user-app
+WORKDIR /app/user-app
 
 # Accept build args
 ARG VITE_API_URL
@@ -43,10 +43,10 @@ RUN yarn build
 FROM nginx:alpine
 
 # Copy built static files
-COPY --from=builder /app/application/user-app/dist /usr/share/nginx/html
+COPY --from=builder /app/user-app/dist /usr/share/nginx/html
 
-# Copy nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy nginx config from build context
+COPY user-app/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
