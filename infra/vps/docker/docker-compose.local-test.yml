@@ -1,0 +1,83 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: epunch-postgres-test
+    environment:
+      POSTGRES_USER: epunch
+      POSTGRES_PASSWORD: epunch
+      POSTGRES_DB: epunch
+    ports:
+      - "54321:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U epunch"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  backend:
+    build:
+      context: ../../../application
+      dockerfile: backend/Dockerfile
+    container_name: epunch-backend-test
+    ports:
+      - "4000:4000"
+    environment:
+      NODE_ENV: development
+      APP_PORT: 4000
+      APP_HOST: 0.0.0.0
+      API_PREFIX: api/v1
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: epunch
+      DB_PASSWORD: epunch
+      DB_DATABASE: epunch
+      DB_SSL: false
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GOOGLE_REDIRECT_URI: http://localhost:3001/auth/callback
+      JWT_SECRET: test-secret-key-local-minimum-32-characters-long
+      JWT_EXPIRES_IN: 7d
+      UPLOADS_DIRECTORY: /app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./uploads-test:/app/uploads
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000/api/v1/hello-world"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  user-app:
+    build:
+      context: ../../../application
+      dockerfile: user-app/Dockerfile
+      args:
+        VITE_API_URL: http://localhost:4000/api/v1
+        VITE_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+        VITE_GOOGLE_REDIRECT_URI: http://localhost:3001/auth/callback
+    container_name: epunch-user-app-test
+    ports:
+      - "3001:80"
+
+  merchant-app:
+    build:
+      context: ../../../application
+      dockerfile: merchant-app/Dockerfile
+      args:
+        VITE_API_URL: http://localhost:4000/api/v1
+        VITE_USER_APP_URL: http://localhost:3001
+    container_name: epunch-merchant-app-test
+    ports:
+      - "3004:80"
+
+  admin-app:
+    build:
+      context: ../../../application
+      dockerfile: admin-app/Dockerfile
+      args:
+        VITE_API_URL: http://localhost:4000/api/v1
+    container_name: epunch-admin-app-test
+    ports:
+      - "3003:80"

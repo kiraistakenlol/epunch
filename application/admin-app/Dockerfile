@@ -3,13 +3,13 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copy workspace package files
-COPY ../package.json ../yarn.lock ./
+# Copy workspace package files (build context is application/)
+COPY package.json yarn.lock ./
 COPY admin-app/package.json ./admin-app/
 COPY common-core/package.json ./common-core/
 COPY common-ui/package.json ./common-ui/
 
-# Install dependencies
+# Install all workspace dependencies
 RUN yarn install --frozen-lockfile
 
 # Copy source code

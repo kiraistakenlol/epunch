@@ -18,8 +18,13 @@ echo "=== Building and Pushing Merchant App ==="
 echo "Platform: $PLATFORM"
 echo "Image: $IMAGE_NAME"
 echo ""
+echo "Build args:"
+echo "  VITE_API_URL=$VITE_API_URL"
+echo "  VITE_USER_APP_URL=$VITE_USER_APP_URL"
+echo ""
 
 docker build \
+    --no-cache \
     --platform "$PLATFORM" \
     --build-arg VITE_API_URL="$VITE_API_URL" \
     --build-arg VITE_USER_APP_URL="$VITE_USER_APP_URL" \

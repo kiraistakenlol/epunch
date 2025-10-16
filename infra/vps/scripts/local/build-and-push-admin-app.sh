@@ -18,8 +18,12 @@ echo "=== Building and Pushing Admin App ==="
 echo "Platform: $PLATFORM"
 echo "Image: $IMAGE_NAME"
 echo ""
+echo "Build args:"
+echo "  VITE_API_URL=$VITE_API_URL"
+echo ""
 
 docker build \
+    --no-cache \
     --platform "$PLATFORM" \
     --build-arg VITE_API_URL="$VITE_API_URL" \
     -t "$IMAGE_NAME" \
