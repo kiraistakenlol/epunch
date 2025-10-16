@@ -18,9 +18,7 @@ services:
       retries: 5
 
   backend:
-    build:
-      context: ../../../application
-      dockerfile: backend/Dockerfile
+    image: ghcr.io/kiraistakenlol/epunch-backend:latest
     container_name: epunch-backend
     ports:
       - "127.0.0.1:4000:4000"
@@ -39,36 +37,21 @@ services:
       retries: 3
 
   user-app:
-    build:
-      context: ../../../application
-      dockerfile: user-app/Dockerfile
-      args:
-        VITE_API_URL: ${VITE_API_URL}
-        VITE_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
-        VITE_GOOGLE_REDIRECT_URI: ${VITE_GOOGLE_REDIRECT_URI}
+    image: ghcr.io/kiraistakenlol/epunch-user-app:latest
     container_name: epunch-user-app
     ports:
       - "127.0.0.1:3001:80"
     restart: always
 
   merchant-app:
-    build:
-      context: ../../../application
-      dockerfile: merchant-app/Dockerfile
-      args:
-        VITE_API_URL: ${VITE_API_URL}
-        VITE_USER_APP_URL: ${VITE_USER_APP_URL}
+    image: ghcr.io/kiraistakenlol/epunch-merchant-app:latest
     container_name: epunch-merchant-app
     ports:
       - "127.0.0.1:3002:80"
     restart: always
 
   admin-app:
-    build:
-      context: ../../../application
-      dockerfile: admin-app/Dockerfile
-      args:
-        VITE_API_URL: ${VITE_API_URL}
+    image: ghcr.io/kiraistakenlol/epunch-admin-app:latest
     container_name: epunch-admin-app
     ports:
       - "127.0.0.1:3003:80"

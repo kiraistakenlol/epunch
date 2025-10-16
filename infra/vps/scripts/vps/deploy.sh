@@ -9,7 +9,7 @@ echo "=== Deploy Latest Code ==="
 echo ""
 echo "This will:"
 echo "  1. Git pull latest changes"
-echo "  2. Rebuild all services"
+echo "  2. Pull latest Docker images from ghcr.io"
 echo "  3. Restart all services"
 echo ""
 read -p "Continue? (y/N) " -n 1 -r
@@ -24,8 +24,8 @@ cd "$PROJECT_ROOT"
 git pull
 
 echo ""
-echo "Step 2: Building all services..."
-"$SCRIPT_DIR/build-all.sh"
+echo "Step 2: Pulling latest Docker images..."
+"$SCRIPT_DIR/pull-images.sh"
 
 echo ""
 echo "Step 3: Restarting all services..."
