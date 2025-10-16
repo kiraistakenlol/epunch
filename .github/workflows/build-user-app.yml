@@ -1,0 +1,43 @@
+name: Build User App
+
+on:
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  GITHUB_USER: kiraistakenlol
+
+jobs:
+  build-user-app:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push user-app
+        uses: docker/build-push-action@v5
+        with:
+          context: ./application
+          file: ./application/user-app/Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.GITHUB_USER }}/epunch-user-app:latest
+          build-args: |
+            VITE_API_URL=${{ vars.VITE_API_URL }}
+            VITE_GOOGLE_CLIENT_ID=${{ vars.GOOGLE_CLIENT_ID }}
+            VITE_GOOGLE_REDIRECT_URI=${{ vars.VITE_GOOGLE_REDIRECT_URI }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
