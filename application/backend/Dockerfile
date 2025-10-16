@@ -38,7 +38,7 @@ RUN apk add --no-cache curl
 
 # Copy built application
 COPY --from=builder /app/backend/dist ./dist
-COPY --from=builder /app/backend/node_modules ./node_modules
+COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/backend/package.json ./
 
 # Create uploads directory
