@@ -14,7 +14,11 @@ echo "Pulling latest backend image..."
 docker-compose -f docker-compose.prod.yml pull backend
 
 echo ""
-echo "Restarting backend..."
+echo "Stopping and removing backend container..."
+docker-compose -f docker-compose.prod.yml rm -sf backend
+
+echo ""
+echo "Starting backend..."
 docker-compose -f docker-compose.prod.yml up -d backend
 
 echo ""

@@ -14,7 +14,11 @@ echo "Pulling latest user-app image..."
 docker-compose -f docker-compose.prod.yml pull user-app
 
 echo ""
-echo "Restarting user-app..."
+echo "Stopping and removing user-app container..."
+docker-compose -f docker-compose.prod.yml rm -sf user-app
+
+echo ""
+echo "Starting user-app..."
 docker-compose -f docker-compose.prod.yml up -d user-app
 
 echo ""

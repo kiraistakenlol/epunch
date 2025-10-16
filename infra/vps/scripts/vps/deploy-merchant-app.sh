@@ -14,7 +14,11 @@ echo "Pulling latest merchant-app image..."
 docker-compose -f docker-compose.prod.yml pull merchant-app
 
 echo ""
-echo "Restarting merchant-app..."
+echo "Stopping and removing merchant-app container..."
+docker-compose -f docker-compose.prod.yml rm -sf merchant-app
+
+echo ""
+echo "Starting merchant-app..."
 docker-compose -f docker-compose.prod.yml up -d merchant-app
 
 echo ""

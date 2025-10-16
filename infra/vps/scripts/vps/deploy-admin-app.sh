@@ -14,7 +14,11 @@ echo "Pulling latest admin-app image..."
 docker-compose -f docker-compose.prod.yml pull admin-app
 
 echo ""
-echo "Restarting admin-app..."
+echo "Stopping and removing admin-app container..."
+docker-compose -f docker-compose.prod.yml rm -sf admin-app
+
+echo ""
+echo "Starting admin-app..."
 docker-compose -f docker-compose.prod.yml up -d admin-app
 
 echo ""
