@@ -104,8 +104,11 @@ Uses security decorators: `@RequireEndUser()`, `@RequireMerchantUser(['admin'])`
 - Multi-tenant design with merchant-scoped data
 - RBAC via `merchant_user` and `merchant_role` tables
 
-### Deployment & Infrastructure  
-- AWS infrastructure (see `infra/README_INFRA.md`)
-- Docker containerization for backend
-- Amplify hosting for frontends
+### Deployment & Infrastructure
+- VPS deployment infrastructure (see `infra/README.md`)
+- Docker containerization for all services (backend, frontends, PostgreSQL)
+- GitHub Actions for building Docker images and pushing to GitHub Container Registry
+- Nginx reverse proxy for routing
+- Local PostgreSQL database in Docker
+- Local file storage
 - Environment-based configuration (dev/prod URLs in README.md)

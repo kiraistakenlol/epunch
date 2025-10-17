@@ -258,11 +258,11 @@ export const apiClient = {
   },
 
   // Authentication method
-  async authenticateUser(authToken: string, userId: string): Promise<AuthResponseDto> {
-    if (!authToken || !userId) {
-      return Promise.reject(new Error('Auth token and user ID are required.'));
+  async authenticateUser(googleCode: string, userId: string): Promise<AuthResponseDto> {
+    if (!googleCode || !userId) {
+      return Promise.reject(new Error('Google code and user ID are required.'));
     }
-    const payload: AuthRequestDto = { authToken, userId };
+    const payload: AuthRequestDto = { googleCode, userId };
     const response = await instance.post<AuthResponseDto>('/auth', payload);
     return response.data;
   },

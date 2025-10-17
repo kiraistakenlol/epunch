@@ -66,7 +66,7 @@ const createPreviewStore = (
         superAdmin: false,
         isLoading: authState === 'loading',
         error: null,
-        cognitoUser: null
+        authToken: authState === 'authenticated' ? 'mock-preview-token' : null
       },
       punchCards: {
         cards: cards,

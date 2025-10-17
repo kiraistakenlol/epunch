@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: epunch-postgres
+    env_file:
+      - ../env/postgres.env
+    volumes:
+      - /root/epunch/data/postgres:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:54320:5432"
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U epunch"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  backend:
+    image: ghcr.io/kiraistakenlol/epunch-backend:latest
+    container_name: epunch-backend
+    ports:
+      - "127.0.0.1:4000:4000"
+    env_file:
+      - ../env/backend.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - /root/epunch/uploads:/app/uploads
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000/v1/hello-world"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  user-app:
+    image: ghcr.io/kiraistakenlol/epunch-user-app:latest
+    container_name: epunch-user-app
+    ports:
+      - "127.0.0.1:3001:80"
+    restart: always
+
+  merchant-app:
+    image: ghcr.io/kiraistakenlol/epunch-merchant-app:latest
+    container_name: epunch-merchant-app
+    ports:
+      - "127.0.0.1:3004:80"
+    restart: always
+
+  admin-app:
+    image: ghcr.io/kiraistakenlol/epunch-admin-app:latest
+    container_name: epunch-admin-app
+    ports:
+      - "127.0.0.1:3003:80"
+    restart: always

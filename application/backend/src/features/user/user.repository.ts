@@ -105,11 +105,11 @@ export class UserRepository {
 
   async createUser(id: string, externalId: string, email: string): Promise<User> {
     this.logger.log(`Attempting to create a new user with external_id: ${externalId}`);
-    
+
     const query = 'INSERT INTO "user" (id, external_id, email, external_provider) VALUES ($1, $2, $3, $4) RETURNING *';
-    
+
     try {
-      const result = await this.pool.query(query, [id, externalId, email, 'cognito']);
+      const result = await this.pool.query(query, [id, externalId, email, 'google']);
       
       if (!result.rows[0]) {
         throw new Error(`Failed to create user [external id: ${externalId}, email: ${email}, id: ${id}]: No data returned`);

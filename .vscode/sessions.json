@@ -1,0 +1,27 @@
+{
+    "$schema": "https://cdn.statically.io/gh/nguyenngoclongdev/cdn/main/schema/v11/terminal-keeper.json",
+    "theme": "tribe",
+    "active": "default",
+    "activateOnStartup": true,
+    "keepExistingTerminals": false,
+    "sessions": {
+        "default": [
+            {
+                "name": "Claude",
+                "autoExecuteCommands": true,
+                "icon": "robot",
+                "color": "terminal.ansiCyan",
+                "commands": [
+                    "claude"
+                ]
+            },
+            {
+                "name": "Terminal",
+                "autoExecuteCommands": false,
+                "icon": "terminal",
+                "color": "terminal.ansiWhite",
+                "commands": []
+            }
+        ]
+    }
+}

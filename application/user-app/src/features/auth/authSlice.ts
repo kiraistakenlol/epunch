@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
-import { getCurrentUser, fetchAuthSession, type GetCurrentUserOutput } from 'aws-amplify/auth';
 import { apiClient } from 'e-punch-common-ui';
 
 export const LOCAL_STORAGE_USER_ID_KEY = 'epunch_user_id';
+export const AUTH_TOKEN_KEY = 'epunch_auth_token';
 
 export interface AuthState {
   userId: string | null;
@@ -11,7 +11,7 @@ export interface AuthState {
   superAdmin: boolean;
   isLoading: boolean;
   error: string | null;
-  cognitoUser: GetCurrentUserOutput | null;
+  authToken: string | null;
 }
 
 const initialState: AuthState = {
@@ -20,7 +20,7 @@ const initialState: AuthState = {
   superAdmin: false,
   isLoading: true,
   error: null,
-  cognitoUser: null,
+  authToken: null,
 };
 
 export const initializeUser = createAsyncThunk<void, void, {}>(
@@ -30,25 +30,23 @@ export const initializeUser = createAsyncThunk<void, void, {}>(
     dispatch(setUserId(userId));
 
     try {
-      const session = await fetchAuthSession();
-      const idToken = session.tokens?.idToken?.toString();
-      
-      if (!idToken) {
+      const token = localStorage.getItem(AUTH_TOKEN_KEY);
+
+      if (!token) {
         return;
       }
 
-      const cognitoUser = await getCurrentUser();
-      
+      dispatch(setAuthToken(token));
+
       const backendUser = await apiClient.getCurrentUser();
-      
-      // Update state with authenticated user data
+
       dispatch(setUserId(backendUser.id));
-      dispatch(setCognitoUser(cognitoUser));
       dispatch(setAuthenticated(true));
       dispatch(setSuperAdmin(backendUser.superAdmin));
-      
+
     } catch (error) {
       console.error('Error during user initialization:', error);
+      localStorage.removeItem(AUTH_TOKEN_KEY);
     }
   }
 );
@@ -68,8 +66,8 @@ const authSlice = createSlice({
     setSuperAdmin: (state, action: PayloadAction<boolean>) => {
       state.superAdmin = action.payload;
     },
-    setCognitoUser: (state, action: PayloadAction<GetCurrentUserOutput | null>) => {
-      state.cognitoUser = action.payload;
+    setAuthToken: (state, action: PayloadAction<string | null>) => {
+      state.authToken = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -92,7 +90,7 @@ export const {
   setUserId,
   setAuthenticated,
   setSuperAdmin,
-  setCognitoUser,
+  setAuthToken,
 } = authSlice.actions;
 
 export const getOrInitializeUserIdFromLocalStorage = (): string => {
@@ -109,5 +107,6 @@ export const selectIsAuthenticated = (state: { auth: AuthState }) => state.auth.
 export const selectSuperAdmin = (state: { auth: AuthState }) => state.auth.superAdmin;
 export const selectAuthLoading = (state: { auth: AuthState }) => state.auth.isLoading;
 export const selectAuthError = (state: { auth: AuthState }) => state.auth.error;
+export const selectAuthToken = (state: { auth: AuthState }) => state.auth.authToken;
 
 export default authSlice.reducer; 

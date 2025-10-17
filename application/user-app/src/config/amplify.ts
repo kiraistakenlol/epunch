@@ -1,103 +1,60 @@
-import { Amplify } from 'aws-amplify';
-import { Hub } from 'aws-amplify/utils';
-import { getCurrentUser, fetchAuthSession, signOut } from 'aws-amplify/auth';
 import { config } from './env';
 import type { AppDispatch } from '../store/store';
-import { getOrInitializeUserIdFromLocalStorage, setAuthenticated, setCognitoUser, setUserId, setSuperAdmin } from '../features/auth/authSlice';
+import { getOrInitializeUserIdFromLocalStorage, setAuthenticated, setUserId, setSuperAdmin, setAuthToken } from '../features/auth/authSlice';
 import { clearPunchCards } from '../features/punchCards/punchCardsSlice';
 import { clearBundles } from '../features/bundles/bundlesSlice';
 import { apiClient } from 'e-punch-common-ui';
 import { v4 as uuidv4 } from 'uuid';
 
-export const configureAmplify = () => {
-  if (!config.cognito.userPoolId || !config.cognito.userPoolClientId) {
-    console.log('Cognito configuration not found - running in anonymous mode');
-    return;
-  }
+const AUTH_TOKEN_KEY = 'epunch_auth_token';
 
-  const amplifyConfig = {
-    Auth: {
-      Cognito: {
-        userPoolId: config.cognito.userPoolId,
-        userPoolClientId: config.cognito.userPoolClientId,
-        region: config.cognito.region,
-        signUpVerificationMethod: 'code' as const,
-        loginWith: {
-          email: true,
-          ...(config.cognito.domain && {
-            oauth: {
-              domain: config.cognito.domain,
-              scopes: ['email', 'openid', 'profile'],
-              redirectSignIn: [config.cognito.redirectSignIn],
-              redirectSignOut: [config.cognito.redirectSignOut],
-              responseType: 'code' as const,
-            },
-          }),
-        },
-      },
-    },
-  };
-
-  Amplify.configure(amplifyConfig);
-};
-
-export const setupAuthListener = (dispatch: AppDispatch) => {
-
-  const listener = Hub.listen('auth', async ({ payload }) => {
-    console.log('Auth event:', payload.event);
-
-    switch (payload.event) {
-      case 'signInWithRedirect':
-      case 'signedIn':
-        try {
-          const user = await getCurrentUser();
-          console.log('User signed in:', user);
-
-          const currentUserId = getOrInitializeUserIdFromLocalStorage();
-
-          const session = await fetchAuthSession();
-          const idToken = session.tokens?.idToken?.toString();
-
-          if (!idToken) {
-            console.warn('No access token available. Signing out.');
-            signOut();
-            return
-          }
-
-          console.log('Calling backend auth with token and userId:', { idToken, currentUserId });
-          const authResponse = await apiClient.authenticateUser(idToken, currentUserId);
-          console.log('Backend auth response:', authResponse);
-
-          dispatch(setUserId(authResponse.user.id));
-          dispatch(setCognitoUser(user));
-          dispatch(setAuthenticated(true));
-          dispatch(setSuperAdmin(authResponse.user.superAdmin));
-        } catch (error) {
-          console.error('Error getting current user after sign in. Signing out.', error);
-          signOut();
-        }
-        break;
-
-      case 'signedOut':
-        console.log('User signed out');
-        dispatch(setAuthenticated(false));
-        dispatch(setSuperAdmin(false));
-        dispatch(setCognitoUser(null));
-        dispatch(setUserId(uuidv4()));
-        dispatch(clearPunchCards());
-        dispatch(clearBundles());
-        break;
-
-      case 'signInWithRedirect_failure':
-        console.error('Sign in with redirect failed:', payload.data);
-        break;
-
-      default:
-        break;
-    }
+export const getGoogleAuthUrl = (): string => {
+  const params = new URLSearchParams({
+    client_id: config.google.clientId,
+    redirect_uri: config.google.redirectUri,
+    response_type: 'code',
+    scope: 'openid email profile',
+    access_type: 'offline',
+    prompt: 'consent',
   });
 
-  return () => {
-    listener();
-  };
+  return `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
+};
+
+export const initiateGoogleAuth = () => {
+  window.location.href = getGoogleAuthUrl();
+};
+
+export const handleGoogleCallback = async (code: string, dispatch: AppDispatch) => {
+  try {
+    const currentUserId = getOrInitializeUserIdFromLocalStorage();
+
+    const authResponse = await apiClient.authenticateUser(code, currentUserId);
+
+    localStorage.setItem(AUTH_TOKEN_KEY, authResponse.token);
+
+    dispatch(setAuthToken(authResponse.token));
+    dispatch(setUserId(authResponse.user.id));
+    dispatch(setAuthenticated(true));
+    dispatch(setSuperAdmin(authResponse.user.superAdmin));
+
+    return authResponse;
+  } catch (error) {
+    console.error('Google OAuth authentication failed:', error);
+    throw error;
+  }
+};
+
+export const signOut = (dispatch: AppDispatch) => {
+  localStorage.removeItem(AUTH_TOKEN_KEY);
+  dispatch(setAuthenticated(false));
+  dispatch(setSuperAdmin(false));
+  dispatch(setAuthToken(null));
+  dispatch(setUserId(uuidv4()));
+  dispatch(clearPunchCards());
+  dispatch(clearBundles());
+};
+
+export const getStoredAuthToken = (): string | null => {
+  return localStorage.getItem(AUTH_TOKEN_KEY);
 }; 

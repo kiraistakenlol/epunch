@@ -13,10 +13,10 @@ import SignOutModal from './components/SignOutModal';
 import GlobalAuthModal from './components/GlobalAuthModal';
 import CompletionOverlay from './features/dashboard/overlay/CompletionOverlay';
 import Alert from './features/alert/Alert';
+import AuthCallbackPage from './pages/AuthCallbackPage';
 import { initializeUser } from './features/auth/authSlice';
-import { configureAmplify, setupAuthListener } from './config/amplify';
+import { getStoredAuthToken } from './config/amplify';
 import { config } from './config/env';
-import { fetchAuthSession } from 'aws-amplify/auth';
 import { injectCSSVariables } from './styles/css-variables';
 import type { AppDispatch } from './store/store';
 import './styles/global.css';
@@ -24,31 +24,16 @@ import { useGlobalAnimationEvents } from './hooks/useGlobalAnimationEvents';
 
 configureApiClient(config.api.baseUrl);
 
-// Set up async auth token provider for AWS Cognito
-setAuthTokenProvider(async () => {
-  try {
-    const session = await fetchAuthSession();
-    return session.tokens?.idToken?.toString() || null;
-  } catch (error) {
-    // User not authenticated or session expired
-    return null;
-  }
+setAuthTokenProvider(() => {
+  return getStoredAuthToken();
 });
 
 function App() {
   const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
-    configureAmplify();
     injectCSSVariables();
-    
-    const removeAuthListener = setupAuthListener(dispatch);
-    
     dispatch(initializeUser());
-
-    return () => {
-      removeAuthListener();
-    };
   }, [dispatch]);
 
   useGlobalAnimationEvents();
@@ -61,6 +46,7 @@ function App() {
             <Route index element={<DashboardPage />} />
             <Route path="dev" element={<DevPage />} />
           </Route>
+          <Route path="/auth/callback" element={<AuthCallbackPage />} />
           <Route path="merchant/card-preview" element={<CardPreviewPage />} />
           <Route path="preview" element={<DashboardPreviewPage />} />
           <Route path="for-merchants" element={<MerchantLandingPage />} />

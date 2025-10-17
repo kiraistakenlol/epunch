@@ -3,6 +3,7 @@ export default () => ({
   app: {
     host: process.env.APP_HOST,
     port: parseInt(process.env.APP_PORT || '', 10),
+    apiPrefix: process.env.API_PREFIX || 'api/v1',
   },
   database: {
     host: process.env.DB_HOST,
@@ -10,16 +11,18 @@ export default () => ({
     name: process.env.DB_DATABASE,
     user: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
+    ssl: process.env.DB_SSL === 'true',
   },
-  aws: {
-    region: process.env.AWS_REGION,
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    cognito: {
-      userPoolId: process.env.AWS_COGNITO_USER_POOL_ID,
-    },
-    s3: {
-      merchantFilesBucketName: process.env.S3_MERCHANT_FILES_BUCKET_NAME,
-    },
+  google: {
+    clientId: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    redirectUri: process.env.GOOGLE_REDIRECT_URI,
+  },
+  jwt: {
+    secret: process.env.JWT_SECRET,
+    expiresIn: process.env.JWT_EXPIRES_IN || '7d',
+  },
+  uploads: {
+    directory: process.env.UPLOADS_DIRECTORY || './uploads',
   }
 }); 

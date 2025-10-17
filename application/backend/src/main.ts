@@ -14,9 +14,10 @@ async function bootstrap() {
     
     // Configure WebSocket adapter
     app.useWebSocketAdapter(new IoAdapter(app));
-    
+
     // Set global API prefix (excluding WebSocket paths)
-    app.setGlobalPrefix('api/v1', {
+    const apiPrefix = configService.get<string>('app.apiPrefix', 'api/v1');
+    app.setGlobalPrefix(apiPrefix, {
       exclude: ['/socket.io(.*)'],
     });
     

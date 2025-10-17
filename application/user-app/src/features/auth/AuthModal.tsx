@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useI18n } from 'e-punch-common-ui';
 import EPunchModal from '../../components/EPunchModal';
-import { signInWithRedirect } from 'aws-amplify/auth';
-import { signUp, signIn } from 'aws-amplify/auth';
+import { initiateGoogleAuth } from '../../config/amplify';
 import { appColors } from '../../theme';
 
 interface AuthModalProps {
@@ -125,7 +124,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode }) =
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, _setLoading] = useState(false);
 
   useEffect(() => {
     setMode(initialMode);
@@ -143,37 +142,12 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode }) =
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    try {
-      if (mode === 'signup') {
-        await signUp({
-          username: email,
-          password,
-          options: {
-            userAttributes: {
-              email,
-            },
-          },
-        });
-      } else {
-        await signIn({
-          username: email,
-          password,
-        });
-      }
-      onClose();
-    } catch (error: any) {
-      setError(error.message || t('authFailed'));
-    } finally {
-      setLoading(false);
-    }
+    setError('Email/password authentication is not yet implemented. Please use Google Sign-In.');
   };
 
-  const handleGoogleAuth = async () => {
+  const handleGoogleAuth = () => {
     try {
-      await signInWithRedirect({ provider: 'Google' });
+      initiateGoogleAuth();
     } catch (error) {
       console.error('Google auth error:', error);
       setError(t('googleFailed'));

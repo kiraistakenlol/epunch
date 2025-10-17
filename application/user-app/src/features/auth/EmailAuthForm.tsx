@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { signUp, confirmSignUp, signIn } from 'aws-amplify/auth';
 import { useI18n } from 'e-punch-common-ui';
 import { appColors } from '../../theme';
 
@@ -33,69 +32,24 @@ const buttonStyle: React.CSSProperties = {
   cursor: 'pointer',
 };
 
-const EmailAuthForm: React.FC<EmailAuthFormProps> = ({ mode, onSuccess, onError }) => {
+const EmailAuthForm: React.FC<EmailAuthFormProps> = ({ mode, onSuccess: _onSuccess, onError }) => {
   const { t } = useI18n('auth');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmationCode, setConfirmationCode] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [needsConfirmation, setNeedsConfirmation] = useState(false);
+  const [isLoading, _setIsLoading] = useState(false);
+  const [needsConfirmation, _setNeedsConfirmation] = useState(false);
 
   const handleSignUp = async () => {
-    try {
-      setIsLoading(true);
-      await signUp({
-        username: email,
-        password,
-        options: {
-          userAttributes: {
-            email,
-          },
-        },
-      });
-      setNeedsConfirmation(true);
-    } catch (error: any) {
-              onError(error.message || t('signUpFailed'));
-    } finally {
-      setIsLoading(false);
-    }
+    onError('Email/password authentication is not implemented. Please use Google Sign-In.');
   };
 
   const handleConfirmSignUp = async () => {
-    try {
-      setIsLoading(true);
-      await confirmSignUp({
-        username: email,
-        confirmationCode,
-      });
-      
-      // Automatically sign in after successful verification
-      await signIn({
-        username: email,
-        password,
-      });
-      
-      onSuccess();
-    } catch (error: any) {
-              onError(error.message || t('confirmationFailed'));
-    } finally {
-      setIsLoading(false);
-    }
+    onError('Email/password authentication is not implemented. Please use Google Sign-In.');
   };
 
   const handleSignIn = async () => {
-    try {
-      setIsLoading(true);
-      await signIn({
-        username: email,
-        password,
-      });
-      onSuccess();
-    } catch (error: any) {
-              onError(error.message || t('signInFailed'));
-    } finally {
-      setIsLoading(false);
-    }
+    onError('Email/password authentication is not implemented. Please use Google Sign-In.');
   };
 
   const handleSubmit = (e: React.FormEvent) => {

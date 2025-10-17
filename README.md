@@ -206,7 +206,7 @@ src/
 * **UI Framework:** Bootstrap 5 with React Bootstrap components and Bootstrap Icons (bundled in common-ui package)
 
 ### Infrastructure & Deployment
-* **AWS** See [infra/README_INFRA.md](infra/README_INFRA.md) for detailed setup and deployment instructions
+* **VPS Deployment** See [infra/README.md](infra/README.md) for complete deployment guide, environment setup, and troubleshooting
 
 ### Real-time Features
 
@@ -255,7 +255,7 @@ Database schema is managed via `initial_ddl.sql`. The project is currently in de
 ```
 # Root Level
 ├── application/              # Main application code
-├── infra/                   # Infrastructure and deployment configurations (see README_INFRA.md)
+├── infra/                   # VPS deployment infrastructure and scripts
 ├── database/                # Database schema and local development setup
 ├── docs/                    # Additional documentation
 ├── ANIMATION_FLOW.md        # Animation system documentation

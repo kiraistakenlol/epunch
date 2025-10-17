@@ -8,7 +8,7 @@ E-Punch uses a **unified authentication middleware** that supports **three disti
 
 | App | User Type | Auth Method | Endpoint | Token Source |
 |-----|-----------|-------------|----------|--------------|
-| **user-app** | End Users | Cognito JWT | `POST /auth` | AWS Cognito |
+| **user-app** | End Users | Google OAuth | `POST /auth` | Backend JWT (after Google auth) |
 | **merchant-app** | Merchant Users | Login/Password | `POST /merchants/auth` | Backend JWT |
 | **admin-app** | Super Admin | Hardcoded | `POST /admin/auth` | Backend JWT |
 
@@ -17,12 +17,13 @@ E-Punch uses a **unified authentication middleware** that supports **three disti
 ### 1. End Users (user-app)
 ```typescript
 // Flow:
-// 1. User authenticates with Cognito (external)
-// 2. Frontend gets Cognito JWT token
-// 3. Frontend calls backend with Cognito token + temp user ID
+// 1. User authenticates with Google OAuth
+// 2. Frontend gets Google OAuth token
+// 3. Frontend calls backend with Google token + temp user ID
+// 4. Backend verifies Google token and creates/returns backend JWT
 POST /auth
 {
-  "authToken": "cognito-jwt-token",
+  "authToken": "google-oauth-token",
   "userId": "temp-anonymous-id"
 }
 
@@ -30,9 +31,10 @@ POST /auth
 {
   "user": {
     "id": "uuid",
-    "email": "user@example.com", 
+    "email": "user@example.com",
     "superAdmin": false
-  }
+  },
+  "token": "backend-jwt-token"
 }
 ```
 
@@ -90,23 +92,23 @@ interface Authentication {
 
 ### Token Detection Logic:
 1. **Try Admin Token** (has `type: 'admin'` + `sub: 'admin-user'`) - **Highest Priority**
-2. **Try Cognito Token** (has `sub` + `email`) - Regular end users  
+2. **Try End User Token** (has `userId` + `email` + `sub`) - Regular end users with backend JWT
 3. **Try Merchant Token** (has `userId` + `merchantId` + `role`) - Merchant users
 
 ### JWT Payload Structures:
 
 ```typescript
-// Cognito Token (End Users)
+// End User Token (Backend JWT after Google OAuth)
 {
-  sub: "cognito-user-id",
-  email: "user@example.com",
-  // ... other Cognito fields
+  userId: "user-uuid",
+  sub: "google-user-id",
+  email: "user@example.com"
 }
 
 // Merchant Token
 {
   userId: "merchant-user-uuid",
-  merchantId: "merchant-uuid", 
+  merchantId: "merchant-uuid",
   role: "admin" | "staff"
 }
 
@@ -296,9 +298,9 @@ async getPrograms(
 ## 🚨 Security Considerations
 
 ### Token Validation:
-- **Cognito tokens**: Verified against AWS Cognito public keys
-- **Merchant tokens**: Signed with backend JWT secret
-- **Admin tokens**: Signed with backend JWT secret
+- **End user tokens**: Verified with backend JWT secret (after initial Google OAuth verification)
+- **Merchant tokens**: Verified with backend JWT secret
+- **Admin tokens**: Verified with backend JWT secret
 
 ### Password Security:
 - Merchant user passwords hashed with bcrypt
@@ -319,9 +321,9 @@ async getPrograms(
 ### API Client Usage:
 ```typescript
 // user-app
-const response = await apiClient.authenticateUser(cognitoToken, tempUserId);
+const response = await apiClient.authenticateUser(googleToken, tempUserId);
 
-// merchant-app  
+// merchant-app
 const response = await apiClient.authenticateMerchant('login', 'password');
 
 // admin-app
@@ -329,6 +331,6 @@ const response = await apiClient.authenticateAdmin('admin', '0000');
 ```
 
 ### Token Storage:
-- **user-app**: Cognito handles token management
-- **merchant-app**: Store JWT in localStorage as `merchant_token`
-- **admin-app**: Store JWT in localStorage as `admin_token` 
+- **user-app**: Backend JWT stored in localStorage as `user_token`
+- **merchant-app**: Backend JWT stored in localStorage as `merchant_token`
+- **admin-app**: Backend JWT stored in localStorage as `admin_token` 

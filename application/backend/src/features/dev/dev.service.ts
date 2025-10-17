@@ -1,6 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Pool } from 'pg';
-import { CognitoIdentityProviderClient, ListUsersCommand, AdminDeleteUserCommand } from '@aws-sdk/client-cognito-identity-provider';
 
 interface DevResponse {
   status: string;
@@ -10,19 +9,7 @@ interface DevResponse {
 
 @Injectable()
 export class DevService {
-  private cognitoClient: CognitoIdentityProviderClient;
-  private userPoolId: string;
-
-  constructor(@Inject('DATABASE_POOL') private pool: Pool) {
-    this.cognitoClient = new CognitoIdentityProviderClient({
-      region: process.env.AWS_REGION || 'us-east-1',
-      credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-      },
-    });
-    this.userPoolId = process.env.AWS_COGNITO_USER_POOL_ID!;
-  }
+  constructor(@Inject('DATABASE_POOL') private pool: Pool) {}
 
   async getStatus(): Promise<DevResponse> {
     try {
@@ -108,62 +95,36 @@ export class DevService {
   async removeAllUsers(merchantId?: string): Promise<DevResponse> {
     try {
       const client = await this.pool.connect();
-      let deletedCognitoUsers = 0;
-      
+
       try {
         await client.query('BEGIN');
-        
-        let users;
-        if (merchantId) {
-          users = await client.query(`
-            SELECT DISTINCT u.external_id 
-            FROM "user" u 
-            JOIN punch_card pc ON u.id = pc.user_id 
-            JOIN loyalty_program lp ON pc.loyalty_program_id = lp.id 
-            WHERE lp.merchant_id = $1 AND u.external_id IS NOT NULL
-          `, [merchantId]);
-        } else {
-          users = await client.query('SELECT external_id FROM "user" WHERE external_id IS NOT NULL');
-        }
-        
-        for (const user of users.rows) {
-          try {
-            await this.cognitoClient.send(new AdminDeleteUserCommand({
-              UserPoolId: this.userPoolId,
-              Username: user.external_id,
-            }));
-            deletedCognitoUsers++;
-          } catch (cognitoError) {
-            console.warn(`Failed to delete Cognito user ${user.external_id}:`, cognitoError);
-          }
-        }
-        
+
         let punchResult, punchCardResult, userResult;
-        
+
         if (merchantId) {
           punchResult = await client.query(`
-            DELETE FROM punch 
+            DELETE FROM punch
             WHERE punch_card_id IN (
-              SELECT pc.id FROM punch_card pc 
-              JOIN loyalty_program lp ON pc.loyalty_program_id = lp.id 
+              SELECT pc.id FROM punch_card pc
+              JOIN loyalty_program lp ON pc.loyalty_program_id = lp.id
               WHERE lp.merchant_id = $1
             )
           `, [merchantId]);
-          
+
           punchCardResult = await client.query(`
-            DELETE FROM punch_card 
+            DELETE FROM punch_card
             WHERE loyalty_program_id IN (
               SELECT id FROM loyalty_program WHERE merchant_id = $1
             )
           `, [merchantId]);
-          
+
           userResult = await client.query(`
-            DELETE FROM "user" 
+            DELETE FROM "user"
             WHERE id IN (
-              SELECT DISTINCT u.id 
-              FROM "user" u 
-              JOIN punch_card pc ON u.id = pc.user_id 
-              JOIN loyalty_program lp ON pc.loyalty_program_id = lp.id 
+              SELECT DISTINCT u.id
+              FROM "user" u
+              JOIN punch_card pc ON u.id = pc.user_id
+              JOIN loyalty_program lp ON pc.loyalty_program_id = lp.id
               WHERE lp.merchant_id = $1
             )
           `, [merchantId]);
@@ -172,19 +133,18 @@ export class DevService {
           punchCardResult = await client.query('DELETE FROM punch_card');
           userResult = await client.query('DELETE FROM "user"');
         }
-        
+
         await client.query('COMMIT');
-        
+
         return {
           status: 'success',
-          message: merchantId 
-            ? `All users for merchant ${merchantId} removed successfully from database and Cognito`
-            : 'All users removed successfully from database and Cognito',
+          message: merchantId
+            ? `All users for merchant ${merchantId} removed successfully from database`
+            : 'All users removed successfully from database',
           deletedCounts: {
             punches: punchResult.rowCount,
             punchCards: punchCardResult.rowCount,
             users: userResult.rowCount,
-            cognitoUsers: deletedCognitoUsers,
           },
           merchantId: merchantId || null,
           timestamp: new Date().toISOString(),
@@ -344,70 +304,44 @@ export class DevService {
   async removeAllData(merchantId?: string): Promise<DevResponse> {
     try {
       const client = await this.pool.connect();
-      let deletedCognitoUsers = 0;
-      
+
       try {
         await client.query('BEGIN');
-        
-        let users;
-        if (merchantId) {
-          users = await client.query(`
-            SELECT DISTINCT u.external_id 
-            FROM "user" u 
-            JOIN punch_card pc ON u.id = pc.user_id 
-            JOIN loyalty_program lp ON pc.loyalty_program_id = lp.id 
-            WHERE lp.merchant_id = $1 AND u.external_id IS NOT NULL
-          `, [merchantId]);
-        } else {
-          users = await client.query('SELECT external_id FROM "user" WHERE external_id IS NOT NULL');
-        }
-        
-        for (const user of users.rows) {
-          try {
-            await this.cognitoClient.send(new AdminDeleteUserCommand({
-              UserPoolId: this.userPoolId,
-              Username: user.external_id,
-            }));
-            deletedCognitoUsers++;
-          } catch (cognitoError) {
-            console.warn(`Failed to delete Cognito user ${user.external_id}:`, cognitoError);
-          }
-        }
-        
+
         let punchResult, punchCardResult, loyaltyProgramResult, merchantResult, userResult;
-        
+
         if (merchantId) {
           punchResult = await client.query(`
-            DELETE FROM punch 
+            DELETE FROM punch
             WHERE punch_card_id IN (
-              SELECT pc.id FROM punch_card pc 
-              JOIN loyalty_program lp ON pc.loyalty_program_id = lp.id 
+              SELECT pc.id FROM punch_card pc
+              JOIN loyalty_program lp ON pc.loyalty_program_id = lp.id
               WHERE lp.merchant_id = $1
             )
           `, [merchantId]);
-          
+
           punchCardResult = await client.query(`
-            DELETE FROM punch_card 
+            DELETE FROM punch_card
             WHERE loyalty_program_id IN (
               SELECT id FROM loyalty_program WHERE merchant_id = $1
             )
           `, [merchantId]);
-          
+
           loyaltyProgramResult = await client.query(`
             DELETE FROM loyalty_program WHERE merchant_id = $1
           `, [merchantId]);
-          
+
           merchantResult = await client.query(`
             DELETE FROM merchant WHERE id = $1
           `, [merchantId]);
-          
+
           userResult = await client.query(`
-            DELETE FROM "user" 
+            DELETE FROM "user"
             WHERE id IN (
-              SELECT DISTINCT u.id 
-              FROM "user" u 
-              JOIN punch_card pc ON u.id = pc.user_id 
-              JOIN loyalty_program lp ON pc.loyalty_program_id = lp.id 
+              SELECT DISTINCT u.id
+              FROM "user" u
+              JOIN punch_card pc ON u.id = pc.user_id
+              JOIN loyalty_program lp ON pc.loyalty_program_id = lp.id
               WHERE lp.merchant_id = $1
             )
           `, [merchantId]);
@@ -418,21 +352,20 @@ export class DevService {
           merchantResult = await client.query('DELETE FROM merchant');
           userResult = await client.query('DELETE FROM "user"');
         }
-        
+
         await client.query('COMMIT');
-        
+
         return {
           status: 'success',
-          message: merchantId 
-            ? `All data for merchant ${merchantId} removed successfully from database and Cognito`
-            : 'All data removed successfully from database and Cognito',
+          message: merchantId
+            ? `All data for merchant ${merchantId} removed successfully from database`
+            : 'All data removed successfully from database',
           deletedCounts: {
             punches: punchResult.rowCount,
             punchCards: punchCardResult.rowCount,
             loyaltyPrograms: loyaltyProgramResult.rowCount,
             merchants: merchantResult.rowCount,
             users: userResult.rowCount,
-            cognitoUsers: deletedCognitoUsers,
           },
           merchantId: merchantId || null,
           timestamp: new Date().toISOString(),
