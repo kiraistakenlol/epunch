@@ -1,11 +1,10 @@
-import { Injectable, NestMiddleware, Logger } from '@nestjs/common';
+import { Injectable, NestMiddleware } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Request, Response, NextFunction } from 'express';
+import { Request, NextFunction } from 'express';
 import { jwtVerify, decodeJwt } from 'jose';
 import { UserRepository } from '../../features/user/user.repository';
 import { MerchantUserRepository } from '../../features/merchant-user/merchant-user.repository';
 import { Authentication, EndUserAuthentication, MerchantUserAuthentication } from '../types/authentication.interface';
-import { JwtPayloadDto } from 'e-punch-common-core';
 
 declare global {
   namespace Express {
@@ -17,15 +16,13 @@ declare global {
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  private readonly logger = new Logger(AuthMiddleware.name);
-
   constructor(
     private userRepository: UserRepository,
     private merchantUserRepository: MerchantUserRepository,
     private configService: ConfigService
   ) {}
 
-  async use(req: Request, res: Response, next: NextFunction) {
+  async use(req: Request, _res: unknown, next: NextFunction) {
     const authHeader = req.headers.authorization;
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -46,7 +43,7 @@ export class AuthMiddleware implements NestMiddleware {
       authentication.superAdmin = true;
     }
 
-    // Try to parse as end user token (Cognito)
+    // Try to parse as end user token
     if (!authentication.endUser) {
       const endUser = await this.tryParseEndUserToken(token);
       if (endUser) {

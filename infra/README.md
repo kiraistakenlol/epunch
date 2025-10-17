@@ -2,6 +2,28 @@
 
 VPS deployment infrastructure for epunch.app
 
+## Multi-Project VPS Setup
+
+**Important:** This project is deployed to a shared VPS that hosts multiple projects. The infrastructure is split across two repositories:
+
+### 1. This Repository (epunch)
+Contains project-specific deployment scripts and configurations:
+- Docker compose files
+- Environment configuration templates
+- Build and deployment scripts
+
+### 2. kiraistaken-infra Repository (separate)
+**Repository:** `kiraistaken-infra` (separate git project)
+**Local path:** `/Users/kirillsobolev/Workspace/kiraistaken-infra`
+**VPS path:** `/root/kiraistaken-infra`
+
+Contains shared infrastructure for ALL projects on the VPS:
+- **Nginx configurations** for all projects (epunch, soulmirror, xchange, etc.)
+- **SSL certificate management** scripts
+- **Shared deployment utilities**
+
+**Why separate?** Nginx and SSL management are shared across all projects on the VPS, so they're maintained in a central infrastructure repository.
+
 ## Directory Structure
 
 ```
@@ -37,7 +59,7 @@ infra/
     │       ├── start-all.sh          # Start all services
     │       ├── stop-all.sh           # Stop all services
     │       └── deploy.sh             # git pull + build + restart
-    └── nginx/                        # (future) Nginx configs
+    └── nginx/                        # NOTE: Nginx configs are in kiraistaken-infra repo
 ```
 
 ## Initial Setup (One Time)
@@ -251,17 +273,90 @@ docker exec -it epunch-postgres psql -U epunch epunch
 
 - **Host**: `root@45.32.117.48`
 - **Project Directory**: `/root/epunch`
-- **Domains**:
-  - epunch.app (user-app)
-  - api.epunch.app (backend)
-  - merchant.epunch.app (merchant-app)
-  - admin.epunch.app (admin-app)
+- **Nginx Configs**: `/root/kiraistaken-infra/nginx/sites/epunch.conf` (in separate repo)
+- **Domains & Port Mapping**:
+  - epunch.app → port 3001 (user-app)
+  - api.epunch.app → port 4000 (backend API)
+  - merchant.epunch.app → port 3002 (merchant-app)
+  - admin.epunch.app → port 3003 (admin-app)
+  - PostgreSQL: port 54320 (host) → 5432 (container)
 
-## Complete Deployment Guide
+### API Path Configuration
 
-See [VPS_DEPLOYMENT_GUIDE.md](../VPS_DEPLOYMENT_GUIDE.md) for:
-- DNS configuration
-- SSL certificates
-- Nginx configuration
-- Google OAuth setup
-- Monitoring and backups
+**Important:** The API prefix differs between local and production:
+
+**Local Development:**
+- Backend prefix: `/api/v1`
+- Full API URL: `http://localhost:4000/api/v1`
+- Example: `http://localhost:4000/api/v1/auth`
+
+**Production (VPS):**
+- Backend prefix: `/v1` (domain already contains "api")
+- Full API URL: `https://api.epunch.app/v1`
+- Example: `https://api.epunch.app/v1/auth`
+
+This is controlled by the `API_PREFIX` environment variable in backend configuration.
+
+## Google OAuth Setup
+
+For production deployment, configure Google OAuth:
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Navigate to **APIs & Services > Credentials**
+3. Edit your OAuth 2.0 Client ID
+4. Add authorized redirect URIs:
+   - `https://epunch.app/auth/callback`
+   - `https://merchant.epunch.app/auth/callback` (if needed)
+   - `https://admin.epunch.app/auth/callback` (if needed)
+5. Update environment files with production Client ID and Secret
+
+## Nginx Configuration
+
+Nginx configs are managed in the **separate kiraistaken-infra repository**:
+- **Location**: `/root/kiraistaken-infra/nginx/sites/epunch.conf` (on VPS)
+- **SSL Setup**: Run `/root/kiraistaken-infra/scripts/setup-ssl.sh` to get certificates
+- **Deploy Config**: Run `/root/kiraistaken-infra/scripts/update-nginx.sh` to apply changes
+
+## Troubleshooting
+
+### Container Issues
+```bash
+# Check container status
+docker-compose -f docker-compose.prod.yml ps
+
+# View logs
+docker-compose -f docker-compose.prod.yml logs -f
+
+# Restart specific service
+docker-compose -f docker-compose.prod.yml restart backend
+```
+
+### Database Issues
+```bash
+# Check postgres is running
+docker ps | grep postgres
+
+# View postgres logs
+docker logs epunch-postgres
+
+# Connect to database
+docker exec -it epunch-postgres psql -U epunch epunch
+```
+
+### SSL/Nginx Issues
+```bash
+# Check SSL certificates (on VPS)
+ssh root@45.32.117.48 'ls -la /etc/letsencrypt/live/epunch.app/'
+
+# Test nginx config
+ssh root@45.32.117.48 'nginx -t'
+
+# Reload nginx
+ssh root@45.32.117.48 'systemctl reload nginx'
+```
+
+### Port Conflicts
+```bash
+# Check what's using a port
+ssh root@45.32.117.48 'netstat -tulpn | grep 4000'
+```
