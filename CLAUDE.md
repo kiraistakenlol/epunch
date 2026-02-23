@@ -1,114 +1,59 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## v2 — What we're building
 
-## Development Commands
+v1 failed because onboarding each business required too much manual effort. v2 makes it fully self-serve — a cafe owner signs up and has a working punch card system in minutes, zero involvement from us.
 
-### Common Package Building
-- `./build-common.sh` - Build common-core and common-ui packages (required before starting any app)
-- `./build-all.sh` - Build all packages in the workspace
+### Key decisions
 
-### Application Development
-- `./run-backend.sh` - Start NestJS backend development server
-- `./run-user-app.sh` - Build common packages and start user app (React + Vite)
-- `./run-merchant-app.sh` - Build common packages and start merchant app (React + Vite)
-- `./run-admin-app.sh` - Build common packages and start admin app (React + Vite)
+- **Scope**: punch cards only. No bundles, benefit cards, animations, or unnecessary features
+- **Customer accounts**: not required, guests can use the system
+- **How punching works**:
+  - Customer scans merchant's QR on the counter → gets an empty card
+  - Merchant scans customer's QR → gives a punch (card created automatically)
+- **Backend**: reuse v1 backend, audit and simplify, fix/remove Cognito auth
+- **Frontend**: rebuild from scratch, separate customer and merchant apps, dead simple
+- **30-day free trial** for new merchants
 
-### Package Management
-- `./reinstall-all.sh` - Reinstall all dependencies across the workspace
-- Individual app builds: `npm run build` (backend), `npm run dev` (frontend apps)
+### Plan
 
-### Testing & Quality
-- Backend: `npm run start:dev` for development with hot reload
-- Frontend: `npm run dev` for development server, `npm run build` for production builds
+1. Define the minimal MVP — all core scenarios for customers and merchants
+2. Audit v1 backend — what to keep, simplify, or remove (especially auth)
+3. Design the simplest merchant onboarding flow
+4. Build real HTML pages for the UI (doubles as working code)
+5. Take screenshots of pages for paper ads
+6. Design and print paper ads with QR to landing/signup page
+7. Walk into cafes, hand out ads, talk to owners
 
-## Architecture Overview
+## v1 reference (tagged `v1-final`)
 
-This is a multi-app TypeScript monorepo implementing a digital loyalty platform with punch cards, bundles, and benefit cards.
+### Development commands
 
-### Core Structure
-```
-application/
-├── backend/           # NestJS API server
-├── user-app/          # Customer-facing React app  
-├── merchant-app/      # Business dashboard (shadcn/ui + Tailwind)
-├── admin-app/         # System admin interface (Material-UI)
-├── common-core/       # Shared DTOs and types
-└── common-ui/         # Shared API client and Bootstrap styles
-```
+- `./build-common.sh` - Build common-core and common-ui packages
+- `./build-all.sh` - Build all packages
+- `./run-backend.sh` - Start NestJS backend
+- `./run-user-app.sh` - Start user app
+- `./run-merchant-app.sh` - Start merchant app
+- `./run-admin-app.sh` - Start admin app
+- `./reinstall-all.sh` - Reinstall all dependencies
 
-### Technology Stack
-- **Backend**: NestJS (Node.js), PostgreSQL, WebSocket (Socket.io), JWT auth
+### Architecture
+
+Monorepo: `application/backend`, `user-app`, `merchant-app`, `admin-app`, `common-core`, `common-ui`
+
+- **Backend**: NestJS, PostgreSQL, WebSocket (Socket.io), JWT auth
 - **Frontend**: React 18, TypeScript, Vite, Redux Toolkit
-- **UI Libraries**: 
-  - merchant-app: shadcn/ui + Tailwind CSS + Radix UI primitives
-  - admin-app: Material-UI
-  - user-app: Custom CSS with Bootstrap base
-- **Package Manager**: Yarn (workspace-enabled)
-- **Database**: PostgreSQL via Supabase
+- **Database**: PostgreSQL, schema in `database/ddl/core-schema.sql`
+- **Deployment**: Docker, GitHub Actions, Nginx reverse proxy
 
-### Feature-Based Backend Architecture
-Backend uses feature-based modules in `src/features/`:
-- `auth/` - End user authentication (Cognito)
-- `admin/` - Super admin authentication  
-- `merchant/` - Merchant management and auth
-- `loyalty/` - Punch card loyalty programs
-- `punch-cards/` - Individual punch card instances
-- `bundle-program/` - Bundle program templates
-- `bundle/` - Individual bundle instances
-- `benefit-card/` - Benefit card programs (upcoming)
-- `analytics/` - Reporting and metrics
-- `user/` - End user management
-- `icons/` - Icon management system
+### Backend modules (`src/features/`)
 
-### Authentication System
-Three distinct user types with unified middleware:
-1. **End Users**: Cognito JWT tokens (`POST /auth`)
-2. **Merchant Users**: Backend JWT with roles (`POST /merchants/auth`) 
-3. **Super Admin**: Hardcoded credentials (`POST /admin/auth`)
+auth, admin, merchant, loyalty, punch-cards, bundle-program, bundle, benefit-card, analytics, user, icons
 
-Uses security decorators: `@RequireEndUser()`, `@RequireMerchantUser(['admin'])`, `@RequireAnyAuth()`
+### Code style
 
-### Data Flow & Real-time Updates
-- WebSocket connections for live updates across all apps
-- Redux state management in frontend apps
-- Feature-based slicing (authSlice, loyaltyProgramsSlice, etc.)
-- Real-time synchronization of punch/bundle operations
-
-### Key Business Entities
-- **User**: Customer with universal QR code
-- **Merchant**: Business offering loyalty products
-- **Loyalty Program**: Punch card template (e.g., "10 coffees = 1 free")
-- **Punch Card**: User's individual progress tracker
-- **Bundle Program**: Pre-paid package template 
-- **Bundle**: User's bundle instance with quantity/expiration
-- **Benefit Card**: Discount/benefit programs (upcoming)
-
-### Code Style Guidelines
-- No code comments (per .cursor/rules/general-rules.mdc)
+- No code comments
 - Remove code instead of commenting out
-- Concise and minimalistic approach
-- TypeScript strict mode throughout
-- Feature-based organization over technical grouping
-
-### Common Development Patterns
-- **Shared Types**: Import from `e-punch-common-core` package
-- **API Client**: Use `apiClient` from `e-punch-common-ui`
-- **State Management**: Redux Toolkit with typed hooks
-- **Component Structure**: Feature-based folders with co-located components
-- **Error Handling**: Standardized error responses via `ApiResponse<T>` DTO
-
-### Database Schema
-- Schema managed via `database/ddl/core-schema.sql`
-- No migrations in development - direct DDL updates
-- Multi-tenant design with merchant-scoped data
-- RBAC via `merchant_user` and `merchant_role` tables
-
-### Deployment & Infrastructure
-- VPS deployment infrastructure (see `infra/README.md`)
-- Docker containerization for all services (backend, frontends, PostgreSQL)
-- GitHub Actions for building Docker images and pushing to GitHub Container Registry
-- Nginx reverse proxy for routing
-- Local PostgreSQL database in Docker
-- Local file storage
-- Environment-based configuration (dev/prod URLs in README.md)
+- Concise and minimalistic
+- TypeScript strict mode
+- Feature-based organization
