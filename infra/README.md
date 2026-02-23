@@ -12,10 +12,10 @@ Contains project-specific deployment scripts and configurations:
 - Environment configuration templates
 - Build and deployment scripts
 
-### 2. kiraistaken-infra Repository (separate)
-**Repository:** `kiraistaken-infra` (separate git project)
-**Local path:** `/Users/kirillsobolev/Workspace/kiraistaken-infra`
-**VPS path:** `/root/kiraistaken-infra`
+### 2. vps-infra Repository (separate)
+**Repository:** `vps-infra` (separate git project)
+**Local path:** `/Users/kirillsobolev/Workspace/vps-infra`
+**VPS path:** `/root/vps-infra`
 
 Contains shared infrastructure for ALL projects on the VPS:
 - **Nginx configurations** for all projects (epunch, soulmirror, xchange, etc.)
@@ -59,7 +59,7 @@ infra/
     │       ├── start-all.sh          # Start all services
     │       ├── stop-all.sh           # Stop all services
     │       └── deploy.sh             # git pull + build + restart
-    └── nginx/                        # NOTE: Nginx configs are in kiraistaken-infra repo
+    └── nginx/                        # NOTE: Nginx configs are in vps-infra repo
 ```
 
 ## Initial Setup (One Time)
@@ -273,7 +273,7 @@ docker exec -it epunch-postgres psql -U epunch epunch
 
 - **Host**: `root@45.32.117.48`
 - **Project Directory**: `/root/epunch`
-- **Nginx Configs**: `/root/kiraistaken-infra/nginx/sites/epunch.conf` (in separate repo)
+- **Nginx Configs**: `/root/vps-infra/nginx/sites/epunch.conf` (in separate repo)
 - **Domains & Port Mapping**:
   - epunch.app → port 3001 (user-app)
   - api.epunch.app → port 4000 (backend API)
@@ -312,10 +312,10 @@ For production deployment, configure Google OAuth:
 
 ## Nginx Configuration
 
-Nginx configs are managed in the **separate kiraistaken-infra repository**:
-- **Location**: `/root/kiraistaken-infra/nginx/sites/epunch.conf` (on VPS)
-- **SSL Setup**: Run `/root/kiraistaken-infra/scripts/setup-ssl.sh` to get certificates
-- **Deploy Config**: Run `/root/kiraistaken-infra/scripts/update-nginx.sh` to apply changes
+Nginx configs are managed in the **separate vps-infra repository**:
+- **Location**: `/root/vps-infra/nginx/sites/epunch.conf` (on VPS)
+- **SSL Setup**: Run `/root/vps-infra/scripts/setup-ssl.sh` to get certificates
+- **Deploy Config**: Run `/root/vps-infra/scripts/update-nginx.sh` to apply changes
 
 ## Troubleshooting
 
