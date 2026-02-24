@@ -1,0 +1,1 @@
+rethink qr code placement; another option is to show it from merchant's screen to each cuseomer (no print needed) 

@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#FFFFFF">
+<title>ePunch — Digital Punch Cards for Your Shop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --coral: #FF385C;
+  --coral-light: #FFF0F3;
+  --coral-dark: #E0304F;
+  --black: #1A1A1A;
+  --gray-1: #444;
+  --gray-2: #717171;
+  --gray-3: #ABABAB;
+  --gray-4: #DDD;
+  --gray-5: #F3F1EE;
+  --white: #FFFFFF;
+  --cream: #FAF8F5;
+  --wa-green: #25D366;
+  --wa-hover: #1EBE5A;
+  --coffee: #6B4C3B;
+  --bakery: #C2703E;
+  --juice: #4A7C59;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--white);
+  color: var(--black);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+/* ── Header ── */
+.header {
+  padding: 20px 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.logo {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--coral);
+  letter-spacing: -0.5px;
+}
+.logo span { color: var(--black); }
+
+/* ── Hero ── */
+.hero {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 24px 64px;
+}
+.hero-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+.hero-text {
+  text-align: center;
+  max-width: 500px;
+}
+.hero-text h1 {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1.12;
+  margin-bottom: 16px;
+}
+.hero-text p {
+  font-size: 17px;
+  color: var(--gray-2);
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 32px;
+  background: var(--coral);
+  color: var(--white);
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  border-radius: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s;
+  width: 100%;
+  max-width: 300px;
+}
+.hero-cta:hover { background: var(--coral-dark); }
+
+/* ── Card Stack ── */
+.card-stack {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+}
+.stack-shadow {
+  position: absolute;
+  inset: 0;
+  background: var(--white);
+  border-radius: 20px;
+  border: 1px solid #eee;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+.stack-shadow::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: var(--accent);
+}
+.stack-shadow:nth-child(1) {
+  --accent: var(--juice);
+  transform: rotate(-3.5deg) translateY(-10px);
+  z-index: 1;
+}
+.stack-shadow:nth-child(2) {
+  --accent: var(--bakery);
+  transform: rotate(2.5deg) translateY(-6px);
+  z-index: 2;
+}
+
+.main-card {
+  position: relative;
+  z-index: 3;
+  background: var(--white);
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid #eee;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04);
+  overflow: hidden;
+}
+.main-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: var(--coral);
+}
+
+.mc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.mc-shop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.mc-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: rgba(255, 56, 92, 0.08);
+  color: var(--coral);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.mc-icon svg { width: 22px; height: 22px; }
+.mc-name {
+  font-size: 16px;
+  font-weight: 700;
+}
+.mc-program {
+  font-size: 12px;
+  color: var(--gray-2);
+  margin-top: 1px;
+}
+.mc-counter {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--coral);
+}
+.mc-counter sub {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-3);
+  bottom: 0;
+}
+
+.mc-dots {
+  display: grid;
+  grid-template-columns: repeat(4, 36px);
+  gap: 10px;
+  width: fit-content;
+  margin: 0 auto;
+}
+.mc-dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2.5px solid var(--gray-4);
+  position: relative;
+}
+.mc-dot.filled {
+  background: var(--coral);
+  border-color: var(--coral);
+}
+.mc-dot.filled::after {
+  content: '\2713';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.mc-reward {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1.5px dashed var(--gray-4);
+  font-size: 13px;
+  color: var(--gray-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.mc-reward strong {
+  color: var(--black);
+  font-weight: 600;
+}
+
+/* ── Shared Section ── */
+.section {
+  padding: 64px 24px;
+}
+.section.cream { background: var(--cream); }
+.section-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+.section-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--coral);
+  text-align: center;
+  margin-bottom: 8px;
+}
+.section-title {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+.section-sub {
+  font-size: 16px;
+  color: var(--gray-2);
+  text-align: center;
+  max-width: 480px;
+  margin: 0 auto 40px;
+  line-height: 1.6;
+}
+
+/* ── How It Works ── */
+.flow-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.flow-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 24px;
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.flow-step:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+}
+.flow-num {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--coral);
+  color: var(--white);
+  font-size: 18px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.flow-content h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.flow-content p {
+  font-size: 14px;
+  color: var(--gray-2);
+  line-height: 1.55;
+}
+
+/* ── Card Types ── */
+.card-types {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+.card-type {
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid #eee;
+  background: var(--white);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.card-type:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+.card-type-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.card-type-emoji {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.card-type-emoji svg { width: 24px; height: 24px; }
+.card-type-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.card-type-desc {
+  font-size: 14px;
+  color: var(--gray-2);
+  line-height: 1.5;
+}
+.card-type-custom {
+  padding-top: 14px;
+  border-top: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.card-type-custom-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--gray-1);
+  line-height: 1.4;
+}
+.card-type-custom-item .check {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--coral-light);
+  color: var(--coral);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.card-type-custom-item .check svg { width: 10px; height: 10px; }
+.card-type-example {
+  font-size: 12px;
+  color: var(--gray-3);
+  margin-top: 6px;
+  font-style: italic;
+}
+.customize-note {
+  margin-top: 32px;
+  padding: 20px 24px;
+  background: var(--coral-light);
+  border-radius: 14px;
+  text-align: center;
+  font-size: 15px;
+  color: var(--black);
+  line-height: 1.6;
+}
+
+@media (min-width: 768px) {
+  .card-types {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+/* ── Features Grid ── */
+.features-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+.feature-card {
+  padding: 24px;
+  background: var(--cream);
+  border-radius: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.feature-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+.feature-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.feature-icon svg { width: 24px; height: 24px; }
+.feature-icon.qr { background: var(--coral-light); color: var(--coral); }
+.feature-icon.people { background: #E8F0FE; color: #1A73E8; }
+.feature-icon.phone { background: #E6F7E6; color: #008A05; }
+.feature-icon.globe { background: #FFF3E0; color: #E65100; }
+.feature-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.feature-desc {
+  font-size: 14px;
+  color: var(--gray-2);
+  line-height: 1.5;
+}
+
+/* ── CTA / Contact ── */
+.contact {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+.contact-heading {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+.contact-sub {
+  font-size: 16px;
+  color: var(--gray-2);
+  margin-bottom: 32px;
+  line-height: 1.6;
+}
+.whatsapp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 380px;
+  padding: 18px 28px;
+  background: var(--wa-green);
+  color: var(--white);
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 700;
+  border: none;
+  border-radius: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.whatsapp-btn:hover { background: var(--wa-hover); }
+.whatsapp-btn svg { flex-shrink: 0; }
+.contact-email {
+  margin-top: 20px;
+  font-size: 15px;
+  color: var(--gray-2);
+}
+.contact-email a {
+  color: var(--coral);
+  font-weight: 600;
+  text-decoration: none;
+}
+.contact-email a:hover { text-decoration: underline; }
+.contact-note {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--gray-3);
+}
+
+/* ── Footer ── */
+.footer {
+  text-align: center;
+  padding: 32px 24px;
+  border-top: 1px solid var(--gray-5);
+  font-size: 14px;
+  color: var(--gray-3);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* ── Responsive ── */
+@media (min-width: 768px) {
+  .hero { padding: 40px 32px 80px; }
+  .hero-inner {
+    flex-direction: row;
+    align-items: center;
+    gap: 64px;
+  }
+  .hero-text {
+    text-align: left;
+    order: -1;
+    flex: 1;
+  }
+  .hero-text h1 { font-size: 44px; }
+  .hero-cta { width: auto; }
+  .card-stack {
+    flex-shrink: 0;
+    width: 360px;
+    max-width: 360px;
+  }
+
+  .section { padding: 80px 32px; }
+  .flow-steps {
+    flex-direction: row;
+    gap: 20px;
+  }
+  .flow-step {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    flex: 1;
+  }
+  .features-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-text h1 { font-size: 52px; }
+  .section-title { font-size: 34px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="logo">e<span>Punch</span></div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-inner">
+    <!-- Card Stack Visual -->
+    <div class="card-stack">
+      <div class="stack-shadow" style="--accent: var(--juice)"></div>
+      <div class="stack-shadow" style="--accent: var(--bakery)"></div>
+      <div class="main-card">
+        <div class="mc-header">
+          <div class="mc-shop">
+            <div class="mc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 110 8h-1"/><path d="M3 8h14v9a4 4 0 01-4 4H7a4 4 0 01-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg></div>
+            <div>
+              <div class="mc-name">Brew &amp; Co</div>
+              <div class="mc-program">Buy 8 coffees, get 1 free</div>
+            </div>
+          </div>
+          <div class="mc-counter">5<sub>/8</sub></div>
+        </div>
+        <div class="mc-dots">
+          <div class="mc-dot filled"></div>
+          <div class="mc-dot filled"></div>
+          <div class="mc-dot filled"></div>
+          <div class="mc-dot filled"></div>
+          <div class="mc-dot filled"></div>
+          <div class="mc-dot"></div>
+          <div class="mc-dot"></div>
+          <div class="mc-dot"></div>
+        </div>
+        <div class="mc-reward">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg> Reward: <strong>Free coffee of your choice</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero Text -->
+    <div class="hero-text">
+      <h1>Digital punch cards for your business</h1>
+      <p>Replace paper cards. Customers scan, collect punches, earn rewards. Set up in 5 minutes.</p>
+      <a href="#contact" class="hero-cta">Get started free &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section class="section cream">
+  <div class="section-inner">
+    <div class="section-label">Simple as 1-2-3</div>
+    <h2 class="section-title">How it works</h2>
+    <p class="section-sub">No app downloads. No complicated setup. Your customers just scan and collect.</p>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-num">1</div>
+        <div class="flow-content">
+          <h3>Customer scans your QR</h3>
+          <p>Place our QR code at your counter. Customers scan it with their phone camera &mdash; no app needed.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">2</div>
+        <div class="flow-content">
+          <h3>They collect punches</h3>
+          <p>Each visit earns a punch on their digital card. It fills up automatically &mdash; just like paper, but better.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">3</div>
+        <div class="flow-content">
+          <h3>They earn rewards</h3>
+          <p>When the card is full, they redeem their reward. Happy customers keep coming back.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Card Types -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label">Your cards, your rules</div>
+    <h2 class="section-title">Create cards that fit your business</h2>
+    <p class="section-sub">Choose from three card types. Set the rules, pick the reward, make it yours. Run as many as you want.</p>
+    <div class="card-types">
+      <div class="card-type">
+        <div class="card-type-top">
+          <div class="card-type-emoji" style="background: rgba(255,56,92,0.08); color: var(--coral)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+          <div>
+            <div class="card-type-title">Punch cards</div>
+            <div class="card-type-desc">Collect punches, earn a reward. The classic &mdash; now digital.</div>
+          </div>
+        </div>
+        <div class="card-type-custom">
+          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Set how many punches (6, 8, 10&hellip;)</div>
+          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Choose the reward (free item, discount&hellip;)</div>
+          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Card restarts automatically when full</div>
+        </div>
+        <div class="card-type-example">e.g. "Buy 8 coffees, get 1 free"</div>
+      </div>
+      <div class="card-type">
+        <div class="card-type-top">
+          <div class="card-type-emoji" style="background: rgba(123,94,167,0.08); color: #7B5EA7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/><path d="M12 6v12"/></svg></div>
+          <div>
+            <div class="card-type-title">Bundles</div>
+            <div class="card-type-desc">Sell a pack of visits upfront. Guaranteed revenue for you.</div>
+          </div>
+        </div>
+        <div class="card-type-custom">
+          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Set pack size (5, 10, 20&hellip;)</div>
+          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Name the bundle (espresso pack, class pass&hellip;)</div>
+          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Customer uses one per visit until gone</div>
+        </div>
+        <div class="card-type-example">e.g. "5-pack espresso" or "10 class pass"</div>
+      </div>
+      <div class="card-type">
+        <div class="card-type-top">
+          <div class="card-type-emoji" style="background: rgba(232,163,23,0.08); color: #E8A317"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div>
+          <div>
+            <div class="card-type-title">Discounts</div>
+            <div class="card-type-desc">Give ongoing perks to your best customers.</div>
+          </div>
+        </div>
+        <div class="card-type-custom">
+          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Describe the perk (% off, free extra&hellip;)</div>
+          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Give to specific customers</div>
+          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Active until you decide to remove it</div>
+        </div>
+        <div class="card-type-example">e.g. "10% off all pastries" or "Free size upgrade"</div>
+      </div>
+    </div>
+    <div class="customize-note">
+      You name the card, pick an icon, set the colors &mdash; customers see <strong>your brand</strong>, not ours.
+    </div>
+  </div>
+</section>
+
+<!-- What You Get -->
+<section class="section cream">
+  <div class="section-inner">
+    <div class="section-label">Why it works</div>
+    <h2 class="section-title">Bring customers back</h2>
+    <p class="section-sub">Regulars spend more and visit more often. A simple loyalty program turns one-time visitors into repeat customers.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon qr">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <rect x="3" y="3" width="7" height="7" rx="1"/>
+            <rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="3" y="14" width="7" height="7" rx="1"/>
+            <rect x="14" y="14" width="3" height="3"/>
+            <line x1="21" y1="14" x2="21" y2="17"/>
+            <line x1="14" y1="21" x2="17" y2="21"/>
+            <line x1="21" y1="21" x2="21" y2="21.01"/>
+          </svg>
+        </div>
+        <div>
+          <div class="feature-title">More repeat visits</div>
+          <div class="feature-desc">Customers come back to fill their card. A simple reason to choose you over the place next door.</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon people">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M2 21v-2a4 4 0 014-4h6a4 4 0 014 4v2"/>
+            <circle cx="19" cy="7" r="3"/>
+            <path d="M22 21v-1.5a3 3 0 00-2.5-2.96"/>
+          </svg>
+        </div>
+        <div>
+          <div class="feature-title">Higher average spend</div>
+          <div class="feature-desc">Loyal customers spend more per visit. They know the menu, they trust you, they add extras.</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon phone">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <rect x="5" y="2" width="14" height="20" rx="3"/>
+            <line x1="12" y1="18" x2="12.01" y2="18"/>
+          </svg>
+        </div>
+        <div>
+          <div class="feature-title">Zero friction for customers</div>
+          <div class="feature-desc">No app to download, no signup needed. They just scan and go &mdash; works in any browser.</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon globe">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="feature-title">Set up in 5 minutes</div>
+          <div class="feature-desc">Sign up, create your program, print the QR. You're live the same day.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section" id="contact">
+  <div class="contact">
+    <h2 class="contact-heading">Interested?</h2>
+    <p class="contact-sub">Drop us a message and we'll tell you everything you need to know.</p>
+    <a href="https://wa.me/1234567890" class="whatsapp-btn">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Message us on WhatsApp
+    </a>
+    <div class="contact-email">or email <a href="mailto:hello@epunch.app">hello@epunch.app</a></div>
+    <div class="contact-note">Have questions? Just message us &mdash; we reply fast.</div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  ePunch &mdash; Digital loyalty, made simple.
+</footer>
+
+</body>
+</html>
