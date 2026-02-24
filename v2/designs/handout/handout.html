@@ -258,10 +258,43 @@ body {
   .page:last-of-type {
     page-break-after: avoid;
   }
+  .lang-toggle { display: none; }
+}
+
+.lang-toggle {
+  display: flex;
+  gap: 2px;
+  background: #f3f1ee;
+  border-radius: 8px;
+  padding: 2px;
+  margin-bottom: -20px;
+}
+.lang-btn {
+  padding: 5px 10px;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ABABAB;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.lang-btn.active {
+  background: #fff;
+  color: #1A1A1A;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 </style>
 </head>
 <body>
+
+<div class="lang-toggle">
+  <button class="lang-btn active" onclick="setLang('es')">ES</button>
+  <button class="lang-btn" onclick="setLang('en')">EN</button>
+  <button class="lang-btn" onclick="setLang('ru')">RU</button>
+  <button class="lang-btn" onclick="setLang('zh')">CN</button>
+</div>
 
 <div class="label">Front</div>
 <div class="page front">
@@ -269,13 +302,8 @@ body {
 
   <div class="front-body">
     <div class="front-text">
-      <div class="big-text">
-        Keep customers<br>
-        <span class="highlight">coming back.</span>
-      </div>
-      <div class="front-detail">
-        Digital punch cards on their phone. Customers collect punches, earn rewards, return more often.
-      </div>
+      <div class="big-text" data-i18n="headline"></div>
+      <div class="front-detail" data-i18n="subline"></div>
     </div>
 
     <div class="phone-wrap">
@@ -296,8 +324,8 @@ body {
 
   <div class="front-bottom-row">
     <div>
-      <span class="tag">3 seconds per scan</span>
-      <span class="tag">No app needed</span>
+      <span class="tag" data-i18n="tag1"></span>
+      <span class="tag" data-i18n="tag2"></span>
     </div>
     <div class="front-contacts">
       <span class="front-contact-wa">+54 9 11 5903 8763</span>
@@ -310,25 +338,25 @@ body {
 <div class="label">Back</div>
 <div class="page back">
   <div class="back-top">
-    <div class="back-top-label">How it works</div>
+    <div class="back-top-label" data-i18n="how-label"></div>
     <div class="how-row">
       <div class="how-item">
         <div class="how-num">1</div>
-        <div class="how-text">Client scans<br>your QR</div>
+        <div class="how-text" data-i18n="step1"></div>
       </div>
       <div class="how-item">
         <div class="how-num">2</div>
-        <div class="how-text">They collect<br>punches</div>
+        <div class="how-text" data-i18n="step2"></div>
       </div>
       <div class="how-item">
         <div class="how-num">3</div>
-        <div class="how-text">Full card =<br>reward</div>
+        <div class="how-text" data-i18n="step3"></div>
       </div>
     </div>
   </div>
 
   <div class="back-bottom">
-    <div class="back-cta">Interested? Write us.</div>
+    <div class="back-cta" data-i18n="cta"></div>
     <div class="back-row">
       <div class="back-col">
         <div class="qr-placeholder"><img id="backQr" src="https://api.qrserver.com/v1/create-qr-code/?data=https%3A%2F%2Fepunch.app&size=400x400&margin=0" alt="QR" style="width:100%;height:100%"></div>
@@ -353,6 +381,68 @@ window.addEventListener('load', function() {
   device.style.transform = 'scale(' + scale + ')';
   wrap.style.height = (device.offsetHeight * scale) + 'px';
 });
+
+var T = {
+  es: {
+    'headline': 'Que tus clientes<br><span class="highlight">vuelvan siempre.</span>',
+    'subline': 'Tarjetas de sellos digitales en el celular. Tus clientes juntan sellos, ganan premios y vuelven más seguido.',
+    'tag1': '3 segundos por escaneo',
+    'tag2': 'Sin descargar app',
+    'how-label': 'Cómo funciona',
+    'step1': 'El cliente escanea<br>tu QR',
+    'step2': 'Junta<br>sellos',
+    'step3': 'Tarjeta llena =<br>premio',
+    'cta': '¿Te interesa? Escribinos.'
+  },
+  en: {
+    'headline': 'Keep customers<br><span class="highlight">coming back.</span>',
+    'subline': 'Digital punch cards on their phone. Customers collect punches, earn rewards, return more often.',
+    'tag1': '3 seconds per scan',
+    'tag2': 'No app needed',
+    'how-label': 'How it works',
+    'step1': 'Client scans<br>your QR',
+    'step2': 'They collect<br>punches',
+    'step3': 'Full card =<br>reward',
+    'cta': 'Interested? Write us.'
+  },
+  ru: {
+    'headline': 'Чтобы клиенты<br><span class="highlight">возвращались.</span>',
+    'subline': 'Цифровые карты лояльности в телефоне. Клиенты копят печати, получают награды и приходят чаще.',
+    'tag1': '3 секунды на сканирование',
+    'tag2': 'Без приложения',
+    'how-label': 'Как это работает',
+    'step1': 'Клиент сканирует<br>ваш QR',
+    'step2': 'Собирает<br>печати',
+    'step3': 'Полная карта =<br>награда',
+    'cta': 'Интересно? Напишите нам.'
+  },
+  zh: {
+    'headline': '让顾客<br><span class="highlight">不断回来。</span>',
+    'subline': '手机上的数字集章卡。顾客集章、赢奖励、回头更频繁。',
+    'tag1': '每次扫码3秒',
+    'tag2': '无需下载应用',
+    'how-label': '如何运作',
+    'step1': '顾客扫描<br>你的二维码',
+    'step2': '收集<br>印章',
+    'step3': '集满 =<br>奖励',
+    'cta': '感兴趣？联系我们。'
+  }
+};
+
+function setLang(lang) {
+  var strings = T[lang];
+  if (!strings) return;
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    if (strings[key] != null) el.innerHTML = strings[key];
+  });
+  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : lang;
+  document.querySelectorAll('.lang-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.textContent.trim() === { es: 'ES', en: 'EN', ru: 'RU', zh: 'CN' }[lang]);
+  });
+}
+
+setLang('es');
 </script>
 
 </body>
