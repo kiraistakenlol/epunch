@@ -243,6 +243,22 @@ body {
   font-size: 13px;
   color: #717171;
 }
+
+@media print {
+  @page { size: A5 portrait; margin: 0; }
+  body { background: none; padding: 0; gap: 0; }
+  .label { display: none; }
+  .page {
+    width: 148mm;
+    height: 210mm;
+    box-shadow: none;
+    border-radius: 0;
+    page-break-after: always;
+  }
+  .page:last-of-type {
+    page-break-after: avoid;
+  }
+}
 </style>
 </head>
 <body>
@@ -280,8 +296,8 @@ body {
 
   <div class="front-bottom-row">
     <div>
+      <span class="tag">3 seconds per scan</span>
       <span class="tag">No app needed</span>
-      <span class="tag">Set up in 5 min</span>
     </div>
     <div class="front-contacts">
       <span class="front-contact-wa">+54 9 11 5903 8763</span>

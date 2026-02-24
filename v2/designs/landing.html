@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,6 +43,9 @@ body {
   padding: 20px 24px;
   max-width: 1100px;
   margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 .logo {
   font-size: 26px;
@@ -51,6 +54,31 @@ body {
   letter-spacing: -0.5px;
 }
 .logo span { color: var(--black); }
+
+.lang-toggle {
+  display: flex;
+  gap: 2px;
+  background: var(--gray-5);
+  border-radius: 8px;
+  padding: 2px;
+}
+.lang-btn {
+  padding: 5px 10px;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-3);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.lang-btn.active {
+  background: var(--white);
+  color: var(--black);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
 
 /* ── Hero ── */
 .hero {
@@ -530,8 +558,19 @@ body {
 }
 .whatsapp-btn:hover { background: var(--wa-hover); }
 .whatsapp-btn svg { flex-shrink: 0; }
-.contact-email {
+.contact-phone {
   margin-top: 20px;
+  font-size: 15px;
+  color: var(--gray-2);
+}
+.contact-phone a {
+  color: var(--coral);
+  font-weight: 600;
+  text-decoration: none;
+}
+.contact-phone a:hover { text-decoration: underline; }
+.contact-email {
+  margin-top: 8px;
   font-size: 15px;
   color: var(--gray-2);
 }
@@ -750,6 +789,12 @@ body {
 <!-- Header -->
 <header class="header">
   <div class="logo">e<span>Punch</span></div>
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('es')">ES</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" onclick="setLang('ru')">RU</button>
+    <button class="lang-btn" onclick="setLang('zh')">CN</button>
+  </div>
 </header>
 
 <!-- Hero -->
@@ -765,7 +810,7 @@ body {
             <div class="mc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 110 8h-1"/><path d="M3 8h14v9a4 4 0 01-4 4H7a4 4 0 01-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg></div>
             <div>
               <div class="mc-name">Brew &amp; Co</div>
-              <div class="mc-program">Buy 8 coffees, get 1 free</div>
+              <div class="mc-program" data-i18n="card-program"></div>
             </div>
           </div>
           <div class="mc-counter"><span id="punch-count">0</span><sub>/8</sub></div>
@@ -781,17 +826,18 @@ body {
           <div class="mc-dot filled"></div>
         </div>
         <div class="mc-reward">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg> Reward: <strong>Free coffee of your choice</strong>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg>
+          <span data-i18n="card-reward"></span>
         </div>
-        <div class="mc-reward-badge" id="rewardBadge">Reward ready!</div>
+        <div class="mc-reward-badge" id="rewardBadge" data-i18n="reward-badge"></div>
       </div>
     </div>
 
     <!-- Hero Text -->
     <div class="hero-text">
-      <h1>Digital punch cards for your business</h1>
-      <p>Replace paper cards. Customers scan, collect punches, earn rewards. Set up in 5 minutes.</p>
-      <a href="#contact" class="hero-cta">Get started free &rarr;</a>
+      <h1 data-i18n="hero-title"></h1>
+      <p data-i18n="hero-sub"></p>
+      <a href="#contact" class="hero-cta" data-i18n="hero-cta"></a>
     </div>
   </div>
 </section>
@@ -799,29 +845,29 @@ body {
 <!-- How It Works -->
 <section class="section cream">
   <div class="section-inner">
-    <div class="section-label reveal">Simple as 1-2-3</div>
-    <h2 class="section-title reveal">How it works</h2>
-    <p class="section-sub reveal">No app downloads. No complicated setup. Your customers just scan and collect.</p>
+    <div class="section-label reveal" data-i18n="how-label"></div>
+    <h2 class="section-title reveal" data-i18n="how-title"></h2>
+    <p class="section-sub reveal" data-i18n="how-sub"></p>
     <div class="flow-steps reveal-group">
       <div class="flow-step reveal" style="--i:0">
         <div class="flow-num">1</div>
         <div class="flow-content">
-          <h3>Customer scans your QR</h3>
-          <p>Place our QR code at your counter. Customers scan it with their phone camera &mdash; no app needed.</p>
+          <h3 data-i18n="step1-title"></h3>
+          <p data-i18n="step1-desc"></p>
         </div>
       </div>
       <div class="flow-step reveal" style="--i:1">
         <div class="flow-num">2</div>
         <div class="flow-content">
-          <h3>They collect punches</h3>
-          <p>Each visit earns a punch on their digital card. It fills up automatically &mdash; just like paper, but better.</p>
+          <h3 data-i18n="step2-title"></h3>
+          <p data-i18n="step2-desc"></p>
         </div>
       </div>
       <div class="flow-step reveal" style="--i:2">
         <div class="flow-num">3</div>
         <div class="flow-content">
-          <h3>They earn rewards</h3>
-          <p>When the card is full, they redeem their reward. Happy customers keep coming back.</p>
+          <h3 data-i18n="step3-title"></h3>
+          <p data-i18n="step3-desc"></p>
         </div>
       </div>
     </div>
@@ -831,68 +877,66 @@ body {
 <!-- Card Types -->
 <section class="section">
   <div class="section-inner">
-    <div class="section-label reveal">Your cards, your rules</div>
-    <h2 class="section-title reveal">Create cards that fit your business</h2>
-    <p class="section-sub reveal">Choose from three card types. Set the rules, pick the reward, make it yours. Run as many as you want.</p>
+    <div class="section-label reveal" data-i18n="types-label"></div>
+    <h2 class="section-title reveal" data-i18n="types-title"></h2>
+    <p class="section-sub reveal" data-i18n="types-sub"></p>
     <div class="card-types reveal-group">
       <div class="card-type reveal" style="--i:0">
         <div class="card-type-top">
           <div class="card-type-emoji" style="background: rgba(255,56,92,0.08); color: var(--coral)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
           <div>
-            <div class="card-type-title">Punch cards</div>
-            <div class="card-type-desc">Collect punches, earn a reward. The classic &mdash; now digital.</div>
+            <div class="card-type-title" data-i18n="punch-title"></div>
+            <div class="card-type-desc" data-i18n="punch-desc"></div>
           </div>
         </div>
         <div class="card-type-custom">
-          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Set how many punches (6, 8, 10&hellip;)</div>
-          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Choose the reward (free item, discount&hellip;)</div>
-          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Card restarts automatically when full</div>
+          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> <span data-i18n="punch-check1"></span></div>
+          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> <span data-i18n="punch-check2"></span></div>
+          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> <span data-i18n="punch-check3"></span></div>
         </div>
-        <div class="card-type-example">e.g. "Buy 8 coffees, get 1 free"</div>
+        <div class="card-type-example" data-i18n="punch-example"></div>
       </div>
       <div class="card-type reveal" style="--i:1">
         <div class="card-type-top">
           <div class="card-type-emoji" style="background: rgba(123,94,167,0.08); color: #7B5EA7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/><path d="M12 6v12"/></svg></div>
           <div>
-            <div class="card-type-title">Bundles</div>
-            <div class="card-type-desc">Sell a pack of visits upfront. Guaranteed revenue for you.</div>
+            <div class="card-type-title" data-i18n="bundle-title"></div>
+            <div class="card-type-desc" data-i18n="bundle-desc"></div>
           </div>
         </div>
         <div class="card-type-custom">
-          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Set pack size (5, 10, 20&hellip;)</div>
-          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Name the bundle (espresso pack, class pass&hellip;)</div>
-          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Customer uses one per visit until gone</div>
+          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> <span data-i18n="bundle-check1"></span></div>
+          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> <span data-i18n="bundle-check2"></span></div>
+          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> <span data-i18n="bundle-check3"></span></div>
         </div>
-        <div class="card-type-example">e.g. "5-pack espresso" or "10 class pass"</div>
+        <div class="card-type-example" data-i18n="bundle-example"></div>
       </div>
       <div class="card-type reveal" style="--i:2">
         <div class="card-type-top">
           <div class="card-type-emoji" style="background: rgba(232,163,23,0.08); color: #E8A317"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div>
           <div>
-            <div class="card-type-title">Discounts</div>
-            <div class="card-type-desc">Give ongoing perks to your best customers.</div>
+            <div class="card-type-title" data-i18n="discount-title"></div>
+            <div class="card-type-desc" data-i18n="discount-desc"></div>
           </div>
         </div>
         <div class="card-type-custom">
-          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Describe the perk (% off, free extra&hellip;)</div>
-          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Give to specific customers</div>
-          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Active until you decide to remove it</div>
+          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> <span data-i18n="discount-check1"></span></div>
+          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> <span data-i18n="discount-check2"></span></div>
+          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> <span data-i18n="discount-check3"></span></div>
         </div>
-        <div class="card-type-example">e.g. "10% off all pastries" or "Free size upgrade"</div>
+        <div class="card-type-example" data-i18n="discount-example"></div>
       </div>
     </div>
-    <div class="customize-note reveal">
-      You name the card, pick an icon, set the colors &mdash; customers see <strong>your brand</strong>, not ours.
-    </div>
+    <div class="customize-note reveal" data-i18n="customize-note"></div>
   </div>
 </section>
 
 <!-- What You Get -->
 <section class="section cream">
   <div class="section-inner">
-    <div class="section-label reveal">Why it works</div>
-    <h2 class="section-title reveal">Bring customers back</h2>
-    <p class="section-sub reveal">Regulars spend more and visit more often. A simple loyalty program turns one-time visitors into repeat customers.</p>
+    <div class="section-label reveal" data-i18n="why-label"></div>
+    <h2 class="section-title reveal" data-i18n="why-title"></h2>
+    <p class="section-sub reveal" data-i18n="why-sub"></p>
     <div class="features-grid reveal-group">
       <div class="feature-card reveal" style="--i:0">
         <div class="feature-icon qr">
@@ -907,8 +951,8 @@ body {
           </svg>
         </div>
         <div>
-          <div class="feature-title">More repeat visits</div>
-          <div class="feature-desc">Customers come back to fill their card. A simple reason to choose you over the place next door.</div>
+          <div class="feature-title" data-i18n="feat1-title"></div>
+          <div class="feature-desc" data-i18n="feat1-desc"></div>
         </div>
       </div>
       <div class="feature-card reveal" style="--i:1">
@@ -921,8 +965,8 @@ body {
           </svg>
         </div>
         <div>
-          <div class="feature-title">Higher average spend</div>
-          <div class="feature-desc">Loyal customers spend more per visit. They know the menu, they trust you, they add extras.</div>
+          <div class="feature-title" data-i18n="feat2-title"></div>
+          <div class="feature-desc" data-i18n="feat2-desc"></div>
         </div>
       </div>
       <div class="feature-card reveal" style="--i:2">
@@ -933,8 +977,8 @@ body {
           </svg>
         </div>
         <div>
-          <div class="feature-title">Zero friction for customers</div>
-          <div class="feature-desc">No app to download, no signup needed. They just scan and go &mdash; works in any browser.</div>
+          <div class="feature-title" data-i18n="feat3-title"></div>
+          <div class="feature-desc" data-i18n="feat3-desc"></div>
         </div>
       </div>
       <div class="feature-card reveal" style="--i:3">
@@ -946,8 +990,8 @@ body {
           </svg>
         </div>
         <div>
-          <div class="feature-title">Set up in 5 minutes</div>
-          <div class="feature-desc">Sign up, create your program, print the QR. You're live the same day.</div>
+          <div class="feature-title" data-i18n="feat4-title"></div>
+          <div class="feature-desc" data-i18n="feat4-desc"></div>
         </div>
       </div>
     </div>
@@ -957,25 +1001,274 @@ body {
 <!-- CTA -->
 <section class="section" id="contact">
   <div class="contact">
-    <h2 class="contact-heading reveal">Interested?</h2>
-    <p class="contact-sub reveal">Drop us a message and we'll tell you everything you need to know.</p>
+    <h2 class="contact-heading reveal" data-i18n="cta-heading"></h2>
+    <p class="contact-sub reveal" data-i18n="cta-sub"></p>
     <a href="https://wa.me/5491159038763" class="whatsapp-btn reveal">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-      Message us on WhatsApp
+      <span data-i18n="cta-wa"></span>
     </a>
-    <div class="contact-email">or email <a href="mailto:hello@epunch.app">hello@epunch.app</a></div>
-    <div class="contact-note">Have questions? Just message us &mdash; we reply fast.</div>
+    <div class="contact-phone" data-i18n="cta-phone"></div>
+    <div class="contact-email" data-i18n="cta-email"></div>
+    <div class="contact-note" data-i18n="cta-note"></div>
   </div>
 </section>
 
 <!-- Footer -->
-<footer class="footer">
-  ePunch &mdash; Digital loyalty, made simple.
-</footer>
+<footer class="footer" data-i18n="footer"></footer>
 
 <script>
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
+var T = {
+  es: {
+    'card-program': 'Comprá 8 cafés, llevá 1 gratis',
+    'card-reward': 'Premio: <strong>Café gratis a elección</strong>',
+    'reward-badge': '¡Premio listo!',
+    'hero-title': 'Tarjetas de fidelidad digitales para tu negocio',
+    'hero-sub': 'Reemplazá las tarjetas de papel. Tus clientes escanean, juntan sellos y ganan premios. Listo en 5 minutos.',
+    'hero-cta': 'Contactanos \u2192',
+    'how-label': 'Fácil como 1-2-3',
+    'how-title': 'Cómo funciona',
+    'how-sub': 'Sin descargar apps. Sin configuración complicada. Tus clientes solo escanean y listo.',
+    'step1-title': 'El cliente escanea tu QR',
+    'step1-desc': 'Poné nuestro QR en tu mostrador. Los clientes lo escanean con la cámara del celular \u2014 sin app.',
+    'step2-title': 'Junta sellos',
+    'step2-desc': 'Cada visita suma un sello en su tarjeta digital. Se llena automáticamente \u2014 como el papel, pero mejor.',
+    'step3-title': 'Gana premios',
+    'step3-desc': 'Cuando la tarjeta se llena, canjea su premio. Clientes contentos vuelven siempre.',
+    'types-label': 'Tus tarjetas, tus reglas',
+    'types-title': 'Creá tarjetas a tu medida',
+    'types-sub': 'Elegí entre tres tipos de tarjeta. Poné las reglas, elegí el premio, hacela tuya. Creá las que quieras.',
+    'punch-title': 'Tarjetas de sellos',
+    'punch-desc': 'Juntá sellos, ganá un premio. El clásico \u2014 ahora digital.',
+    'punch-check1': 'Elegí cuántos sellos (6, 8, 10\u2026)',
+    'punch-check2': 'Elegí el premio (producto gratis, descuento\u2026)',
+    'punch-check3': 'La tarjeta se reinicia sola al completarse',
+    'punch-example': 'ej. "Comprá 8 cafés, llevá 1 gratis"',
+    'bundle-title': 'Packs',
+    'bundle-desc': 'Vendé un paquete de visitas por adelantado. Ingreso garantizado.',
+    'bundle-check1': 'Elegí el tamaño del pack (5, 10, 20\u2026)',
+    'bundle-check2': 'Ponele nombre (pack espresso, pase de clases\u2026)',
+    'bundle-check3': 'El cliente usa uno por visita hasta agotarlos',
+    'bundle-example': 'ej. "Pack de 5 espressos" o "Pase de 10 clases"',
+    'discount-title': 'Descuentos',
+    'discount-desc': 'Dales beneficios permanentes a tus mejores clientes.',
+    'discount-check1': 'Describí el beneficio (% off, extra gratis\u2026)',
+    'discount-check2': 'Asignalo a clientes específicos',
+    'discount-check3': 'Activo hasta que vos lo saques',
+    'discount-example': 'ej. "10% off en medialunas" o "Tamaño grande gratis"',
+    'customize-note': 'Vos elegís el nombre, el ícono y los colores \u2014 tus clientes ven <strong>tu marca</strong>, no la nuestra.',
+    'why-label': 'Por qué funciona',
+    'why-title': 'Hacé que tus clientes vuelvan',
+    'why-sub': 'Los clientes habituales gastan más y vienen más seguido. Un programa de fidelidad simple convierte visitantes en regulares.',
+    'feat1-title': 'Más visitas repetidas',
+    'feat1-desc': 'Los clientes vuelven para completar su tarjeta. Una razón simple para elegirte a vos.',
+    'feat2-title': 'Mayor gasto promedio',
+    'feat2-desc': 'Los clientes fieles gastan más por visita. Conocen el menú, confían en vos, agregan extras.',
+    'feat3-title': 'Cero fricción para el cliente',
+    'feat3-desc': 'Sin descargar app, sin registro. Solo escanean y listo \u2014 funciona en cualquier navegador.',
+    'feat4-title': 'Listo en 5 minutos',
+    'feat4-desc': 'Registrate, creá tu programa, imprimí el QR. Estás activo el mismo día.',
+    'cta-heading': '¿Te interesa?',
+    'cta-sub': 'Mandanos un mensaje y te contamos todo lo que necesitás saber.',
+    'cta-wa': 'Escribinos por WhatsApp',
+    'cta-phone': '+54 9 11 5903-8763',
+    'cta-email': 'o escribí a <a href="mailto:hello@epunch.app">hello@epunch.app</a>',
+    'cta-note': '¿Tenés preguntas? Escribinos \u2014 respondemos rápido.',
+    'footer': 'ePunch \u2014 Fidelización digital, simple.'
+  },
+  en: {
+    'card-program': 'Buy 8 coffees, get 1 free',
+    'card-reward': 'Reward: <strong>Free coffee of your choice</strong>',
+    'reward-badge': 'Reward ready!',
+    'hero-title': 'Digital punch cards for your business',
+    'hero-sub': 'Replace paper cards. Customers scan, collect punches, earn rewards. Set up in 5 minutes.',
+    'hero-cta': 'Contact us \u2192',
+    'how-label': 'Simple as 1-2-3',
+    'how-title': 'How it works',
+    'how-sub': 'No app downloads. No complicated setup. Your customers just scan and collect.',
+    'step1-title': 'Customer scans your QR',
+    'step1-desc': 'Place our QR code at your counter. Customers scan it with their phone camera \u2014 no app needed.',
+    'step2-title': 'They collect punches',
+    'step2-desc': 'Each visit earns a punch on their digital card. It fills up automatically \u2014 just like paper, but better.',
+    'step3-title': 'They earn rewards',
+    'step3-desc': 'When the card is full, they redeem their reward. Happy customers keep coming back.',
+    'types-label': 'Your cards, your rules',
+    'types-title': 'Create cards that fit your business',
+    'types-sub': 'Choose from three card types. Set the rules, pick the reward, make it yours. Run as many as you want.',
+    'punch-title': 'Punch cards',
+    'punch-desc': 'Collect punches, earn a reward. The classic \u2014 now digital.',
+    'punch-check1': 'Set how many punches (6, 8, 10\u2026)',
+    'punch-check2': 'Choose the reward (free item, discount\u2026)',
+    'punch-check3': 'Card restarts automatically when full',
+    'punch-example': 'e.g. "Buy 8 coffees, get 1 free"',
+    'bundle-title': 'Bundles',
+    'bundle-desc': 'Sell a pack of visits upfront. Guaranteed revenue for you.',
+    'bundle-check1': 'Set pack size (5, 10, 20\u2026)',
+    'bundle-check2': 'Name the bundle (espresso pack, class pass\u2026)',
+    'bundle-check3': 'Customer uses one per visit until gone',
+    'bundle-example': 'e.g. "5-pack espresso" or "10 class pass"',
+    'discount-title': 'Discounts',
+    'discount-desc': 'Give ongoing perks to your best customers.',
+    'discount-check1': 'Describe the perk (% off, free extra\u2026)',
+    'discount-check2': 'Give to specific customers',
+    'discount-check3': 'Active until you decide to remove it',
+    'discount-example': 'e.g. "10% off all pastries" or "Free size upgrade"',
+    'customize-note': 'You name the card, pick an icon, set the colors \u2014 customers see <strong>your brand</strong>, not ours.',
+    'why-label': 'Why it works',
+    'why-title': 'Bring customers back',
+    'why-sub': 'Regulars spend more and visit more often. A simple loyalty program turns one-time visitors into repeat customers.',
+    'feat1-title': 'More repeat visits',
+    'feat1-desc': 'Customers come back to fill their card. A simple reason to choose you over the place next door.',
+    'feat2-title': 'Higher average spend',
+    'feat2-desc': 'Loyal customers spend more per visit. They know the menu, they trust you, they add extras.',
+    'feat3-title': 'Zero friction for customers',
+    'feat3-desc': 'No app to download, no signup needed. They just scan and go \u2014 works in any browser.',
+    'feat4-title': 'Set up in 5 minutes',
+    'feat4-desc': 'Sign up, create your program, print the QR. You\'re live the same day.',
+    'cta-heading': 'Interested?',
+    'cta-sub': 'Drop us a message and we\'ll tell you everything you need to know.',
+    'cta-wa': 'Message us on WhatsApp',
+    'cta-phone': '+54 9 11 5903-8763',
+    'cta-email': 'or email <a href="mailto:hello@epunch.app">hello@epunch.app</a>',
+    'cta-note': 'Have questions? Just message us \u2014 we reply fast.',
+    'footer': 'ePunch \u2014 Digital loyalty, made simple.'
+  },
+  zh: {
+    'card-program': '买8杯咖啡，免费得1杯',
+    'card-reward': '奖励：<strong>免费咖啡任选</strong>',
+    'reward-badge': '奖励已就绪！',
+    'hero-title': '为你的店铺打造数字集章卡',
+    'hero-sub': '告别纸质卡片。顾客扫码、集章、赢奖励。5分钟即可上线。',
+    'hero-cta': '联系我们 \u2192',
+    'how-label': '简单三步',
+    'how-title': '如何运作',
+    'how-sub': '无需下载应用，无需复杂设置。顾客只需扫码即可。',
+    'step1-title': '顾客扫描你的二维码',
+    'step1-desc': '将我们的二维码放在柜台上。顾客用手机相机扫描即可——不需要下载任何应用。',
+    'step2-title': '他们收集印章',
+    'step2-desc': '每次消费自动获得一个印章。自动累计——像纸卡一样，但更好。',
+    'step3-title': '他们赢得奖励',
+    'step3-desc': '集满后兑换奖励。满意的顾客会持续回来。',
+    'types-label': '你的卡，你做主',
+    'types-title': '创建适合你的卡片',
+    'types-sub': '三种卡片类型可选。设定规则，选择奖励，打造你的品牌。想创建多少就创建多少。',
+    'punch-title': '集章卡',
+    'punch-desc': '集章赢奖励。经典模式——现在是数字版。',
+    'punch-check1': '设定印章数量（6、8、10……）',
+    'punch-check2': '选择奖励（免费商品、折扣……）',
+    'punch-check3': '集满后自动重新开始',
+    'punch-example': '例如 "买8杯咖啡，免费得1杯"',
+    'bundle-title': '套餐包',
+    'bundle-desc': '预售消费套餐。为你锁定收入。',
+    'bundle-check1': '设定套餐数量（5、10、20……）',
+    'bundle-check2': '命名套餐（浓缩咖啡包、课程通行证……）',
+    'bundle-check3': '每次消费使用一次直到用完',
+    'bundle-example': '例如 "5杯浓缩套餐" 或 "10次课程通行证"',
+    'discount-title': '折扣',
+    'discount-desc': '为你的忠实客户提供持续优惠。',
+    'discount-check1': '描述优惠（折扣百分比、免费加料……）',
+    'discount-check2': '指定给特定客户',
+    'discount-check3': '持续有效直到你取消',
+    'discount-example': '例如 "所有糕点9折" 或 "免费升杯"',
+    'customize-note': '你来命名卡片、选图标、定颜色——顾客看到的是<strong>你的品牌</strong>，不是我们的。',
+    'why-label': '为什么有效',
+    'why-title': '让顾客不断回来',
+    'why-sub': '老顾客消费更多、来得更勤。一个简单的忠诚计划就能把路人变成回头客。',
+    'feat1-title': '更多回头客',
+    'feat1-desc': '顾客会回来集满卡片。一个简单的理由让他们选择你而不是隔壁。',
+    'feat2-title': '更高的客单价',
+    'feat2-desc': '忠实顾客每次消费更多。他们熟悉菜单，信任你，会加点额外的。',
+    'feat3-title': '顾客零门槛',
+    'feat3-desc': '无需下载应用，无需注册。扫码即走——任何浏览器都能用。',
+    'feat4-title': '5分钟搞定',
+    'feat4-desc': '注册、创建计划、打印二维码。当天就能上线。',
+    'cta-heading': '感兴趣？',
+    'cta-sub': '给我们发消息，我们会告诉你所有你需要知道的。',
+    'cta-wa': '通过WhatsApp联系我们',
+    'cta-phone': '+54 9 11 5903-8763',
+    'cta-email': '或发邮件至 <a href="mailto:hello@epunch.app">hello@epunch.app</a>',
+    'cta-note': '有问题？给我们发消息——我们回复很快。',
+    'footer': 'ePunch \u2014 数字忠诚计划，简单好用。'
+  },
+  ru: {
+    'card-program': 'Купи 8 кофе, получи 1 бесплатно',
+    'card-reward': 'Награда: <strong>Бесплатный кофе на выбор</strong>',
+    'reward-badge': 'Награда готова!',
+    'hero-title': 'Цифровые карты лояльности для вашего бизнеса',
+    'hero-sub': 'Замените бумажные карточки. Клиенты сканируют, собирают печати, получают награды. Настройка за 5 минут.',
+    'hero-cta': 'Связаться с нами \u2192',
+    'how-label': 'Просто как 1-2-3',
+    'how-title': 'Как это работает',
+    'how-sub': 'Без скачивания приложений. Без сложной настройки. Клиенты просто сканируют и копят.',
+    'step1-title': 'Клиент сканирует ваш QR',
+    'step1-desc': 'Разместите наш QR-код на кассе. Клиенты сканируют камерой телефона \u2014 без приложения.',
+    'step2-title': 'Собирают печати',
+    'step2-desc': 'Каждый визит \u2014 новая печать на цифровой карте. Заполняется автоматически \u2014 как бумажная, но лучше.',
+    'step3-title': 'Получают награды',
+    'step3-desc': 'Когда карта заполнена, клиент получает награду. Довольные клиенты возвращаются снова.',
+    'types-label': 'Ваши карты, ваши правила',
+    'types-title': 'Создайте карты под ваш бизнес',
+    'types-sub': 'Три типа карт на выбор. Задайте правила, выберите награду, сделайте по-своему. Создавайте сколько угодно.',
+    'punch-title': 'Карты с печатями',
+    'punch-desc': 'Собирай печати, получай награду. Классика \u2014 теперь в цифре.',
+    'punch-check1': 'Задайте количество печатей (6, 8, 10\u2026)',
+    'punch-check2': 'Выберите награду (бесплатный товар, скидка\u2026)',
+    'punch-check3': 'Карта перезапускается автоматически',
+    'punch-example': 'напр. "Купи 8 кофе, получи 1 бесплатно"',
+    'bundle-title': 'Пакеты',
+    'bundle-desc': 'Продавайте пакет визитов заранее. Гарантированный доход.',
+    'bundle-check1': 'Задайте размер пакета (5, 10, 20\u2026)',
+    'bundle-check2': 'Назовите пакет (пакет эспрессо, абонемент\u2026)',
+    'bundle-check3': 'Клиент использует по одному за визит',
+    'bundle-example': 'напр. "5 эспрессо" или "Абонемент на 10 занятий"',
+    'discount-title': 'Скидки',
+    'discount-desc': 'Постоянные бонусы для лучших клиентов.',
+    'discount-check1': 'Опишите бонус (% скидки, бесплатное дополнение\u2026)',
+    'discount-check2': 'Назначьте конкретным клиентам',
+    'discount-check3': 'Действует пока вы не отмените',
+    'discount-example': 'напр. "Скидка 10% на выпечку" или "Бесплатный апгрейд размера"',
+    'customize-note': 'Вы выбираете название, иконку и цвета \u2014 клиенты видят <strong>ваш бренд</strong>, а не наш.',
+    'why-label': 'Почему это работает',
+    'why-title': 'Верните клиентов снова',
+    'why-sub': 'Постоянные клиенты тратят больше и приходят чаще. Простая программа лояльности превращает случайных посетителей в постоянных.',
+    'feat1-title': 'Больше повторных визитов',
+    'feat1-desc': 'Клиенты возвращаются, чтобы заполнить карту. Простая причина выбрать вас.',
+    'feat2-title': 'Выше средний чек',
+    'feat2-desc': 'Лояльные клиенты тратят больше за визит. Они знают меню, доверяют вам, берут дополнительное.',
+    'feat3-title': 'Ноль барьеров для клиентов',
+    'feat3-desc': 'Не нужно скачивать приложение или регистрироваться. Просто сканируй \u2014 работает в любом браузере.',
+    'feat4-title': 'Настройка за 5 минут',
+    'feat4-desc': 'Зарегистрируйтесь, создайте программу, распечатайте QR. Работает в тот же день.',
+    'cta-heading': 'Интересно?',
+    'cta-sub': 'Напишите нам, и мы расскажем всё, что нужно знать.',
+    'cta-wa': 'Написать в WhatsApp',
+    'cta-phone': '+54 9 11 5903-8763',
+    'cta-email': 'или на почту <a href="mailto:hello@epunch.app">hello@epunch.app</a>',
+    'cta-note': 'Есть вопросы? Просто напишите \u2014 мы отвечаем быстро.',
+    'footer': 'ePunch \u2014 Цифровая лояльность, просто и удобно.'
+  }
+};
+
+function setLang(lang) {
+  var strings = T[lang];
+  if (!strings) return;
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    if (strings[key] != null) el.innerHTML = strings[key];
+  });
+  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : lang;
+  document.querySelectorAll('.lang-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.textContent.trim() === { es: 'ES', en: 'EN', ru: 'RU', zh: 'CN' }[lang]);
+  });
+  try { localStorage.setItem('epunch-lang', lang); } catch(e) {}
+}
+
+var urlLang = new URLSearchParams(window.location.search).get('lang');
+var savedLang = null;
+try { savedLang = localStorage.getItem('epunch-lang'); } catch(e) {}
+setLang((urlLang && T[urlLang]) ? urlLang : savedLang || 'es');
+
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
     if (entry.isIntersecting) {
       entry.target.classList.add('visible');
       observer.unobserve(entry.target);
@@ -983,17 +1276,17 @@ const observer = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
 
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
 
-document.querySelectorAll('.stack-shadow, .main-card').forEach(el => {
-  el.addEventListener('animationend', () => el.classList.add('landed'));
+document.querySelectorAll('.stack-shadow, .main-card').forEach(function(el) {
+  el.addEventListener('animationend', function() { el.classList.add('landed'); });
 });
 
-const counter = document.getElementById('punch-count');
-[1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100].forEach((ms, i) => {
-  setTimeout(() => { counter.textContent = i + 1; }, ms + 200);
+var counter = document.getElementById('punch-count');
+[1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100].forEach(function(ms, i) {
+  setTimeout(function() { counter.textContent = i + 1; }, ms + 200);
 });
-setTimeout(() => {
+setTimeout(function() {
   document.getElementById('rewardBadge').classList.add('visible');
 }, 3500);
 </script>
