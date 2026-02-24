@@ -1260,6 +1260,9 @@ function setLang(lang) {
     btn.classList.toggle('active', btn.textContent.trim() === { es: 'ES', en: 'EN', ru: 'RU', zh: 'CN' }[lang]);
   });
   try { localStorage.setItem('epunch-lang', lang); } catch(e) {}
+  var url = new URL(window.location);
+  url.searchParams.set('lang', lang);
+  history.replaceState(null, '', url);
 }
 
 var urlLang = new URLSearchParams(window.location.search).get('lang');
