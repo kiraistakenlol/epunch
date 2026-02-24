@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF">
-<title>ePunch — QR Pinned</title>
+<title>ePunch — QR Strip</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -54,41 +54,53 @@ body {
 .tab-view { display: none; }
 .tab-view.active { display: block; }
 
-/* ── QR Hero (top of Cards tab) ── */
+/* ── QR Strip (Variant A — Minimal Strip) ── */
 .qr-top-card {
-  padding: 16px 20px 20px;
-  padding-top: calc(16px + env(safe-area-inset-top, 0px));
-  background: var(--white);
+  margin-top: env(safe-area-inset-top, 0px);
+  margin-left: 0;
+  margin-right: 0;
+  padding: 10px 16px;
+  background: var(--gray-5);
+  border-bottom: 1px solid var(--gray-4);
+  border-radius: 0;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  border-bottom: 1px solid var(--gray-5);
+  gap: 12px;
 }
 .qr-canvas-container {
-  width: 200px;
-  height: 200px;
+  width: 72px;
+  height: 72px;
+  background: var(--white);
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+}
+.qr-top-info {
+  flex: 1;
+  min-width: 0;
 }
 .qr-top-logo {
-  font-size: 15px;
+  font-size: 20px;
   font-weight: 800;
   color: var(--coral);
-  letter-spacing: -0.3px;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+  display: none;
 }
 .qr-top-logo span { color: var(--black); }
 .qr-top-id {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
-  color: var(--gray-3);
+  color: var(--gray-2);
   font-family: 'Plus Jakarta Sans', monospace;
   letter-spacing: 0.3px;
+  margin-bottom: 0;
 }
 .qr-top-hint {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--gray-3);
+  line-height: 1.4;
 }
 
 /* ── Guest Banner ── */
@@ -774,13 +786,16 @@ body {
 <div class="app">
     <!-- Cards Tab -->
     <div class="tab-view active" id="tabCards">
-      <!-- QR Code pinned at top -->
+      <!-- QR Code strip at top -->
       <div class="qr-top-card">
-        <div class="qr-top-logo">e<span>Punch</span></div>
         <div class="qr-canvas-container">
-          <canvas id="topQrCanvas" width="200" height="200"></canvas>
+          <canvas id="topQrCanvas" width="66" height="66"></canvas>
         </div>
-        <div class="qr-top-id" id="topQrUserId" style="display:none"></div>
+        <div class="qr-top-info">
+          <div class="qr-top-logo">e<span>Punch</span></div>
+          <div class="qr-top-id" id="topQrUserId"></div>
+          <div class="qr-top-hint">Show to collect</div>
+        </div>
       </div>
 
       <!-- Guest Banner -->

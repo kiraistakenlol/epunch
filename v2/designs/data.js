@@ -7,6 +7,21 @@ const APP_DATA = {
     qrSeed: 0xABCDEF12
   },
 
+  signedInUser: {
+    id: "EP-2F9A-4C71-8B3E",
+    name: "Kirill S.",
+    email: "kirill@example.com",
+    authenticated: true,
+    qrSeed: 0xABCDEF12
+  },
+
+  guestUser: {
+    id: "EP-2F9A-4C71-8B3E",
+    name: "Guest User",
+    authenticated: false,
+    qrSeed: 0xABCDEF12
+  },
+
   cards: [
     // ── Punch cards (8) ──
     {
@@ -239,6 +254,14 @@ APP_DATA.eventText = function(event) {
     default:                  return event.event;
   }
 };
+
+// ?auth= presets: in, out (default: out)
+(function() {
+  const auth = new URLSearchParams(window.location.search).get('auth')
+    || localStorage.getItem('epunch-auth')
+    || 'out';
+  APP_DATA.user = auth === 'in' ? { ...APP_DATA.signedInUser } : { ...APP_DATA.guestUser };
+})();
 
 // ?state= presets
 // empty — new user, no cards

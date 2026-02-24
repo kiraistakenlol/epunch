@@ -131,7 +131,12 @@
 
 <script>
   const designs = [
-    { file: 'variants/01-qr-pinned.html', num: '01', name: 'QR Pinned' },
+    { file: 'variants/01-qr-pinned.html', num: '01', name: 'QR Pinned (current)' },
+    { file: 'variants/01a-qr-strip.html', num: 'A', name: 'Minimal Strip' },
+    { file: 'variants/01b-qr-centered.html', num: 'B', name: 'Centered Compact' },
+    { file: 'variants/01c-qr-card.html', num: 'C', name: 'Coral Card' },
+    { file: 'variants/01d-qr-split.html', num: 'D', name: 'Split Row' },
+    { file: 'variants/01e-qr-hero.html', num: 'E', name: 'Full-Bleed Hero' },
   ];
 
   const states = [
@@ -143,14 +148,30 @@
     { value: 'rewards3', label: '3 Rewards' },
   ];
 
+  const authStates = [
+    { value: 'out', label: 'Signed out' },
+    { value: 'in', label: 'Signed in' },
+  ];
+
   let currentState = localStorage.getItem('epunch-state') || 'full';
+  let currentAuth = localStorage.getItem('epunch-auth') || 'out';
 
   const picker = document.getElementById('picker');
 
   function render() {
-    const qs = currentState === 'full' ? '' : '?state=' + currentState;
+    const params = [];
+    if (currentState !== 'full') params.push('state=' + currentState);
+    if (currentAuth !== 'out') params.push('auth=' + currentAuth);
+    const qs = params.length ? '?' + params.join('&') : '';
 
     let html = '<h1>ePunch v2</h1><p>Tap a design to preview — use Safari back to return</p>';
+
+    html += '<div class="section-label">Auth</div>';
+    html += '<div class="state-picker">';
+    authStates.forEach(s => {
+      html += `<button data-auth="${s.value}" class="${s.value === currentAuth ? 'active' : ''}">${s.label}</button>`;
+    });
+    html += '</div>';
 
     html += '<div class="section-label">Data state</div>';
     html += '<div class="state-picker">';
@@ -172,12 +193,22 @@
 
     picker.innerHTML = html;
 
-    picker.querySelector('.state-picker').addEventListener('click', e => {
-      const btn = e.target.closest('button[data-state]');
-      if (!btn) return;
-      currentState = btn.dataset.state;
-      localStorage.setItem('epunch-state', currentState);
-      render();
+    picker.querySelectorAll('.state-picker').forEach(sp => {
+      sp.addEventListener('click', e => {
+        const stateBtn = e.target.closest('button[data-state]');
+        if (stateBtn) {
+          currentState = stateBtn.dataset.state;
+          localStorage.setItem('epunch-state', currentState);
+          render();
+          return;
+        }
+        const authBtn = e.target.closest('button[data-auth]');
+        if (authBtn) {
+          currentAuth = authBtn.dataset.auth;
+          localStorage.setItem('epunch-auth', currentAuth);
+          render();
+        }
+      });
     });
   }
 
