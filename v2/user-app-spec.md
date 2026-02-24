@@ -19,7 +19,8 @@ Each card type has different data and progress visualization, but they all belon
 - Must be easy to access — this is the most frequent action
 
 **Scan a merchant's QR code**
-- Scanning a QR code on a shop's counter creates a new card for that shop
+- Scanning a merchant's QR creates a new card for that shop
+- Merchant shows it from their portal screen
 - This is handled by the phone's camera, not the app itself
 
 **See their cards**
@@ -69,7 +70,7 @@ Each card type has different data and progress visualization, but they all belon
 3. Card appears or updates in real time
 
 **Getting a new card**
-1. User scans a merchant's QR on the counter
+1. User scans a merchant's QR (shown from their portal screen)
 2. New empty card for that shop appears
 
 **Redeeming a reward**

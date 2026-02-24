@@ -22,12 +22,12 @@ Staff should be able to do their job with zero training. Open the app, point cam
 **Create a punch card program (owner)**
 - Set: program name, number of punches required (e.g. 8), reward description (e.g. "Free coffee")
 - One active program is enough for MVP. Multiple programs are a future thing.
-- The program generates a QR code that goes on the counter for customers to scan
+- The program generates a QR code that customers scan to join
 
-**Print / display their QR code (owner)**
-- The counter QR is how new customers join
+**Show their QR code (owner)**
+- The shop QR is how new customers join
 - Customer scans it with their phone camera → gets an empty card
-- Should be easy to print or show on a tablet at the counter
+- Merchant shows it from the portal on their screen — no printing needed
 
 **Scan customers (staff + owner)**
 - This is the most frequent action, must be fast
@@ -72,7 +72,7 @@ Staff should be able to do their job with zero training. Open the app, point cam
 1. Owner signs up (name, email, password)
 2. Creates shop (name, address)
 3. Creates punch card program (name, punches needed, reward)
-4. Gets their counter QR code → prints it or displays it
+4. Gets their shop QR code → shows it to customers from the portal
 5. Done. Ready to start punching.
 
 **Daily operation (staff)**
@@ -81,7 +81,7 @@ Staff should be able to do their job with zero training. Open the app, point cam
 3. If customer shows redemption QR → staff scans → confirms reward → done
 
 **Customer walks in for the first time**
-1. Customer scans counter QR with phone camera → gets empty card
+1. Customer scans merchant's QR from their screen → gets empty card
 2. Next time they buy, they show their QR → staff scans → first punch
 
 **Checking activity (owner)**
@@ -99,7 +99,7 @@ Staff should be able to do their job with zero training. Open the app, point cam
 - Scanner (same as staff)
 - Program settings (edit punch card program)
 - Shop settings (name, address, logo)
-- Counter QR (view / print)
+- Shop QR (show to customers)
 - Staff management (add/remove)
 
 ## What we're NOT building for MVP

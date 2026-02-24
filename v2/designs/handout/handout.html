@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ePunch Handout — Final (A5)</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="devices.min.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Outfit', sans-serif;
+  background: #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  padding: 40px 20px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: -20px;
+}
+
+.page {
+  width: 148mm;
+  height: 210mm;
+  border-radius: 4px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── FRONT ── */
+.front {
+  background: #fff;
+  padding: 14mm 14mm;
+  justify-content: space-between;
+}
+
+.front-logo {
+  font-size: 21px;
+  font-weight: 800;
+  color: #FF385C;
+}
+.front-logo span { color: #1A1A1A; }
+
+.front-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12mm;
+}
+
+.front-text { flex: 1; }
+.big-text {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  color: #1A1A1A;
+  margin-bottom: 12px;
+}
+.big-text .highlight { color: #FF385C; }
+.front-detail {
+  font-size: 14px;
+  color: #717171;
+  line-height: 1.5;
+}
+
+/* ── iPhone frame (devices.css) ── */
+.phone-wrap {
+  width: 64mm;
+  flex-shrink: 0;
+  transform: rotate(4deg);
+}
+.phone-wrap .device {
+  transform-origin: top left;
+}
+.phone-wrap .device-screen {
+  position: relative;
+  overflow: hidden;
+}
+#appFrame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 390px;
+  height: 830px;
+  border: none;
+}
+
+.front-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tag {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1.5px solid #eee;
+  font-size: 11px;
+  font-weight: 600;
+  color: #717171;
+}
+.front-contacts {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #ABABAB;
+}
+.front-contact-wa {
+  color: #717171;
+  font-weight: 600;
+}
+.front-contact-sep {
+  color: #DDD;
+}
+.front-contact-email {
+  color: #717171;
+}
+
+/* ── BACK ── */
+.back { background: #fff; }
+
+.back-top {
+  background: #FAF8F5;
+  padding: 14mm 14mm;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.back-top-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #FF385C;
+  margin-bottom: 8mm;
+}
+.how-row {
+  display: flex;
+  gap: 8px;
+}
+.how-item {
+  flex: 1;
+  text-align: center;
+  padding: 8px 6px;
+}
+.how-num {
+  font-size: 28px;
+  font-weight: 800;
+  color: #FF385C;
+  margin-bottom: 3px;
+}
+.how-text {
+  font-size: 12px;
+  color: #444;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.back-bottom {
+  padding: 10mm 14mm;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.back-cta {
+  font-size: 26px;
+  font-weight: 800;
+  color: #1A1A1A;
+  margin-bottom: 8mm;
+  letter-spacing: -0.3px;
+}
+.back-row {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0;
+  width: 100%;
+}
+.back-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 4mm;
+}
+.back-col + .back-col {
+  border-left: 1px solid #eee;
+}
+
+.col-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #ABABAB;
+  margin-bottom: 6px;
+}
+.qr-placeholder {
+  width: 30mm;
+  height: 30mm;
+  display: block;
+  margin: 0 auto 6px;
+  overflow: hidden;
+}
+.qr-url {
+  font-size: 13px;
+  color: #717171;
+  text-align: center;
+}
+.contact-wa {
+  font-size: 17px;
+  font-weight: 700;
+  color: #25D366;
+  margin-bottom: 4px;
+}
+.contact-divider {
+  height: 1px;
+  width: 30px;
+  background: #eee;
+  margin: 8px auto;
+}
+.contact-email {
+  font-size: 13px;
+  color: #717171;
+}
+</style>
+</head>
+<body>
+
+<div class="label">Front</div>
+<div class="page front">
+  <div class="front-logo">e<span>Punch</span></div>
+
+  <div class="front-body">
+    <div class="front-text">
+      <div class="big-text">
+        Keep customers<br>
+        <span class="highlight">coming back.</span>
+      </div>
+      <div class="front-detail">
+        Digital punch cards on their phone. Customers collect punches, earn rewards, return more often.
+      </div>
+    </div>
+
+    <div class="phone-wrap">
+      <div class="device device-iphone-14-pro">
+        <div class="device-frame">
+          <div class="device-screen" id="phoneScreen">
+            <iframe id="appFrame" src="app.html" scrolling="no"></iframe>
+          </div>
+        </div>
+        <div class="device-stripe"></div>
+        <div class="device-header"></div>
+        <div class="device-sensors"></div>
+        <div class="device-btns"></div>
+        <div class="device-power"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="front-bottom-row">
+    <div>
+      <span class="tag">No app needed</span>
+      <span class="tag">Set up in 5 min</span>
+    </div>
+    <div class="front-contacts">
+      <span class="front-contact-wa">+54 9 11 5903 8763</span>
+      <span class="front-contact-sep">&middot;</span>
+      <span class="front-contact-email">hello@epunch.app</span>
+    </div>
+  </div>
+</div>
+
+<div class="label">Back</div>
+<div class="page back">
+  <div class="back-top">
+    <div class="back-top-label">How it works</div>
+    <div class="how-row">
+      <div class="how-item">
+        <div class="how-num">1</div>
+        <div class="how-text">Client scans<br>your QR</div>
+      </div>
+      <div class="how-item">
+        <div class="how-num">2</div>
+        <div class="how-text">They collect<br>punches</div>
+      </div>
+      <div class="how-item">
+        <div class="how-num">3</div>
+        <div class="how-text">Full card =<br>reward</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="back-bottom">
+    <div class="back-cta">Interested? Write us.</div>
+    <div class="back-row">
+      <div class="back-col">
+        <div class="qr-placeholder"><img id="backQr" src="https://api.qrserver.com/v1/create-qr-code/?data=https%3A%2F%2Fepunch.app&size=400x400&margin=0" alt="QR" style="width:100%;height:100%"></div>
+        <div class="qr-url">epunch.app</div>
+      </div>
+      <div class="back-col">
+        <div class="col-label">WhatsApp</div>
+        <div class="contact-wa">+54 9 11 5903 8763</div>
+        <div class="contact-divider"></div>
+        <div class="col-label">Email</div>
+        <div class="contact-email">hello@epunch.app</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener('load', function() {
+  var wrap = document.querySelector('.phone-wrap');
+  var device = wrap.querySelector('.device');
+  var scale = wrap.offsetWidth / device.offsetWidth;
+  device.style.transform = 'scale(' + scale + ')';
+  wrap.style.height = (device.offsetHeight * scale) + 'px';
+});
+</script>
+
+</body>
+</html>

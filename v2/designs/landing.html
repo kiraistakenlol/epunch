@@ -114,7 +114,7 @@ body {
   background: var(--white);
   border-radius: 20px;
   border: 1px solid #eee;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 6px 20px rgba(0,0,0,0.04);
   overflow: hidden;
 }
 .stack-shadow::before {
@@ -128,11 +128,19 @@ body {
   --accent: var(--juice);
   transform: rotate(-3.5deg) translateY(-10px);
   z-index: 1;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .stack-shadow:nth-child(2) {
   --accent: var(--bakery);
   transform: rotate(2.5deg) translateY(-6px);
   z-index: 2;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-stack:hover .stack-shadow:nth-child(1) {
+  transform: rotate(-5deg) translateX(-24px) translateY(-14px);
+}
+.card-stack:hover .stack-shadow:nth-child(2) {
+  transform: rotate(4deg) translateX(20px) translateY(-10px);
 }
 
 .main-card {
@@ -142,7 +150,7 @@ body {
   border-radius: 20px;
   padding: 24px;
   border: 1px solid #eee;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10), 0 8px 32px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
   overflow: hidden;
 }
 .main-card::before {
@@ -241,6 +249,31 @@ body {
 .mc-reward strong {
   color: var(--black);
   font-weight: 600;
+}
+
+.mc-reward-badge {
+  margin-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px;
+  background: #E6F7E6;
+  color: #008A05;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 20px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.4s, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: center;
+}
+.mc-reward-badge::before {
+  content: '\2605';
+  font-size: 12px;
+}
+.mc-reward-badge.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* ── Shared Section ── */
@@ -525,6 +558,149 @@ body {
   margin: 0 auto;
 }
 
+/* ── Animations ── */
+
+/* Hero load: staggered fade-up */
+.header,
+.hero-text h1,
+.hero-text p,
+.hero-cta {
+  opacity: 0;
+  transform: translateY(24px);
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.header        { animation-delay: 0s; }
+.hero-text h1  { animation-delay: 0.08s; }
+.hero-text p   { animation-delay: 0.16s; }
+.hero-cta      { animation-delay: 0.24s; }
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Card stack entrance — slide in already rotated */
+.stack-shadow,
+.main-card {
+  opacity: 0;
+  --slide-rotate: 0deg;
+  --slide-y: 0px;
+  animation: cardSlideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.stack-shadow.landed,
+.main-card.landed {
+  animation: none;
+  opacity: 1;
+}
+.stack-shadow:nth-child(1) {
+  --slide-rotate: -3.5deg;
+  --slide-y: -10px;
+  animation-delay: 0.3s;
+}
+.stack-shadow:nth-child(2) {
+  --slide-rotate: 2.5deg;
+  --slide-y: -6px;
+  animation-delay: 0.5s;
+}
+.main-card { animation-delay: 0.7s; }
+
+@keyframes cardSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(80px) rotate(var(--slide-rotate)) translateY(var(--slide-y));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(var(--slide-rotate)) translateY(var(--slide-y));
+  }
+}
+
+/* Punch dots — all visible, filled ones animate after cards settle */
+.mc-dot.filled {
+  background: transparent;
+  border-color: var(--gray-4);
+  animation: dotFill 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+.mc-dot.filled::after {
+  opacity: 0;
+  animation: checkShow 0.01s forwards;
+}
+.mc-dot.filled:nth-child(1) { animation-delay: 1.7s; }
+.mc-dot.filled:nth-child(2) { animation-delay: 1.9s; }
+.mc-dot.filled:nth-child(3) { animation-delay: 2.1s; }
+.mc-dot.filled:nth-child(4) { animation-delay: 2.3s; }
+.mc-dot.filled:nth-child(5) { animation-delay: 2.5s; }
+.mc-dot.filled:nth-child(6) { animation-delay: 2.7s; }
+.mc-dot.filled:nth-child(7) { animation-delay: 2.9s; }
+.mc-dot.filled:nth-child(8) { animation-delay: 3.1s; }
+.mc-dot.filled:nth-child(1)::after { animation-delay: 1.89s; }
+.mc-dot.filled:nth-child(2)::after { animation-delay: 2.09s; }
+.mc-dot.filled:nth-child(3)::after { animation-delay: 2.29s; }
+.mc-dot.filled:nth-child(4)::after { animation-delay: 2.49s; }
+.mc-dot.filled:nth-child(5)::after { animation-delay: 2.69s; }
+.mc-dot.filled:nth-child(6)::after { animation-delay: 2.89s; }
+.mc-dot.filled:nth-child(7)::after { animation-delay: 3.09s; }
+.mc-dot.filled:nth-child(8)::after { animation-delay: 3.29s; }
+
+@keyframes dotFill {
+  0% { background: transparent; border-color: var(--gray-4); transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { background: var(--coral); border-color: var(--coral); transform: scale(1); }
+}
+@keyframes checkShow {
+  to { opacity: 1; }
+}
+
+/* Scroll-triggered reveal — elements start hidden */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger children inside a reveal group */
+.reveal-group .reveal {
+  transition-delay: calc(var(--i, 0) * 0.08s);
+}
+
+/* CTA button — subtle scale on hover */
+.hero-cta {
+  transition: background 0.15s, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hero-cta:hover {
+  transform: translateY(-1px);
+}
+.hero-cta:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* WhatsApp button — same feel */
+.whatsapp-btn {
+  transition: background 0.15s, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.whatsapp-btn:hover {
+  transform: translateY(-1px);
+}
+.whatsapp-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+}
+
 /* ── Responsive ── */
 @media (min-width: 768px) {
   .hero { padding: 40px 32px 80px; }
@@ -592,7 +768,7 @@ body {
               <div class="mc-program">Buy 8 coffees, get 1 free</div>
             </div>
           </div>
-          <div class="mc-counter">5<sub>/8</sub></div>
+          <div class="mc-counter"><span id="punch-count">0</span><sub>/8</sub></div>
         </div>
         <div class="mc-dots">
           <div class="mc-dot filled"></div>
@@ -600,13 +776,14 @@ body {
           <div class="mc-dot filled"></div>
           <div class="mc-dot filled"></div>
           <div class="mc-dot filled"></div>
-          <div class="mc-dot"></div>
-          <div class="mc-dot"></div>
-          <div class="mc-dot"></div>
+          <div class="mc-dot filled"></div>
+          <div class="mc-dot filled"></div>
+          <div class="mc-dot filled"></div>
         </div>
         <div class="mc-reward">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg> Reward: <strong>Free coffee of your choice</strong>
         </div>
+        <div class="mc-reward-badge" id="rewardBadge">Reward ready!</div>
       </div>
     </div>
 
@@ -622,25 +799,25 @@ body {
 <!-- How It Works -->
 <section class="section cream">
   <div class="section-inner">
-    <div class="section-label">Simple as 1-2-3</div>
-    <h2 class="section-title">How it works</h2>
-    <p class="section-sub">No app downloads. No complicated setup. Your customers just scan and collect.</p>
-    <div class="flow-steps">
-      <div class="flow-step">
+    <div class="section-label reveal">Simple as 1-2-3</div>
+    <h2 class="section-title reveal">How it works</h2>
+    <p class="section-sub reveal">No app downloads. No complicated setup. Your customers just scan and collect.</p>
+    <div class="flow-steps reveal-group">
+      <div class="flow-step reveal" style="--i:0">
         <div class="flow-num">1</div>
         <div class="flow-content">
           <h3>Customer scans your QR</h3>
           <p>Place our QR code at your counter. Customers scan it with their phone camera &mdash; no app needed.</p>
         </div>
       </div>
-      <div class="flow-step">
+      <div class="flow-step reveal" style="--i:1">
         <div class="flow-num">2</div>
         <div class="flow-content">
           <h3>They collect punches</h3>
           <p>Each visit earns a punch on their digital card. It fills up automatically &mdash; just like paper, but better.</p>
         </div>
       </div>
-      <div class="flow-step">
+      <div class="flow-step reveal" style="--i:2">
         <div class="flow-num">3</div>
         <div class="flow-content">
           <h3>They earn rewards</h3>
@@ -654,11 +831,11 @@ body {
 <!-- Card Types -->
 <section class="section">
   <div class="section-inner">
-    <div class="section-label">Your cards, your rules</div>
-    <h2 class="section-title">Create cards that fit your business</h2>
-    <p class="section-sub">Choose from three card types. Set the rules, pick the reward, make it yours. Run as many as you want.</p>
-    <div class="card-types">
-      <div class="card-type">
+    <div class="section-label reveal">Your cards, your rules</div>
+    <h2 class="section-title reveal">Create cards that fit your business</h2>
+    <p class="section-sub reveal">Choose from three card types. Set the rules, pick the reward, make it yours. Run as many as you want.</p>
+    <div class="card-types reveal-group">
+      <div class="card-type reveal" style="--i:0">
         <div class="card-type-top">
           <div class="card-type-emoji" style="background: rgba(255,56,92,0.08); color: var(--coral)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
           <div>
@@ -673,7 +850,7 @@ body {
         </div>
         <div class="card-type-example">e.g. "Buy 8 coffees, get 1 free"</div>
       </div>
-      <div class="card-type">
+      <div class="card-type reveal" style="--i:1">
         <div class="card-type-top">
           <div class="card-type-emoji" style="background: rgba(123,94,167,0.08); color: #7B5EA7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/><path d="M12 6v12"/></svg></div>
           <div>
@@ -688,7 +865,7 @@ body {
         </div>
         <div class="card-type-example">e.g. "5-pack espresso" or "10 class pass"</div>
       </div>
-      <div class="card-type">
+      <div class="card-type reveal" style="--i:2">
         <div class="card-type-top">
           <div class="card-type-emoji" style="background: rgba(232,163,23,0.08); color: #E8A317"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div>
           <div>
@@ -704,7 +881,7 @@ body {
         <div class="card-type-example">e.g. "10% off all pastries" or "Free size upgrade"</div>
       </div>
     </div>
-    <div class="customize-note">
+    <div class="customize-note reveal">
       You name the card, pick an icon, set the colors &mdash; customers see <strong>your brand</strong>, not ours.
     </div>
   </div>
@@ -713,11 +890,11 @@ body {
 <!-- What You Get -->
 <section class="section cream">
   <div class="section-inner">
-    <div class="section-label">Why it works</div>
-    <h2 class="section-title">Bring customers back</h2>
-    <p class="section-sub">Regulars spend more and visit more often. A simple loyalty program turns one-time visitors into repeat customers.</p>
-    <div class="features-grid">
-      <div class="feature-card">
+    <div class="section-label reveal">Why it works</div>
+    <h2 class="section-title reveal">Bring customers back</h2>
+    <p class="section-sub reveal">Regulars spend more and visit more often. A simple loyalty program turns one-time visitors into repeat customers.</p>
+    <div class="features-grid reveal-group">
+      <div class="feature-card reveal" style="--i:0">
         <div class="feature-icon qr">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <rect x="3" y="3" width="7" height="7" rx="1"/>
@@ -734,7 +911,7 @@ body {
           <div class="feature-desc">Customers come back to fill their card. A simple reason to choose you over the place next door.</div>
         </div>
       </div>
-      <div class="feature-card">
+      <div class="feature-card reveal" style="--i:1">
         <div class="feature-icon people">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <circle cx="9" cy="7" r="4"/>
@@ -748,7 +925,7 @@ body {
           <div class="feature-desc">Loyal customers spend more per visit. They know the menu, they trust you, they add extras.</div>
         </div>
       </div>
-      <div class="feature-card">
+      <div class="feature-card reveal" style="--i:2">
         <div class="feature-icon phone">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <rect x="5" y="2" width="14" height="20" rx="3"/>
@@ -760,7 +937,7 @@ body {
           <div class="feature-desc">No app to download, no signup needed. They just scan and go &mdash; works in any browser.</div>
         </div>
       </div>
-      <div class="feature-card">
+      <div class="feature-card reveal" style="--i:3">
         <div class="feature-icon globe">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <circle cx="12" cy="12" r="10"/>
@@ -780,9 +957,9 @@ body {
 <!-- CTA -->
 <section class="section" id="contact">
   <div class="contact">
-    <h2 class="contact-heading">Interested?</h2>
-    <p class="contact-sub">Drop us a message and we'll tell you everything you need to know.</p>
-    <a href="https://wa.me/1234567890" class="whatsapp-btn">
+    <h2 class="contact-heading reveal">Interested?</h2>
+    <p class="contact-sub reveal">Drop us a message and we'll tell you everything you need to know.</p>
+    <a href="https://wa.me/5491159038763" class="whatsapp-btn reveal">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
       Message us on WhatsApp
     </a>
@@ -795,6 +972,31 @@ body {
 <footer class="footer">
   ePunch &mdash; Digital loyalty, made simple.
 </footer>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+document.querySelectorAll('.stack-shadow, .main-card').forEach(el => {
+  el.addEventListener('animationend', () => el.classList.add('landed'));
+});
+
+const counter = document.getElementById('punch-count');
+[1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100].forEach((ms, i) => {
+  setTimeout(() => { counter.textContent = i + 1; }, ms + 200);
+});
+setTimeout(() => {
+  document.getElementById('rewardBadge').classList.add('visible');
+}, 3500);
+</script>
 
 </body>
 </html>
