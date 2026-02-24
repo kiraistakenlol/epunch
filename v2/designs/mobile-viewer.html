@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ePunch — Design Picker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  :root {
+    --bg: #F5F2ED;
+    --surface: #FFFFFF;
+    --text: #1C1917;
+    --text-dim: #78716C;
+    --border: #E7E5E0;
+    --accent: #1C1917;
+    --radius: 14px;
+  }
+
+  html, body { height: 100%; font-family: 'Manrope', sans-serif; background: var(--bg); color: var(--text); }
+
+  .picker {
+    padding: 60px 20px 40px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .picker h1 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .picker p {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 28px;
+  }
+
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .list a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.12s, box-shadow 0.12s;
+  }
+
+  .list a:active {
+    transform: scale(0.98);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+
+  .list .num {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .list .label {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .list .arrow {
+    color: var(--text-dim);
+    font-size: 18px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-dim);
+    margin: 20px 0 8px;
+  }
+
+  .section-label:first-child { margin-top: 0; }
+
+  .state-picker {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+
+  .state-picker button {
+    padding: 8px 14px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    background: var(--surface);
+    color: var(--text-dim);
+    cursor: pointer;
+  }
+
+  .state-picker button.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+</style>
+</head>
+<body>
+
+<div class="picker" id="picker"></div>
+
+<script>
+  const designs = [
+    { file: 'variants/01-wallet.html', num: '01', name: 'Wallet' },
+    { file: 'variants/02-qr-tab.html', num: '02', name: 'QR Tab' },
+    { file: 'variants/03-qr-pinned.html', num: '03', name: 'QR Pinned' },
+    { file: 'variants/04-qr-fab.html', num: '04', name: 'QR FAB' },
+    { file: 'variants/05-qr-home.html', num: '05', name: 'QR Home' },
+    { file: 'variants/06-qr-strip.html', num: '06', name: 'QR Strip' },
+    { file: 'variants/07-qr-pulldown.html', num: '07', name: 'QR Pulldown' },
+  ];
+
+  const states = [
+    { value: 'full', label: 'Full' },
+    { value: 'empty', label: 'Empty' },
+    { value: 'one', label: '1 card' },
+    { value: 'few', label: '2 cards' },
+    { value: 'reward', label: 'Reward' },
+    { value: 'rewards3', label: '3 Rewards' },
+  ];
+
+  let currentState = localStorage.getItem('epunch-state') || 'full';
+
+  const picker = document.getElementById('picker');
+
+  function render() {
+    const qs = currentState === 'full' ? '' : '?state=' + currentState;
+
+    let html = '<h1>ePunch v2</h1><p>Tap a design to preview — use Safari back to return</p>';
+
+    html += '<div class="section-label">Data state</div>';
+    html += '<div class="state-picker">';
+    states.forEach(s => {
+      html += `<button data-state="${s.value}" class="${s.value === currentState ? 'active' : ''}">${s.label}</button>`;
+    });
+    html += '</div>';
+
+    html += '<div class="section-label">Variants</div>';
+    html += '<div class="list">';
+    designs.forEach(d => {
+      html += `<a href="${d.file}${qs}">
+        <span class="num">${d.num}</span>
+        <span class="label">${d.name}</span>
+        <span class="arrow">›</span>
+      </a>`;
+    });
+    html += '</div>';
+
+    picker.innerHTML = html;
+
+    picker.querySelector('.state-picker').addEventListener('click', e => {
+      const btn = e.target.closest('button[data-state]');
+      if (!btn) return;
+      currentState = btn.dataset.state;
+      localStorage.setItem('epunch-state', currentState);
+      render();
+    });
+  }
+
+  render();
+</script>
+</body>
+</html>

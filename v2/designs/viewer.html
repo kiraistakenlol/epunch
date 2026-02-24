@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ePunch v2 — Design Viewer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --phone-w: 390px;
+            --phone-h: 844px;
+            --frame-radius: 48px;
+            --frame-border: 8px;
+            --frame-color: #1A1A1A;
+            --bg: #F0EEEB;
+            --text: #1A1A1A;
+            --text-secondary: #888;
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 40px 24px 80px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+
+        .grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 48px;
+            justify-content: center;
+        }
+
+        .design-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .design-label {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+
+        .design-label span {
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .phone-frame {
+            width: calc(var(--phone-w) + var(--frame-border) * 2);
+            height: calc(var(--phone-h) + var(--frame-border) * 2);
+            background: var(--frame-color);
+            border-radius: var(--frame-radius);
+            padding: var(--frame-border);
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .phone-frame::before {
+            content: '';
+            position: absolute;
+            top: var(--frame-border);
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 28px;
+            background: var(--frame-color);
+            border-radius: 0 0 16px 16px;
+            z-index: 10;
+        }
+
+        .phone-screen {
+            width: var(--phone-w);
+            height: var(--phone-h);
+            border-radius: calc(var(--frame-radius) - var(--frame-border));
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .phone-screen iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .scale-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 3px;
+            background: #fff;
+            padding: 4px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+            z-index: 900;
+            border: 1px solid #E7E5E0;
+        }
+
+        .scale-toggle button {
+            padding: 8px 16px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            border: none;
+            border-radius: 9px;
+            cursor: pointer;
+            background: transparent;
+            color: var(--text-secondary);
+        }
+
+        .scale-toggle button.active {
+            background: var(--text);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <h1>ePunch v2 Designs</h1>
+    <p class="subtitle">iPhone 14 — 390 x 844pt</p>
+
+    <div class="grid" id="grid"></div>
+
+    <div class="scale-toggle" id="scaleToggle">
+        <button data-scale="0.45">Small</button>
+        <button data-scale="0.6">Medium</button>
+        <button class="active" data-scale="0.75">Large</button>
+        <button data-scale="1">Full</button>
+    </div>
+
+    <script>
+        const grid = document.getElementById('grid');
+        let currentScale = 0.75;
+
+        const DIR = 'variants';
+
+        async function scanDir(dir) {
+            let files = [];
+            // Try directory listing
+            try {
+                const resp = await fetch(dir + '/');
+                const html = await resp.text();
+                const matches = html.match(/\d{2}-[\w-]+\.html/g);
+                if (matches) files = [...new Set(matches)].sort();
+            } catch(e) {}
+
+            // Fallback: probe known names
+            if (files.length === 0) {
+                const names = ['wallet','qr-first','single-card','grid','feed','tabs',
+                    'carousel','airbnb-wallet','qr-tab','qr-pinned','qr-fab','qr-home',
+                    'qr-strip','qr-pulldown','minimal-list','split','stamp-book',
+                    'dashboard','cards','list','stack','scroll','compact'];
+                const probes = [];
+                for (let i = 1; i <= 30; i++) {
+                    const num = String(i).padStart(2, '0');
+                    for (const name of names) probes.push(num + '-' + name + '.html');
+                }
+                const results = await Promise.allSettled(
+                    probes.map(f => fetch(dir + '/' + f, {method:'HEAD'}).then(r => r.ok ? f : null))
+                );
+                results.forEach(r => {
+                    if (r.status === 'fulfilled' && r.value) files.push(r.value);
+                });
+                files.sort();
+            }
+            return files;
+        }
+
+        async function loadDesigns() {
+            const files = await scanDir(DIR);
+            files.forEach(file => {
+                const m = file.match(/^(\d{2})-(.+)\.html$/);
+                if (!m) return;
+                const name = m[2].split('-').map(w => w[0].toUpperCase() + w.slice(1)).join(' ');
+                grid.innerHTML += `
+                    <div class="design-item">
+                        <div class="design-label">${m[1]} <span>${name}</span></div>
+                        <div class="phone-frame">
+                            <div class="phone-screen">
+                                <iframe src="${DIR}/${file}" loading="lazy"></iframe>
+                            </div>
+                        </div>
+                    </div>`;
+            });
+            applyScale(currentScale);
+        }
+
+        document.getElementById('scaleToggle').addEventListener('click', (e) => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            const scale = parseFloat(btn.dataset.scale);
+            document.querySelectorAll('.scale-toggle button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentScale = scale;
+            applyScale(scale);
+        });
+
+        function applyScale(scale) {
+            document.querySelectorAll('.phone-frame').forEach(frame => {
+                frame.style.transform = `scale(${scale})`;
+                frame.style.transformOrigin = 'top center';
+            });
+            document.querySelectorAll('.design-item').forEach(item => {
+                const w = (390 + 16) * scale;
+                const h = (844 + 16) * scale + 36;
+                item.style.width = w + 'px';
+                item.style.height = h + 'px';
+            });
+        }
+
+        loadDesigns();
+    </script>
+</body>
+</html>
