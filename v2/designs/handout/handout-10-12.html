@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ePunch Handout — 10×12 cm</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  background: #e5e5e5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+body {
+  width: 100mm;
+  height: 120mm;
+  min-width: 100mm;
+  min-height: 120mm;
+  max-width: 100mm;
+  max-height: 120mm;
+  flex-shrink: 0;
+  overflow: hidden;
+  font-family: 'Outfit', sans-serif;
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  padding: 6mm 7mm 5mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+@media print {
+  @page { size: 100mm 120mm; margin: 0; }
+  html { background: none; min-height: auto; }
+  body { box-shadow: none; transform: none !important; }
+}
+</style>
+</head>
+<body>
+<div style="display:flex; justify-content:space-between; align-items:flex-start;">
+  <div>
+    <div style="font-size:15px; font-weight:800; color:#FF385C;">e<span style="color:#1A1A1A;">Punch</span></div>
+    <div style="font-size:9px; color:#888; font-weight:600; margin-top:1mm;" data-i18n="subtitle"></div>
+  </div>
+  <div style="display:flex; flex-direction:column; align-items:center; gap:0.5mm;">
+    <div style="position:relative; width:22mm; height:22mm;">
+      <img id="wa-qr" alt="WhatsApp QR" style="width:22mm; height:22mm; display:block;">
+      <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:8mm; height:8mm; background:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+        <svg width="20" height="20" viewBox="0 0 175.216 175.552" fill="#000"><path d="M87.184 0C39.04 0 0 39.04 0 87.184c0 16.4 4.56 31.76 12.48 44.88L0 175.552l44.88-11.76c12.64 7.12 27.2 11.2 42.72 11.2 48.144 0 87.184-39.04 87.184-87.184S135.76 0 87.184 0zm0 159.84c-14.56 0-28.08-4.24-39.52-11.52l-2.8-1.68-29.04 7.6 7.76-28.32-1.84-2.96c-7.92-12.72-12.08-27.36-12.08-42.72 0-40.08 32.64-72.72 72.72-72.72s73.12 32.64 73.12 72.72-32.64 73.12-73.12 73.12z"/><path d="M126.088 105.864c-2.128-1.064-12.592-6.208-14.544-6.92-1.952-.712-3.376-1.064-4.8 1.064-1.424 2.128-5.504 6.92-6.744 8.344-1.24 1.424-2.48 1.6-4.608.536-2.128-1.064-8.992-3.312-17.12-10.568-6.336-5.648-10.608-12.624-11.848-14.752-1.24-2.128-.136-3.28.928-4.344.96-.96 2.128-2.48 3.192-3.72 1.064-1.24 1.424-2.128 2.128-3.552.712-1.424.36-2.664-.176-3.72-.536-1.064-4.8-11.568-6.576-15.824-1.728-4.16-3.488-3.6-4.8-3.664-1.24-.056-2.664-.064-4.088-.064s-3.736.536-5.688 2.664c-1.952 2.128-7.456 7.28-7.456 17.76s7.632 20.608 8.696 22.032c1.064 1.424 15.008 22.912 36.368 32.128 5.08 2.192 9.04 3.504 12.128 4.48 5.096 1.624 9.736 1.392 13.4.848 4.088-.608 12.592-5.152 14.368-10.12 1.776-4.968 1.776-9.232 1.24-10.12-.536-.896-1.952-1.424-4.088-2.48z"/></svg>
+      </div>
+    </div>
+    <div style="font-size:7px; color:#555; font-weight:600;" data-i18n="wa-label"></div>
+  </div>
+</div>
+
+<div style="font-size:21px; font-weight:900; line-height:1.1; color:#1A1A1A; letter-spacing:-0.5px;" data-i18n="headline"></div>
+
+<div style="align-self:center; background:#FAF8F5; border-radius:3.5mm; padding:3.5mm 4mm 3mm; transform:rotate(-2deg); box-shadow:0 4px 16px rgba(0,0,0,0.28), 0 1px 4px rgba(0,0,0,0.15); display:inline-block;">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2.5mm;">
+    <div style="font-size:8px; color:#999; font-weight:700; text-transform:uppercase; letter-spacing:1.5px;" data-i18n="card-label"></div>
+    <div style="font-size:9px; color:#aaa; font-weight:700; margin-left:4mm;">4 / 10</div>
+  </div>
+  <div style="display:flex; gap:2.5mm; margin-bottom:2.5mm;">
+    <div style="width:9mm; height:9mm; border-radius:50%; background:#FF385C; display:flex; align-items:center; justify-content:center; font-size:10px; color:#fff; font-weight:800;">✓</div>
+    <div style="width:9mm; height:9mm; border-radius:50%; background:#FF385C; display:flex; align-items:center; justify-content:center; font-size:10px; color:#fff; font-weight:800;">✓</div>
+    <div style="width:9mm; height:9mm; border-radius:50%; background:#FF385C; display:flex; align-items:center; justify-content:center; font-size:10px; color:#fff; font-weight:800;">✓</div>
+    <div style="width:9mm; height:9mm; border-radius:50%; background:#FF385C; display:flex; align-items:center; justify-content:center; font-size:10px; color:#fff; font-weight:800;">✓</div>
+    <div style="width:9mm; height:9mm; border-radius:50%; border:2px solid #ccc; background:#fff;"></div>
+  </div>
+  <div style="display:flex; gap:2.5mm;">
+    <div style="width:9mm; height:9mm; border-radius:50%; border:2px solid #ccc; background:#fff;"></div>
+    <div style="width:9mm; height:9mm; border-radius:50%; border:2px solid #ccc; background:#fff;"></div>
+    <div style="width:9mm; height:9mm; border-radius:50%; border:2px solid #ccc; background:#fff;"></div>
+    <div style="width:9mm; height:9mm; border-radius:50%; border:2px solid #ccc; background:#fff;"></div>
+    <div style="width:9mm; height:9mm; border-radius:50%; border:1.5px solid #FF385C; background:#fff; display:flex; align-items:center; justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FF385C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="12" width="18" height="10" rx="1"/><line x1="12" y1="12" x2="12" y2="22"/><path d="M12 7c0-3 -3-5-6-3s0 6 6 6c6 0 9-4 6-6s-6 0-6 3"/></svg></div>
+  </div>
+</div>
+
+<div style="display:flex;">
+  <div style="flex:1; text-align:center; font-size:10px; color:#333; font-weight:600; line-height:1.35; padding:0 2px;"><span style="display:block; font-size:14px; font-weight:900; color:#FF385C;">1</span><span data-i18n="step1"></span></div>
+  <div style="flex:1; text-align:center; font-size:10px; color:#333; font-weight:600; line-height:1.35; padding:0 2px; border-left:1px solid #f0f0f0; border-right:1px solid #f0f0f0;"><span style="display:block; font-size:14px; font-weight:900; color:#FF385C;">2</span><span data-i18n="step2"></span></div>
+  <div style="flex:1; text-align:center; font-size:10px; color:#333; font-weight:600; line-height:1.35; padding:0 2px;"><span style="display:block; font-size:14px; font-weight:900; color:#FF385C;">3</span><span data-i18n="step3"></span></div>
+</div>
+
+<div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #f0f0f0; padding-top:2.5mm;">
+  <span style="display:flex; align-items:center; gap:1.5px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg><span style="font-size:7.5px; color:#333; font-weight:700;">epunch.app</span></span>
+  <span style="display:flex; align-items:center; gap:1.5px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="#1A1A1A"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg><span style="font-size:7.5px; color:#333; font-weight:700;" data-i18n="phone"></span></span>
+  <span style="display:flex; align-items:center; gap:1.5px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg><span style="font-size:7.5px; color:#333; font-weight:700;">hello@epunch.app</span></span>
+</div>
+
+<script>
+var T = {
+  es: {
+    phone: '+54 9 11 5903 8763',
+    waLink: 'https://wa.me/5491159038763',
+    'wa-label': 'Escribinos',
+    subtitle: 'Tarjetas de sellos digitales.<br>Sin app. En su celular.',
+    headline: 'Que tus clientes<br><span style="color:#FF385C;">vuelvan siempre.</span>',
+    'card-label': 'Nombre de tu negocio',
+    step1: 'Cliente escanea<br>tu QR',
+    step2: 'Junta<br>sellos',
+    step3: 'Vuelve por<br>su premio'
+  },
+  en: {
+    phone: '+54 9 11 5903 8763',
+    waLink: 'https://wa.me/5491159038763',
+    'wa-label': 'Write us',
+    subtitle: 'Digital punch cards.<br>No app. On their phone.',
+    headline: 'Keep customers<br><span style="color:#FF385C;">coming back.</span>',
+    'card-label': 'Your business name',
+    step1: 'Customer scans<br>your QR',
+    step2: 'Collects<br>punches',
+    step3: 'Comes back<br>for the reward'
+  },
+  ru: {
+    phone: '+7 925 041-93-62',
+    waLink: 'https://wa.me/79250419362',
+    'wa-label': 'Напишите нам',
+    subtitle: 'Цифровые карты лояльности.<br>Без приложения. В телефоне.',
+    headline: 'Клиенты<br><span style="color:#FF385C;">возвращаются.</span>',
+    'card-label': 'Название вашего бизнеса',
+    step1: 'Клиент сканирует<br>ваш QR',
+    step2: 'Собирает<br>штампы',
+    step3: 'Возвращается<br>за подарком'
+  }
+};
+
+function setLang(lang) {
+  var strings = T[lang];
+  if (!strings) return;
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    if (strings[key] != null) el.innerHTML = strings[key];
+  });
+  document.documentElement.lang = lang;
+  document.title = 'ePunch Handout 10x12 — ' + lang;
+  var waQr = document.getElementById('wa-qr');
+  if (waQr) waQr.src = 'https://api.qrserver.com/v1/create-qr-code/?data=' + encodeURIComponent(strings.waLink) + '&size=300x300&margin=0&ecc=H';
+}
+
+var urlLang = new URLSearchParams(window.location.search).get('lang');
+setLang((urlLang && T[urlLang]) ? urlLang : 'es');
+
+// Scale CSS mm to real physical mm.
+// CSS always maps 1mm = 3.7795px (96dpi), but actual screen PPI differs.
+// We detect common Mac screens by physical pixel resolution and apply a correction.
+(function() {
+  var dpr = window.devicePixelRatio || 1;
+  var pw = screen.width * dpr;
+  var ph = screen.height * dpr;
+  var diag = Math.sqrt(pw * pw + ph * ph);
+
+  // [expectedDiagonalPx, screenSizeInches] for known Mac displays
+  var screens = [
+    [3606, 14.2],  // MacBook Pro 14"
+    [4116, 16.2],  // MacBook Pro 16"
+    [3018, 13.3],  // MacBook Pro 13" / Air (old)
+    [3054, 13.6],  // MacBook Air 13.6"
+    [3430, 15.3],  // MacBook Air 15"
+    [5142, 23.5],  // iMac 24"
+    [5876, 27.0],  // Apple Studio Display
+  ];
+
+  var scale = null;
+  for (var i = 0; i < screens.length; i++) {
+    if (Math.abs(diag - screens[i][0]) < 150) {
+      var ppi = screens[i][0] / screens[i][1];
+      scale = ppi / (96 * dpr);
+      break;
+    }
+  }
+
+  // Fallback: generic Retina Mac ~1.28, non-Retina no scale
+  if (!scale && dpr >= 2) scale = 1.28;
+
+  if (scale && Math.abs(scale - 1) > 0.02) {
+    document.body.style.transform = 'scale(' + scale.toFixed(4) + ')';
+  }
+})();
+</script>
+</body>
+</html>

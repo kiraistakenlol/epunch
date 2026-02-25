@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Print Sizes — Real Size Preview</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #e5e5e5;
+      font-family: system-ui, sans-serif;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .calibration {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+
+    .ruler {
+      width: 10cm;
+      height: 8px;
+      background: repeating-linear-gradient(
+        to right,
+        #333 0, #333 1px,
+        transparent 1px, transparent 9px,
+        #333 9px, #333 10px,
+        transparent 10px, transparent 19px,
+        #333 19px, #333 20px,
+        transparent 20px, transparent 49px,
+        #666 49px, #666 50px,
+        transparent 50px, transparent 99px,
+        #333 99px, #333 100px
+      );
+      border: 1px solid #333;
+    }
+
+    .calibration-label {
+      font-size: 12px;
+      color: #555;
+    }
+
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      align-items: flex-end;
+    }
+
+    .item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #bbb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .card-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #222;
+    }
+
+    .card-dims {
+      font-size: 11px;
+      color: #888;
+    }
+
+    .label {
+      font-size: 12px;
+      color: #555;
+      text-align: center;
+    }
+
+    /* Real physical sizes using CSS mm units */
+    .a6     { width: 105mm; height: 148mm; }
+    .a7     { width: 74mm;  height: 105mm; }
+    .sq100  { width: 100mm; height: 100mm; }
+    .bizcard { width: 85mm; height: 55mm; }
+    .dl     { width: 99mm;  height: 210mm; }
+    .sq1015 { width: 100mm; height: 150mm; }
+  </style>
+</head>
+<body>
+
+  <h1>Calibrate: the bar below should be exactly 10 cm wide on your screen</h1>
+  <div class="calibration">
+    <div class="ruler"></div>
+    <span class="calibration-label">← 10 cm →</span>
+  </div>
+
+  <div class="grid">
+
+    <div class="item">
+      <div class="card sq1015">
+        <span class="card-name">10 × 15 cm</span>
+        <span class="card-dims">100 × 150 mm</span>
+      </div>
+      <div class="label">Typography card size</div>
+    </div>
+
+    <div class="item">
+      <div class="card a6">
+        <span class="card-name">A6</span>
+        <span class="card-dims">105 × 148 mm</span>
+      </div>
+      <div class="label">Half of A5<br>Most common small flyer</div>
+    </div>
+
+    <div class="item">
+      <div class="card a7">
+        <span class="card-name">A7</span>
+        <span class="card-dims">74 × 105 mm</span>
+      </div>
+      <div class="label">Quarter of A4</div>
+    </div>
+
+    <div class="item">
+      <div class="card sq100">
+        <span class="card-name">10 × 10 cm</span>
+        <span class="card-dims">100 × 100 mm</span>
+      </div>
+      <div class="label">Square<br>"finger square" size</div>
+    </div>
+
+    <div class="item">
+      <div class="card bizcard">
+        <span class="card-name">Business card</span>
+        <span class="card-dims">85 × 55 mm</span>
+      </div>
+      <div class="label">Standard business card</div>
+    </div>
+
+    <div class="item">
+      <div class="card dl">
+        <span class="card-name">DL</span>
+        <span class="card-dims">99 × 210 mm</span>
+      </div>
+      <div class="label">Fits in envelope<br>Tall narrow flyer</div>
+    </div>
+
+  </div>
+
+</body>
+</html>
