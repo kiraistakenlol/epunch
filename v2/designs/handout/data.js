@@ -30,7 +30,9 @@ const APP_DATA = {
       shopName: "Your Business",
       address: "123 Main Street",
       program: "Buy 8, get 1 free",
+      programI18n: { en: "Buy 8, get 1 free", es: "Compra 8, lleva 1 gratis", ru: "Купи 8, получи 1 бесплатно", zh: "买8送1" },
       reward: "1 free item of your choice",
+      rewardI18n: { en: "1 free item of your choice", es: "1 artículo gratis a tu elección", ru: "1 бесплатный товар на выбор", zh: "免费获得1件商品" },
       current: 5,
       total: 8,
       accent: "#FF385C",
@@ -42,7 +44,9 @@ const APP_DATA = {
       shopName: "Your Business",
       address: "456 Oak Avenue",
       program: "Buy 6, get 1 free",
+      programI18n: { en: "Buy 6, get 1 free", es: "Compra 6, lleva 1 gratis", ru: "Купи 6, получи 1 бесплатно", zh: "买6送1" },
       reward: "1 free item",
+      rewardI18n: { en: "1 free item", es: "1 artículo gratis", ru: "1 бесплатный товар", zh: "免费获得1件商品" },
       current: 6,
       total: 6,
       accent: "#008A05",
@@ -74,17 +78,20 @@ APP_DATA.cardsByType = function(type) {
   return this.cards.filter(c => c.type === type);
 };
 
-APP_DATA.eventText = function(event) {
+APP_DATA.eventText = function(event, lang) {
   const card = this.getCard(event.cardId);
   if (!card) return "";
-  switch (event.event) {
-    case "punch":             return `Got a punch at ${card.shopName}`;
-    case "reward_ready":      return `Reward ready at ${card.shopName}!`;
-    case "new_card":          return `New card from ${card.shopName}`;
-    case "bundle_use":        return `Used ${card.program} at ${card.shopName}`;
-    case "bundle_purchase":   return `Purchased ${card.program} at ${card.shopName}`;
-    case "benefit_activated": return `Benefit activated: ${card.program}`;
-    case "benefit_expired":   return `Benefit expired: ${card.program}`;
-    default:                  return event.event;
-  }
+  const shop = card.shopName;
+  const prog = (card.programI18n && card.programI18n[lang]) || card.program;
+  const texts = {
+    punch:             { en: `Got a punch at ${shop}`, es: `Sello en ${shop}`, ru: `Печать в ${shop}`, zh: `在${shop}获得印章` },
+    reward_ready:      { en: `Reward ready at ${shop}!`, es: `¡Premio listo en ${shop}!`, ru: `Награда готова в ${shop}!`, zh: `${shop}的奖励已就绪！` },
+    new_card:          { en: `New card from ${shop}`, es: `Nueva tarjeta de ${shop}`, ru: `Новая карта от ${shop}`, zh: `来自${shop}的新卡片` },
+    bundle_use:        { en: `Used ${prog} at ${shop}`, es: `Usado ${prog} en ${shop}`, ru: `Использован ${prog} в ${shop}`, zh: `在${shop}使用了${prog}` },
+    bundle_purchase:   { en: `Purchased ${prog} at ${shop}`, es: `Comprado ${prog} en ${shop}`, ru: `Куплен ${prog} в ${shop}`, zh: `在${shop}购买了${prog}` },
+    benefit_activated: { en: `Benefit activated: ${prog}`, es: `Beneficio activado: ${prog}`, ru: `Бонус активирован: ${prog}`, zh: `权益已激活：${prog}` },
+    benefit_expired:   { en: `Benefit expired: ${prog}`, es: `Beneficio vencido: ${prog}`, ru: `Бонус истёк: ${prog}`, zh: `权益已过期：${prog}` },
+  };
+  const t = texts[event.event];
+  return (t && (t[lang] || t.en)) || event.event;
 };

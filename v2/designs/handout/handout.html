@@ -304,7 +304,7 @@ body {
       <div class="device device-iphone-14-pro">
         <div class="device-frame">
           <div class="device-screen" id="phoneScreen">
-            <iframe id="appFrame" src="app.html" scrolling="no"></iframe>
+            <iframe id="appFrame" src="../user-app.html?state=handout" scrolling="no"></iframe>
           </div>
         </div>
         <div class="device-stripe"></div>
@@ -322,7 +322,7 @@ body {
       <span class="tag" data-i18n="tag2"></span>
     </div>
     <div class="front-contacts">
-      <span class="front-contact-wa">+54 9 11 5903 8763</span>
+      <span class="front-contact-wa" data-i18n="phone">+54 9 11 5903 8763</span>
       <span class="front-contact-sep">&middot;</span>
       <span class="front-contact-email">hello@epunch.app</span>
     </div>
@@ -358,7 +358,7 @@ body {
       </div>
       <div class="back-col">
         <div class="col-label">WhatsApp</div>
-        <div class="contact-wa">+54 9 11 5903 8763</div>
+        <div class="contact-wa" data-i18n="phone">+54 9 11 5903 8763</div>
         <div class="contact-divider"></div>
         <div class="col-label">Email</div>
         <div class="contact-email">hello@epunch.app</div>
@@ -378,6 +378,7 @@ window.addEventListener('load', function() {
 
 var T = {
   es: {
+    'phone': '+54 9 11 5903 8763',
     'headline': 'Que tus clientes<br><span class="highlight">vuelvan siempre.</span>',
     'subline': 'Tarjetas de sellos digitales en el celular. Tus clientes juntan sellos, ganan premios y vuelven más seguido.',
     'tag1': '3 seg por escaneo',
@@ -389,6 +390,7 @@ var T = {
     'cta': '¿Te interesa? Escribinos.'
   },
   en: {
+    'phone': '+54 9 11 5903 8763',
     'headline': 'Keep customers<br><span class="highlight">coming back.</span>',
     'subline': 'Digital punch cards on their phone. Customers collect punches, earn rewards, return more often.',
     'tag1': '3 seconds per scan',
@@ -400,6 +402,7 @@ var T = {
     'cta': 'Interested? Write us.'
   },
   ru: {
+    'phone': '+7 925 041-93-62',
     'headline': 'Клиенты<br><span class="highlight">возвращаются.</span>',
     'subline': 'Цифровые карты лояльности в телефоне. Копят печати, получают награды, приходят чаще.',
     'tag1': '3 сек на скан',
@@ -411,6 +414,7 @@ var T = {
     'cta': 'Интересно? Напишите нам.'
   },
   zh: {
+    'phone': '+54 9 11 5903 8763',
     'headline': '让顾客<br><span class="highlight">不断回来。</span>',
     'subline': '手机上的数字集章卡。顾客集章、赢奖励、回头更频繁。',
     'tag1': '每次扫码3秒',
@@ -434,6 +438,8 @@ function setLang(lang) {
   document.querySelectorAll('.lang-btn').forEach(function(btn) {
     btn.classList.toggle('active', btn.textContent.trim() === { es: 'ES', en: 'EN', ru: 'RU', zh: 'CN' }[lang]);
   });
+  var appFrame = document.getElementById('appFrame');
+  if (appFrame) appFrame.src = '../user-app.html?state=handout&lang=' + lang;
 }
 
 var urlLang = new URLSearchParams(window.location.search).get('lang');

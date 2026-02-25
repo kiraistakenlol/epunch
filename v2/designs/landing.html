@@ -1241,7 +1241,7 @@ var T = {
     'cta-heading': 'Интересно?',
     'cta-sub': 'Напишите нам, и мы расскажем всё, что нужно знать.',
     'cta-wa': 'Написать в WhatsApp',
-    'cta-phone': '+54 9 11 5903-8763',
+    'cta-phone': '+7 925 041-93-62',
     'cta-email': 'или на почту <a href="mailto:hello@epunch.app">hello@epunch.app</a>',
     'cta-note': 'Есть вопросы? Просто напишите \u2014 мы отвечаем быстро.',
     'footer': 'ePunch \u2014 Цифровая лояльность, просто и удобно.'
@@ -1259,6 +1259,9 @@ function setLang(lang, fromUser) {
   document.querySelectorAll('.lang-btn').forEach(function(btn) {
     btn.classList.toggle('active', btn.textContent.trim() === { es: 'ES', en: 'EN', ru: 'RU', zh: 'CN' }[lang]);
   });
+  var waNum = lang === 'ru' ? '79250419362' : '5491159038763';
+  var waBtn = document.querySelector('.whatsapp-btn');
+  if (waBtn) waBtn.href = 'https://wa.me/' + waNum;
   try { localStorage.setItem('epunch-lang', lang); } catch(e) {}
   if (fromUser) {
     var url = new URL(window.location);

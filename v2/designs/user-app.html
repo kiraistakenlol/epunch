@@ -57,7 +57,7 @@ body {
 /* ── QR Hero (top of Cards tab) ── */
 .qr-top-card {
   padding: 16px 20px 20px;
-  padding-top: calc(16px + env(safe-area-inset-top, 0px));
+  padding-top: calc(54px + env(safe-area-inset-top, 0px));
   background: var(--white);
   display: flex;
   flex-direction: column;
@@ -786,7 +786,7 @@ body {
       <!-- Guest Banner -->
       <div class="guest-banner" id="guestBanner">
         <div class="guest-banner-icon">!</div>
-        <div class="guest-banner-text">
+        <div class="guest-banner-text" data-i18n="guest-banner">
           <strong>Cards saved on this device only.</strong>
           <a href="#">Sign in</a> to keep them across devices.
         </div>
@@ -794,7 +794,7 @@ body {
 
       <!-- My Cards section -->
       <div class="section-header">
-        <div class="section-title">My Cards</div>
+        <div class="section-title" data-i18n="my-cards">My Cards</div>
         <div class="section-header-right">
           <button class="rewards-filter" id="rewardsFilter" onclick="toggleRewardsFilter()"></button>
           <div class="section-count" id="cardCount"></div>
@@ -802,19 +802,19 @@ body {
       </div>
       <div class="cards-list" id="cardsList"></div>
       <div class="empty-state" id="emptyState">
-        <div class="empty-title">How it works</div>
+        <div class="empty-title" data-i18n="how-it-works">How it works</div>
         <div class="empty-steps">
           <div class="empty-step">
             <div class="empty-step-num">1</div>
-            <div class="empty-step-text"><strong>Visit a shop</strong> that offers ePunch loyalty</div>
+            <div class="empty-step-text" data-i18n="empty-step-1"><strong>Visit a shop</strong> that offers ePunch loyalty</div>
           </div>
           <div class="empty-step">
             <div class="empty-step-num">2</div>
-            <div class="empty-step-text"><strong>Show your QR</strong> above to the cashier</div>
+            <div class="empty-step-text" data-i18n="empty-step-2"><strong>Show your QR</strong> above to the cashier</div>
           </div>
           <div class="empty-step">
             <div class="empty-step-num">3</div>
-            <div class="empty-step-text"><strong>Collect punches</strong> and earn free rewards</div>
+            <div class="empty-step-text" data-i18n="empty-step-3"><strong>Collect punches</strong> and earn free rewards</div>
           </div>
         </div>
       </div>
@@ -823,7 +823,7 @@ body {
     <!-- History Tab -->
     <div class="tab-view" id="tabHistory">
       <div class="section-header">
-        <div class="section-title">Activity</div>
+        <div class="section-title" data-i18n="activity">Activity</div>
       </div>
       <div class="history-section" id="historyList"></div>
     </div>
@@ -831,7 +831,7 @@ body {
     <!-- Profile Tab -->
     <div class="tab-view" id="tabProfile">
       <div class="section-header">
-        <div class="section-title">Profile</div>
+        <div class="section-title" data-i18n="profile-title">Profile</div>
       </div>
       <div class="profile-section">
         <div class="profile-card">
@@ -839,19 +839,19 @@ body {
           <div class="profile-name" id="profileName"></div>
           <div class="profile-sub" id="profileSub"></div>
           <div class="profile-row">
-            <span class="profile-row-label">User ID</span>
+            <span class="profile-row-label" data-i18n="user-id-label">User ID</span>
             <span class="profile-row-value" id="profileId"></span>
           </div>
           <div class="profile-row" id="profileEmailRow" style="display:none">
-            <span class="profile-row-label">Email</span>
+            <span class="profile-row-label" data-i18n="email-label">Email</span>
             <span class="profile-row-value" id="profileEmail"></span>
           </div>
           <div class="profile-row">
-            <span class="profile-row-label">Status</span>
+            <span class="profile-row-label" data-i18n="status-label">Status</span>
             <span class="profile-row-value" id="profileStatus">Guest</span>
           </div>
           <div class="profile-row">
-            <span class="profile-row-label">Cards</span>
+            <span class="profile-row-label" data-i18n="cards-count-label">Cards</span>
             <span class="profile-row-value" id="profileCardCount"></span>
           </div>
           <button class="profile-signin-btn" id="profileSigninBtn">Sign in to sync your cards</button>
@@ -868,21 +868,21 @@ body {
         <path d="M7 21h10"/>
         <path d="M12 17v4"/>
       </svg>
-      <span class="nav-label">Cards</span>
+      <span class="nav-label" data-i18n="nav-cards">Cards</span>
     </div>
     <div class="nav-item" data-tab="history" onclick="switchTab('history')">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="10"/>
         <polyline points="12 6 12 12 16 14"/>
       </svg>
-      <span class="nav-label">History</span>
+      <span class="nav-label" data-i18n="nav-history">History</span>
     </div>
     <div class="nav-item" data-tab="profile" onclick="switchTab('profile')">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="8" r="4"/>
         <path d="M5 20c0-4 3.1-7 7-7s7 3 7 7"/>
       </svg>
-      <span class="nav-label">Profile</span>
+      <span class="nav-label" data-i18n="nav-profile">Profile</span>
     </div>
   </div>
 </div>
@@ -897,11 +897,115 @@ body {
   <div class="redeem-sheet" id="redeemContent"></div>
 </div>
 
-<script src="../data.js"></script>
+<script src="data.js"></script>
 <script>
+var currentLang = (new URLSearchParams(window.location.search).get('lang') || 'en');
+
+var UI = {
+  en: {
+    'my-cards': 'My Cards', 'activity': 'Activity', 'profile-title': 'Profile',
+    'nav-cards': 'Cards', 'nav-history': 'History', 'nav-profile': 'Profile',
+    'how-it-works': 'How it works',
+    'empty-step-1': '<strong>Visit a shop</strong> that offers ePunch loyalty',
+    'empty-step-2': '<strong>Show your QR</strong> above to the cashier',
+    'empty-step-3': '<strong>Collect punches</strong> and earn free rewards',
+    'guest-banner': '<strong>Cards saved on this device only.</strong> <a href="#">Sign in</a> to keep them across devices.',
+    'user-id-label': 'User ID', 'email-label': 'Email', 'status-label': 'Status', 'cards-count-label': 'Cards',
+    rewardsFilter: function(n) { return 'Rewards (' + n + ')'; }, showAll: 'Show all',
+    cardCount: function(n) { return n + ' cards'; },
+    rewardReady: 'Reward ready', badgePunch: 'Punch', badgeBundle: 'Bundle', badgeBenefit: 'Benefit',
+    active: 'Active', expired: 'Expired', left: 'left',
+    bundleRemaining: function(r, t) { return r + ' of ' + t + ' remaining'; },
+    guestSub: 'Guest account \u2014 device only', guest: 'Guest', signedIn: 'Signed in',
+    signInBtn: 'Sign in to sync your cards',
+    program: 'Program', progress: 'Progress', reward: 'Reward', remainingUses: 'Remaining Uses',
+    collected: function(c, t) { return c + ' of ' + t + ' collected'; },
+    showQrRedeem: 'Show QR to redeem', close: 'Close',
+    redemptionMode: '\u2605 Redemption Mode',
+    redeemWarning: 'Show this QR code to the merchant to redeem your reward. Do not close until they confirm.',
+    cancelRedemption: 'Cancel redemption',
+  },
+  es: {
+    'my-cards': 'Mis Tarjetas', 'activity': 'Actividad', 'profile-title': 'Perfil',
+    'nav-cards': 'Tarjetas', 'nav-history': 'Historial', 'nav-profile': 'Perfil',
+    'how-it-works': 'Cómo funciona',
+    'empty-step-1': '<strong>Visita un negocio</strong> con lealtad ePunch',
+    'empty-step-2': '<strong>Muestra tu QR</strong> en la caja',
+    'empty-step-3': '<strong>Junta sellos</strong> y gana premios gratis',
+    'guest-banner': '<strong>Tarjetas guardadas solo en este dispositivo.</strong> <a href="#">Inicia sesión</a> para sincronizar.',
+    'user-id-label': 'ID de usuario', 'email-label': 'Email', 'status-label': 'Estado', 'cards-count-label': 'Tarjetas',
+    rewardsFilter: function(n) { return 'Premios (' + n + ')'; }, showAll: 'Ver todas',
+    cardCount: function(n) { return n + ' tarjetas'; },
+    rewardReady: 'Premio listo', badgePunch: 'Sello', badgeBundle: 'Paquete', badgeBenefit: 'Beneficio',
+    active: 'Activo', expired: 'Vencido', left: 'restantes',
+    bundleRemaining: function(r, t) { return r + ' de ' + t + ' restantes'; },
+    guestSub: 'Cuenta de invitado \u2014 solo este dispositivo', guest: 'Invitado', signedIn: 'Conectado',
+    signInBtn: 'Iniciar sesión para sincronizar',
+    program: 'Programa', progress: 'Progreso', reward: 'Premio', remainingUses: 'Usos restantes',
+    collected: function(c, t) { return c + ' de ' + t + ' completados'; },
+    showQrRedeem: 'Mostrar QR para canjear', close: 'Cerrar',
+    redemptionMode: '\u2605 Canje',
+    redeemWarning: 'Muestra este QR al comerciante para canjear tu premio. No cierres hasta que confirme.',
+    cancelRedemption: 'Cancelar canje',
+  },
+  ru: {
+    'my-cards': 'Мои карты', 'activity': 'История', 'profile-title': 'Профиль',
+    'nav-cards': 'Карты', 'nav-history': 'История', 'nav-profile': 'Профиль',
+    'how-it-works': 'Как это работает',
+    'empty-step-1': '<strong>Посетите магазин</strong> с программой ePunch',
+    'empty-step-2': '<strong>Покажите QR-код</strong> кассиру',
+    'empty-step-3': '<strong>Собирайте печати</strong> и получайте награды',
+    'guest-banner': '<strong>Карты сохранены только на этом устройстве.</strong> <a href="#">Войдите</a>, чтобы синхронизировать.',
+    'user-id-label': 'ID пользователя', 'email-label': 'Email', 'status-label': 'Статус', 'cards-count-label': 'Карты',
+    rewardsFilter: function(n) { return 'Награды (' + n + ')'; }, showAll: 'Все',
+    cardCount: function(n) { return n + ' карт'; },
+    rewardReady: 'Награда готова', badgePunch: 'Печать', badgeBundle: 'Пакет', badgeBenefit: 'Бонус',
+    active: 'Активен', expired: 'Истёк', left: 'осталось',
+    bundleRemaining: function(r, t) { return r + ' из ' + t + ' осталось'; },
+    guestSub: 'Гостевой аккаунт \u2014 только это устройство', guest: 'Гость', signedIn: 'Вошёл',
+    signInBtn: 'Войти для синхронизации',
+    program: 'Программа', progress: 'Прогресс', reward: 'Награда', remainingUses: 'Остаток',
+    collected: function(c, t) { return c + ' из ' + t + ' собрано'; },
+    showQrRedeem: 'Показать QR для получения', close: 'Закрыть',
+    redemptionMode: '\u2605 Получение награды',
+    redeemWarning: 'Покажите этот QR продавцу. Не закрывайте до подтверждения.',
+    cancelRedemption: 'Отмена',
+  },
+  zh: {
+    'my-cards': '我的卡片', 'activity': '活动记录', 'profile-title': '个人',
+    'nav-cards': '卡片', 'nav-history': '历史', 'nav-profile': '个人',
+    'how-it-works': '如何使用',
+    'empty-step-1': '<strong>拜访商店</strong>，了解ePunch忠诚计划',
+    'empty-step-2': '<strong>向收银员展示</strong>您的二维码',
+    'empty-step-3': '<strong>收集印章</strong>，赢取免费奖励',
+    'guest-banner': '<strong>卡片仅保存在此设备。</strong><a href="#">登录</a>以跨设备同步。',
+    'user-id-label': '用户ID', 'email-label': '邮箱', 'status-label': '状态', 'cards-count-label': '卡片',
+    rewardsFilter: function(n) { return '奖励 (' + n + ')'; }, showAll: '全部',
+    cardCount: function(n) { return n + ' 张卡'; },
+    rewardReady: '奖励可用', badgePunch: '印章', badgeBundle: '套餐', badgeBenefit: '权益',
+    active: '有效', expired: '已过期', left: '剩余',
+    bundleRemaining: function(r, t) { return r + ' / ' + t + ' 剩余'; },
+    guestSub: '访客账户 \u2014 仅此设备', guest: '访客', signedIn: '已登录',
+    signInBtn: '登录以同步卡片',
+    program: '计划', progress: '进度', reward: '奖励', remainingUses: '剩余次数',
+    collected: function(c, t) { return '已集 ' + c + ' / ' + t; },
+    showQrRedeem: '出示二维码兑换', close: '关闭',
+    redemptionMode: '\u2605 兑换模式',
+    redeemWarning: '向商家出示此二维码以兑换奖励。确认前请勿关闭。',
+    cancelRedemption: '取消兑换',
+  }
+};
+
+if (!UI[currentLang]) currentLang = 'en';
+var L = UI[currentLang];
+
+function prog(card) { return (card.programI18n && card.programI18n[currentLang]) || card.program; }
+function rew(card) { return (card.rewardI18n && card.rewardI18n[currentLang]) || card.reward; }
+function shop(card) { return (card.shopNameI18n && card.shopNameI18n[currentLang]) || card.shop; }
+
 var CARDS = APP_DATA.cards.map(function(c) {
-  var base = { id: c.id, type: c.type, shop: c.shopName, address: c.address, program: c.program, accent: c.accent, emoji: c.emoji };
-  if (c.type === 'punch') { base.current = c.current; base.total = c.total; base.reward = c.reward; base.ready = c.current >= c.total; }
+  var base = { id: c.id, type: c.type, shop: c.shopName, shopNameI18n: c.shopNameI18n, address: c.address, program: c.program, programI18n: c.programI18n, accent: c.accent, emoji: c.emoji };
+  if (c.type === 'punch') { base.current = c.current; base.total = c.total; base.reward = c.reward; base.rewardI18n = c.rewardI18n; base.ready = c.current >= c.total; }
   if (c.type === 'bundle') { base.remaining = c.remaining; base.total = c.total; }
   if (c.type === 'benefit') { base.status = c.status; base.benefitDesc = c.program; }
   return base;
@@ -952,12 +1056,12 @@ function renderCards() {
     div.onclick = function() { openDetail(card.id); };
 
     var badgeClass = card.type === 'punch' ? 'badge-punch' : card.type === 'bundle' ? 'badge-bundle' : 'badge-benefit';
-    var badgeText = card.type === 'punch' ? 'Punch' : card.type === 'bundle' ? 'Bundle' : 'Benefit';
+    var badgeText = card.type === 'punch' ? L.badgePunch : card.type === 'bundle' ? L.badgeBundle : L.badgeBenefit;
 
     var html = '<div class="card-top">' +
       '<div class="card-emoji" style="background:' + card.accent + '15">' + card.emoji + '</div>' +
-      '<div class="card-info"><div class="card-shop">' + card.shop + '</div>' +
-      '<div class="card-program">' + card.program + '</div></div>' +
+      '<div class="card-info"><div class="card-shop">' + shop(card) + '</div>' +
+      '<div class="card-program">' + prog(card) + '</div></div>' +
       '<div class="card-type-badge ' + badgeClass + '">' + badgeText + '</div></div>';
 
     if (card.type === 'punch') {
@@ -969,29 +1073,29 @@ function renderCards() {
       }
       if (card.total > 12) html += '<span class="punch-count">+' + (card.total - 12) + ' more</span>';
       html += '<span class="punch-count">' + card.current + '/' + card.total + '</span></div>';
-      if (card.ready) html += '<div class="reward-badge">Reward ready</div>';
+      if (card.ready) html += '<div class="reward-badge">' + L.rewardReady + '</div>';
     }
 
     if (card.type === 'bundle') {
       var pct = (card.remaining / card.total * 100);
       html += '<div class="bundle-progress">' +
         '<div class="bundle-bar-wrap"><div class="bundle-bar"><div class="bundle-bar-fill" style="width:' + pct + '%;background:' + card.accent + '"></div></div>' +
-        '<div class="bundle-label">' + card.remaining + ' of ' + card.total + ' remaining</div></div>' +
+        '<div class="bundle-label">' + L.bundleRemaining(card.remaining, card.total) + '</div></div>' +
         '<div><div class="bundle-count" style="color:' + card.accent + '">' + card.remaining + '</div>' +
-        '<div class="bundle-count-sub">left</div></div></div>';
+        '<div class="bundle-count-sub">' + L.left + '</div></div></div>';
     }
 
     if (card.type === 'benefit') {
       html += '<div class="benefit-desc">' + card.benefitDesc + '</div>' +
         '<div class="benefit-status ' + card.status + '"><div class="benefit-status-dot"></div>' +
-        (card.status === 'active' ? 'Active' : 'Expired') + '</div>';
+        (card.status === 'active' ? L.active : L.expired) + '</div>';
     }
 
     div.innerHTML = html;
     list.appendChild(div);
   });
   var showing = showingRewards ? rewardCards.length : CARDS.length;
-  document.getElementById('cardCount').textContent = showing + ' cards';
+  document.getElementById('cardCount').textContent = L.cardCount(showing);
   document.getElementById('emptyState').style.display = CARDS.length === 0 ? 'block' : 'none';
   document.getElementById('cardCount').style.display = CARDS.length === 0 ? 'none' : '';
 }
@@ -1006,7 +1110,7 @@ function updateRewardsFilter() {
     return;
   }
   btn.classList.add('visible');
-  btn.textContent = showingRewards ? 'Show all' : 'Rewards (' + rewardCards.length + ')';
+  btn.textContent = showingRewards ? L.showAll : L.rewardsFilter(rewardCards.length);
   btn.classList.toggle('active', showingRewards);
 }
 
@@ -1023,37 +1127,37 @@ function openDetail(id) {
   var html = '<div class="modal-handle"></div>' +
     '<div class="detail-header">' +
     '<div class="detail-emoji" style="background:' + card.accent + '15">' + card.emoji + '</div>' +
-    '<div><div class="detail-shop">' + card.shop + '</div>' +
+    '<div><div class="detail-shop">' + shop(card) + '</div>' +
     '<div class="detail-address"><a href="https://maps.google.com/?q=' + encodeURIComponent(card.address) + '">' + card.address + ' \u2192</a></div></div></div>';
 
-  html += '<div class="detail-section"><div class="detail-section-label">Program</div><div class="detail-program">' + card.program + '</div></div>';
+  html += '<div class="detail-section"><div class="detail-section-label">' + L.program + '</div><div class="detail-program">' + prog(card) + '</div></div>';
 
   if (card.type === 'punch') {
-    html += '<div class="detail-section"><div class="detail-section-label">Progress</div><div class="detail-progress-dots">';
+    html += '<div class="detail-section"><div class="detail-section-label">' + L.progress + '</div><div class="detail-progress-dots">';
     for (var i = 0; i < card.total; i++) {
       html += '<div class="detail-dot' + (i < card.current ? ' filled' : '') + '"' +
         (i < card.current ? ' style="background:' + card.accent + '"' : '') + '></div>';
     }
-    html += '</div><div class="detail-progress-text">' + card.current + ' of ' + card.total + ' collected</div></div>';
-    html += '<div class="detail-section"><div class="detail-section-label">Reward</div><div class="detail-reward">' + card.reward + '</div></div>';
-    if (card.ready) html += '<button class="redeem-btn" onclick="openRedeem(\'' + card.id + '\')">Show QR to redeem</button>';
+    html += '</div><div class="detail-progress-text">' + L.collected(card.current, card.total) + '</div></div>';
+    html += '<div class="detail-section"><div class="detail-section-label">' + L.reward + '</div><div class="detail-reward">' + rew(card) + '</div></div>';
+    if (card.ready) html += '<button class="redeem-btn" onclick="openRedeem(\'' + card.id + '\')">' + L.showQrRedeem + '</button>';
   }
 
   if (card.type === 'bundle') {
     var pct = card.remaining / card.total * 100;
-    html += '<div class="detail-section"><div class="detail-section-label">Remaining Uses</div>' +
+    html += '<div class="detail-section"><div class="detail-section-label">' + L.remainingUses + '</div>' +
       '<div class="detail-bar"><div class="detail-bar-fill" style="width:' + pct + '%;background:' + card.accent + '"></div></div>' +
-      '<div class="detail-progress-text">' + card.remaining + ' of ' + card.total + ' remaining</div></div>';
+      '<div class="detail-progress-text">' + L.bundleRemaining(card.remaining, card.total) + '</div></div>';
   }
 
   if (card.type === 'benefit') {
-    html += '<div class="detail-section"><div class="detail-section-label">Benefit</div>' +
+    html += '<div class="detail-section"><div class="detail-section-label">' + L.reward + '</div>' +
       '<div class="detail-benefit-text">' + card.benefitDesc + '</div>' +
       '<div class="benefit-status ' + card.status + '"><div class="benefit-status-dot"></div>' +
-      (card.status === 'active' ? 'Active' : 'Expired') + '</div></div>';
+      (card.status === 'active' ? L.active : L.expired) + '</div></div>';
   }
 
-  html += '<button class="close-btn" onclick="closeDetail()">Close</button>';
+  html += '<button class="close-btn" onclick="closeDetail()">' + L.close + '</button>';
   el.innerHTML = html;
   document.getElementById('detailModal').classList.add('visible');
 }
@@ -1066,12 +1170,12 @@ function openRedeem(id) {
   if (!card) return;
   var el = document.getElementById('redeemContent');
   el.innerHTML = '<div class="modal-handle"></div>' +
-    '<div class="redeem-label">\u2605 Redemption Mode</div>' +
-    '<div class="redeem-shop">' + card.shop + '</div>' +
-    '<div class="redeem-reward">' + (card.reward || card.program) + '</div>' +
+    '<div class="redeem-label">' + L.redemptionMode + '</div>' +
+    '<div class="redeem-shop">' + shop(card) + '</div>' +
+    '<div class="redeem-reward">' + (rew(card) || prog(card)) + '</div>' +
     '<div class="redeem-qr-wrap"><canvas id="redeemQrCanvas" width="180" height="180"></canvas></div>' +
-    '<div class="redeem-warning">Show this QR code to the merchant to redeem your reward. Do not close until they confirm.</div>' +
-    '<button class="redeem-cancel-btn" onclick="closeRedeem()">Cancel redemption</button>';
+    '<div class="redeem-warning">' + L.redeemWarning + '</div>' +
+    '<button class="redeem-cancel-btn" onclick="closeRedeem()">' + L.cancelRedemption + '</button>';
   document.getElementById('redeemModal').classList.add('visible');
   drawQR(document.getElementById('redeemQrCanvas'), hashId(card.id), true);
 }
@@ -1104,7 +1208,7 @@ function renderHistory() {
       html += '<div class="history-item">' +
         '<div class="history-icon" style="background:' + card.accent + '12">' + card.emoji + '</div>' +
         '<div class="history-content">' +
-        '<div class="history-text">' + APP_DATA.eventText(ev) + '</div>' +
+        '<div class="history-text">' + APP_DATA.eventText(ev, currentLang) + '</div>' +
         '<div class="history-time">' + ev.time + '</div></div></div>';
     });
   });
@@ -1116,11 +1220,12 @@ document.getElementById('redeemModal').addEventListener('click', function(e) { i
 
 var isAuth = APP_DATA.user.authenticated;
 document.getElementById('profileName').textContent = APP_DATA.user.name;
-document.getElementById('profileSub').textContent = isAuth ? APP_DATA.user.email : 'Guest account \u2014 device only';
+document.getElementById('profileSub').textContent = isAuth ? APP_DATA.user.email : L.guestSub;
 document.getElementById('profileId').textContent = APP_DATA.user.id;
 document.getElementById('profileCardCount').textContent = CARDS.length;
 document.getElementById('profileAvatar').textContent = APP_DATA.user.name.charAt(0).toUpperCase();
-document.getElementById('profileStatus').textContent = isAuth ? 'Signed in' : 'Guest';
+document.getElementById('profileStatus').textContent = isAuth ? L.signedIn : L.guest;
+document.getElementById('profileSigninBtn').textContent = L.signInBtn;
 document.getElementById('profileSigninBtn').style.display = isAuth ? 'none' : '';
 document.getElementById('guestBanner').style.display = isAuth ? 'none' : '';
 if (isAuth && APP_DATA.user.email) {
@@ -1129,6 +1234,12 @@ if (isAuth && APP_DATA.user.email) {
 }
 document.getElementById('topQrUserId').textContent = APP_DATA.user.id;
 drawQR(document.getElementById('topQrCanvas'), APP_DATA.user.qrSeed, false);
+
+document.querySelectorAll('[data-i18n]').forEach(function(el) {
+  var key = el.getAttribute('data-i18n');
+  if (L[key] != null) el.innerHTML = L[key];
+});
+
 renderCards();
 updateRewardsFilter();
 </script>
