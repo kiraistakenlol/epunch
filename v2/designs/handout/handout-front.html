@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ePunch Handout — Front</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="devices.min.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 148mm;
+  height: 210mm;
+  overflow: hidden;
+  font-family: 'Outfit', sans-serif;
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  padding: 14mm 14mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.front-logo {
+  font-size: 21px;
+  font-weight: 800;
+  color: #FF385C;
+}
+.front-logo span { color: #1A1A1A; }
+
+.front-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12mm;
+}
+
+.front-text { flex: 1; }
+.big-text {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  color: #1A1A1A;
+  margin-bottom: 12px;
+}
+.big-text .highlight { color: #FF385C; }
+.front-detail {
+  font-size: 14px;
+  color: #717171;
+  line-height: 1.5;
+}
+
+.phone-wrap {
+  width: 64mm;
+  flex-shrink: 0;
+  transform: rotate(4deg);
+}
+.phone-wrap .device {
+  transform-origin: top left;
+}
+.phone-wrap .device-screen {
+  position: relative;
+  overflow: hidden;
+}
+#appFrame {
+  position: absolute;
+  top: 0; left: 0;
+  width: 390px;
+  height: 830px;
+  border: none;
+}
+
+.front-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tag {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1.5px solid #eee;
+  font-size: 11px;
+  font-weight: 600;
+  color: #717171;
+}
+.front-contacts {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #ABABAB;
+}
+.front-contact-wa {
+  color: #717171;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.front-contact-sep { color: #DDD; }
+.front-contact-email { color: #717171; }
+
+.lang-toggle {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 2px;
+  background: #f3f1ee;
+  border-radius: 8px;
+  padding: 2px;
+  z-index: 10;
+}
+.lang-btn {
+  padding: 5px 10px;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ABABAB;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.lang-btn.active {
+  background: #fff;
+  color: #1A1A1A;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+@media print {
+  @page { size: 148mm 210mm; margin: 0; }
+  .lang-toggle { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="lang-toggle">
+  <button class="lang-btn" onclick="setLang('es')">ES</button>
+  <button class="lang-btn" onclick="setLang('en')">EN</button>
+  <button class="lang-btn" onclick="setLang('ru')">RU</button>
+  <button class="lang-btn" onclick="setLang('zh')">CN</button>
+</div>
+
+<div class="front-logo">e<span>Punch</span></div>
+
+<div class="front-body">
+  <div class="front-text">
+    <div class="big-text" data-i18n="headline"></div>
+    <div class="front-detail" data-i18n="subline"></div>
+  </div>
+
+  <div class="phone-wrap">
+    <div class="device device-iphone-14-pro">
+      <div class="device-frame">
+        <div class="device-screen" id="phoneScreen">
+          <iframe id="appFrame" src="../user-app.html?state=handout" scrolling="no"></iframe>
+        </div>
+      </div>
+      <div class="device-stripe"></div>
+      <div class="device-header"></div>
+      <div class="device-sensors"></div>
+      <div class="device-btns"></div>
+      <div class="device-power"></div>
+    </div>
+  </div>
+</div>
+
+<div class="front-bottom-row">
+  <div>
+    <span class="tag" data-i18n="tag1"></span>
+    <span class="tag" data-i18n="tag2"></span>
+  </div>
+  <div class="front-contacts">
+    <span class="front-contact-wa" data-i18n="phone"></span>
+    <span class="front-contact-sep">&middot;</span>
+    <span class="front-contact-email">hello@epunch.app</span>
+  </div>
+</div>
+
+<script>
+window.addEventListener('load', function() {
+  var wrap = document.querySelector('.phone-wrap');
+  var device = wrap.querySelector('.device');
+  var scale = wrap.offsetWidth / device.offsetWidth;
+  device.style.transform = 'scale(' + scale + ')';
+  wrap.style.height = (device.offsetHeight * scale) + 'px';
+});
+
+var T = {
+  es: {
+    'phone': '+54 9 11 5903 8763',
+    'headline': 'Que tus clientes<br><span class="highlight">vuelvan siempre.</span>',
+    'subline': 'Tarjetas de sellos digitales en el celular. Tus clientes juntan sellos, ganan premios y vuelven más seguido.',
+    'tag1': '3 seg por escaneo',
+    'tag2': 'Sin app'
+  },
+  en: {
+    'phone': '+54 9 11 5903 8763',
+    'headline': 'Keep customers<br><span class="highlight">coming back.</span>',
+    'subline': 'Digital punch cards on their phone. Customers collect punches, earn rewards, return more often.',
+    'tag1': '3 seconds per scan',
+    'tag2': 'No app needed'
+  },
+  ru: {
+    'phone': '+7 925 041-93-62',
+    'headline': 'Клиенты<br><span class="highlight">возвращаются.</span>',
+    'subline': 'Цифровые карты лояльности в телефоне. Копят печати, получают награды, приходят чаще.',
+    'tag1': '3 сек на скан',
+    'tag2': 'Без приложения'
+  },
+  zh: {
+    'phone': '+54 9 11 5903 8763',
+    'headline': '让顾客<br><span class="highlight">不断回来。</span>',
+    'subline': '手机上的数字集章卡。顾客集章、赢奖励、回头更频繁。',
+    'tag1': '每次扫码3秒',
+    'tag2': '无需下载应用'
+  }
+};
+
+function setLang(lang) {
+  var strings = T[lang];
+  if (!strings) return;
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    if (strings[key] != null) el.innerHTML = strings[key];
+  });
+  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : lang;
+  document.querySelectorAll('.lang-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.textContent.trim() === { es: 'ES', en: 'EN', ru: 'RU', zh: 'CN' }[lang]);
+  });
+  var appFrame = document.getElementById('appFrame');
+  if (appFrame) appFrame.src = '../user-app.html?state=handout&lang=' + lang;
+}
+
+var urlLang = new URLSearchParams(window.location.search).get('lang');
+setLang((urlLang && T[urlLang]) ? urlLang : 'es');
+</script>
+</body>
+</html>

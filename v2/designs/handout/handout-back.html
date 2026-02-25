@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ePunch Handout — Back</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 148mm;
+  height: 210mm;
+  overflow: hidden;
+  font-family: 'Outfit', sans-serif;
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+}
+
+.back-top {
+  background: #FAF8F5;
+  padding: 14mm 14mm;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.back-top-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #FF385C;
+  margin-bottom: 8mm;
+}
+.how-row {
+  display: flex;
+  gap: 8px;
+}
+.how-item {
+  flex: 1;
+  text-align: center;
+  padding: 8px 6px;
+}
+.how-num {
+  font-size: 28px;
+  font-weight: 800;
+  color: #FF385C;
+  margin-bottom: 3px;
+}
+.how-text {
+  font-size: 12px;
+  color: #444;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.back-bottom {
+  padding: 10mm 14mm;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.back-cta {
+  font-size: 26px;
+  font-weight: 800;
+  color: #1A1A1A;
+  margin-bottom: 8mm;
+  letter-spacing: -0.3px;
+}
+.back-row {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0;
+  width: 100%;
+}
+.back-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 4mm;
+}
+.back-col + .back-col {
+  border-left: 1px solid #eee;
+}
+.col-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #ABABAB;
+  margin-bottom: 6px;
+}
+.qr-placeholder {
+  width: 30mm;
+  height: 30mm;
+  display: block;
+  margin: 0 auto 6px;
+  overflow: hidden;
+}
+.qr-url {
+  font-size: 13px;
+  color: #717171;
+  text-align: center;
+}
+.contact-wa {
+  font-size: 17px;
+  font-weight: 700;
+  color: #25D366;
+  margin-bottom: 4px;
+}
+.contact-divider {
+  height: 1px;
+  width: 30px;
+  background: #eee;
+  margin: 8px auto;
+}
+.contact-email {
+  font-size: 13px;
+  color: #717171;
+}
+
+.lang-toggle {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 2px;
+  background: #f3f1ee;
+  border-radius: 8px;
+  padding: 2px;
+  z-index: 10;
+}
+.lang-btn {
+  padding: 5px 10px;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ABABAB;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.lang-btn.active {
+  background: #fff;
+  color: #1A1A1A;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+@media print {
+  @page { size: 148mm 210mm; margin: 0; }
+  .lang-toggle { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="lang-toggle">
+  <button class="lang-btn" onclick="setLang('es')">ES</button>
+  <button class="lang-btn" onclick="setLang('en')">EN</button>
+  <button class="lang-btn" onclick="setLang('ru')">RU</button>
+  <button class="lang-btn" onclick="setLang('zh')">CN</button>
+</div>
+
+<div class="back-top">
+  <div class="back-top-label" data-i18n="how-label"></div>
+  <div class="how-row">
+    <div class="how-item">
+      <div class="how-num">1</div>
+      <div class="how-text" data-i18n="step1"></div>
+    </div>
+    <div class="how-item">
+      <div class="how-num">2</div>
+      <div class="how-text" data-i18n="step2"></div>
+    </div>
+    <div class="how-item">
+      <div class="how-num">3</div>
+      <div class="how-text" data-i18n="step3"></div>
+    </div>
+  </div>
+</div>
+
+<div class="back-bottom">
+  <div class="back-cta" data-i18n="cta"></div>
+  <div class="back-row">
+    <div class="back-col">
+      <div class="qr-placeholder"><img src="https://api.qrserver.com/v1/create-qr-code/?data=https%3A%2F%2Fepunch.app&size=400x400&margin=0" alt="QR" style="width:100%;height:100%"></div>
+      <div class="qr-url">epunch.app</div>
+    </div>
+    <div class="back-col">
+      <div class="col-label">WhatsApp</div>
+      <div class="contact-wa" data-i18n="phone"></div>
+      <div class="contact-divider"></div>
+      <div class="col-label">Email</div>
+      <div class="contact-email">hello@epunch.app</div>
+    </div>
+  </div>
+</div>
+
+<script>
+var T = {
+  es: {
+    'phone': '+54 9 11 5903 8763',
+    'how-label': 'Cómo funciona',
+    'step1': 'El cliente escanea<br>tu QR',
+    'step2': 'Junta<br>sellos',
+    'step3': 'Tarjeta llena =<br>premio',
+    'cta': '¿Te interesa? Escribinos.'
+  },
+  en: {
+    'phone': '+54 9 11 5903 8763',
+    'how-label': 'How it works',
+    'step1': 'Client scans<br>your QR',
+    'step2': 'They collect<br>punches',
+    'step3': 'Full card =<br>reward',
+    'cta': 'Interested? Write us.'
+  },
+  ru: {
+    'phone': '+7 925 041-93-62',
+    'how-label': 'Как это работает',
+    'step1': 'Клиент сканирует<br>ваш QR',
+    'step2': 'Собирает<br>печати',
+    'step3': 'Полная карта =<br>награда',
+    'cta': 'Интересно? Напишите нам.'
+  },
+  zh: {
+    'phone': '+54 9 11 5903 8763',
+    'how-label': '如何运作',
+    'step1': '顾客扫描<br>你的二维码',
+    'step2': '收集<br>印章',
+    'step3': '集满 =<br>奖励',
+    'cta': '感兴趣？联系我们。'
+  }
+};
+
+function setLang(lang) {
+  var strings = T[lang];
+  if (!strings) return;
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    if (strings[key] != null) el.innerHTML = strings[key];
+  });
+  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : lang;
+  document.querySelectorAll('.lang-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.textContent.trim() === { es: 'ES', en: 'EN', ru: 'RU', zh: 'CN' }[lang]);
+  });
+}
+
+var urlLang = new URLSearchParams(window.location.search).get('lang');
+setLang((urlLang && T[urlLang]) ? urlLang : 'es');
+</script>
+</body>
+</html>
