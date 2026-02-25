@@ -246,7 +246,7 @@ body {
 }
 
 @media print {
-  @page { size: A5 portrait; margin: 0; }
+  @page { size: 148mm 210mm; margin: 0; }
   body { background: none; padding: 0; gap: 0; }
   .label { display: none; }
   .page {
@@ -289,13 +289,6 @@ body {
 </style>
 </head>
 <body>
-
-<div class="lang-toggle">
-  <button class="lang-btn active" onclick="setLang('es')">ES</button>
-  <button class="lang-btn" onclick="setLang('en')">EN</button>
-  <button class="lang-btn" onclick="setLang('ru')">RU</button>
-  <button class="lang-btn" onclick="setLang('zh')">CN</button>
-</div>
 
 <div class="label">Front</div>
 <div class="page front">
@@ -443,7 +436,8 @@ function setLang(lang) {
   });
 }
 
-setLang('es');
+var urlLang = new URLSearchParams(window.location.search).get('lang');
+setLang((urlLang && T[urlLang]) ? urlLang : 'es');
 </script>
 
 </body>

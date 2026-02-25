@@ -790,10 +790,10 @@ body {
 <header class="header">
   <div class="logo">e<span>Punch</span></div>
   <div class="lang-toggle">
-    <button class="lang-btn active" onclick="setLang('es')">ES</button>
-    <button class="lang-btn" onclick="setLang('en')">EN</button>
-    <button class="lang-btn" onclick="setLang('ru')">RU</button>
-    <button class="lang-btn" onclick="setLang('zh')">CN</button>
+    <button class="lang-btn active" onclick="setLang('es',true)">ES</button>
+    <button class="lang-btn" onclick="setLang('en',true)">EN</button>
+    <button class="lang-btn" onclick="setLang('ru',true)">RU</button>
+    <button class="lang-btn" onclick="setLang('zh',true)">CN</button>
   </div>
 </header>
 
@@ -1248,7 +1248,7 @@ var T = {
   }
 };
 
-function setLang(lang) {
+function setLang(lang, fromUser) {
   var strings = T[lang];
   if (!strings) return;
   document.querySelectorAll('[data-i18n]').forEach(function(el) {
@@ -1260,9 +1260,11 @@ function setLang(lang) {
     btn.classList.toggle('active', btn.textContent.trim() === { es: 'ES', en: 'EN', ru: 'RU', zh: 'CN' }[lang]);
   });
   try { localStorage.setItem('epunch-lang', lang); } catch(e) {}
-  var url = new URL(window.location);
-  url.searchParams.set('lang', lang);
-  history.replaceState(null, '', url);
+  if (fromUser) {
+    var url = new URL(window.location);
+    url.searchParams.set('lang', lang);
+    history.replaceState(null, '', url);
+  }
 }
 
 var urlLang = new URLSearchParams(window.location.search).get('lang');
