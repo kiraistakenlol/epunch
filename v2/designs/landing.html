@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#FFFFFF">
-<title>ePunch — Digiconttal Punch Cards for Your Shop</title>
+<title>ePunch — Digital Punch Cards for Your Shop</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -26,6 +26,13 @@
   --coffee: #6B4C3B;
   --bakery: #C2703E;
   --juice: #4A7C59;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
+  --shadow-lg: 0 4px 12px rgba(0,0,0,0.05), 0 8px 32px rgba(0,0,0,0.08);
+  --shadow-xl: 0 8px 24px rgba(0,0,0,0.06), 0 16px 48px rgba(0,0,0,0.10);
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -36,11 +43,26 @@ body {
   color: var(--black);
   -webkit-font-smoothing: antialiased;
   line-height: 1.5;
+  overflow-x: hidden;
 }
 
+/* ── Header ── */
 .header {
-  padding: 20px 24px;
-  max-width: 1100px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s;
+}
+.header.scrolled {
+  border-bottom-color: var(--gray-5);
+}
+.header-inner {
+  padding: 16px 24px;
+  max-width: 1120px;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -73,27 +95,55 @@ body {
   cursor: pointer;
   transition: all 0.15s;
 }
+.lang-btn:hover { color: var(--gray-2); }
 .lang-btn.active {
   background: var(--white);
   color: var(--black);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: var(--shadow-sm);
 }
 
+/* ── Hero ── */
 .hero {
-  max-width: 1100px;
+  max-width: 1120px;
   margin: 0 auto;
-  padding: 20px 24px 64px;
+  padding: 32px 24px 72px;
 }
 .hero-inner {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 40px;
+  gap: 44px;
 }
 .hero-text {
   text-align: center;
-  max-width: 500px;
+  max-width: 520px;
 }
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px 5px 8px;
+  background: var(--coral-light);
+  border: 1px solid rgba(255,56,92,0.12);
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--coral);
+  margin-bottom: 20px;
+}
+.hero-badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--coral);
+  animation: badge-pulse 2s infinite;
+}
+@keyframes badge-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
 .hero-text h1 {
   font-size: 34px;
   font-weight: 800;
@@ -119,15 +169,25 @@ body {
   font-size: 16px;
   font-weight: 700;
   border: none;
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   text-decoration: none;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background 0.15s, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s;
   width: 100%;
   max-width: 300px;
+  box-shadow: 0 2px 8px rgba(255,56,92,0.2);
 }
-.hero-cta:hover { background: var(--coral-dark); }
+.hero-cta:hover {
+  background: var(--coral-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(255,56,92,0.3);
+}
+.hero-cta:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 2px 8px rgba(255,56,92,0.2);
+}
 
+/* ── Card Stack ── */
 .card-stack {
   position: relative;
   width: 100%;
@@ -137,9 +197,9 @@ body {
   position: absolute;
   inset: 0;
   background: var(--white);
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   border: 1px solid #eee;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 6px 20px rgba(0,0,0,0.04);
+  box-shadow: var(--shadow-md);
   overflow: hidden;
 }
 .stack-shadow::before {
@@ -172,10 +232,10 @@ body {
   position: relative;
   z-index: 3;
   background: var(--white);
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   padding: 24px;
   border: 1px solid #eee;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.10), 0 8px 32px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+  box-shadow: var(--shadow-xl);
   overflow: hidden;
 }
 .main-card::before {
@@ -303,11 +363,11 @@ body {
 
 /* ── Sections ── */
 .section {
-  padding: 64px 24px;
+  padding: 72px 24px;
 }
 .section.cream { background: var(--cream); }
 .section-inner {
-  max-width: 900px;
+  max-width: 960px;
   margin: 0 auto;
 }
 .section-title {
@@ -315,7 +375,47 @@ body {
   font-weight: 800;
   letter-spacing: -0.5px;
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 44px;
+}
+
+/* ── Stats ── */
+.stats {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+.stat {
+  background: var(--white);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: var(--radius-md);
+  padding: 28px 24px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s;
+}
+.stat:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+.stat-val {
+  font-size: 44px;
+  font-weight: 800;
+  color: var(--coral);
+  letter-spacing: -2px;
+  line-height: 1;
+}
+.stat-desc {
+  font-size: 15px;
+  color: var(--gray-2);
+  margin-top: 6px;
+}
+.stats-note {
+  margin-top: 24px;
+  font-size: 12px;
+  color: var(--gray-3);
+  text-align: center;
 }
 
 /* ── Steps ── */
@@ -339,6 +439,7 @@ body {
   align-items: center;
   justify-content: center;
   margin-bottom: 14px;
+  box-shadow: 0 2px 8px rgba(255,56,92,0.2);
 }
 .step h3 {
   font-size: 16px;
@@ -353,39 +454,33 @@ body {
   margin: 0 auto;
 }
 
-/* ── Stats ── */
-.stats {
-  display: flex;
-  flex-direction: column;
-  gap: 36px;
-  text-align: center;
-  max-width: 700px;
-  margin: 0 auto;
-}
-.stat-val {
-  font-size: 44px;
-  font-weight: 800;
-  color: var(--coral);
-  letter-spacing: -2px;
-  line-height: 1;
-}
-.stat-desc {
-  font-size: 15px;
-  color: var(--gray-2);
-  margin-top: 6px;
-}
-.stats-note {
-  margin-top: 32px;
-  font-size: 12px;
-  color: var(--gray-3);
-  text-align: center;
+/* Step connector dots (desktop only) */
+.step-connector {
+  display: none;
 }
 
 /* ── CTA / Contact ── */
+.cta-section {
+  background: var(--cream);
+  position: relative;
+  overflow: hidden;
+}
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 300px;
+  background: radial-gradient(ellipse, rgba(255,56,92,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
 .contact {
   max-width: 600px;
   margin: 0 auto;
   text-align: center;
+  position: relative;
 }
 .contact-heading {
   font-size: 32px;
@@ -413,12 +508,20 @@ body {
   font-size: 17px;
   font-weight: 700;
   border: none;
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   text-decoration: none;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background 0.15s, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(37,211,102,0.2);
 }
-.whatsapp-btn:hover { background: var(--wa-hover); }
+.whatsapp-btn:hover {
+  background: var(--wa-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(37,211,102,0.3);
+}
+.whatsapp-btn:active {
+  transform: translateY(0) scale(0.98);
+}
 .whatsapp-btn svg { flex-shrink: 0; }
 .contact-phone {
   margin-top: 20px;
@@ -450,13 +553,13 @@ body {
   border-top: 1px solid var(--gray-5);
   font-size: 14px;
   color: var(--gray-3);
-  max-width: 900px;
+  max-width: 960px;
   margin: 0 auto;
 }
 
 /* ── Animations ── */
-
-.header,
+.header-inner,
+.hero-badge,
 .hero-text h1,
 .hero-text p,
 .hero-cta {
@@ -464,10 +567,11 @@ body {
   transform: translateY(24px);
   animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
-.header        { animation-delay: 0s; }
-.hero-text h1  { animation-delay: 0.08s; }
-.hero-text p   { animation-delay: 0.16s; }
-.hero-cta      { animation-delay: 0.24s; }
+.header-inner  { animation-delay: 0s; }
+.hero-badge    { animation-delay: 0.06s; }
+.hero-text h1  { animation-delay: 0.12s; }
+.hero-text p   { animation-delay: 0.2s; }
+.hero-cta      { animation-delay: 0.28s; }
 
 @keyframes fadeUp {
   to {
@@ -556,29 +660,8 @@ body {
   opacity: 1;
   transform: translateY(0);
 }
-
 .reveal-group .reveal {
   transition-delay: calc(var(--i, 0) * 0.08s);
-}
-
-.hero-cta {
-  transition: background 0.15s, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.hero-cta:hover {
-  transform: translateY(-1px);
-}
-.hero-cta:active {
-  transform: translateY(0) scale(0.98);
-}
-
-.whatsapp-btn {
-  transition: background 0.15s, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.whatsapp-btn:hover {
-  transform: translateY(-1px);
-}
-.whatsapp-btn:active {
-  transform: translateY(0) scale(0.98);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -589,52 +672,13 @@ body {
   .reveal { opacity: 1; transform: none; }
 }
 
-/* ── Responsive ── */
-@media (min-width: 768px) {
-  .hero { padding: 40px 32px 80px; }
-  .hero-inner {
-    flex-direction: row;
-    align-items: center;
-    gap: 64px;
-  }
-  .hero-text {
-    text-align: left;
-    order: -1;
-    flex: 1;
-  }
-  .hero-text h1 { font-size: 44px; }
-  .hero-cta { width: auto; }
-  .card-stack {
-    flex-shrink: 0;
-    width: 360px;
-    max-width: 360px;
-  }
-
-  .section { padding: 80px 32px; }
-  .steps {
-    flex-direction: row;
-    gap: 24px;
-  }
-  .step { flex: 1; }
-  .stats {
-    flex-direction: row;
-    justify-content: space-around;
-  }
-  .stat { flex: 1; }
-}
-
-@media (min-width: 1024px) {
-  .hero-text h1 { font-size: 52px; }
-  .section-title { font-size: 34px; }
-}
-
 /* ── Card mockup base ── */
 .ct2-mock {
   width: 100%;
   background: #fff;
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   padding: 16px;
-  box-shadow: 0 8px 28px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.04);
+  box-shadow: var(--shadow-lg);
   position: relative;
   overflow: hidden;
 }
@@ -644,7 +688,7 @@ body {
   width: 3.5px;
 }
 
-/* ── Card Showcase v3 — Containerless ── */
+/* ── Card Showcase v3 ── */
 .ct3 {
   padding: 80px 24px;
   background: var(--cream);
@@ -690,16 +734,15 @@ body {
   padding: 24px;
   border-radius: 18px;
   border: 1px solid rgba(0,0,0,0.05);
-  box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.03);
+  box-shadow: var(--shadow-md);
   transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s;
   display: flex;
   flex-direction: column;
 }
 .ct3-item:hover .ct2-mock {
   transform: translateY(-5px);
-  box-shadow: 0 16px 40px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.04);
+  box-shadow: var(--shadow-xl);
 }
-/* v3 internal layout — 3 zones: top / mid / bot */
 .ct3-top {
   display: flex;
   align-items: center;
@@ -719,7 +762,6 @@ body {
   text-align: center;
 }
 .ct3-bot strong { color: #1A1A1A; font-weight: 600; }
-/* v3 punch dots — larger */
 .ct3-dots {
   display: flex;
   gap: 8px;
@@ -740,10 +782,7 @@ body {
   border-color: var(--coral);
 }
 .ct3-dot.filled::after { content: '\2713'; }
-/* v3 bundle bar — taller */
-.ct3-bar-wrap {
-  width: 100%;
-}
+.ct3-bar-wrap { width: 100%; }
 .ct3-bar {
   height: 12px;
   border-radius: 6px;
@@ -763,10 +802,7 @@ body {
   margin-top: 6px;
 }
 .ct3-bar-meta strong { color: #1A1A1A; font-weight: 700; }
-/* v3 discount — larger value */
-.ct3-disc {
-  text-align: center;
-}
+.ct3-disc { text-align: center; }
 .ct3-disc-val {
   font-size: 36px;
   font-weight: 800;
@@ -778,7 +814,6 @@ body {
   font-size: 13px;
   color: #717171;
 }
-/* v3 mockup header */
 .ct3-mi {
   width: 36px; height: 36px;
   border-radius: 10px;
@@ -824,9 +859,7 @@ body {
   padding: 8px 18px;
   border-radius: 20px;
 }
-.ct3-tag svg {
-  width: 15px; height: 15px;
-}
+.ct3-tag svg { width: 15px; height: 15px; }
 .ct3-item--punch .ct3-tag {
   background: rgba(255,56,92,0.08);
   color: var(--coral);
@@ -845,7 +878,65 @@ body {
   line-height: 1.55;
   text-align: center;
 }
+
+/* ── Responsive ── */
 @media (min-width: 768px) {
+  .hero { padding: 48px 32px 88px; }
+  .hero-inner {
+    flex-direction: row;
+    align-items: center;
+    gap: 64px;
+  }
+  .hero-text {
+    text-align: left;
+    order: -1;
+    flex: 1;
+  }
+  .hero-text h1 { font-size: 44px; }
+  .hero-cta { width: auto; }
+  .card-stack {
+    flex-shrink: 0;
+    width: 360px;
+    max-width: 360px;
+  }
+
+  .section { padding: 88px 32px; }
+  .steps {
+    flex-direction: row;
+    gap: 0;
+    align-items: flex-start;
+  }
+  .step { flex: 1; position: relative; }
+  .step-connector {
+    display: block;
+    position: absolute;
+    top: 24px;
+    left: calc(50% + 32px);
+    width: calc(100% - 64px);
+    height: 2px;
+    background: var(--gray-4);
+    border-radius: 1px;
+  }
+  .step-connector::before,
+  .step-connector::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gray-4);
+  }
+  .step-connector::before { left: 0; }
+  .step-connector::after { right: 0; }
+  .step:last-child .step-connector { display: none; }
+
+  .stats {
+    flex-direction: row;
+    gap: 16px;
+  }
+  .stat { flex: 1; }
+
   .ct3 { padding: 100px 32px; }
   .ct3-title { font-size: 34px; }
   .ct3-grid {
@@ -855,22 +946,26 @@ body {
   .ct3-item { max-width: none; }
   .ct3-item .ct2-mock { max-width: 300px; }
 }
+
 @media (min-width: 1024px) {
+  .hero-text h1 { font-size: 52px; }
+  .section-title { font-size: 34px; }
   .ct3-title { font-size: 38px; }
 }
-
 </style>
 </head>
 <body>
 
 <!-- Header -->
-<header class="header">
-  <div class="logo">e<span>Punch</span></div>
-  <div class="lang-toggle">
-    <button class="lang-btn active" onclick="setLang('es',true)">ES</button>
-    <button class="lang-btn" onclick="setLang('en',true)">EN</button>
-    <button class="lang-btn" onclick="setLang('ru',true)">RU</button>
-    <button class="lang-btn" onclick="setLang('zh',true)">CN</button>
+<header class="header" id="stickyHeader">
+  <div class="header-inner">
+    <div class="logo">e<span>Punch</span></div>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('es',true)">ES</button>
+      <button class="lang-btn" onclick="setLang('en',true)">EN</button>
+      <button class="lang-btn" onclick="setLang('ru',true)">RU</button>
+      <button class="lang-btn" onclick="setLang('zh',true)">CN</button>
+    </div>
   </div>
 </header>
 
@@ -912,6 +1007,10 @@ body {
 
     <!-- Hero Text -->
     <div class="hero-text">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        <span data-i18n="hero-badge"></span>
+      </div>
       <h1 data-i18n="hero-title"></h1>
       <p data-i18n="hero-sub"></p>
       <a href="#contact" class="hero-cta" data-i18n="hero-cta"></a>
@@ -919,7 +1018,7 @@ body {
   </div>
 </section>
 
-<!-- Why You Need It — real industry stats from 2025 restaurant/cafe loyalty studies -->
+<!-- Why You Need It -->
 <section class="section cream">
   <div class="section-inner">
     <h2 class="section-title reveal" data-i18n="why-title"></h2>
@@ -948,16 +1047,19 @@ body {
     <div class="steps reveal-group">
       <div class="step reveal" style="--i:0">
         <div class="step-num">1</div>
+        <div class="step-connector"></div>
         <h3 data-i18n="step1-title"></h3>
         <p data-i18n="step1-desc"></p>
       </div>
       <div class="step reveal" style="--i:1">
         <div class="step-num">2</div>
+        <div class="step-connector"></div>
         <h3 data-i18n="step2-title"></h3>
         <p data-i18n="step2-desc"></p>
       </div>
       <div class="step reveal" style="--i:2">
         <div class="step-num">3</div>
+        <div class="step-connector"></div>
         <h3 data-i18n="step3-title"></h3>
         <p data-i18n="step3-desc"></p>
       </div>
@@ -965,7 +1067,7 @@ body {
   </div>
 </section>
 
-<!-- Card Showcase v3 — Containerless -->
+<!-- Card Showcase v3 -->
 <section class="ct3">
   <div class="ct3-inner">
     <div class="ct3-head reveal">
@@ -1074,7 +1176,7 @@ body {
 </section>
 
 <!-- CTA -->
-<section class="section cream" id="contact">
+<section class="section cta-section" id="contact">
   <div class="contact">
     <h2 class="contact-heading reveal" data-i18n="cta-heading"></h2>
     <p class="contact-sub reveal" data-i18n="cta-sub"></p>
@@ -1093,6 +1195,7 @@ body {
 <script>
 var T = {
   es: {
+    'hero-badge': '30 d\u00edas de prueba gratis',
     'card-program': 'Compr\u00e1 8 caf\u00e9s, llev\u00e1 1 gratis',
     'card-reward': 'Premio: <strong>Caf\u00e9 gratis a elecci\u00f3n</strong>',
     'reward-badge': '\u00a1Premio listo!',
@@ -1118,22 +1221,10 @@ var T = {
     'ct2-sub': 'Tres tipos de tarjeta. Una plataforma.',
     'punch-title': 'Tarjetas de sellos',
     'punch-desc': 'Junt\u00e1 sellos, gan\u00e1 un premio. El cl\u00e1sico \u2014 ahora digital.',
-    'punch-check1': 'Eleg\u00ed cu\u00e1ntos sellos (6, 8, 10\u2026)',
-    'punch-check2': 'Eleg\u00ed el premio (producto gratis, descuento\u2026)',
-    'punch-check3': 'La tarjeta se reinicia sola al completarse',
-    'punch-example': 'ej. "Compr\u00e1 8 caf\u00e9s, llev\u00e1 1 gratis"',
     'bundle-title': 'Packs',
     'bundle-desc': 'Vend\u00e9 un paquete de visitas por adelantado. Ingreso garantizado.',
-    'bundle-check1': 'Eleg\u00ed el tama\u00f1o del pack (5, 10, 20\u2026)',
-    'bundle-check2': 'Ponele nombre (pack espresso, pase de clases\u2026)',
-    'bundle-check3': 'El cliente usa uno por visita hasta agotarlos',
-    'bundle-example': 'ej. "Pack de 5 espressos" o "Pase de 10 clases"',
     'discount-title': 'Descuentos',
     'discount-desc': 'Dales beneficios permanentes a tus mejores clientes.',
-    'discount-check1': 'Describ\u00ed el beneficio (% off, extra gratis\u2026)',
-    'discount-check2': 'Asignalo a clientes espec\u00edficos',
-    'discount-check3': 'Activo hasta que vos lo saques',
-    'discount-example': 'ej. "10% off en medialunas" o "Tama\u00f1o grande gratis"',
     'mini-bundle-program': 'Pack de 5 jugos',
     'mini-bundle-remaining': 'Restantes',
     'mini-discount-program': 'Cliente VIP',
@@ -1147,6 +1238,7 @@ var T = {
     'footer': 'ePunch \u2014 Fidelizaci\u00f3n digital, simple.'
   },
   en: {
+    'hero-badge': '30-day free trial',
     'card-program': 'Buy 8 coffees, get 1 free',
     'card-reward': 'Reward: <strong>Free coffee of your choice</strong>',
     'reward-badge': 'Reward ready!',
@@ -1172,22 +1264,10 @@ var T = {
     'ct2-sub': 'Three card types. One platform.',
     'punch-title': 'Punch cards',
     'punch-desc': 'Collect punches, earn a reward. The classic \u2014 now digital.',
-    'punch-check1': 'Set how many punches (6, 8, 10\u2026)',
-    'punch-check2': 'Choose the reward (free item, discount\u2026)',
-    'punch-check3': 'Card restarts automatically when full',
-    'punch-example': 'e.g. "Buy 8 coffees, get 1 free"',
     'bundle-title': 'Bundles',
     'bundle-desc': 'Sell a pack of visits upfront. Guaranteed revenue for you.',
-    'bundle-check1': 'Set pack size (5, 10, 20\u2026)',
-    'bundle-check2': 'Name the bundle (espresso pack, class pass\u2026)',
-    'bundle-check3': 'Customer uses one per visit until gone',
-    'bundle-example': 'e.g. "5-pack espresso" or "10 class pass"',
     'discount-title': 'Discounts',
     'discount-desc': 'Give ongoing perks to your best customers.',
-    'discount-check1': 'Describe the perk (% off, free extra\u2026)',
-    'discount-check2': 'Give to specific customers',
-    'discount-check3': 'Active until you decide to remove it',
-    'discount-example': 'e.g. "10% off all pastries" or "Free size upgrade"',
     'mini-bundle-program': '5-juice pack',
     'mini-bundle-remaining': 'Remaining',
     'mini-discount-program': 'VIP Customer',
@@ -1201,6 +1281,7 @@ var T = {
     'footer': 'ePunch \u2014 Digital loyalty, made simple.'
   },
   zh: {
+    'hero-badge': '30\u5929\u514d\u8d39\u8bd5\u7528',
     'card-program': '\u4e708\u676f\u5496\u5561\uff0c\u514d\u8d39\u5f971\u676f',
     'card-reward': '\u5956\u52b1\uff1a<strong>\u514d\u8d39\u5496\u5561\u4efb\u9009</strong>',
     'reward-badge': '\u5956\u52b1\u5df2\u5c31\u7eea\uff01',
@@ -1226,22 +1307,10 @@ var T = {
     'ct2-sub': '\u4e09\u79cd\u5361\u7247\u7c7b\u578b\u3002\u4e00\u4e2a\u5e73\u53f0\u3002',
     'punch-title': '\u96c6\u7ae0\u5361',
     'punch-desc': '\u96c6\u7ae0\u8d62\u5956\u52b1\u3002\u7ecf\u5178\u6a21\u5f0f\u2014\u2014\u73b0\u5728\u662f\u6570\u5b57\u7248\u3002',
-    'punch-check1': '\u8bbe\u5b9a\u5370\u7ae0\u6570\u91cf\uff086\u30018\u300110\u2026\u2026\uff09',
-    'punch-check2': '\u9009\u62e9\u5956\u52b1\uff08\u514d\u8d39\u5546\u54c1\u3001\u6298\u6263\u2026\u2026\uff09',
-    'punch-check3': '\u96c6\u6ee1\u540e\u81ea\u52a8\u91cd\u65b0\u5f00\u59cb',
-    'punch-example': '\u4f8b\u5982 "\u4e708\u676f\u5496\u5561\uff0c\u514d\u8d39\u5f971\u676f"',
     'bundle-title': '\u5957\u9910\u5305',
     'bundle-desc': '\u9884\u552e\u6d88\u8d39\u5957\u9910\u3002\u4e3a\u4f60\u9501\u5b9a\u6536\u5165\u3002',
-    'bundle-check1': '\u8bbe\u5b9a\u5957\u9910\u6570\u91cf\uff085\u300110\u300120\u2026\u2026\uff09',
-    'bundle-check2': '\u547d\u540d\u5957\u9910\uff08\u6d53\u7f29\u5496\u5561\u5305\u3001\u8bfe\u7a0b\u901a\u884c\u8bc1\u2026\u2026\uff09',
-    'bundle-check3': '\u6bcf\u6b21\u6d88\u8d39\u4f7f\u7528\u4e00\u6b21\u76f4\u5230\u7528\u5b8c',
-    'bundle-example': '\u4f8b\u5982 "5\u676f\u6d53\u7f29\u5957\u9910" \u6216 "10\u6b21\u8bfe\u7a0b\u901a\u884c\u8bc1"',
     'discount-title': '\u6298\u6263',
     'discount-desc': '\u4e3a\u4f60\u7684\u5fe0\u5b9e\u5ba2\u6237\u63d0\u4f9b\u6301\u7eed\u4f18\u60e0\u3002',
-    'discount-check1': '\u63cf\u8ff0\u4f18\u60e0\uff08\u6298\u6263\u767e\u5206\u6bd4\u3001\u514d\u8d39\u52a0\u6599\u2026\u2026\uff09',
-    'discount-check2': '\u6307\u5b9a\u7ed9\u7279\u5b9a\u5ba2\u6237',
-    'discount-check3': '\u6301\u7eed\u6709\u6548\u76f4\u5230\u4f60\u53d6\u6d88',
-    'discount-example': '\u4f8b\u5982 "\u6240\u6709\u7cd5\u70b99\u6298" \u6216 "\u514d\u8d39\u5347\u676f"',
     'mini-bundle-program': '5\u676f\u679c\u6c41\u5957\u9910',
     'mini-bundle-remaining': '\u5269\u4f59',
     'mini-discount-program': 'VIP\u5ba2\u6237',
@@ -1255,6 +1324,7 @@ var T = {
     'footer': 'ePunch \u2014 \u6570\u5b57\u5fe0\u8bda\u8ba1\u5212\uff0c\u7b80\u5355\u597d\u7528\u3002'
   },
   ru: {
+    'hero-badge': '30 \u0434\u043d\u0435\u0439 \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e',
     'card-program': '\u041a\u0443\u043f\u0438 8 \u043a\u043e\u0444\u0435, \u043f\u043e\u043b\u0443\u0447\u0438 1 \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e',
     'card-reward': '\u041d\u0430\u0433\u0440\u0430\u0434\u0430: <strong>\u0411\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u044b\u0439 \u043a\u043e\u0444\u0435 \u043d\u0430 \u0432\u044b\u0431\u043e\u0440</strong>',
     'reward-badge': '\u041d\u0430\u0433\u0440\u0430\u0434\u0430 \u0433\u043e\u0442\u043e\u0432\u0430!',
@@ -1280,22 +1350,10 @@ var T = {
     'ct2-sub': '\u0422\u0440\u0438 \u0442\u0438\u043f\u0430 \u043a\u0430\u0440\u0442. \u041e\u0434\u043d\u0430 \u043f\u043b\u0430\u0442\u0444\u043e\u0440\u043c\u0430.',
     'punch-title': '\u041a\u0430\u0440\u0442\u044b \u0441 \u043f\u0435\u0447\u0430\u0442\u044f\u043c\u0438',
     'punch-desc': '\u0421\u043e\u0431\u0438\u0440\u0430\u0439 \u043f\u0435\u0447\u0430\u0442\u0438, \u043f\u043e\u043b\u0443\u0447\u0430\u0439 \u043d\u0430\u0433\u0440\u0430\u0434\u0443. \u041a\u043b\u0430\u0441\u0441\u0438\u043a\u0430 \u2014 \u0442\u0435\u043f\u0435\u0440\u044c \u0432 \u0446\u0438\u0444\u0440\u0435.',
-    'punch-check1': '\u0417\u0430\u0434\u0430\u0439\u0442\u0435 \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u043f\u0435\u0447\u0430\u0442\u0435\u0439 (6, 8, 10\u2026)',
-    'punch-check2': '\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u043d\u0430\u0433\u0440\u0430\u0434\u0443 (\u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u044b\u0439 \u0442\u043e\u0432\u0430\u0440, \u0441\u043a\u0438\u0434\u043a\u0430\u2026)',
-    'punch-check3': '\u041a\u0430\u0440\u0442\u0430 \u043f\u0435\u0440\u0435\u0437\u0430\u043f\u0443\u0441\u043a\u0430\u0435\u0442\u0441\u044f \u0430\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u0435\u0441\u043a\u0438',
-    'punch-example': '\u043d\u0430\u043f\u0440. "\u041a\u0443\u043f\u0438 8 \u043a\u043e\u0444\u0435, \u043f\u043e\u043b\u0443\u0447\u0438 1 \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e"',
     'bundle-title': '\u041f\u0430\u043a\u0435\u0442\u044b',
     'bundle-desc': '\u041f\u0440\u043e\u0434\u0430\u0432\u0430\u0439\u0442\u0435 \u043f\u0430\u043a\u0435\u0442 \u0443\u0441\u043b\u0443\u0433 \u0437\u0430\u0440\u0430\u043d\u0435\u0435. \u0413\u0430\u0440\u0430\u043d\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u0439 \u0434\u043e\u0445\u043e\u0434.',
-    'bundle-check1': '\u0417\u0430\u0434\u0430\u0439\u0442\u0435 \u0440\u0430\u0437\u043c\u0435\u0440 \u043f\u0430\u043a\u0435\u0442\u0430 (5, 10, 20\u2026)',
-    'bundle-check2': '\u041d\u0430\u0437\u043e\u0432\u0438\u0442\u0435 \u043f\u0430\u043a\u0435\u0442 (\u043f\u0430\u043a\u0435\u0442 \u044d\u0441\u043f\u0440\u0435\u0441\u0441\u043e, \u0430\u0431\u043e\u043d\u0435\u043c\u0435\u043d\u0442\u2026)',
-    'bundle-check3': '\u041a\u043b\u0438\u0435\u043d\u0442 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0435\u0442 \u043f\u043e \u043e\u0434\u043d\u043e\u043c\u0443 \u0437\u0430 \u0432\u0438\u0437\u0438\u0442',
-    'bundle-example': '\u043d\u0430\u043f\u0440. "5 \u044d\u0441\u043f\u0440\u0435\u0441\u0441\u043e" \u0438\u043b\u0438 "\u0410\u0431\u043e\u043d\u0435\u043c\u0435\u043d\u0442 \u043d\u0430 10 \u0437\u0430\u043d\u044f\u0442\u0438\u0439"',
     'discount-title': '\u0421\u043a\u0438\u0434\u043a\u0438',
     'discount-desc': '\u041f\u043e\u0441\u0442\u043e\u044f\u043d\u043d\u044b\u0435 \u0431\u043e\u043d\u0443\u0441\u044b \u0434\u043b\u044f \u043b\u0443\u0447\u0448\u0438\u0445 \u043a\u043b\u0438\u0435\u043d\u0442\u043e\u0432.',
-    'discount-check1': '\u041e\u043f\u0438\u0448\u0438\u0442\u0435 \u0431\u043e\u043d\u0443\u0441 (% \u0441\u043a\u0438\u0434\u043a\u0438, \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e\u0435 \u0434\u043e\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u0435\u2026)',
-    'discount-check2': '\u041d\u0430\u0437\u043d\u0430\u0447\u044c\u0442\u0435 \u043a\u043e\u043d\u043a\u0440\u0435\u0442\u043d\u044b\u043c \u043a\u043b\u0438\u0435\u043d\u0442\u0430\u043c',
-    'discount-check3': '\u0414\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u043f\u043e\u043a\u0430 \u0432\u044b \u043d\u0435 \u043e\u0442\u043c\u0435\u043d\u0438\u0442\u0435',
-    'discount-example': '\u043d\u0430\u043f\u0440. "\u0421\u043a\u0438\u0434\u043a\u0430 10% \u043d\u0430 \u0432\u044b\u043f\u0435\u0447\u043a\u0443" \u0438\u043b\u0438 "\u0411\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u044b\u0439 \u0430\u043f\u0433\u0440\u0435\u0439\u0434 \u0440\u0430\u0437\u043c\u0435\u0440\u0430"',
     'mini-bundle-program': '\u041f\u0430\u043a\u0435\u0442 \u0438\u0437 5 \u0441\u043e\u043a\u043e\u0432',
     'mini-bundle-remaining': '\u041e\u0441\u0442\u0430\u043b\u043e\u0441\u044c',
     'mini-discount-program': 'VIP \u043a\u043b\u0438\u0435\u043d\u0442',
@@ -1357,6 +1415,12 @@ document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el)
 document.querySelectorAll('.stack-shadow, .main-card').forEach(function(el) {
   el.addEventListener('animationend', function() { el.classList.add('landed'); });
 });
+
+// Header scroll border
+var stickyHeader = document.getElementById('stickyHeader');
+window.addEventListener('scroll', function() {
+  stickyHeader.classList.toggle('scrolled', window.scrollY > 8);
+}, { passive: true });
 
 var counter = document.getElementById('punch-count');
 [1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100].forEach(function(ms, i) {
