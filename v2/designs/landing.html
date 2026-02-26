@@ -38,7 +38,6 @@ body {
   line-height: 1.5;
 }
 
-/* ── Header ── */
 .header {
   padding: 20px 24px;
   max-width: 1100px;
@@ -80,7 +79,6 @@ body {
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-/* ── Hero ── */
 .hero {
   max-width: 1100px;
   margin: 0 auto;
@@ -130,7 +128,6 @@ body {
 }
 .hero-cta:hover { background: var(--coral-dark); }
 
-/* ── Card Stack ── */
 .card-stack {
   position: relative;
   width: 100%;
@@ -304,7 +301,7 @@ body {
   transform: translateY(0);
 }
 
-/* ── Shared Section ── */
+/* ── Sections ── */
 .section {
   padding: 64px 24px;
 }
@@ -313,73 +310,75 @@ body {
   max-width: 900px;
   margin: 0 auto;
 }
-.section-label {
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: var(--coral);
-  text-align: center;
-  margin-bottom: 8px;
-}
 .section-title {
   font-size: 28px;
   font-weight: 800;
   letter-spacing: -0.5px;
   text-align: center;
-  margin-bottom: 12px;
-}
-.section-sub {
-  font-size: 16px;
-  color: var(--gray-2);
-  text-align: center;
-  max-width: 480px;
-  margin: 0 auto 40px;
-  line-height: 1.6;
+  margin-bottom: 40px;
 }
 
-/* ── How It Works ── */
-.flow-steps {
+/* ── Steps ── */
+.steps {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 32px;
 }
-.flow-step {
-  display: flex;
-  align-items: flex-start;
-  gap: 18px;
-  padding: 24px;
-  background: var(--white);
-  border-radius: 16px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-  transition: transform 0.15s, box-shadow 0.15s;
+.step {
+  text-align: center;
 }
-.flow-step:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.07);
-}
-.flow-num {
-  width: 44px;
-  height: 44px;
+.step-num {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: var(--coral);
   color: var(--white);
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 800;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  margin-bottom: 14px;
 }
-.flow-content h3 {
+.step h3 {
   font-size: 16px;
   font-weight: 700;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
-.flow-content p {
+.step p {
   font-size: 14px;
   color: var(--gray-2);
   line-height: 1.55;
+  max-width: 260px;
+  margin: 0 auto;
+}
+
+/* ── Stats ── */
+.stats {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
+}
+.stat-val {
+  font-size: 44px;
+  font-weight: 800;
+  color: var(--coral);
+  letter-spacing: -2px;
+  line-height: 1;
+}
+.stat-desc {
+  font-size: 15px;
+  color: var(--gray-2);
+  margin-top: 6px;
+}
+.stats-note {
+  margin-top: 32px;
+  font-size: 12px;
+  color: var(--gray-3);
+  text-align: center;
 }
 
 /* ── Card Types ── */
@@ -389,134 +388,89 @@ body {
   gap: 16px;
 }
 .card-type {
-  padding: 24px;
-  border-radius: 16px;
-  border: 1px solid #eee;
+  padding: 28px;
+  border-radius: 18px;
+  border: 1.5px solid #eee;
   background: var(--white);
-  transition: transform 0.15s, box-shadow 0.15s;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 .card-type:hover {
-  transform: translateY(-2px);
+  border-color: var(--gray-4);
   box-shadow: 0 4px 16px rgba(0,0,0,0.06);
 }
-.card-type-top {
+.card-type-head {
   display: flex;
   align-items: flex-start;
-  gap: 14px;
-  margin-bottom: 14px;
+  gap: 16px;
 }
 .card-type-emoji {
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
-.card-type-emoji svg { width: 24px; height: 24px; }
+.card-type-emoji svg { width: 26px; height: 26px; }
 .card-type-title {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
-  margin-bottom: 4px;
+  margin-bottom: 5px;
 }
 .card-type-desc {
-  font-size: 14px;
+  font-size: 15px;
   color: var(--gray-2);
-  line-height: 1.5;
+  line-height: 1.55;
 }
-.card-type-custom {
-  padding-top: 14px;
-  border-top: 1px solid #f0f0f0;
+.card-type-chevron {
+  margin-left: auto;
+  margin-top: 4px;
+  flex-shrink: 0;
+  color: var(--gray-3);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-type.expanded .card-type-chevron {
+  transform: rotate(180deg);
+}
+.card-type-details {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-type.expanded .card-type-details {
+  max-height: 400px;
+}
+.card-type-details-inner {
+  padding-top: 16px;
+  margin-top: 16px;
+  border-top: 1px solid var(--gray-5);
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
-.card-type-custom-item {
+.card-type-check {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--gray-1);
-  line-height: 1.4;
+  line-height: 1.5;
 }
-.card-type-custom-item .check {
-  width: 18px;
-  height: 18px;
+.card-type-check::before {
+  content: '';
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: var(--coral-light);
-  color: var(--coral);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: var(--coral);
   flex-shrink: 0;
 }
-.card-type-custom-item .check svg { width: 10px; height: 10px; }
 .card-type-example {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--gray-3);
   margin-top: 6px;
   font-style: italic;
-}
-.customize-note {
-  margin-top: 32px;
-  padding: 20px 24px;
-  background: var(--coral-light);
-  border-radius: 14px;
-  text-align: center;
-  font-size: 15px;
-  color: var(--black);
-  line-height: 1.6;
-}
-
-@media (min-width: 768px) {
-  .card-types {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-}
-
-/* ── Features Grid ── */
-.features-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
-}
-.feature-card {
-  padding: 24px;
-  background: var(--cream);
-  border-radius: 16px;
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  transition: transform 0.15s, box-shadow 0.15s;
-}
-.feature-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-}
-.feature-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-.feature-icon svg { width: 24px; height: 24px; }
-.feature-icon.qr { background: var(--coral-light); color: var(--coral); }
-.feature-icon.people { background: #E8F0FE; color: #1A73E8; }
-.feature-icon.phone { background: #E6F7E6; color: #008A05; }
-.feature-icon.globe { background: #FFF3E0; color: #E65100; }
-.feature-title {
-  font-size: 15px;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-.feature-desc {
-  font-size: 14px;
-  color: var(--gray-2);
-  line-height: 1.5;
 }
 
 /* ── CTA / Contact ── */
@@ -580,11 +534,6 @@ body {
   text-decoration: none;
 }
 .contact-email a:hover { text-decoration: underline; }
-.contact-note {
-  margin-top: 8px;
-  font-size: 13px;
-  color: var(--gray-3);
-}
 
 /* ── Footer ── */
 .footer {
@@ -599,7 +548,6 @@ body {
 
 /* ── Animations ── */
 
-/* Hero load: staggered fade-up */
 .header,
 .hero-text h1,
 .hero-text p,
@@ -620,7 +568,6 @@ body {
   }
 }
 
-/* Card stack entrance — slide in already rotated */
 .stack-shadow,
 .main-card {
   opacity: 0;
@@ -656,7 +603,6 @@ body {
   }
 }
 
-/* Punch dots — all visible, filled ones animate after cards settle */
 .mc-dot.filled {
   background: transparent;
   border-color: var(--gray-4);
@@ -692,7 +638,6 @@ body {
   to { opacity: 1; }
 }
 
-/* Scroll-triggered reveal — elements start hidden */
 .reveal {
   opacity: 0;
   transform: translateY(32px);
@@ -704,12 +649,10 @@ body {
   transform: translateY(0);
 }
 
-/* Stagger children inside a reveal group */
 .reveal-group .reveal {
   transition-delay: calc(var(--i, 0) * 0.08s);
 }
 
-/* CTA button — subtle scale on hover */
 .hero-cta {
   transition: background 0.15s, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -720,7 +663,6 @@ body {
   transform: translateY(0) scale(0.98);
 }
 
-/* WhatsApp button — same feel */
 .whatsapp-btn {
   transition: background 0.15s, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -731,7 +673,6 @@ body {
   transform: translateY(0) scale(0.98);
 }
 
-/* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -762,19 +703,18 @@ body {
   }
 
   .section { padding: 80px 32px; }
-  .flow-steps {
+  .steps {
     flex-direction: row;
-    gap: 20px;
+    gap: 24px;
   }
-  .flow-step {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    flex: 1;
+  .step { flex: 1; }
+  .stats {
+    flex-direction: row;
+    justify-content: space-around;
   }
-  .features-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+  .stat { flex: 1; }
+  .card-types {
+    grid-template-columns: 1fr 1fr 1fr;
   }
 }
 
@@ -842,33 +782,47 @@ body {
   </div>
 </section>
 
-<!-- How It Works -->
+<!-- Why You Need It — real industry stats from 2025 restaurant/cafe loyalty studies -->
 <section class="section cream">
   <div class="section-inner">
-    <div class="section-label reveal" data-i18n="how-label"></div>
+    <h2 class="section-title reveal" data-i18n="why-title"></h2>
+    <div class="stats reveal-group">
+      <div class="stat reveal" style="--i:0">
+        <div class="stat-val" data-i18n="stat1-val"></div>
+        <div class="stat-desc" data-i18n="stat1-desc"></div>
+      </div>
+      <div class="stat reveal" style="--i:1">
+        <div class="stat-val" data-i18n="stat2-val"></div>
+        <div class="stat-desc" data-i18n="stat2-desc"></div>
+      </div>
+      <div class="stat reveal" style="--i:2">
+        <div class="stat-val" data-i18n="stat3-val"></div>
+        <div class="stat-desc" data-i18n="stat3-desc"></div>
+      </div>
+    </div>
+    <div class="stats-note reveal" data-i18n="stats-note"></div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section class="section">
+  <div class="section-inner">
     <h2 class="section-title reveal" data-i18n="how-title"></h2>
-    <p class="section-sub reveal" data-i18n="how-sub"></p>
-    <div class="flow-steps reveal-group">
-      <div class="flow-step reveal" style="--i:0">
-        <div class="flow-num">1</div>
-        <div class="flow-content">
-          <h3 data-i18n="step1-title"></h3>
-          <p data-i18n="step1-desc"></p>
-        </div>
+    <div class="steps reveal-group">
+      <div class="step reveal" style="--i:0">
+        <div class="step-num">1</div>
+        <h3 data-i18n="step1-title"></h3>
+        <p data-i18n="step1-desc"></p>
       </div>
-      <div class="flow-step reveal" style="--i:1">
-        <div class="flow-num">2</div>
-        <div class="flow-content">
-          <h3 data-i18n="step2-title"></h3>
-          <p data-i18n="step2-desc"></p>
-        </div>
+      <div class="step reveal" style="--i:1">
+        <div class="step-num">2</div>
+        <h3 data-i18n="step2-title"></h3>
+        <p data-i18n="step2-desc"></p>
       </div>
-      <div class="flow-step reveal" style="--i:2">
-        <div class="flow-num">3</div>
-        <div class="flow-content">
-          <h3 data-i18n="step3-title"></h3>
-          <p data-i18n="step3-desc"></p>
-        </div>
+      <div class="step reveal" style="--i:2">
+        <div class="step-num">3</div>
+        <h3 data-i18n="step3-title"></h3>
+        <p data-i18n="step3-desc"></p>
       </div>
     </div>
   </div>
@@ -877,121 +831,60 @@ body {
 <!-- Card Types -->
 <section class="section">
   <div class="section-inner">
-    <div class="section-label reveal" data-i18n="types-label"></div>
     <h2 class="section-title reveal" data-i18n="types-title"></h2>
-    <p class="section-sub reveal" data-i18n="types-sub"></p>
     <div class="card-types reveal-group">
-      <div class="card-type reveal" style="--i:0">
-        <div class="card-type-top">
+      <div class="card-type reveal" style="--i:0" onclick="this.classList.toggle('expanded')">
+        <div class="card-type-head">
           <div class="card-type-emoji" style="background: rgba(255,56,92,0.08); color: var(--coral)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
           <div>
             <div class="card-type-title" data-i18n="punch-title"></div>
             <div class="card-type-desc" data-i18n="punch-desc"></div>
           </div>
+          <svg class="card-type-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
-        <div class="card-type-custom">
-          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> <span data-i18n="punch-check1"></span></div>
-          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> <span data-i18n="punch-check2"></span></div>
-          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> <span data-i18n="punch-check3"></span></div>
+        <div class="card-type-details">
+          <div class="card-type-details-inner">
+            <div class="card-type-check" data-i18n="punch-check1"></div>
+            <div class="card-type-check" data-i18n="punch-check2"></div>
+            <div class="card-type-check" data-i18n="punch-check3"></div>
+            <div class="card-type-example" data-i18n="punch-example"></div>
+          </div>
         </div>
-        <div class="card-type-example" data-i18n="punch-example"></div>
       </div>
-      <div class="card-type reveal" style="--i:1">
-        <div class="card-type-top">
+      <div class="card-type reveal" style="--i:1" onclick="this.classList.toggle('expanded')">
+        <div class="card-type-head">
           <div class="card-type-emoji" style="background: rgba(123,94,167,0.08); color: #7B5EA7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/><path d="M12 6v12"/></svg></div>
           <div>
             <div class="card-type-title" data-i18n="bundle-title"></div>
             <div class="card-type-desc" data-i18n="bundle-desc"></div>
           </div>
+          <svg class="card-type-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
-        <div class="card-type-custom">
-          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> <span data-i18n="bundle-check1"></span></div>
-          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> <span data-i18n="bundle-check2"></span></div>
-          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> <span data-i18n="bundle-check3"></span></div>
+        <div class="card-type-details">
+          <div class="card-type-details-inner">
+            <div class="card-type-check" data-i18n="bundle-check1"></div>
+            <div class="card-type-check" data-i18n="bundle-check2"></div>
+            <div class="card-type-check" data-i18n="bundle-check3"></div>
+            <div class="card-type-example" data-i18n="bundle-example"></div>
+          </div>
         </div>
-        <div class="card-type-example" data-i18n="bundle-example"></div>
       </div>
-      <div class="card-type reveal" style="--i:2">
-        <div class="card-type-top">
+      <div class="card-type reveal" style="--i:2" onclick="this.classList.toggle('expanded')">
+        <div class="card-type-head">
           <div class="card-type-emoji" style="background: rgba(232,163,23,0.08); color: #E8A317"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div>
           <div>
             <div class="card-type-title" data-i18n="discount-title"></div>
             <div class="card-type-desc" data-i18n="discount-desc"></div>
           </div>
+          <svg class="card-type-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
-        <div class="card-type-custom">
-          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> <span data-i18n="discount-check1"></span></div>
-          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> <span data-i18n="discount-check2"></span></div>
-          <div class="card-type-custom-item"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> <span data-i18n="discount-check3"></span></div>
-        </div>
-        <div class="card-type-example" data-i18n="discount-example"></div>
-      </div>
-    </div>
-    <div class="customize-note reveal" data-i18n="customize-note"></div>
-  </div>
-</section>
-
-<!-- What You Get -->
-<section class="section cream">
-  <div class="section-inner">
-    <div class="section-label reveal" data-i18n="why-label"></div>
-    <h2 class="section-title reveal" data-i18n="why-title"></h2>
-    <p class="section-sub reveal" data-i18n="why-sub"></p>
-    <div class="features-grid reveal-group">
-      <div class="feature-card reveal" style="--i:0">
-        <div class="feature-icon qr">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <rect x="3" y="3" width="7" height="7" rx="1"/>
-            <rect x="14" y="3" width="7" height="7" rx="1"/>
-            <rect x="3" y="14" width="7" height="7" rx="1"/>
-            <rect x="14" y="14" width="3" height="3"/>
-            <line x1="21" y1="14" x2="21" y2="17"/>
-            <line x1="14" y1="21" x2="17" y2="21"/>
-            <line x1="21" y1="21" x2="21" y2="21.01"/>
-          </svg>
-        </div>
-        <div>
-          <div class="feature-title" data-i18n="feat1-title"></div>
-          <div class="feature-desc" data-i18n="feat1-desc"></div>
-        </div>
-      </div>
-      <div class="feature-card reveal" style="--i:1">
-        <div class="feature-icon people">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M2 21v-2a4 4 0 014-4h6a4 4 0 014 4v2"/>
-            <circle cx="19" cy="7" r="3"/>
-            <path d="M22 21v-1.5a3 3 0 00-2.5-2.96"/>
-          </svg>
-        </div>
-        <div>
-          <div class="feature-title" data-i18n="feat2-title"></div>
-          <div class="feature-desc" data-i18n="feat2-desc"></div>
-        </div>
-      </div>
-      <div class="feature-card reveal" style="--i:2">
-        <div class="feature-icon phone">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <rect x="5" y="2" width="14" height="20" rx="3"/>
-            <line x1="12" y1="18" x2="12.01" y2="18"/>
-          </svg>
-        </div>
-        <div>
-          <div class="feature-title" data-i18n="feat3-title"></div>
-          <div class="feature-desc" data-i18n="feat3-desc"></div>
-        </div>
-      </div>
-      <div class="feature-card reveal" style="--i:3">
-        <div class="feature-icon globe">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="2" y1="12" x2="22" y2="12"/>
-            <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/>
-          </svg>
-        </div>
-        <div>
-          <div class="feature-title" data-i18n="feat4-title"></div>
-          <div class="feature-desc" data-i18n="feat4-desc"></div>
+        <div class="card-type-details">
+          <div class="card-type-details-inner">
+            <div class="card-type-check" data-i18n="discount-check1"></div>
+            <div class="card-type-check" data-i18n="discount-check2"></div>
+            <div class="card-type-check" data-i18n="discount-check3"></div>
+            <div class="card-type-example" data-i18n="discount-example"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -999,7 +892,7 @@ body {
 </section>
 
 <!-- CTA -->
-<section class="section" id="contact">
+<section class="section cream" id="contact">
   <div class="contact">
     <h2 class="contact-heading reveal" data-i18n="cta-heading"></h2>
     <p class="contact-sub reveal" data-i18n="cta-sub"></p>
@@ -1009,7 +902,6 @@ body {
     </a>
     <div class="contact-phone" data-i18n="cta-phone"></div>
     <div class="contact-email" data-i18n="cta-email"></div>
-    <div class="contact-note" data-i18n="cta-note"></div>
   </div>
 </section>
 
@@ -1019,61 +911,52 @@ body {
 <script>
 var T = {
   es: {
-    'card-program': 'Comprá 8 cafés, llevá 1 gratis',
-    'card-reward': 'Premio: <strong>Café gratis a elección</strong>',
-    'reward-badge': '¡Premio listo!',
+    'card-program': 'Compr\u00e1 8 caf\u00e9s, llev\u00e1 1 gratis',
+    'card-reward': 'Premio: <strong>Caf\u00e9 gratis a elecci\u00f3n</strong>',
+    'reward-badge': '\u00a1Premio listo!',
     'hero-title': 'Tarjetas de fidelidad digitales para tu negocio',
-    'hero-sub': 'Reemplazá las tarjetas de papel. Tus clientes escanean, juntan sellos y ganan premios. Listo en 5 minutos.',
+    'hero-sub': 'Reemplaz\u00e1 las tarjetas de papel. Tus clientes escanean, juntan sellos y ganan premios. Listo en 5 minutos.',
     'hero-cta': 'Contactanos \u2192',
-    'how-label': 'Fácil como 1-2-3',
-    'how-title': 'Cómo funciona',
-    'how-sub': 'Sin descargar apps. Sin configuración complicada. Tus clientes solo escanean y listo.',
+    'how-title': 'C\u00f3mo funciona',
     'step1-title': 'El cliente escanea tu QR',
-    'step1-desc': 'Poné nuestro QR en tu mostrador. Los clientes lo escanean con la cámara del celular \u2014 sin app.',
+    'step1-desc': 'Pon\u00e9 nuestro QR en tu mostrador. Los clientes lo escanean con la c\u00e1mara del celular \u2014 sin app.',
     'step2-title': 'Junta sellos',
-    'step2-desc': 'Cada visita suma un sello en su tarjeta digital. Se llena automáticamente \u2014 como el papel, pero mejor.',
+    'step2-desc': 'Cada visita suma un sello en su tarjeta digital. Se llena autom\u00e1ticamente.',
     'step3-title': 'Gana premios',
     'step3-desc': 'Cuando la tarjeta se llena, canjea su premio. Clientes contentos vuelven siempre.',
-    'types-label': 'Tus tarjetas, tus reglas',
-    'types-title': 'Creá tarjetas a tu medida',
-    'types-sub': 'Elegí entre tres tipos de tarjeta. Poné las reglas, elegí el premio, hacela tuya. Creá las que quieras.',
+    'why-title': 'Por qu\u00e9 lo necesit\u00e1s',
+    'stat1-val': '+20%',
+    'stat1-desc': 'm\u00e1s visitas de clientes con tarjeta de fidelidad',
+    'stat2-val': '+15%',
+    'stat2-desc': 'gasto promedio por visita de clientes fieles',
+    'stat3-val': '1.7x',
+    'stat3-desc': 'm\u00e1s ingresos de clientes que vuelven vs. nuevos',
+    'stats-note': 'Datos reales de estudios de fidelizaci\u00f3n en gastronom\u00eda, 2025',
+    'types-title': 'Cre\u00e1 tarjetas a tu medida',
     'punch-title': 'Tarjetas de sellos',
-    'punch-desc': 'Juntá sellos, ganá un premio. El clásico \u2014 ahora digital.',
-    'punch-check1': 'Elegí cuántos sellos (6, 8, 10\u2026)',
-    'punch-check2': 'Elegí el premio (producto gratis, descuento\u2026)',
+    'punch-desc': 'Junt\u00e1 sellos, gan\u00e1 un premio. El cl\u00e1sico \u2014 ahora digital.',
+    'punch-check1': 'Eleg\u00ed cu\u00e1ntos sellos (6, 8, 10\u2026)',
+    'punch-check2': 'Eleg\u00ed el premio (producto gratis, descuento\u2026)',
     'punch-check3': 'La tarjeta se reinicia sola al completarse',
-    'punch-example': 'ej. "Comprá 8 cafés, llevá 1 gratis"',
+    'punch-example': 'ej. "Compr\u00e1 8 caf\u00e9s, llev\u00e1 1 gratis"',
     'bundle-title': 'Packs',
-    'bundle-desc': 'Vendé un paquete de visitas por adelantado. Ingreso garantizado.',
-    'bundle-check1': 'Elegí el tamaño del pack (5, 10, 20\u2026)',
+    'bundle-desc': 'Vend\u00e9 un paquete de visitas por adelantado. Ingreso garantizado.',
+    'bundle-check1': 'Eleg\u00ed el tama\u00f1o del pack (5, 10, 20\u2026)',
     'bundle-check2': 'Ponele nombre (pack espresso, pase de clases\u2026)',
     'bundle-check3': 'El cliente usa uno por visita hasta agotarlos',
     'bundle-example': 'ej. "Pack de 5 espressos" o "Pase de 10 clases"',
     'discount-title': 'Descuentos',
     'discount-desc': 'Dales beneficios permanentes a tus mejores clientes.',
-    'discount-check1': 'Describí el beneficio (% off, extra gratis\u2026)',
-    'discount-check2': 'Asignalo a clientes específicos',
+    'discount-check1': 'Describ\u00ed el beneficio (% off, extra gratis\u2026)',
+    'discount-check2': 'Asignalo a clientes espec\u00edficos',
     'discount-check3': 'Activo hasta que vos lo saques',
-    'discount-example': 'ej. "10% off en medialunas" o "Tamaño grande gratis"',
-    'customize-note': 'Vos elegís el nombre, el ícono y los colores \u2014 tus clientes ven <strong>tu marca</strong>, no la nuestra.',
-    'why-label': 'Por qué funciona',
-    'why-title': 'Hacé que tus clientes vuelvan',
-    'why-sub': 'Los clientes habituales gastan más y vienen más seguido. Un programa de fidelidad simple convierte visitantes en regulares.',
-    'feat1-title': 'Más visitas repetidas',
-    'feat1-desc': 'Los clientes vuelven para completar su tarjeta. Una razón simple para elegirte a vos.',
-    'feat2-title': 'Mayor gasto promedio',
-    'feat2-desc': 'Los clientes fieles gastan más por visita. Conocen el menú, confían en vos, agregan extras.',
-    'feat3-title': 'Cero fricción para el cliente',
-    'feat3-desc': 'Sin descargar app, sin registro. Solo escanean y listo \u2014 funciona en cualquier navegador.',
-    'feat4-title': 'Listo en 5 minutos',
-    'feat4-desc': 'Registrate, creá tu programa, imprimí el QR. Estás activo el mismo día.',
-    'cta-heading': '¿Te interesa?',
-    'cta-sub': 'Mandanos un mensaje y te contamos todo lo que necesitás saber.',
+    'discount-example': 'ej. "10% off en medialunas" o "Tama\u00f1o grande gratis"',
+    'cta-heading': '\u00bfTe interesa?',
+    'cta-sub': 'Mandanos un mensaje y te contamos todo lo que necesit\u00e1s saber.',
     'cta-wa': 'Escribinos por WhatsApp',
     'cta-phone': '+54 9 11 5903-8763',
-    'cta-email': 'o escribí a <a href="mailto:hello@epunch.app">hello@epunch.app</a>',
-    'cta-note': '¿Tenés preguntas? Escribinos \u2014 respondemos rápido.',
-    'footer': 'ePunch \u2014 Fidelización digital, simple.'
+    'cta-email': 'o escrib\u00ed a <a href="mailto:hello@epunch.app">hello@epunch.app</a>',
+    'footer': 'ePunch \u2014 Fidelizaci\u00f3n digital, simple.'
   },
   en: {
     'card-program': 'Buy 8 coffees, get 1 free',
@@ -1082,18 +965,22 @@ var T = {
     'hero-title': 'Digital punch cards for your business',
     'hero-sub': 'Replace paper cards. Customers scan, collect punches, earn rewards. Set up in 5 minutes.',
     'hero-cta': 'Contact us \u2192',
-    'how-label': 'Simple as 1-2-3',
     'how-title': 'How it works',
-    'how-sub': 'No app downloads. No complicated setup. Your customers just scan and collect.',
     'step1-title': 'Customer scans your QR',
     'step1-desc': 'Place our QR code at your counter. Customers scan it with their phone camera \u2014 no app needed.',
     'step2-title': 'They collect punches',
-    'step2-desc': 'Each visit earns a punch on their digital card. It fills up automatically \u2014 just like paper, but better.',
+    'step2-desc': 'Each visit earns a punch on their digital card. It fills up automatically.',
     'step3-title': 'They earn rewards',
     'step3-desc': 'When the card is full, they redeem their reward. Happy customers keep coming back.',
-    'types-label': 'Your cards, your rules',
+    'why-title': 'Why you need this',
+    'stat1-val': '+20%',
+    'stat1-desc': 'more visits from loyalty card holders',
+    'stat2-val': '+15%',
+    'stat2-desc': 'higher spend per visit from regulars',
+    'stat3-val': '1.7x',
+    'stat3-desc': 'more revenue from returning vs. new customers',
+    'stats-note': 'Real data from restaurant loyalty studies, 2025',
     'types-title': 'Create cards that fit your business',
-    'types-sub': 'Choose from three card types. Set the rules, pick the reward, make it yours. Run as many as you want.',
     'punch-title': 'Punch cards',
     'punch-desc': 'Collect punches, earn a reward. The classic \u2014 now digital.',
     'punch-check1': 'Set how many punches (6, 8, 10\u2026)',
@@ -1112,139 +999,108 @@ var T = {
     'discount-check2': 'Give to specific customers',
     'discount-check3': 'Active until you decide to remove it',
     'discount-example': 'e.g. "10% off all pastries" or "Free size upgrade"',
-    'customize-note': 'You name the card, pick an icon, set the colors \u2014 customers see <strong>your brand</strong>, not ours.',
-    'why-label': 'Why it works',
-    'why-title': 'Bring customers back',
-    'why-sub': 'Regulars spend more and visit more often. A simple loyalty program turns one-time visitors into repeat customers.',
-    'feat1-title': 'More repeat visits',
-    'feat1-desc': 'Customers come back to fill their card. A simple reason to choose you over the place next door.',
-    'feat2-title': 'Higher average spend',
-    'feat2-desc': 'Loyal customers spend more per visit. They know the menu, they trust you, they add extras.',
-    'feat3-title': 'Zero friction for customers',
-    'feat3-desc': 'No app to download, no signup needed. They just scan and go \u2014 works in any browser.',
-    'feat4-title': 'Set up in 5 minutes',
-    'feat4-desc': 'Sign up, create your program, print the QR. You\'re live the same day.',
     'cta-heading': 'Interested?',
     'cta-sub': 'Drop us a message and we\'ll tell you everything you need to know.',
     'cta-wa': 'Message us on WhatsApp',
     'cta-phone': '+54 9 11 5903-8763',
     'cta-email': 'or email <a href="mailto:hello@epunch.app">hello@epunch.app</a>',
-    'cta-note': 'Have questions? Just message us \u2014 we reply fast.',
     'footer': 'ePunch \u2014 Digital loyalty, made simple.'
   },
   zh: {
-    'card-program': '买8杯咖啡，免费得1杯',
-    'card-reward': '奖励：<strong>免费咖啡任选</strong>',
-    'reward-badge': '奖励已就绪！',
-    'hero-title': '为你的店铺打造数字集章卡',
-    'hero-sub': '告别纸质卡片。顾客扫码、集章、赢奖励。5分钟即可上线。',
-    'hero-cta': '联系我们 \u2192',
-    'how-label': '简单三步',
-    'how-title': '如何运作',
-    'how-sub': '无需下载应用，无需复杂设置。顾客只需扫码即可。',
-    'step1-title': '顾客扫描你的二维码',
-    'step1-desc': '将我们的二维码放在柜台上。顾客用手机相机扫描即可——不需要下载任何应用。',
-    'step2-title': '他们收集印章',
-    'step2-desc': '每次消费自动获得一个印章。自动累计——像纸卡一样，但更好。',
-    'step3-title': '他们赢得奖励',
-    'step3-desc': '集满后兑换奖励。满意的顾客会持续回来。',
-    'types-label': '你的卡，你做主',
-    'types-title': '创建适合你的卡片',
-    'types-sub': '三种卡片类型可选。设定规则，选择奖励，打造你的品牌。想创建多少就创建多少。',
-    'punch-title': '集章卡',
-    'punch-desc': '集章赢奖励。经典模式——现在是数字版。',
-    'punch-check1': '设定印章数量（6、8、10……）',
-    'punch-check2': '选择奖励（免费商品、折扣……）',
-    'punch-check3': '集满后自动重新开始',
-    'punch-example': '例如 "买8杯咖啡，免费得1杯"',
-    'bundle-title': '套餐包',
-    'bundle-desc': '预售消费套餐。为你锁定收入。',
-    'bundle-check1': '设定套餐数量（5、10、20……）',
-    'bundle-check2': '命名套餐（浓缩咖啡包、课程通行证……）',
-    'bundle-check3': '每次消费使用一次直到用完',
-    'bundle-example': '例如 "5杯浓缩套餐" 或 "10次课程通行证"',
-    'discount-title': '折扣',
-    'discount-desc': '为你的忠实客户提供持续优惠。',
-    'discount-check1': '描述优惠（折扣百分比、免费加料……）',
-    'discount-check2': '指定给特定客户',
-    'discount-check3': '持续有效直到你取消',
-    'discount-example': '例如 "所有糕点9折" 或 "免费升杯"',
-    'customize-note': '你来命名卡片、选图标、定颜色——顾客看到的是<strong>你的品牌</strong>，不是我们的。',
-    'why-label': '为什么有效',
-    'why-title': '让顾客不断回来',
-    'why-sub': '老顾客消费更多、来得更勤。一个简单的忠诚计划就能把路人变成回头客。',
-    'feat1-title': '更多回头客',
-    'feat1-desc': '顾客会回来集满卡片。一个简单的理由让他们选择你而不是隔壁。',
-    'feat2-title': '更高的客单价',
-    'feat2-desc': '忠实顾客每次消费更多。他们熟悉菜单，信任你，会加点额外的。',
-    'feat3-title': '顾客零门槛',
-    'feat3-desc': '无需下载应用，无需注册。扫码即走——任何浏览器都能用。',
-    'feat4-title': '5分钟搞定',
-    'feat4-desc': '注册、创建计划、打印二维码。当天就能上线。',
-    'cta-heading': '感兴趣？',
-    'cta-sub': '给我们发消息，我们会告诉你所有你需要知道的。',
-    'cta-wa': '通过WhatsApp联系我们',
+    'card-program': '\u4e708\u676f\u5496\u5561\uff0c\u514d\u8d39\u5f971\u676f',
+    'card-reward': '\u5956\u52b1\uff1a<strong>\u514d\u8d39\u5496\u5561\u4efb\u9009</strong>',
+    'reward-badge': '\u5956\u52b1\u5df2\u5c31\u7eea\uff01',
+    'hero-title': '\u4e3a\u4f60\u7684\u5e97\u94fa\u6253\u9020\u6570\u5b57\u96c6\u7ae0\u5361',
+    'hero-sub': '\u544a\u522b\u7eb8\u8d28\u5361\u7247\u3002\u987e\u5ba2\u626b\u7801\u3001\u96c6\u7ae0\u3001\u8d62\u5956\u52b1\u30025\u5206\u949f\u5373\u53ef\u4e0a\u7ebf\u3002',
+    'hero-cta': '\u8054\u7cfb\u6211\u4eec \u2192',
+    'how-title': '\u5982\u4f55\u8fd0\u4f5c',
+    'step1-title': '\u987e\u5ba2\u626b\u63cf\u4f60\u7684\u4e8c\u7ef4\u7801',
+    'step1-desc': '\u5c06\u6211\u4eec\u7684\u4e8c\u7ef4\u7801\u653e\u5728\u67dc\u53f0\u4e0a\u3002\u987e\u5ba2\u7528\u624b\u673a\u76f8\u673a\u626b\u63cf\u5373\u53ef\u3002',
+    'step2-title': '\u4ed6\u4eec\u6536\u96c6\u5370\u7ae0',
+    'step2-desc': '\u6bcf\u6b21\u6d88\u8d39\u81ea\u52a8\u83b7\u5f97\u4e00\u4e2a\u5370\u7ae0\u3002\u81ea\u52a8\u7d2f\u8ba1\u3002',
+    'step3-title': '\u4ed6\u4eec\u8d62\u5f97\u5956\u52b1',
+    'step3-desc': '\u96c6\u6ee1\u540e\u5151\u6362\u5956\u52b1\u3002\u6ee1\u610f\u7684\u987e\u5ba2\u4f1a\u6301\u7eed\u56de\u6765\u3002',
+    'why-title': '\u4e3a\u4ec0\u4e48\u4f60\u9700\u8981\u5b83',
+    'stat1-val': '+20%',
+    'stat1-desc': '\u4f1a\u5458\u5361\u6301\u6709\u8005\u5230\u5e97\u66f4\u9891\u7e41',
+    'stat2-val': '+15%',
+    'stat2-desc': '\u8001\u5ba2\u6237\u6bcf\u6b21\u6d88\u8d39\u66f4\u9ad8',
+    'stat3-val': '1.7x',
+    'stat3-desc': '\u56de\u5934\u5ba2\u6bd4\u65b0\u5ba2\u6237\u5e26\u6765\u66f4\u591a\u6536\u5165',
+    'stats-note': '\u6570\u636e\u6765\u6e90\uff1a2025\u5e74\u9910\u996e\u4e1a\u5fe0\u8bda\u5ea6\u7814\u7a76',
+    'types-title': '\u521b\u5efa\u9002\u5408\u4f60\u7684\u5361\u7247',
+    'punch-title': '\u96c6\u7ae0\u5361',
+    'punch-desc': '\u96c6\u7ae0\u8d62\u5956\u52b1\u3002\u7ecf\u5178\u6a21\u5f0f\u2014\u2014\u73b0\u5728\u662f\u6570\u5b57\u7248\u3002',
+    'punch-check1': '\u8bbe\u5b9a\u5370\u7ae0\u6570\u91cf\uff086\u30018\u300110\u2026\u2026\uff09',
+    'punch-check2': '\u9009\u62e9\u5956\u52b1\uff08\u514d\u8d39\u5546\u54c1\u3001\u6298\u6263\u2026\u2026\uff09',
+    'punch-check3': '\u96c6\u6ee1\u540e\u81ea\u52a8\u91cd\u65b0\u5f00\u59cb',
+    'punch-example': '\u4f8b\u5982 "\u4e708\u676f\u5496\u5561\uff0c\u514d\u8d39\u5f971\u676f"',
+    'bundle-title': '\u5957\u9910\u5305',
+    'bundle-desc': '\u9884\u552e\u6d88\u8d39\u5957\u9910\u3002\u4e3a\u4f60\u9501\u5b9a\u6536\u5165\u3002',
+    'bundle-check1': '\u8bbe\u5b9a\u5957\u9910\u6570\u91cf\uff085\u300110\u300120\u2026\u2026\uff09',
+    'bundle-check2': '\u547d\u540d\u5957\u9910\uff08\u6d53\u7f29\u5496\u5561\u5305\u3001\u8bfe\u7a0b\u901a\u884c\u8bc1\u2026\u2026\uff09',
+    'bundle-check3': '\u6bcf\u6b21\u6d88\u8d39\u4f7f\u7528\u4e00\u6b21\u76f4\u5230\u7528\u5b8c',
+    'bundle-example': '\u4f8b\u5982 "5\u676f\u6d53\u7f29\u5957\u9910" \u6216 "10\u6b21\u8bfe\u7a0b\u901a\u884c\u8bc1"',
+    'discount-title': '\u6298\u6263',
+    'discount-desc': '\u4e3a\u4f60\u7684\u5fe0\u5b9e\u5ba2\u6237\u63d0\u4f9b\u6301\u7eed\u4f18\u60e0\u3002',
+    'discount-check1': '\u63cf\u8ff0\u4f18\u60e0\uff08\u6298\u6263\u767e\u5206\u6bd4\u3001\u514d\u8d39\u52a0\u6599\u2026\u2026\uff09',
+    'discount-check2': '\u6307\u5b9a\u7ed9\u7279\u5b9a\u5ba2\u6237',
+    'discount-check3': '\u6301\u7eed\u6709\u6548\u76f4\u5230\u4f60\u53d6\u6d88',
+    'discount-example': '\u4f8b\u5982 "\u6240\u6709\u7cd5\u70b99\u6298" \u6216 "\u514d\u8d39\u5347\u676f"',
+    'cta-heading': '\u611f\u5174\u8da3\uff1f',
+    'cta-sub': '\u7ed9\u6211\u4eec\u53d1\u6d88\u606f\uff0c\u6211\u4eec\u4f1a\u544a\u8bc9\u4f60\u6240\u6709\u4f60\u9700\u8981\u77e5\u9053\u7684\u3002',
+    'cta-wa': '\u901a\u8fc7WhatsApp\u8054\u7cfb\u6211\u4eec',
     'cta-phone': '+54 9 11 5903-8763',
-    'cta-email': '或发邮件至 <a href="mailto:hello@epunch.app">hello@epunch.app</a>',
-    'cta-note': '有问题？给我们发消息——我们回复很快。',
-    'footer': 'ePunch \u2014 数字忠诚计划，简单好用。'
+    'cta-email': '\u6216\u53d1\u90ae\u4ef6\u81f3 <a href="mailto:hello@epunch.app">hello@epunch.app</a>',
+    'footer': 'ePunch \u2014 \u6570\u5b57\u5fe0\u8bda\u8ba1\u5212\uff0c\u7b80\u5355\u597d\u7528\u3002'
   },
   ru: {
-    'card-program': 'Купи 8 кофе, получи 1 бесплатно',
-    'card-reward': 'Награда: <strong>Бесплатный кофе на выбор</strong>',
-    'reward-badge': 'Награда готова!',
-    'hero-title': 'Цифровые карты лояльности для вашего бизнеса',
-    'hero-sub': 'Замените бумажные карточки. Клиенты сканируют, собирают печати, получают награды. Настройка за 5 минут.',
-    'hero-cta': 'Связаться с нами \u2192',
-    'how-label': 'Просто как 1-2-3',
-    'how-title': 'Как это работает',
-    'how-sub': 'Без скачивания приложений. Без сложной настройки. Клиенты просто сканируют и копят.',
-    'step1-title': 'Клиент сканирует ваш QR',
-    'step1-desc': 'Разместите наш QR-код на кассе. Клиенты сканируют камерой телефона \u2014 без приложения.',
-    'step2-title': 'Собирают печати',
-    'step2-desc': 'Каждый визит \u2014 новая печать на цифровой карте. Заполняется автоматически \u2014 как бумажная, но лучше.',
-    'step3-title': 'Получают награды',
-    'step3-desc': 'Когда карта заполнена, клиент получает награду. Довольные клиенты возвращаются снова.',
-    'types-label': 'Ваши карты, ваши правила',
-    'types-title': 'Создайте карты под ваш бизнес',
-    'types-sub': 'Три типа карт на выбор. Задайте правила, выберите награду, сделайте по-своему. Создавайте сколько угодно.',
-    'punch-title': 'Карты с печатями',
-    'punch-desc': 'Собирай печати, получай награду. Классика \u2014 теперь в цифре.',
-    'punch-check1': 'Задайте количество печатей (6, 8, 10\u2026)',
-    'punch-check2': 'Выберите награду (бесплатный товар, скидка\u2026)',
-    'punch-check3': 'Карта перезапускается автоматически',
-    'punch-example': 'напр. "Купи 8 кофе, получи 1 бесплатно"',
-    'bundle-title': 'Пакеты',
-    'bundle-desc': 'Продавайте пакет визитов заранее. Гарантированный доход.',
-    'bundle-check1': 'Задайте размер пакета (5, 10, 20\u2026)',
-    'bundle-check2': 'Назовите пакет (пакет эспрессо, абонемент\u2026)',
-    'bundle-check3': 'Клиент использует по одному за визит',
-    'bundle-example': 'напр. "5 эспрессо" или "Абонемент на 10 занятий"',
-    'discount-title': 'Скидки',
-    'discount-desc': 'Постоянные бонусы для лучших клиентов.',
-    'discount-check1': 'Опишите бонус (% скидки, бесплатное дополнение\u2026)',
-    'discount-check2': 'Назначьте конкретным клиентам',
-    'discount-check3': 'Действует пока вы не отмените',
-    'discount-example': 'напр. "Скидка 10% на выпечку" или "Бесплатный апгрейд размера"',
-    'customize-note': 'Вы выбираете название, иконку и цвета \u2014 клиенты видят <strong>ваш бренд</strong>, а не наш.',
-    'why-label': 'Почему это работает',
-    'why-title': 'Верните клиентов снова',
-    'why-sub': 'Постоянные клиенты тратят больше и приходят чаще. Простая программа лояльности превращает случайных посетителей в постоянных.',
-    'feat1-title': 'Больше повторных визитов',
-    'feat1-desc': 'Клиенты возвращаются, чтобы заполнить карту. Простая причина выбрать вас.',
-    'feat2-title': 'Выше средний чек',
-    'feat2-desc': 'Лояльные клиенты тратят больше за визит. Они знают меню, доверяют вам, берут дополнительное.',
-    'feat3-title': 'Ноль барьеров для клиентов',
-    'feat3-desc': 'Не нужно скачивать приложение или регистрироваться. Просто сканируй \u2014 работает в любом браузере.',
-    'feat4-title': 'Настройка за 5 минут',
-    'feat4-desc': 'Зарегистрируйтесь, создайте программу, распечатайте QR. Работает в тот же день.',
-    'cta-heading': 'Интересно?',
-    'cta-sub': 'Напишите нам, и мы расскажем всё, что нужно знать.',
-    'cta-wa': 'Написать в WhatsApp',
+    'card-program': '\u041a\u0443\u043f\u0438 8 \u043a\u043e\u0444\u0435, \u043f\u043e\u043b\u0443\u0447\u0438 1 \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e',
+    'card-reward': '\u041d\u0430\u0433\u0440\u0430\u0434\u0430: <strong>\u0411\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u044b\u0439 \u043a\u043e\u0444\u0435 \u043d\u0430 \u0432\u044b\u0431\u043e\u0440</strong>',
+    'reward-badge': '\u041d\u0430\u0433\u0440\u0430\u0434\u0430 \u0433\u043e\u0442\u043e\u0432\u0430!',
+    'hero-title': '\u0426\u0438\u0444\u0440\u043e\u0432\u044b\u0435 \u043a\u0430\u0440\u0442\u044b \u043b\u043e\u044f\u043b\u044c\u043d\u043e\u0441\u0442\u0438 \u0434\u043b\u044f \u0432\u0430\u0448\u0435\u0433\u043e \u0431\u0438\u0437\u043d\u0435\u0441\u0430',
+    'hero-sub': '\u0417\u0430\u043c\u0435\u043d\u0438\u0442\u0435 \u0431\u0443\u043c\u0430\u0436\u043d\u044b\u0435 \u043a\u0430\u0440\u0442\u043e\u0447\u043a\u0438. \u041a\u043b\u0438\u0435\u043d\u0442\u044b \u0441\u043a\u0430\u043d\u0438\u0440\u0443\u044e\u0442, \u0441\u043e\u0431\u0438\u0440\u0430\u044e\u0442 \u043f\u0435\u0447\u0430\u0442\u0438, \u043f\u043e\u043b\u0443\u0447\u0430\u044e\u0442 \u043d\u0430\u0433\u0440\u0430\u0434\u044b. \u041d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0430 \u0437\u0430 5 \u043c\u0438\u043d\u0443\u0442.',
+    'hero-cta': '\u0421\u0432\u044f\u0437\u0430\u0442\u044c\u0441\u044f \u0441 \u043d\u0430\u043c\u0438 \u2192',
+    'how-title': '\u041a\u0430\u043a \u044d\u0442\u043e \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442',
+    'step1-title': '\u041a\u043b\u0438\u0435\u043d\u0442 \u0441\u043a\u0430\u043d\u0438\u0440\u0443\u0435\u0442 \u0432\u0430\u0448 QR',
+    'step1-desc': '\u0420\u0430\u0437\u043c\u0435\u0441\u0442\u0438\u0442\u0435 \u043d\u0430\u0448 QR-\u043a\u043e\u0434 \u043d\u0430 \u043a\u0430\u0441\u0441\u0435. \u041a\u043b\u0438\u0435\u043d\u0442\u044b \u0441\u043a\u0430\u043d\u0438\u0440\u0443\u044e\u0442 \u043a\u0430\u043c\u0435\u0440\u043e\u0439 \u0442\u0435\u043b\u0435\u0444\u043e\u043d\u0430 \u2014 \u0431\u0435\u0437 \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u044f.',
+    'step2-title': '\u0421\u043e\u0431\u0438\u0440\u0430\u044e\u0442 \u043f\u0435\u0447\u0430\u0442\u0438',
+    'step2-desc': '\u041a\u0430\u0436\u0434\u044b\u0439 \u0432\u0438\u0437\u0438\u0442 \u2014 \u043d\u043e\u0432\u0430\u044f \u043f\u0435\u0447\u0430\u0442\u044c \u043d\u0430 \u0446\u0438\u0444\u0440\u043e\u0432\u043e\u0439 \u043a\u0430\u0440\u0442\u0435. \u0417\u0430\u043f\u043e\u043b\u043d\u044f\u0435\u0442\u0441\u044f \u0430\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u0435\u0441\u043a\u0438.',
+    'step3-title': '\u041f\u043e\u043b\u0443\u0447\u0430\u044e\u0442 \u043d\u0430\u0433\u0440\u0430\u0434\u044b',
+    'step3-desc': '\u041a\u043e\u0433\u0434\u0430 \u043a\u0430\u0440\u0442\u0430 \u0437\u0430\u043f\u043e\u043b\u043d\u0435\u043d\u0430, \u043a\u043b\u0438\u0435\u043d\u0442 \u043f\u043e\u043b\u0443\u0447\u0430\u0435\u0442 \u043d\u0430\u0433\u0440\u0430\u0434\u0443. \u0414\u043e\u0432\u043e\u043b\u044c\u043d\u044b\u0435 \u043a\u043b\u0438\u0435\u043d\u0442\u044b \u0432\u043e\u0437\u0432\u0440\u0430\u0449\u0430\u044e\u0442\u0441\u044f.',
+    'why-title': '\u0417\u0430\u0447\u0435\u043c \u044d\u0442\u043e \u043d\u0443\u0436\u043d\u043e',
+    'stat1-val': '+20%',
+    'stat1-desc': '\u0431\u043e\u043b\u044c\u0448\u0435 \u0432\u0438\u0437\u0438\u0442\u043e\u0432 \u043e\u0442 \u0443\u0447\u0430\u0441\u0442\u043d\u0438\u043a\u043e\u0432 \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u044b',
+    'stat2-val': '+15%',
+    'stat2-desc': '\u0432\u044b\u0448\u0435 \u0441\u0440\u0435\u0434\u043d\u0438\u0439 \u0447\u0435\u043a \u043f\u043e\u0441\u0442\u043e\u044f\u043d\u043d\u044b\u0445 \u043a\u043b\u0438\u0435\u043d\u0442\u043e\u0432',
+    'stat3-val': '1.7x',
+    'stat3-desc': '\u0431\u043e\u043b\u044c\u0448\u0435 \u0434\u043e\u0445\u043e\u0434\u0430 \u043e\u0442 \u043f\u043e\u0441\u0442\u043e\u044f\u043d\u043d\u044b\u0445 \u0432\u0441. \u043d\u043e\u0432\u044b\u0445 \u043a\u043b\u0438\u0435\u043d\u0442\u043e\u0432',
+    'stats-note': '\u0420\u0435\u0430\u043b\u044c\u043d\u044b\u0435 \u0434\u0430\u043d\u043d\u044b\u0435 \u0438\u0437 \u0438\u0441\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u043d\u0438\u0439 \u043b\u043e\u044f\u043b\u044c\u043d\u043e\u0441\u0442\u0438 \u0432 \u0440\u0435\u0441\u0442\u043e\u0440\u0430\u043d\u0430\u0445, 2025',
+    'types-title': '\u0421\u043e\u0437\u0434\u0430\u0439\u0442\u0435 \u043a\u0430\u0440\u0442\u044b \u043f\u043e\u0434 \u0432\u0430\u0448 \u0431\u0438\u0437\u043d\u0435\u0441',
+    'punch-title': '\u041a\u0430\u0440\u0442\u044b \u0441 \u043f\u0435\u0447\u0430\u0442\u044f\u043c\u0438',
+    'punch-desc': '\u0421\u043e\u0431\u0438\u0440\u0430\u0439 \u043f\u0435\u0447\u0430\u0442\u0438, \u043f\u043e\u043b\u0443\u0447\u0430\u0439 \u043d\u0430\u0433\u0440\u0430\u0434\u0443. \u041a\u043b\u0430\u0441\u0441\u0438\u043a\u0430 \u2014 \u0442\u0435\u043f\u0435\u0440\u044c \u0432 \u0446\u0438\u0444\u0440\u0435.',
+    'punch-check1': '\u0417\u0430\u0434\u0430\u0439\u0442\u0435 \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u043f\u0435\u0447\u0430\u0442\u0435\u0439 (6, 8, 10\u2026)',
+    'punch-check2': '\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u043d\u0430\u0433\u0440\u0430\u0434\u0443 (\u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u044b\u0439 \u0442\u043e\u0432\u0430\u0440, \u0441\u043a\u0438\u0434\u043a\u0430\u2026)',
+    'punch-check3': '\u041a\u0430\u0440\u0442\u0430 \u043f\u0435\u0440\u0435\u0437\u0430\u043f\u0443\u0441\u043a\u0430\u0435\u0442\u0441\u044f \u0430\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u0435\u0441\u043a\u0438',
+    'punch-example': '\u043d\u0430\u043f\u0440. "\u041a\u0443\u043f\u0438 8 \u043a\u043e\u0444\u0435, \u043f\u043e\u043b\u0443\u0447\u0438 1 \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e"',
+    'bundle-title': '\u041f\u0430\u043a\u0435\u0442\u044b',
+    'bundle-desc': '\u041f\u0440\u043e\u0434\u0430\u0432\u0430\u0439\u0442\u0435 \u043f\u0430\u043a\u0435\u0442 \u0432\u0438\u0437\u0438\u0442\u043e\u0432 \u0437\u0430\u0440\u0430\u043d\u0435\u0435. \u0413\u0430\u0440\u0430\u043d\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u0439 \u0434\u043e\u0445\u043e\u0434.',
+    'bundle-check1': '\u0417\u0430\u0434\u0430\u0439\u0442\u0435 \u0440\u0430\u0437\u043c\u0435\u0440 \u043f\u0430\u043a\u0435\u0442\u0430 (5, 10, 20\u2026)',
+    'bundle-check2': '\u041d\u0430\u0437\u043e\u0432\u0438\u0442\u0435 \u043f\u0430\u043a\u0435\u0442 (\u043f\u0430\u043a\u0435\u0442 \u044d\u0441\u043f\u0440\u0435\u0441\u0441\u043e, \u0430\u0431\u043e\u043d\u0435\u043c\u0435\u043d\u0442\u2026)',
+    'bundle-check3': '\u041a\u043b\u0438\u0435\u043d\u0442 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0435\u0442 \u043f\u043e \u043e\u0434\u043d\u043e\u043c\u0443 \u0437\u0430 \u0432\u0438\u0437\u0438\u0442',
+    'bundle-example': '\u043d\u0430\u043f\u0440. "5 \u044d\u0441\u043f\u0440\u0435\u0441\u0441\u043e" \u0438\u043b\u0438 "\u0410\u0431\u043e\u043d\u0435\u043c\u0435\u043d\u0442 \u043d\u0430 10 \u0437\u0430\u043d\u044f\u0442\u0438\u0439"',
+    'discount-title': '\u0421\u043a\u0438\u0434\u043a\u0438',
+    'discount-desc': '\u041f\u043e\u0441\u0442\u043e\u044f\u043d\u043d\u044b\u0435 \u0431\u043e\u043d\u0443\u0441\u044b \u0434\u043b\u044f \u043b\u0443\u0447\u0448\u0438\u0445 \u043a\u043b\u0438\u0435\u043d\u0442\u043e\u0432.',
+    'discount-check1': '\u041e\u043f\u0438\u0448\u0438\u0442\u0435 \u0431\u043e\u043d\u0443\u0441 (% \u0441\u043a\u0438\u0434\u043a\u0438, \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e\u0435 \u0434\u043e\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u0435\u2026)',
+    'discount-check2': '\u041d\u0430\u0437\u043d\u0430\u0447\u044c\u0442\u0435 \u043a\u043e\u043d\u043a\u0440\u0435\u0442\u043d\u044b\u043c \u043a\u043b\u0438\u0435\u043d\u0442\u0430\u043c',
+    'discount-check3': '\u0414\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u043f\u043e\u043a\u0430 \u0432\u044b \u043d\u0435 \u043e\u0442\u043c\u0435\u043d\u0438\u0442\u0435',
+    'discount-example': '\u043d\u0430\u043f\u0440. "\u0421\u043a\u0438\u0434\u043a\u0430 10% \u043d\u0430 \u0432\u044b\u043f\u0435\u0447\u043a\u0443" \u0438\u043b\u0438 "\u0411\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u044b\u0439 \u0430\u043f\u0433\u0440\u0435\u0439\u0434 \u0440\u0430\u0437\u043c\u0435\u0440\u0430"',
+    'cta-heading': '\u0418\u043d\u0442\u0435\u0440\u0435\u0441\u043d\u043e?',
+    'cta-sub': '\u041d\u0430\u043f\u0438\u0448\u0438\u0442\u0435 \u043d\u0430\u043c, \u0438 \u043c\u044b \u0440\u0430\u0441\u0441\u043a\u0430\u0436\u0435\u043c \u0432\u0441\u0451, \u0447\u0442\u043e \u043d\u0443\u0436\u043d\u043e \u0437\u043d\u0430\u0442\u044c.',
+    'cta-wa': '\u041d\u0430\u043f\u0438\u0441\u0430\u0442\u044c \u0432 WhatsApp',
     'cta-phone': '+7 925 041-93-62',
-    'cta-email': 'или на почту <a href="mailto:hello@epunch.app">hello@epunch.app</a>',
-    'cta-note': 'Есть вопросы? Просто напишите \u2014 мы отвечаем быстро.',
-    'footer': 'ePunch \u2014 Цифровая лояльность, просто и удобно.'
+    'cta-email': '\u0438\u043b\u0438 \u043d\u0430 \u043f\u043e\u0447\u0442\u0443 <a href="mailto:hello@epunch.app">hello@epunch.app</a>',
+    'footer': 'ePunch \u2014 \u0426\u0438\u0444\u0440\u043e\u0432\u0430\u044f \u043b\u043e\u044f\u043b\u044c\u043d\u043e\u0441\u0442\u044c, \u043f\u0440\u043e\u0441\u0442\u043e \u0438 \u0443\u0434\u043e\u0431\u043d\u043e.'
   }
 };
 
