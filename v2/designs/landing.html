@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#FFFFFF">
-<title>ePunch — Digital Punch Cards for Your Shop</title>
+<title>ePunch — Digiconttal Punch Cards for Your Shop</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -381,98 +381,6 @@ body {
   text-align: center;
 }
 
-/* ── Card Types ── */
-.card-types {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-}
-.card-type {
-  padding: 28px;
-  border-radius: 18px;
-  border: 1.5px solid #eee;
-  background: var(--white);
-  cursor: pointer;
-  transition: border-color 0.15s, box-shadow 0.15s;
-}
-.card-type:hover {
-  border-color: var(--gray-4);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-}
-.card-type-head {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-}
-.card-type-emoji {
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-.card-type-emoji svg { width: 26px; height: 26px; }
-.card-type-title {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 5px;
-}
-.card-type-desc {
-  font-size: 15px;
-  color: var(--gray-2);
-  line-height: 1.55;
-}
-.card-type-chevron {
-  margin-left: auto;
-  margin-top: 4px;
-  flex-shrink: 0;
-  color: var(--gray-3);
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.card-type.expanded .card-type-chevron {
-  transform: rotate(180deg);
-}
-.card-type-details {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.card-type.expanded .card-type-details {
-  max-height: 400px;
-}
-.card-type-details-inner {
-  padding-top: 16px;
-  margin-top: 16px;
-  border-top: 1px solid var(--gray-5);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.card-type-check {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: var(--gray-1);
-  line-height: 1.5;
-}
-.card-type-check::before {
-  content: '';
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--coral);
-  flex-shrink: 0;
-}
-.card-type-example {
-  font-size: 13px;
-  color: var(--gray-3);
-  margin-top: 6px;
-  font-style: italic;
-}
-
 /* ── CTA / Contact ── */
 .contact {
   max-width: 600px;
@@ -713,15 +621,244 @@ body {
     justify-content: space-around;
   }
   .stat { flex: 1; }
-  .card-types {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
 }
 
 @media (min-width: 1024px) {
   .hero-text h1 { font-size: 52px; }
   .section-title { font-size: 34px; }
 }
+
+/* ── Card mockup base ── */
+.ct2-mock {
+  width: 100%;
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.04);
+  position: relative;
+  overflow: hidden;
+}
+.ct2-stripe {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3.5px;
+}
+
+/* ── Card Showcase v3 — Containerless ── */
+.ct3 {
+  padding: 80px 24px;
+  background: var(--cream);
+}
+.ct3-inner {
+  max-width: 1060px;
+  margin: 0 auto;
+}
+.ct3-head {
+  text-align: center;
+  margin-bottom: 52px;
+}
+.ct3-title {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--black);
+  margin-bottom: 8px;
+}
+.ct3-sub {
+  font-size: 15px;
+  color: var(--gray-2);
+  line-height: 1.5;
+}
+.ct3-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 36px;
+  justify-items: center;
+}
+.ct3-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 380px;
+}
+.ct3-item .ct2-mock {
+  width: 100%;
+  max-width: 360px;
+  aspect-ratio: 5 / 3;
+  padding: 24px;
+  border-radius: 18px;
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.03);
+  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s;
+  display: flex;
+  flex-direction: column;
+}
+.ct3-item:hover .ct2-mock {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.04);
+}
+/* v3 internal layout — 3 zones: top / mid / bot */
+.ct3-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.ct3-mid {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ct3-bot {
+  padding-top: 10px;
+  border-top: 1.5px dashed #DDD;
+  font-size: 12px;
+  color: #717171;
+  text-align: center;
+}
+.ct3-bot strong { color: #1A1A1A; font-weight: 600; }
+/* v3 punch dots — larger */
+.ct3-dots {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+.ct3-dot {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 2.5px solid #DDD;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #fff;
+}
+.ct3-dot.filled {
+  background: var(--coral);
+  border-color: var(--coral);
+}
+.ct3-dot.filled::after { content: '\2713'; }
+/* v3 bundle bar — taller */
+.ct3-bar-wrap {
+  width: 100%;
+}
+.ct3-bar {
+  height: 12px;
+  border-radius: 6px;
+  background: #EEE;
+  overflow: hidden;
+}
+.ct3-bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  background: #7B5EA7;
+}
+.ct3-bar-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #717171;
+  margin-top: 6px;
+}
+.ct3-bar-meta strong { color: #1A1A1A; font-weight: 700; }
+/* v3 discount — larger value */
+.ct3-disc {
+  text-align: center;
+}
+.ct3-disc-val {
+  font-size: 36px;
+  font-weight: 800;
+  color: #E8A317;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.ct3-disc-on {
+  font-size: 13px;
+  color: #717171;
+}
+/* v3 mockup header */
+.ct3-mi {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.ct3-mi svg { width: 18px; height: 18px; }
+.ct3-ms {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ct3-mn {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1A1A1A;
+  line-height: 1.15;
+}
+.ct3-mp {
+  font-size: 12px;
+  color: #717171;
+  margin-top: 1px;
+}
+.ct3-mc {
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 1;
+}
+.ct3-mc sub {
+  font-size: 12px;
+  font-weight: 600;
+  color: #ABABAB;
+  bottom: 0;
+}
+.ct3-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: 20px;
+}
+.ct3-tag svg {
+  width: 15px; height: 15px;
+}
+.ct3-item--punch .ct3-tag {
+  background: rgba(255,56,92,0.08);
+  color: var(--coral);
+}
+.ct3-item--bundle .ct3-tag {
+  background: rgba(123,94,167,0.08);
+  color: #7B5EA7;
+}
+.ct3-item--discount .ct3-tag {
+  background: rgba(232,163,23,0.08);
+  color: #E8A317;
+}
+.ct3-desc {
+  font-size: 14px;
+  color: var(--gray-2);
+  line-height: 1.55;
+  text-align: center;
+}
+@media (min-width: 768px) {
+  .ct3 { padding: 100px 32px; }
+  .ct3-title { font-size: 34px; }
+  .ct3-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+  .ct3-item { max-width: none; }
+  .ct3-item .ct2-mock { max-width: 300px; }
+}
+@media (min-width: 1024px) {
+  .ct3-title { font-size: 38px; }
+}
+
 </style>
 </head>
 <body>
@@ -828,65 +965,110 @@ body {
   </div>
 </section>
 
-<!-- Card Types -->
-<section class="section">
-  <div class="section-inner">
-    <h2 class="section-title reveal" data-i18n="types-title"></h2>
-    <div class="card-types reveal-group">
-      <div class="card-type reveal" style="--i:0" onclick="this.classList.toggle('expanded')">
-        <div class="card-type-head">
-          <div class="card-type-emoji" style="background: rgba(255,56,92,0.08); color: var(--coral)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-          <div>
-            <div class="card-type-title" data-i18n="punch-title"></div>
-            <div class="card-type-desc" data-i18n="punch-desc"></div>
+<!-- Card Showcase v3 — Containerless -->
+<section class="ct3">
+  <div class="ct3-inner">
+    <div class="ct3-head reveal">
+      <h2 class="ct3-title" data-i18n="types-title"></h2>
+      <p class="ct3-sub" data-i18n="ct2-sub"></p>
+    </div>
+    <div class="ct3-grid reveal-group">
+
+      <div class="ct3-item ct3-item--punch reveal" style="--i:0">
+        <div class="ct2-mock">
+          <div class="ct2-stripe" style="background:var(--coral)"></div>
+          <div class="ct3-top">
+            <div class="ct3-ms">
+              <div class="ct3-mi" style="background:rgba(255,56,92,0.08);color:var(--coral)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 110 8h-1"/><path d="M3 8h14v9a4 4 0 01-4 4H7a4 4 0 01-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>
+              </div>
+              <div>
+                <div class="ct3-mn">Brew &amp; Co</div>
+                <div class="ct3-mp" data-i18n="card-program"></div>
+              </div>
+            </div>
+            <div class="ct3-mc" style="color:var(--coral)">5<sub>/8</sub></div>
           </div>
-          <svg class="card-type-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
-        <div class="card-type-details">
-          <div class="card-type-details-inner">
-            <div class="card-type-check" data-i18n="punch-check1"></div>
-            <div class="card-type-check" data-i18n="punch-check2"></div>
-            <div class="card-type-check" data-i18n="punch-check3"></div>
-            <div class="card-type-example" data-i18n="punch-example"></div>
+          <div class="ct3-mid">
+            <div class="ct3-dots">
+              <div class="ct3-dot filled"></div>
+              <div class="ct3-dot filled"></div>
+              <div class="ct3-dot filled"></div>
+              <div class="ct3-dot filled"></div>
+              <div class="ct3-dot filled"></div>
+              <div class="ct3-dot"></div>
+              <div class="ct3-dot"></div>
+              <div class="ct3-dot"></div>
+            </div>
           </div>
+          <div class="ct3-bot"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg> <span data-i18n="card-reward"></span></div>
         </div>
+        <div class="ct3-tag">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l2 2 4-4"/></svg>
+          <span data-i18n="punch-title"></span>
+        </div>
+        <div class="ct3-desc" data-i18n="punch-desc"></div>
       </div>
-      <div class="card-type reveal" style="--i:1" onclick="this.classList.toggle('expanded')">
-        <div class="card-type-head">
-          <div class="card-type-emoji" style="background: rgba(123,94,167,0.08); color: #7B5EA7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/><path d="M12 6v12"/></svg></div>
-          <div>
-            <div class="card-type-title" data-i18n="bundle-title"></div>
-            <div class="card-type-desc" data-i18n="bundle-desc"></div>
+
+      <div class="ct3-item ct3-item--bundle reveal" style="--i:1">
+        <div class="ct2-mock">
+          <div class="ct2-stripe" style="background:#7B5EA7"></div>
+          <div class="ct3-top">
+            <div class="ct3-ms">
+              <div class="ct3-mi" style="background:rgba(123,94,167,0.08);color:#7B5EA7">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/><path d="M12 6v12"/></svg>
+              </div>
+              <div>
+                <div class="ct3-mn">Juice Lab</div>
+                <div class="ct3-mp" data-i18n="mini-bundle-program"></div>
+              </div>
+            </div>
+            <div class="ct3-mc" style="color:#7B5EA7">3<sub>/5</sub></div>
           </div>
-          <svg class="card-type-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
-        <div class="card-type-details">
-          <div class="card-type-details-inner">
-            <div class="card-type-check" data-i18n="bundle-check1"></div>
-            <div class="card-type-check" data-i18n="bundle-check2"></div>
-            <div class="card-type-check" data-i18n="bundle-check3"></div>
-            <div class="card-type-example" data-i18n="bundle-example"></div>
+          <div class="ct3-mid">
+            <div class="ct3-bar-wrap">
+              <div class="ct3-bar"><div class="ct3-bar-fill" style="width:60%"></div></div>
+              <div class="ct3-bar-meta"><span data-i18n="mini-bundle-remaining"></span> <strong>3</strong></div>
+            </div>
           </div>
+          <div class="ct3-bot"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg> <span data-i18n="mini-bundle-program"></span></div>
         </div>
+        <div class="ct3-tag">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg>
+          <span data-i18n="bundle-title"></span>
+        </div>
+        <div class="ct3-desc" data-i18n="bundle-desc"></div>
       </div>
-      <div class="card-type reveal" style="--i:2" onclick="this.classList.toggle('expanded')">
-        <div class="card-type-head">
-          <div class="card-type-emoji" style="background: rgba(232,163,23,0.08); color: #E8A317"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div>
-          <div>
-            <div class="card-type-title" data-i18n="discount-title"></div>
-            <div class="card-type-desc" data-i18n="discount-desc"></div>
+
+      <div class="ct3-item ct3-item--discount reveal" style="--i:2">
+        <div class="ct2-mock">
+          <div class="ct2-stripe" style="background:#E8A317"></div>
+          <div class="ct3-top">
+            <div class="ct3-ms">
+              <div class="ct3-mi" style="background:rgba(232,163,23,0.08);color:#E8A317">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+              </div>
+              <div>
+                <div class="ct3-mn">La Panaderia</div>
+                <div class="ct3-mp" data-i18n="mini-discount-program"></div>
+              </div>
+            </div>
           </div>
-          <svg class="card-type-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
-        <div class="card-type-details">
-          <div class="card-type-details-inner">
-            <div class="card-type-check" data-i18n="discount-check1"></div>
-            <div class="card-type-check" data-i18n="discount-check2"></div>
-            <div class="card-type-check" data-i18n="discount-check3"></div>
-            <div class="card-type-example" data-i18n="discount-example"></div>
+          <div class="ct3-mid">
+            <div class="ct3-disc">
+              <div class="ct3-disc-val">10% OFF</div>
+              <div class="ct3-disc-on" data-i18n="mini-discount-on"></div>
+            </div>
           </div>
+          <div class="ct3-bot"><span data-i18n="mini-discount-active"></span></div>
         </div>
+        <div class="ct3-tag">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+          <span data-i18n="discount-title"></span>
+        </div>
+        <div class="ct3-desc" data-i18n="discount-desc"></div>
       </div>
+
     </div>
   </div>
 </section>
@@ -933,6 +1115,7 @@ var T = {
     'stat3-desc': 'm\u00e1s ingresos de clientes que vuelven vs. nuevos',
     'stats-note': 'Datos reales de estudios de fidelizaci\u00f3n en gastronom\u00eda, 2025',
     'types-title': 'Cre\u00e1 tarjetas a tu medida',
+    'ct2-sub': 'Tres tipos de tarjeta. Una plataforma.',
     'punch-title': 'Tarjetas de sellos',
     'punch-desc': 'Junt\u00e1 sellos, gan\u00e1 un premio. El cl\u00e1sico \u2014 ahora digital.',
     'punch-check1': 'Eleg\u00ed cu\u00e1ntos sellos (6, 8, 10\u2026)',
@@ -951,6 +1134,11 @@ var T = {
     'discount-check2': 'Asignalo a clientes espec\u00edficos',
     'discount-check3': 'Activo hasta que vos lo saques',
     'discount-example': 'ej. "10% off en medialunas" o "Tama\u00f1o grande gratis"',
+    'mini-bundle-program': 'Pack de 5 jugos',
+    'mini-bundle-remaining': 'Restantes',
+    'mini-discount-program': 'Cliente VIP',
+    'mini-discount-on': 'En todas las medialunas',
+    'mini-discount-active': 'Siempre activo',
     'cta-heading': '\u00bfTe interesa?',
     'cta-sub': 'Mandanos un mensaje y te contamos todo lo que necesit\u00e1s saber.',
     'cta-wa': 'Escribinos por WhatsApp',
@@ -981,6 +1169,7 @@ var T = {
     'stat3-desc': 'more revenue from returning vs. new customers',
     'stats-note': 'Real data from restaurant loyalty studies, 2025',
     'types-title': 'Create cards that fit your business',
+    'ct2-sub': 'Three card types. One platform.',
     'punch-title': 'Punch cards',
     'punch-desc': 'Collect punches, earn a reward. The classic \u2014 now digital.',
     'punch-check1': 'Set how many punches (6, 8, 10\u2026)',
@@ -999,6 +1188,11 @@ var T = {
     'discount-check2': 'Give to specific customers',
     'discount-check3': 'Active until you decide to remove it',
     'discount-example': 'e.g. "10% off all pastries" or "Free size upgrade"',
+    'mini-bundle-program': '5-juice pack',
+    'mini-bundle-remaining': 'Remaining',
+    'mini-discount-program': 'VIP Customer',
+    'mini-discount-on': 'On all pastries',
+    'mini-discount-active': 'Always active',
     'cta-heading': 'Interested?',
     'cta-sub': 'Drop us a message and we\'ll tell you everything you need to know.',
     'cta-wa': 'Message us on WhatsApp',
@@ -1029,6 +1223,7 @@ var T = {
     'stat3-desc': '\u56de\u5934\u5ba2\u6bd4\u65b0\u5ba2\u6237\u5e26\u6765\u66f4\u591a\u6536\u5165',
     'stats-note': '\u6570\u636e\u6765\u6e90\uff1a2025\u5e74\u9910\u996e\u4e1a\u5fe0\u8bda\u5ea6\u7814\u7a76',
     'types-title': '\u521b\u5efa\u9002\u5408\u4f60\u7684\u5361\u7247',
+    'ct2-sub': '\u4e09\u79cd\u5361\u7247\u7c7b\u578b\u3002\u4e00\u4e2a\u5e73\u53f0\u3002',
     'punch-title': '\u96c6\u7ae0\u5361',
     'punch-desc': '\u96c6\u7ae0\u8d62\u5956\u52b1\u3002\u7ecf\u5178\u6a21\u5f0f\u2014\u2014\u73b0\u5728\u662f\u6570\u5b57\u7248\u3002',
     'punch-check1': '\u8bbe\u5b9a\u5370\u7ae0\u6570\u91cf\uff086\u30018\u300110\u2026\u2026\uff09',
@@ -1047,6 +1242,11 @@ var T = {
     'discount-check2': '\u6307\u5b9a\u7ed9\u7279\u5b9a\u5ba2\u6237',
     'discount-check3': '\u6301\u7eed\u6709\u6548\u76f4\u5230\u4f60\u53d6\u6d88',
     'discount-example': '\u4f8b\u5982 "\u6240\u6709\u7cd5\u70b99\u6298" \u6216 "\u514d\u8d39\u5347\u676f"',
+    'mini-bundle-program': '5\u676f\u679c\u6c41\u5957\u9910',
+    'mini-bundle-remaining': '\u5269\u4f59',
+    'mini-discount-program': 'VIP\u5ba2\u6237',
+    'mini-discount-on': '\u6240\u6709\u7cd5\u70b9',
+    'mini-discount-active': '\u59cb\u7ec8\u6709\u6548',
     'cta-heading': '\u611f\u5174\u8da3\uff1f',
     'cta-sub': '\u7ed9\u6211\u4eec\u53d1\u6d88\u606f\uff0c\u6211\u4eec\u4f1a\u544a\u8bc9\u4f60\u6240\u6709\u4f60\u9700\u8981\u77e5\u9053\u7684\u3002',
     'cta-wa': '\u901a\u8fc7WhatsApp\u8054\u7cfb\u6211\u4eec',
@@ -1077,6 +1277,7 @@ var T = {
     'stat3-desc': '\u0431\u043e\u043b\u044c\u0448\u0435 \u0434\u043e\u0445\u043e\u0434\u0430 \u043e\u0442 \u043f\u043e\u0441\u0442\u043e\u044f\u043d\u043d\u044b\u0445 \u0432\u0441. \u043d\u043e\u0432\u044b\u0445 \u043a\u043b\u0438\u0435\u043d\u0442\u043e\u0432',
     'stats-note': '\u0420\u0435\u0430\u043b\u044c\u043d\u044b\u0435 \u0434\u0430\u043d\u043d\u044b\u0435 \u0438\u0437 \u0438\u0441\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u043d\u0438\u0439 \u043b\u043e\u044f\u043b\u044c\u043d\u043e\u0441\u0442\u0438 \u0432 \u0440\u0435\u0441\u0442\u043e\u0440\u0430\u043d\u0430\u0445, 2025',
     'types-title': '\u0421\u043e\u0437\u0434\u0430\u0439\u0442\u0435 \u043a\u0430\u0440\u0442\u044b \u043f\u043e\u0434 \u0432\u0430\u0448 \u0431\u0438\u0437\u043d\u0435\u0441',
+    'ct2-sub': '\u0422\u0440\u0438 \u0442\u0438\u043f\u0430 \u043a\u0430\u0440\u0442. \u041e\u0434\u043d\u0430 \u043f\u043b\u0430\u0442\u0444\u043e\u0440\u043c\u0430.',
     'punch-title': '\u041a\u0430\u0440\u0442\u044b \u0441 \u043f\u0435\u0447\u0430\u0442\u044f\u043c\u0438',
     'punch-desc': '\u0421\u043e\u0431\u0438\u0440\u0430\u0439 \u043f\u0435\u0447\u0430\u0442\u0438, \u043f\u043e\u043b\u0443\u0447\u0430\u0439 \u043d\u0430\u0433\u0440\u0430\u0434\u0443. \u041a\u043b\u0430\u0441\u0441\u0438\u043a\u0430 \u2014 \u0442\u0435\u043f\u0435\u0440\u044c \u0432 \u0446\u0438\u0444\u0440\u0435.',
     'punch-check1': '\u0417\u0430\u0434\u0430\u0439\u0442\u0435 \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u043f\u0435\u0447\u0430\u0442\u0435\u0439 (6, 8, 10\u2026)',
@@ -1084,7 +1285,7 @@ var T = {
     'punch-check3': '\u041a\u0430\u0440\u0442\u0430 \u043f\u0435\u0440\u0435\u0437\u0430\u043f\u0443\u0441\u043a\u0430\u0435\u0442\u0441\u044f \u0430\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u0435\u0441\u043a\u0438',
     'punch-example': '\u043d\u0430\u043f\u0440. "\u041a\u0443\u043f\u0438 8 \u043a\u043e\u0444\u0435, \u043f\u043e\u043b\u0443\u0447\u0438 1 \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e"',
     'bundle-title': '\u041f\u0430\u043a\u0435\u0442\u044b',
-    'bundle-desc': '\u041f\u0440\u043e\u0434\u0430\u0432\u0430\u0439\u0442\u0435 \u043f\u0430\u043a\u0435\u0442 \u0432\u0438\u0437\u0438\u0442\u043e\u0432 \u0437\u0430\u0440\u0430\u043d\u0435\u0435. \u0413\u0430\u0440\u0430\u043d\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u0439 \u0434\u043e\u0445\u043e\u0434.',
+    'bundle-desc': '\u041f\u0440\u043e\u0434\u0430\u0432\u0430\u0439\u0442\u0435 \u043f\u0430\u043a\u0435\u0442 \u0443\u0441\u043b\u0443\u0433 \u0437\u0430\u0440\u0430\u043d\u0435\u0435. \u0413\u0430\u0440\u0430\u043d\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u043d\u044b\u0439 \u0434\u043e\u0445\u043e\u0434.',
     'bundle-check1': '\u0417\u0430\u0434\u0430\u0439\u0442\u0435 \u0440\u0430\u0437\u043c\u0435\u0440 \u043f\u0430\u043a\u0435\u0442\u0430 (5, 10, 20\u2026)',
     'bundle-check2': '\u041d\u0430\u0437\u043e\u0432\u0438\u0442\u0435 \u043f\u0430\u043a\u0435\u0442 (\u043f\u0430\u043a\u0435\u0442 \u044d\u0441\u043f\u0440\u0435\u0441\u0441\u043e, \u0430\u0431\u043e\u043d\u0435\u043c\u0435\u043d\u0442\u2026)',
     'bundle-check3': '\u041a\u043b\u0438\u0435\u043d\u0442 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0435\u0442 \u043f\u043e \u043e\u0434\u043d\u043e\u043c\u0443 \u0437\u0430 \u0432\u0438\u0437\u0438\u0442',
@@ -1095,6 +1296,11 @@ var T = {
     'discount-check2': '\u041d\u0430\u0437\u043d\u0430\u0447\u044c\u0442\u0435 \u043a\u043e\u043d\u043a\u0440\u0435\u0442\u043d\u044b\u043c \u043a\u043b\u0438\u0435\u043d\u0442\u0430\u043c',
     'discount-check3': '\u0414\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u043f\u043e\u043a\u0430 \u0432\u044b \u043d\u0435 \u043e\u0442\u043c\u0435\u043d\u0438\u0442\u0435',
     'discount-example': '\u043d\u0430\u043f\u0440. "\u0421\u043a\u0438\u0434\u043a\u0430 10% \u043d\u0430 \u0432\u044b\u043f\u0435\u0447\u043a\u0443" \u0438\u043b\u0438 "\u0411\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u044b\u0439 \u0430\u043f\u0433\u0440\u0435\u0439\u0434 \u0440\u0430\u0437\u043c\u0435\u0440\u0430"',
+    'mini-bundle-program': '\u041f\u0430\u043a\u0435\u0442 \u0438\u0437 5 \u0441\u043e\u043a\u043e\u0432',
+    'mini-bundle-remaining': '\u041e\u0441\u0442\u0430\u043b\u043e\u0441\u044c',
+    'mini-discount-program': 'VIP \u043a\u043b\u0438\u0435\u043d\u0442',
+    'mini-discount-on': '\u041d\u0430 \u0432\u0441\u044e \u0432\u044b\u043f\u0435\u0447\u043a\u0443',
+    'mini-discount-active': '\u0412\u0441\u0435\u0433\u0434\u0430 \u0430\u043a\u0442\u0438\u0432\u043d\u043e',
     'cta-heading': '\u0418\u043d\u0442\u0435\u0440\u0435\u0441\u043d\u043e?',
     'cta-sub': '\u041d\u0430\u043f\u0438\u0448\u0438\u0442\u0435 \u043d\u0430\u043c, \u0438 \u043c\u044b \u0440\u0430\u0441\u0441\u043a\u0430\u0436\u0435\u043c \u0432\u0441\u0451, \u0447\u0442\u043e \u043d\u0443\u0436\u043d\u043e \u0437\u043d\u0430\u0442\u044c.',
     'cta-wa': '\u041d\u0430\u043f\u0438\u0441\u0430\u0442\u044c \u0432 WhatsApp',
